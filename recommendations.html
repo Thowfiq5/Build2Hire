@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Career Recommendations | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
+            Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="portfolio.html" class="sidebar-link">
+                🎨 <span>My Showcase</span>
+              </a>
+            </li>
+            <li>
+              <a href="marketplace.html" class="sidebar-link">
+                🧩 <span>Challenges</span>
+              </a>
+            </li>
+            <li>
+              <a href="recommendations.html" class="sidebar-link active">
+                🤖 <span>AI Recommendations</span>
+              </a>
+            </li>
+            <li>
+              <a href="leaderboard.html" class="sidebar-link">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
+        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">candidate</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display);">AI Career Recommendations</h2>
+        <p style="color: var(--text-secondary);">Our engine maps your showcased skills to industry jobs and offers developmental roadmaps.</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <div id="loading-state" style="text-align: center; padding: 4rem 0; display: none;">
+        <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-secondary);">Running AI Skill Analyzer...</p>
+      </div>
+
+      <div id="no-skills-state" class="card" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted);">
+        <p>Add some skills to your profile to generate recommendations.</p>
+        <a href="portfolio.html" class="btn btn-primary" style="margin-top: 1rem;">Add Skills</a>
+      </div>
+
+      <div id="recommendations-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <!-- Dynamic Recommendation Cards -->
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const user = getUser();
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById('user-role-badge').textContent = user.role;
+      renderHeader();
+    }
+
+    // Default template roles to map candidate skills against
+    const jobTemplates = [
+      {
+        roleName: "Frontend Developer",
+        description: "Focuses on user interfaces, responsive design layouts, client-side frameworks, and state integrations.",
+        requiredSkills: ["React", "JavaScript", "HTML", "CSS Variables", "Next.js", "TailwindCSS"],
+        reasoning: "Excellent UI aesthetics. Build more reactive dashboard components to reach full eligibility."
+      },
+      {
+        roleName: "Full Stack Engineer",
+        description: "Handles both client application workflows and scalable servers, database entities, and endpoint interfaces.",
+        requiredSkills: ["React", "JavaScript", "PHP", "MySQL", "Node.js", "Express", "API Design"],
+        reasoning: "Great combination of client layout design and server querying capabilities."
+      },
+      {
+        roleName: "Database Administrator",
+        description: "Specializes in relational/non-relational database design, query caching, indexing configurations, and scalable schemas.",
+        requiredSkills: ["MySQL", "Database", "MongoDB", "SQL", "Database Design", "Redis"],
+        reasoning: "Consider taking backend schema challenges to reinforce performance optimizations."
+      }
+    ];
+
+    async function loadRecommendations() {
+      const loading = document.getElementById('loading-state');
+      const container = document.getElementById('recommendations-container');
+      const emptyState = document.getElementById('no-skills-state');
+
+      loading.style.display = "block";
+      container.style.display = "none";
+      emptyState.style.display = "none";
+
+      try {
+        const res = await fetch("/api/career/recommend");
+        const data = await res.json();
+        
+        loading.style.display = "none";
+        if (data.success && data.data.length > 0) {
+          renderRecs(data.data);
+        } else {
+          generateMockRecommendations();
+        }
+      } catch (err) {
+        console.warn("Backend offline, generating real-time match analysis locally:", err.message);
+        loading.style.display = "none";
+        generateMockRecommendations();
+      }
+    }
+
+    function generateMockRecommendations() {
+      const container = document.getElementById('recommendations-container');
+      const emptyState = document.getElementById('no-skills-state');
+      
+      // Get skills list from localStorage (same as portfolio page)
+      let skillsList = ["React", "CSS Variables", "JavaScript", "PHP", "MySQL"];
+      if (localStorage.getItem('candidate_profile')) {
+        const prof = JSON.parse(localStorage.getItem('candidate_profile'));
+        skillsList = prof.skills || [];
+      }
+
+      if (skillsList.length === 0) {
+        emptyState.style.display = "block";
+        container.style.display = "none";
+        return;
+      }
+
+      // Calculate matching ratios dynamically!
+      const recs = jobTemplates.map(tpl => {
+        const matched = tpl.requiredSkills.filter(s => 
+          skillsList.some(userSkill => userSkill.toLowerCase() === s.toLowerCase())
+        );
+        const missing = tpl.requiredSkills.filter(s => 
+          !skillsList.some(userSkill => userSkill.toLowerCase() === s.toLowerCase())
+        );
+        const matchPercentage = Math.round((matched.length / tpl.requiredSkills.length) * 100);
+
+        return {
+          roleName: tpl.roleName,
+          description: tpl.description,
+          matchPercentage,
+          matchedSkills: matched,
+          missingSkills: missing,
+          reasoning: tpl.reasoning
+        };
+      });
+
+      // Sort by match percentage descending
+      recs.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+      renderRecs(recs);
+    }
+
+    function renderRecs(data) {
+      const container = document.getElementById('recommendations-container');
+      container.innerHTML = "";
+      container.style.display = "flex";
+
+      data.forEach(rec => {
+        const isHighMatch = rec.matchPercentage >= 70;
+        const isMediumMatch = rec.matchPercentage >= 40 && rec.matchPercentage < 70;
+
+        const card = document.createElement('div');
+        card.className = "card";
+        card.style.cssText = `padding: 2rem; border-left: 5px solid ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--text-muted)'}; margin-bottom: 1.5rem;`;
+
+        let matchedBadges = rec.matchedSkills.length === 0 
+          ? `<span style="font-size: 0.85rem; color: var(--text-muted);">None yet</span>`
+          : rec.matchedSkills.map(sk => `<span class="badge badge-success" style="font-size: 0.75rem; margin-right: 0.4rem; margin-bottom: 0.4rem;">${sk}</span>`).join("");
+
+        let missingBadges = rec.missingSkills.length === 0
+          ? `<span style="font-size: 0.85rem; color: var(--success); font-weight: 600;">✓ Fully qualified</span>`
+          : rec.missingSkills.map(sk => `<span class="badge" style="background-color: var(--bg-tertiary); color: var(--text-secondary); font-size: 0.75rem; border: 1px solid var(--border-color); margin-right: 0.4rem; margin-bottom: 0.4rem;">${sk}</span>`).join("");
+
+        card.innerHTML = `
+          <div class="flex-between" style="margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 style="font-size: 1.4rem; font-family: var(--font-display);">${rec.roleName}</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; max-width: 600px;">
+                ${rec.description}
+              </p>
+            </div>
+            
+            <div class="flex-center" style="
+              flex-direction: column; 
+              padding: 0.75rem 1.25rem; 
+              border-radius: var(--radius-md); 
+              background-color: ${isHighMatch ? 'var(--success-light)' : isMediumMatch ? 'var(--warning-light)' : 'var(--bg-tertiary)'}; 
+              color: ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--text-secondary)'};
+              border: 1px solid ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--border-color)'};
+            ">
+              <span style="font-size: 1.8rem; font-weight: 800; line-height: 1;">${rec.matchPercentage}%</span>
+              <span style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-top: 0.25rem;">Match Ratio</span>
+            </div>
+          </div>
+
+          <!-- Skill Maps -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+            <div>
+              <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--success); display: block; margin-bottom: 0.5rem;">
+                Matched Skills (${rec.matchedSkills.length})
+              </strong>
+              <div style="display: flex; flex-wrap: wrap;">
+                ${matchedBadges}
+              </div>
+            </div>
+
+            <div>
+              <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+                Missing Skills (${rec.missingSkills.length})
+              </strong>
+              <div style="display: flex; flex-wrap: wrap;">
+                ${missingBadges}
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations reasoning statement -->
+          <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 520px;">
+              💡 <strong>Engine Feedback:</strong> ${rec.reasoning}
+            </p>
+            ${rec.missingSkills.length > 0 ? `<a href="marketplace.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Find Challenges</a>` : ""}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    loadRecommendations();
+  </script>
+</body>
+</html>

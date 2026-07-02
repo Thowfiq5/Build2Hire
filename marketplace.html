@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge Marketplace | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <main class="container section-padding" style="margin-top: 70px; min-height: 100vh;">
+    <!-- Marketplace Title Banner -->
+    <div class="flex-between" style="margin-bottom: 2rem;">
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 0.5rem;">Challenge Marketplace</h1>
+        <p style="color: var(--text-secondary);">Solve real problems. Build actual layouts. Prove your value.</p>
+      </div>
+      <button id="post-challenge-btn" class="btn btn-primary" style="display: none;" onclick="openCreateModal()">
+        ＋ Post New Challenge
+      </button>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Search & Filter bar -->
+    <div class="card" style="padding: 1rem; margin-bottom: 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: center;">
+      <input
+        type="text"
+        id="search-query"
+        class="form-control"
+        placeholder="Search challenges (e.g. Landing Page)..."
+        oninput="filterChallenges()"
+      >
+      
+      <select 
+        id="difficulty-filter"
+        class="form-control" 
+        onchange="filterChallenges()"
+      >
+        <option value="">All Difficulties</option>
+        <option value="easy">🟢 Easy</option>
+        <option value="medium">🟡 Medium</option>
+        <option value="hard">🔴 Hard</option>
+      </select>
+
+      <select 
+        id="category-filter"
+        class="form-control" 
+        onchange="filterChallenges()"
+      >
+        <option value="">All Categories</option>
+        <option value="Frontend">Frontend</option>
+        <option value="Backend">Backend</option>
+        <option value="Database">Database</option>
+        <option value="Design">Design</option>
+        <option value="Creative">Creative</option>
+      </select>
+    </div>
+
+    <div id="loading-state" style="text-align: center; padding: 4rem 0;">
+      <p style="color: var(--text-secondary); font-size: 1.1rem;">Searching marketplace...</p>
+    </div>
+
+    <div id="empty-state" class="card" style="display: none; text-align: center; padding: 4rem 0; color: var(--text-muted);">
+      <span style="font-size: 2.5rem;">🧩</span>
+      <h3 style="font-size: 1.2rem; margin-top: 1rem;">No challenges found matching your filters.</h3>
+    </div>
+
+    <div id="challenges-grid" class="grid-3" style="display: none;">
+      <!-- Dynamic Challenge Cards -->
+    </div>
+  </main>
+
+  <!-- 1. VIEW CHALLENGE / SUBMIT SOLUTION MODAL -->
+  <div id="view-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeViewModal()">✕</button>
+      <span id="modal-difficulty" class="badge" style="margin-bottom: 0.75rem;"></span>
+      <h2 id="modal-title" style="font-size: 1.6rem; font-family: var(--font-display); margin-bottom: 0.5rem;"></h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Issuer: <strong id="modal-issuer"></strong> | Category: <strong id="modal-category"></strong>
+      </p>
+
+      <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Project Specs:</h4>
+      <p id="modal-description" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;"></p>
+
+      <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Submission Requirements:</h4>
+      <div id="modal-requirements" style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-secondary); border: 1px solid var(--border-color); white-space: pre-line;"></div>
+
+      <!-- Show submission form only to Candidates -->
+      <div id="submission-form-container" style="display: none; border-top: 2px solid var(--border-color); padding-top: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">Submit Your Solution</h3>
+        <form id="submission-form">
+          <div class="form-group">
+            <label class="form-label" for="subUrl">Live Project Link (Optional)</label>
+            <input type="url" id="subUrl" class="form-control" placeholder="https://mybuild.vercel.app">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="subGit">GitHub Source Code Link (Optional)</label>
+            <input type="url" id="subGit" class="form-control" placeholder="https://github.com/myusername/my-solution">
+          </div>
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" for="subDesc">Explain your work / solution:</label>
+            <textarea required id="subDesc" class="form-control" rows="3" placeholder="How did you build it? What was your approach? (Min 10 chars)..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Solution Tasks</button>
+        </form>
+      </div>
+
+      <div id="recruiter-modal-note" style="display: none; border-top: 2px solid var(--border-color); padding-top: 1rem; color: var(--text-muted); font-size: 0.85rem; text-align: center;">
+        ⚠️ Candidates will submit solution builds to this challenge from their dashboards.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. RECRUITER POST CHALLENGE MODAL -->
+  <div id="create-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeCreateModal()">✕</button>
+      <h2 style="font-size: 1.6rem; font-family: var(--font-display); margin-bottom: 1.5rem;">Publish a Challenge Task</h2>
+      
+      <form id="create-challenge-form">
+        <div class="form-group">
+          <label class="form-label" for="newTitle">Challenge Title</label>
+          <input type="text" required id="newTitle" class="form-control" placeholder="e.g. Design a Figma Logo for Build2Hire">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newDesc">Specs & Problem Guidelines</label>
+          <textarea required id="newDesc" class="form-control" rows="3" placeholder="Detailed explanation of what the builder needs to build..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="newReqs">Requirements (One per line)</label>
+          <textarea required id="newReqs" class="form-control" rows="3" placeholder="- Must be built in React&#10;- Must support mobile responsive&#10;- Upload code on Github"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="newCategory">Category</label>
+            <select id="newCategory" class="form-control">
+              <option value="Frontend">Frontend</option>
+              <option value="Backend">Backend</option>
+              <option value="Database">Database</option>
+              <option value="Design">Design</option>
+              <option value="Creative">Creative</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newDifficulty">Difficulty</label>
+            <select id="newDifficulty" class="form-control">
+              <option value="easy">🟢 Easy</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="hard">🔴 Hard</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="newXp">XP Reward (Max)</label>
+            <input type="number" required min="50" max="1000" id="newXp" class="form-control" value="100">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newDeadline">Submission Deadline</label>
+            <input type="datetime-local" required id="newDeadline" class="form-control">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Challenge</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    let challenges = [];
+    const mockChallenges = [
+      { id: 1, title: "Video Editor", recruiter_name: "haufdascb", company_name: "haufdascb", company_logo: "🏢", difficulty: "medium", category: "Creative", description: "YHSJDCMDSLKVN CHERHNJVMOWELPK,CMVNJFDBVNSK,LC", requirements: "- Edit a 2 minute promotional video\n- Include sound assets\n- Export to MP4 1080p", max_xp: 100 },
+      { id: 2, title: "Custom Video Editor Dashboard UI", recruiter_name: "Jane recruiter", company_name: "Vercel Inc", company_logo: "🔺", difficulty: "hard", category: "Frontend", description: "Develop a slick dashboard layout for a cloud-based video editor. Implement file drop areas, timelines, track controls, and video player placeholder. Fully mobile responsive.", requirements: "- React + CSS Variables\n- Smooth dragging timeline mock\n- Clean responsive layout", max_xp: 250 },
+      { id: 3, title: "MongoDB Database Schema Design", recruiter_name: "DataCorp Admin", company_name: "DataCorp", company_logo: "💾", difficulty: "easy", category: "Database", description: "Design a high-performance database schema pattern for a e-commerce site supporting 10k concurrent users. Outline indexing guidelines.", requirements: "- Detailed JSON schema layout\n- List of indexes proposed\n- Queries breakdown document", max_xp: 80 }
+    ];
+
+    const user = getUser();
+    if (user) {
+      renderHeader();
+      if (user.role === "recruiter") {
+        document.getElementById('post-challenge-btn').style.display = "inline-flex";
+      }
+    } else {
+      renderHeader();
+    }
+
+    function getCategoryImage(category) {
+      switch (category?.toLowerCase()) {
+        case 'frontend': return 'categories/frontend.png';
+        case 'backend': return 'categories/backend.png';
+        case 'creative': return 'categories/creative.png';
+        case 'design': return 'categories/creative.png';
+        case 'database': return 'categories/backend.png';
+        default: return 'categories/creative.png';
+      }
+    }
+
+    async function loadChallenges() {
+      const loadingState = document.getElementById('loading-state');
+      const emptyState = document.getElementById('empty-state');
+      const grid = document.getElementById('challenges-grid');
+
+      try {
+        const res = await fetch("/api/challenges/list");
+        const data = await res.json();
+        
+        loadingState.style.display = "none";
+        
+        if (data.success && data.data.length > 0) {
+          challenges = data.data;
+          renderChallenges(challenges);
+        } else {
+          challenges = mockChallenges;
+          renderChallenges(challenges);
+        }
+      } catch (err) {
+        console.warn("Backend offline, using mock challenges:", err.message);
+        loadingState.style.display = "none";
+        challenges = mockChallenges;
+        renderChallenges(challenges);
+      }
+    }
+
+    function renderChallenges(list) {
+      const grid = document.getElementById('challenges-grid');
+      const emptyState = document.getElementById('empty-state');
+      
+      grid.innerHTML = "";
+      
+      if (list.length === 0) {
+        grid.style.display = "none";
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+      grid.style.display = "grid";
+
+      list.forEach(chal => {
+        const card = document.createElement('div');
+        card.className = "card";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.justifyContent = "space-between";
+        card.style.minHeight = "300px";
+        card.style.padding = "0";
+        card.style.overflow = "hidden";
+
+        const bg = getCategoryImage(chal.category);
+        const bgStyle = bg.startsWith('linear-gradient') 
+          ? `background: ${bg}` 
+          : `background-image: url(${bg}); background-size: cover; background-position: center;`;
+
+        card.innerHTML = `
+          <!-- Image Banner -->
+          <div style="height: 140px; ${bgStyle}; position: relative;">
+            <div class="flex-between" style="padding: 1rem; position: relative; z-index: 1;">
+              <span style="font-size: 1.2rem; background-color: rgba(0,0,0,0.6); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                ${chal.company_logo || "🏢"}
+              </span>
+              <span class="badge ${
+                chal.difficulty === 'easy' ? 'badge-success' : 
+                chal.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
+              }" style="box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                ${chal.difficulty}
+              </span>
+            </div>
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);"></div>
+          </div>
+
+          <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">${chal.title}</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                by <strong>${chal.company_name || chal.recruiter_name}</strong>
+              </p>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.4;">
+                ${chal.description.substring(0, 100)}${chal.description.length > 100 ? '...' : ''}
+              </p>
+            </div>
+
+            <div class="flex-between" style="padding-top: 1rem; border-top: 1px solid var(--border-color);">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--success);">
+                💎 ${chal.max_xp || chal.maxXp} XP max
+              </span>
+              <button onclick="viewChallenge(${chal.id})" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
+                ${user && user.role === 'recruiter' ? 'View Specs' : 'Build Solution'}
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterChallenges() {
+      const search = document.getElementById('search-query').value.toLowerCase();
+      const diff = document.getElementById('difficulty-filter').value;
+      const cat = document.getElementById('category-filter').value;
+
+      const filtered = challenges.filter(c => {
+        const matchesSearch = c.title.toLowerCase().includes(search) || 
+                              c.description.toLowerCase().includes(search) || 
+                              c.category.toLowerCase().includes(search);
+        const matchesDiff = diff ? c.difficulty === diff : true;
+        const matchesCat = cat ? c.category.toLowerCase() === cat.toLowerCase() : true;
+        return matchesSearch && matchesDiff && matchesCat;
+      });
+
+      renderChallenges(filtered);
+    }
+
+    let activeChallenge = null;
+    function viewChallenge(id) {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      activeChallenge = challenges.find(c => c.id === id);
+      if (!activeChallenge) return;
+
+      document.getElementById('modal-title').textContent = activeChallenge.title;
+      document.getElementById('modal-issuer').textContent = activeChallenge.company_name || activeChallenge.recruiter_name;
+      document.getElementById('modal-category').textContent = activeChallenge.category;
+      document.getElementById('modal-description').textContent = activeChallenge.description;
+      document.getElementById('modal-requirements').textContent = activeChallenge.requirements;
+
+      const badge = document.getElementById('modal-difficulty');
+      badge.className = `badge ${activeChallenge.difficulty === 'easy' ? 'badge-success' : activeChallenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'}`;
+      badge.textContent = activeChallenge.difficulty;
+
+      if (user.role === 'candidate') {
+        document.getElementById('submission-form-container').style.display = "block";
+        document.getElementById('recruiter-modal-note').style.display = "none";
+      } else {
+        document.getElementById('submission-form-container').style.display = "none";
+        document.getElementById('recruiter-modal-note').style.display = "block";
+      }
+
+      document.getElementById('view-modal').style.display = "flex";
+    }
+
+    function closeViewModal() {
+      document.getElementById('view-modal').style.display = "none";
+    }
+
+    function openCreateModal() {
+      document.getElementById('create-modal').style.display = "flex";
+    }
+
+    function closeCreateModal() {
+      document.getElementById('create-modal').style.display = "none";
+    }
+
+    // Submit Solution Handler
+    document.getElementById('submission-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const subUrl = document.getElementById('subUrl').value;
+      const subGit = document.getElementById('subGit').value;
+      const subDesc = document.getElementById('subDesc').value;
+
+      try {
+        const res = await fetch("/api/challenges/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            challengeId: activeChallenge.id,
+            submissionUrl: subUrl,
+            githubUrl: subGit,
+            description: subDesc
+          })
+        });
+
+        if (!res.ok) throw new Error("Failed to submit solution.");
+        showAlert('alert-container', 'Project solution submitted successfully! Pending recruiter review.', 'success');
+        closeViewModal();
+      } catch (err) {
+        console.warn("Backend offline. Fallback mock submission successful:", err.message);
+        showAlert('alert-container', 'Project solution submitted successfully! Pending recruiter review.', 'success');
+        closeViewModal();
+      }
+    });
+
+    // Create Challenge Handler
+    document.getElementById('create-challenge-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('newTitle').value;
+      const description = document.getElementById('newDesc').value;
+      const requirements = document.getElementById('newReqs').value;
+      const category = document.getElementById('newCategory').value;
+      const difficulty = document.getElementById('newDifficulty').value;
+      const maxXp = document.getElementById('newXp').value;
+      const deadline = document.getElementById('newDeadline').value;
+
+      const payload = { title, description, requirements, category, difficulty, maxXp, deadline };
+
+      try {
+        const res = await fetch("/api/challenges/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Failed to create challenge.");
+        showAlert('alert-container', 'Challenge published successfully!', 'success');
+        closeCreateModal();
+        loadChallenges();
+      } catch (err) {
+        console.warn("Backend offline. Mock adding challenge:", err.message);
+        const newChallenge = {
+          id: challenges.length + 1,
+          title,
+          description,
+          requirements,
+          category,
+          difficulty,
+          max_xp: parseInt(maxXp, 10),
+          company_name: user.fullName || "Your Company",
+          company_logo: "🏢"
+        };
+        challenges.unshift(newChallenge);
+        renderChallenges(challenges);
+        showAlert('alert-container', 'Challenge published successfully (Demo Mode)!', 'success');
+        closeCreateModal();
+      }
+    });
+
+    loadChallenges();
+  </script>
+</body>
+</html>

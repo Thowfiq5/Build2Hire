@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiring Board | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
+            Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="recruiter-dashboard.html" class="sidebar-link active">
+                💼 <span>Hiring Board</span>
+              </a>
+            </li>
+            <li>
+              <a href="marketplace.html" class="sidebar-link">
+                🧩 <span>All Challenges</span>
+              </a>
+            </li>
+            <li>
+              <a href="leaderboard.html" class="sidebar-link">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
+        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">recruiter</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <!-- Welcome Banner -->
+      <div class="card" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 1.6rem; font-family: var(--font-display); margin-bottom: 0.5rem;">
+            Welcome, <span id="recruiter-name">Jane Recruiter</span>!
+          </h2>
+          <p style="color: var(--text-secondary);">
+            Hiring coordinator for <strong id="recruiter-company">InnovateTech</strong>
+          </p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+            📍 Remote | Tech Industry
+          </p>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem; flex-direction: column; justify-content: center; padding-left: 1.5rem; border-left: 1px solid var(--border-color);">
+          <span style="font-size: 0.85rem;">📋 Published Tasks: <strong id="stat-challenges">0</strong></span>
+          <span style="font-size: 0.85rem;">📥 Submissions to Grade: <strong id="stat-pending" style="color: var(--warning);">0</strong></span>
+          <span style="font-size: 0.85rem;">🤝 Scheduled Interviews: <strong id="stat-interviews">0</strong></span>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- Navigation tabs -->
+      <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+        <button id="tab-submissions" onclick="switchTab('submissions')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--primary); border-bottom: 2px solid var(--primary);">
+          Grade Submissions (<span id="tab-submissions-count">0</span>)
+        </button>
+        <button id="tab-pipeline" onclick="switchTab('pipeline')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
+          Shortlist Pipeline (<span id="tab-pipeline-count">0</span>)
+        </button>
+        <button id="tab-interviews" onclick="switchTab('interviews')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
+          Scheduled Interviews (<span id="tab-interviews-count">0</span>)
+        </button>
+        <button id="tab-challenges" onclick="switchTab('challenges')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
+          My Published Tasks (<span id="tab-challenges-count">0</span>)
+        </button>
+      </div>
+
+      <!-- TAB CONTENT: GRADE SUBMISSIONS -->
+      <div id="content-submissions" class="tab-content">
+        <div id="submissions-list" style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Submissions render here -->
+        </div>
+      </div>
+
+      <!-- TAB CONTENT: PIPELINE -->
+      <div id="content-pipeline" class="tab-content" style="display: none;">
+        <div class="card" style="padding: 1rem; overflow-x: auto;">
+          <table class="leaderboard-table" style="width: 100%;">
+            <thead>
+              <tr>
+                <th class="leaderboard-th">Candidate</th>
+                <th class="leaderboard-th">Challenge Task</th>
+                <th class="leaderboard-th">Talent Score</th>
+                <th class="leaderboard-th">Status</th>
+                <th class="leaderboard-th">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pipeline-table-body">
+              <!-- Pipeline rows render here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT: INTERVIEWS -->
+      <div id="content-interviews" class="tab-content" style="display: none;">
+        <div id="interviews-list" style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Interviews render here -->
+        </div>
+      </div>
+
+      <!-- TAB CONTENT: MY CHALLENGES -->
+      <div id="content-challenges" class="tab-content" style="display: none;">
+        <div id="challenges-list" class="grid-3">
+          <!-- Recruiter challenges render here -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- 1. GRADE MODAL -->
+  <div id="grade-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeGradeModal()">✕</button>
+      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1rem;">Review Submission</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+        Candidate: <strong id="grade-candidate"></strong>
+      </p>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Challenge task: <strong id="grade-task"></strong>
+      </p>
+
+      <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
+        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Candidate Explanation:</h4>
+        <p id="grade-desc" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; white-space: pre-line;"></p>
+        
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+          <a id="grade-github" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">View Github repo</a>
+          <a id="grade-live" href="#" target="_blank" class="btn btn-primary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">View Live demo</a>
+        </div>
+      </div>
+
+      <form id="grading-form">
+        <div class="form-group">
+          <label class="form-label" for="scoreInput">Assign Grade (0 - 100)</label>
+          <input type="number" required min="0" max="100" id="scoreInput" class="form-control" placeholder="e.g. 85">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label" for="feedbackInput">Review Feedback</label>
+          <textarea required id="feedbackInput" class="form-control" rows="3" placeholder="Give technical feedback to the candidate..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Review Grade</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. SCHEDULER MODAL -->
+  <div id="scheduler-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeSchedulerModal()">✕</button>
+      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem;">Schedule Interview</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Candidate: <strong id="sched-candidate" style="color: var(--primary);"></strong>
+      </p>
+
+      <form id="scheduler-form">
+        <div class="form-group">
+          <label class="form-label" for="meetDate">Date & Time</label>
+          <input type="datetime-local" required id="meetDate" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="meetLink">Meeting URL (Google Meet / Zoom)</label>
+          <input type="url" required id="meetLink" class="form-control" placeholder="https://meet.google.com/xyz-abc-def">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label" for="meetNotes">Organizer Notes (Optional)</label>
+          <textarea id="meetNotes" class="form-control" rows="2" placeholder="e.g. Technical interview focusing on CSS animations..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Invite</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const user = getUser();
+    if (!user || user.role !== "recruiter") {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById('user-role-badge').textContent = user.role;
+      document.getElementById('recruiter-name').textContent = user.fullName || "Jane Recruiter";
+      renderHeader();
+    }
+
+    // Mock Dashboard Data Database
+    let dashboardData = {
+      recruiter: {
+        full_name: user.fullName || "Jane Recruiter",
+        company_name: "InnovateTech",
+        location: "San Francisco, CA",
+        industry: "Information Technology"
+      },
+      challenges: [
+        { id: 1, title: "Custom Video Editor Dashboard UI", difficulty: "hard", category: "Frontend", max_xp: 250 },
+        { id: 2, title: "Video Editor", difficulty: "medium", category: "Creative", max_xp: 100 }
+      ],
+      submissions: [
+        { id: 101, candidate_name: "Alex Rivera", challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, current_level: "Elite Talent", status: "pending", description: "Created an in-browser timeline drop zone with canvas timeline rendering and responsive grid views.", github_url: "https://github.com/alexrivera/timeline", submission_url: "https://timeline-demo.vercel.app" },
+        { id: 102, candidate_name: "Sarah Chen", challenge_title: "Video Editor", talent_score: 92, current_level: "Elite Talent", status: "pending", description: "Edited the 2-minute promotional clip with clean overlays and high compression format.", github_url: "", submission_url: "https://vimeo.com/sarahvid" }
+      ],
+      applications: [
+        { id: 201, candidate_name: "Alex Rivera", challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, status: "applied" },
+        { id: 202, candidate_name: "Sarah Chen", challenge_title: "Video Editor", talent_score: 92, status: "shortlisted" }
+      ],
+      interviews: [
+        { id: 301, candidate_name: "Marcus Aurelius", challenge_title: "Custom Video Editor Dashboard UI", scheduled_at: "2026-07-10T15:00:00", location_url: "https://meet.google.com/xyz-abc-def", notes: "Review timeline grid coding details." }
+      ]
+    };
+
+    // Load from LocalStorage if demo state exists
+    if (localStorage.getItem('recruiter_dashboard_data')) {
+      dashboardData = JSON.parse(localStorage.getItem('recruiter_dashboard_data'));
+    }
+
+    function saveState() {
+      localStorage.setItem('recruiter_dashboard_data', JSON.stringify(dashboardData));
+      updateStats();
+      renderAllTabs();
+    }
+
+    function updateStats() {
+      const pendingSubCount = dashboardData.submissions.filter(s => s.status === 'pending').length;
+      
+      document.getElementById('stat-challenges').textContent = dashboardData.challenges.length;
+      document.getElementById('stat-pending').textContent = pendingSubCount;
+      document.getElementById('stat-interviews').textContent = dashboardData.interviews.length;
+
+      document.getElementById('tab-submissions-count').textContent = pendingSubCount;
+      document.getElementById('tab-pipeline-count').textContent = dashboardData.applications.length;
+      document.getElementById('tab-interviews-count').textContent = dashboardData.interviews.length;
+      document.getElementById('tab-challenges-count').textContent = dashboardData.challenges.length;
+    }
+
+    let activeTab = 'submissions';
+    function switchTab(tab) {
+      activeTab = tab;
+      
+      // Update Tab CSS
+      const tabs = ['submissions', 'pipeline', 'interviews', 'challenges'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === tab) {
+          btn.style.color = "var(--primary)";
+          btn.style.borderBottom = "2px solid var(--primary)";
+        } else {
+          btn.style.color = "var(--text-secondary)";
+          btn.style.borderBottom = "none";
+        }
+        
+        const content = document.getElementById(`content-${t}`);
+        content.style.display = t === tab ? "block" : "none";
+      });
+      
+      renderTabContent(tab);
+    }
+
+    function renderAllTabs() {
+      renderTabContent('submissions');
+      renderTabContent('pipeline');
+      renderTabContent('interviews');
+      renderTabContent('challenges');
+    }
+
+    function renderTabContent(tab) {
+      if (tab === 'submissions') {
+        const list = document.getElementById('submissions-list');
+        const pending = dashboardData.submissions.filter(s => s.status === 'pending');
+        
+        list.innerHTML = "";
+        if (pending.length === 0) {
+          list.innerHTML = `
+            <div class="card" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <p>All candidate submissions have been reviewed and graded! Good job.</p>
+            </div>
+          `;
+          return;
+        }
+
+        pending.forEach(sub => {
+          const card = document.createElement('div');
+          card.className = "card flex-between";
+          card.style.padding = "1.25rem";
+          card.innerHTML = `
+            <div>
+              <strong style="font-size: 1.1rem; display: block;">${sub.candidate_name}</strong>
+              <span style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                Submitted for: <strong>${sub.challenge_title}</strong>
+              </span>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Talent Score: <strong style="color: var(--primary);">${Math.round(sub.talent_score)}</strong> | Level: <strong>${sub.current_level}</strong>
+              </p>
+            </div>
+            
+            <button onclick="openGradeModal(${sub.id})" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
+              Review Build
+            </button>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+      if (tab === 'pipeline') {
+        const tbody = document.getElementById('pipeline-table-body');
+        tbody.innerHTML = "";
+        
+        if (dashboardData.applications.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No applications found in the pipeline yet.</td></tr>`;
+          return;
+        }
+
+        dashboardData.applications.forEach(app => {
+          let badgeClass = "badge-primary";
+          if (app.status === 'shortlisted') badgeClass = "badge-warning";
+          if (app.status === 'hired') badgeClass = "badge-success";
+          if (app.status === 'rejected') badgeClass = "badge-danger";
+
+          const tr = document.createElement('tr');
+          tr.className = "leaderboard-tr";
+          
+          let actionBtns = "";
+          if (app.status === 'applied') {
+            actionBtns = `<button onclick="openSchedulerModal(${app.id})" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">🗓️ Schedule Meet</button>`;
+          } else if (app.status === 'shortlisted') {
+            actionBtns = `<button onclick="changeStatus(${app.id}, 'hired')" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background-color: var(--success);">🎉 Hire Candidate</button>`;
+          }
+          
+          if (app.status !== 'rejected' && app.status !== 'hired') {
+            actionBtns += ` <button onclick="changeStatus(${app.id}, 'rejected')" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; border: 1px solid var(--danger); color: var(--danger); margin-left: 5px;">Reject</button>`;
+          }
+
+          tr.innerHTML = `
+            <td class="leaderboard-td">${app.candidate_name}</td>
+            <td class="leaderboard-td">${app.challenge_title}</td>
+            <td class="leaderboard-td" style="font-weight: 700; color: var(--primary);">${Math.round(app.talent_score)}</td>
+            <td class="leaderboard-td">
+              <span class="badge ${badgeClass}">${app.status}</span>
+            </td>
+            <td class="leaderboard-td">${actionBtns}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      if (tab === 'interviews') {
+        const list = document.getElementById('interviews-list');
+        list.innerHTML = "";
+        
+        if (dashboardData.interviews.length === 0) {
+          list.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No upcoming scheduled interviews.</p>`;
+          return;
+        }
+
+        dashboardData.interviews.forEach(meet => {
+          const card = document.createElement('div');
+          card.className = "card flex-between";
+          card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--warning);";
+          card.innerHTML = `
+            <div>
+              <strong style="font-size: 1.1rem; display: block;">${meet.candidate_name}</strong>
+              <span style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">
+                Topic: Evaluation for <strong>${meet.challenge_title}</strong>
+              </span>
+              <p style="font-size: 0.85rem; color: var(--primary); margin-top: 0.25rem;">
+                🕒 Date: ${new Date(meet.scheduled_at).toLocaleString()}
+              </p>
+              ${meet.notes ? `<p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; border-left: 2px solid var(--border-color); padding-left: 0.5rem;">Notes: "${meet.notes}"</p>` : ""}
+            </div>
+            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+              Join Call 📞
+            </a>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+      if (tab === 'challenges') {
+        const list = document.getElementById('challenges-list');
+        list.innerHTML = "";
+        
+        if (dashboardData.challenges.length === 0) {
+          list.innerHTML = `<div class="card" style="text-align: center; padding: 2rem; color: var(--text-muted);"><p>You haven't published any challenges yet.</p></div>`;
+          return;
+        }
+
+        dashboardData.challenges.forEach(chal => {
+          const card = document.createElement('div');
+          card.className = "card";
+          card.style.cssText = "display: flex; flex-direction: column; justify-content: space-between;";
+          card.innerHTML = `
+            <div>
+              <span class="badge ${chal.difficulty === 'easy' ? 'badge-success' : chal.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'}" style="margin-bottom: 0.5rem;">
+                ${chal.difficulty}
+              </span>
+              <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${chal.title}</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                Max XP: <strong>${chal.max_xp} XP</strong> | Category: <strong>${chal.category}</strong>
+              </p>
+            </div>
+            <span class="badge badge-primary" style="padding: 0.4rem; align-self: flex-start; margin-top: 1rem;">
+              Active Status
+            </span>
+          `;
+          list.appendChild(card);
+        });
+      }
+    }
+
+    // Modal Action variables
+    let selectedSubmissionId = null;
+    let selectedApplicationId = null;
+
+    function openGradeModal(id) {
+      const sub = dashboardData.submissions.find(s => s.id === id);
+      if (!sub) return;
+      
+      selectedSubmissionId = id;
+      document.getElementById('grade-candidate').textContent = sub.candidate_name;
+      document.getElementById('grade-task').textContent = sub.challenge_title;
+      document.getElementById('grade-desc').textContent = sub.description;
+      
+      const gitLink = document.getElementById('grade-github');
+      if (sub.github_url) {
+        gitLink.style.display = "inline-flex";
+        gitLink.href = sub.github_url;
+      } else {
+        gitLink.style.display = "none";
+      }
+
+      const liveLink = document.getElementById('grade-live');
+      if (sub.submission_url) {
+        liveLink.style.display = "inline-flex";
+        liveLink.href = sub.submission_url;
+      } else {
+        liveLink.style.display = "none";
+      }
+
+      document.getElementById('grade-modal').style.display = "flex";
+    }
+
+    function closeGradeModal() {
+      document.getElementById('grade-modal').style.display = "none";
+    }
+
+    // Submit Grade Form
+    document.getElementById('grading-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const score = document.getElementById('scoreInput').value;
+      const feedback = document.getElementById('feedbackInput').value;
+
+      // Grade the submission
+      const sub = dashboardData.submissions.find(s => s.id === selectedSubmissionId);
+      if (sub) {
+        sub.status = "graded";
+        // Also update shortlist status in application pipeline
+        const app = dashboardData.applications.find(a => a.candidate_name === sub.candidate_name && a.challenge_title === sub.challenge_title);
+        if (app) {
+          app.status = "shortlisted";
+        }
+      }
+
+      document.getElementById('scoreInput').value = "";
+      document.getElementById('feedbackInput').value = "";
+      closeGradeModal();
+      
+      showAlert('alert-container', 'Graded successfully! Candidate shortlisted for pipeline.', 'success');
+      saveState();
+    });
+
+    function openSchedulerModal(appId) {
+      const app = dashboardData.applications.find(a => a.id === appId);
+      if (!app) return;
+      selectedApplicationId = appId;
+      document.getElementById('sched-candidate').textContent = app.candidate_name;
+      document.getElementById('scheduler-modal').style.display = "flex";
+    }
+
+    function closeSchedulerModal() {
+      document.getElementById('scheduler-modal').style.display = "none";
+    }
+
+    // Schedule Interview Form
+    document.getElementById('scheduler-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const meetDate = document.getElementById('meetDate').value;
+      const meetLink = document.getElementById('meetLink').value;
+      const meetNotes = document.getElementById('meetNotes').value;
+
+      const app = dashboardData.applications.find(a => a.id === selectedApplicationId);
+      if (app) {
+        app.status = "shortlisted";
+        
+        // Add to interviews list
+        const newMeet = {
+          id: Date.now(),
+          candidate_name: app.candidate_name,
+          challenge_title: app.challenge_title,
+          scheduled_at: meetDate,
+          location_url: meetLink,
+          notes: meetNotes
+        };
+        dashboardData.interviews.push(newMeet);
+      }
+
+      document.getElementById('meetDate').value = "";
+      document.getElementById('meetLink').value = "";
+      document.getElementById('meetNotes').value = "";
+      closeSchedulerModal();
+      
+      showAlert('alert-container', 'Interview invitation sent to candidate successfully!', 'success');
+      saveState();
+    });
+
+    function changeStatus(appId, nextStatus) {
+      const app = dashboardData.applications.find(a => a.id === appId);
+      if (app) {
+        app.status = nextStatus;
+        showAlert('alert-container', `Application status updated to "${nextStatus}".`, 'success');
+        saveState();
+      }
+    }
+
+    // Load initial states
+    updateStats();
+    renderAllTabs();
+  </script>
+</body>
+</html>

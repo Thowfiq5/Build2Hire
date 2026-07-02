@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Leaderboard | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <main class="container section-padding" style="margin-top: 70px; min-height: 100vh;">
+    <!-- Banner header -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1 style="font-family: var(--font-display); font-size: 2.4rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        Talent Leaderboard
+      </h1>
+      <p style="color: var(--text-secondary); font-size: 1.05rem;">
+        Real-time standings of top Builders ranked by their verification scores.
+      </p>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div id="loading-state" style="text-align: center; padding: 4rem 0;">
+      <p style="color: var(--text-secondary); font-size: 1.1rem;">Retrieving standings...</p>
+    </div>
+
+    <div id="empty-state" class="card" style="display: none; text-align: center; padding: 4rem 0; color: var(--text-muted); max-width: 800px; margin: 0 auto;">
+      <span style="font-size: 2.5rem;">🏆</span>
+      <h3 style="font-size: 1.2rem; margin-top: 1rem;">Leaderboard is empty. Be the first to build and score!</h3>
+    </div>
+
+    <div id="leaderboard-card" class="card" style="display: none; max-width: 1000px; margin: 0 auto; padding: 1.5rem; overflow-x: auto;">
+      <table class="leaderboard-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th class="leaderboard-th" style="width: 80px; text-align: center;">Rank</th>
+            <th class="leaderboard-th">Builder</th>
+            <th class="leaderboard-th">Level / XP</th>
+            <th class="leaderboard-th" style="text-align: center;">Scores Breakdown</th>
+            <th class="leaderboard-th" style="width: 120px; text-align: right;">Talent Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <!-- Dynamic Leaderboard entries go here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    renderHeader();
+
+    const mockLeaderboard = [
+      { id: 1, full_name: "Alex Rivera", avatar_url: "👨‍💻", current_level: "Elite Talent", xp_points: 4800, talent_score: 95, portfolio_score: 98, challenge_score: 92, assessment_score: 95 },
+      { id: 2, full_name: "Sarah Chen", avatar_url: "👩‍💻", current_level: "Elite Talent", xp_points: 4200, talent_score: 92, portfolio_score: 94, challenge_score: 90, assessment_score: 93 },
+      { id: 3, full_name: "Marcus Aurelius", avatar_url: "🤖", current_level: "Master Builder", xp_points: 3800, talent_score: 88, portfolio_score: 87, challenge_score: 89, assessment_score: 90 },
+      { id: 4, full_name: "Taylor Swift (Dev)", avatar_url: "👩‍🎤", current_level: "Master Builder", xp_points: 3100, talent_score: 84, portfolio_score: 82, challenge_score: 85, assessment_score: 88 },
+      { id: 5, full_name: "David Kim", avatar_url: "🧑‍💻", current_level: "Skilled Builder", xp_points: 2400, talent_score: 79, portfolio_score: 80, challenge_score: 78, assessment_score: 81 }
+    ];
+
+    async function loadLeaderboard() {
+      const loadingState = document.getElementById('loading-state');
+      const emptyState = document.getElementById('empty-state');
+      const leaderboardCard = document.getElementById('leaderboard-card');
+      const leaderboardBody = document.getElementById('leaderboard-body');
+
+      try {
+        const res = await fetch("/api/talent/leaderboard");
+        const data = await res.json();
+        
+        loadingState.style.display = "none";
+        
+        if (data.success && data.data.length > 0) {
+          renderTable(data.data);
+        } else {
+          emptyState.style.display = "block";
+        }
+      } catch (err) {
+        console.warn("Backend offline, using mock leaderboard data:", err.message);
+        loadingState.style.display = "none";
+        renderTable(mockLeaderboard);
+      }
+    }
+
+    function renderTable(data) {
+      const leaderboardCard = document.getElementById('leaderboard-card');
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      
+      leaderboardBody.innerHTML = "";
+      
+      data.forEach((cand, idx) => {
+        const rank = idx + 1;
+        let rankDisplay = `#${rank}`;
+        if (rank === 1) rankDisplay = "🥇";
+        else if (rank === 2) rankDisplay = "🥈";
+        else if (rank === 3) rankDisplay = "🥉";
+
+        const tr = document.createElement('tr');
+        tr.className = "leaderboard-tr";
+        tr.innerHTML = `
+          <td class="leaderboard-td" style="text-align: center; font-size: ${rank <= 3 ? '1.6rem' : '0.95rem'}; font-weight: 700;">
+            ${rankDisplay}
+          </td>
+          <td class="leaderboard-td">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.5rem;">${cand.avatar_url || "👤"}</span>
+              <div>
+                <strong style="font-size: 1rem;">${cand.full_name || cand.fullName}</strong>
+              </div>
+            </div>
+          </td>
+          <td class="leaderboard-td">
+            <span style="font-size: 0.85rem; font-weight: 600; display: block;">${cand.current_level}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">${cand.xp_points} XP</span>
+          </td>
+          <td class="leaderboard-td">
+            <div style="display: flex; gap: 1rem; font-size: 0.75rem; justify-content: center;">
+              <span title="Portfolio Score" style="padding: 0.2rem 0.5rem; border-radius: 4px; background-color: var(--primary-light); color: var(--primary); font-weight: 600;">
+                💼 Portfolio: ${Math.round(cand.portfolio_score)}
+              </span>
+              <span title="Challenges Score" style="padding: 0.2rem 0.5rem; border-radius: 4px; background-color: var(--secondary-light); color: var(--secondary); font-weight: 600;">
+                🧩 Challenge: ${Math.round(cand.challenge_score)}
+              </span>
+              <span title="Assessment Score" style="padding: 0.2rem 0.5rem; border-radius: 4px; background-color: var(--success-light); color: var(--success); font-weight: 600;">
+                ⚡ Quiz: ${Math.round(cand.assessment_score)}
+              </span>
+            </div>
+          </td>
+          <td class="leaderboard-td" style="text-align: right;">
+            <div style="display: inline-flex; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background-color: var(--primary-light); color: var(--primary); font-weight: 800; font-size: 1.1rem; border: 1px solid var(--border-glow); font-family: var(--font-display);">
+              ${Math.round(cand.talent_score)}
+            </div>
+          </td>
+        `;
+        leaderboardBody.appendChild(tr);
+      });
+      
+      leaderboardCard.style.display = "block";
+    }
+
+    loadLeaderboard();
+  </script>
+</body>
+</html>

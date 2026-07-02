@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Showcase Portfolio | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
+            Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="portfolio.html" class="sidebar-link active">
+                🎨 <span>My Showcase</span>
+              </a>
+            </li>
+            <li>
+              <a href="marketplace.html" class="sidebar-link">
+                🧩 <span>Challenges</span>
+              </a>
+            </li>
+            <li>
+              <a href="recommendations.html" class="sidebar-link">
+                🤖 <span>AI Recommendations</span>
+              </a>
+            </li>
+            <li>
+              <a href="leaderboard.html" class="sidebar-link">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
+        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; marginTop: 0.25rem;">candidate</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">My Showcase Portfolio</h2>
+          <p style="color: var(--text-secondary);">Don't tell recruiters what you can do. Build it and show them here.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <div class="grid-2col" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.5rem;">
+        
+        <!-- LEFT COLUMN: PROFILE DETAILS & SKILLS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <div class="card">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              👤 Profile Credentials
+            </h3>
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label" for="fullName">Full Name</label>
+                <input type="text" required id="fullName" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input type="tel" id="phone" class="form-control" placeholder="+1 (555) 000-0000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="bio">Professional Bio</label>
+                <textarea id="bio" class="form-control" rows="4" style="resize: vertical;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="githubUrl">GitHub URL</label>
+                <input type="url" id="githubUrl" class="form-control" placeholder="https://github.com/username">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="linkedinUrl">LinkedIn URL</label>
+                <input type="url" id="linkedinUrl" class="form-control" placeholder="https://linkedin.com/in/username">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" for="portfolioWebsite">Live Portfolio Website</label>
+                <input type="url" id="portfolioWebsite" class="form-control" placeholder="https://mywebsite.com">
+              </div>
+
+              <!-- Skills Section -->
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label">My Skills Tagging</label>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                  <input type="text" id="newSkill" class="form-control" placeholder="e.g. Next.js" style="flex-grow: 1;">
+                  <button type="button" onclick="addSkillTag()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Add</button>
+                </div>
+
+                <div id="skills-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 40px; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                  <!-- Dynamic Skill badges -->
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Save Profile Details</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: PROJECTS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <div class="card">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              🚀 Showcase a New Project
+            </h3>
+            <form id="project-form">
+              <div class="form-group">
+                <label class="form-label" for="projectTitle">Project Title</label>
+                <input type="text" required id="projectTitle" class="form-control" placeholder="e.g. Next.js E-Commerce Store">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectDesc">Project Description</label>
+                <textarea required id="projectDesc" class="form-control" rows="3" placeholder="Explain what technologies you used, the core features you built, and what problem it solves..." style="resize: vertical;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectLink">Live Website Link (Optional)</label>
+                <input type="url" id="projectLink" class="form-control" placeholder="https://myproject.com">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectGit">GitHub Source Code Link (Optional)</label>
+                <input type="url" id="projectGit" class="form-control" placeholder="https://github.com/username/project">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" for="projectThumb">Thumbnail Emoji or Icon (Optional)</label>
+                <input type="text" id="projectThumb" class="form-control" placeholder="e.g. 🛒, 🎨, 🌐 (default is 📁)">
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Project Showcase</button>
+            </form>
+          </div>
+
+          <!-- Published Projects List -->
+          <div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Published Projects (<span id="project-count">0</span>)</h3>
+            <div id="projects-list-container">
+              <!-- Dynamic Project cards -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const user = getUser();
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById('user-role-badge').textContent = user.role;
+      renderHeader();
+    }
+
+    let candidateProfile = {
+      fullName: user.fullName || "John Builder",
+      phone: "+1 (555) 019-2834",
+      bio: "Full Stack Engineer passionate about UI aesthetics and robust database architectures. Building modular platforms.",
+      githubUrl: "https://github.com/johnbuilder",
+      linkedinUrl: "https://linkedin.com/in/johnbuilder",
+      portfolioWebsite: "https://johnbuilder.vercel.app",
+      skills: ["React", "CSS Variables", "JavaScript", "PHP", "MySQL"]
+    };
+
+    let projectsList = [
+      { id: 1, title: "Next.js E-Commerce Store", description: "Completed storefront with fully responsive design, cart features, and mock checkout. Uses CSS variables for absolute design consistency.", github_url: "https://github.com/johnbuilder/store", project_url: "https://mystore-react.vercel.app", thumbnail_url: "🛒" }
+    ];
+
+    // Load from LocalStorage if exists, to make it fully interactive!
+    if (localStorage.getItem('candidate_profile')) {
+      candidateProfile = JSON.parse(localStorage.getItem('candidate_profile'));
+    }
+    if (localStorage.getItem('candidate_projects')) {
+      projectsList = JSON.parse(localStorage.getItem('candidate_projects'));
+    }
+
+    function initFormFields() {
+      document.getElementById('fullName').value = candidateProfile.fullName;
+      document.getElementById('phone').value = candidateProfile.phone;
+      document.getElementById('bio').value = candidateProfile.bio;
+      document.getElementById('githubUrl').value = candidateProfile.githubUrl;
+      document.getElementById('linkedinUrl').value = candidateProfile.linkedinUrl;
+      document.getElementById('portfolioWebsite').value = candidateProfile.portfolioWebsite;
+      
+      renderSkills();
+      renderProjects();
+    }
+
+    function renderSkills() {
+      const container = document.getElementById('skills-container');
+      container.innerHTML = "";
+      
+      if (candidateProfile.skills.length === 0) {
+        container.innerHTML = `<span style="font-size: 0.85rem; color: var(--text-muted); padding: 0.25rem;">No skills tags added yet.</span>`;
+        return;
+      }
+
+      candidateProfile.skills.forEach(sk => {
+        const badge = document.createElement('span');
+        badge.className = "badge badge-primary";
+        badge.style.cssText = "font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem;";
+        badge.innerHTML = `
+          ${sk}
+          <button type="button" onclick="removeSkillTag('${sk}')" style="background: none; border: none; cursor: pointer; color: inherit; font-weight: bold;">✕</button>
+        `;
+        container.appendChild(badge);
+      });
+    }
+
+    function addSkillTag() {
+      const input = document.getElementById('newSkill');
+      const val = input.value.trim();
+      if (val && !candidateProfile.skills.includes(val)) {
+        candidateProfile.skills.push(val);
+        input.value = "";
+        renderSkills();
+      }
+    }
+
+    function removeSkillTag(sk) {
+      candidateProfile.skills = candidateProfile.skills.filter(s => s !== sk);
+      renderSkills();
+    }
+
+    function renderProjects() {
+      const container = document.getElementById('projects-list-container');
+      document.getElementById('project-count').textContent = projectsList.length;
+      container.innerHTML = "";
+
+      if (projectsList.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+            <p style="font-size: 0.9rem;">No projects showcased. Add one above to boost your Portfolio score!</p>
+          </div>
+        `;
+        return;
+      }
+
+      projectsList.forEach(proj => {
+        const card = document.createElement('div');
+        card.className = "card";
+        card.style.cssText = "padding: 1.25rem; margin-bottom: 1rem;";
+        card.innerHTML = `
+          <div class="flex-between" style="margin-bottom: 0.5rem;">
+            <span style="font-size: 1.5rem;">${proj.thumbnail_url || "📁"}</span>
+            <button onclick="deleteProject(${proj.id})" class="btn" style="padding: 0.25rem 0.5rem; border: 1px solid var(--danger); color: var(--danger); background: transparent; font-size: 0.8rem;">
+              Delete
+            </button>
+          </div>
+          <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${proj.title}</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
+            ${proj.description}
+          </p>
+          <div style="display: flex; gap: 0.5rem;">
+            ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Code Source</a>` : ""}
+            ${proj.project_url ? `<a href="${proj.project_url}" target="_blank" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Live Site</a>` : ""}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Save Profile
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      candidateProfile.fullName = document.getElementById('fullName').value;
+      candidateProfile.phone = document.getElementById('phone').value;
+      candidateProfile.bio = document.getElementById('bio').value;
+      candidateProfile.githubUrl = document.getElementById('githubUrl').value;
+      candidateProfile.linkedinUrl = document.getElementById('linkedinUrl').value;
+      candidateProfile.portfolioWebsite = document.getElementById('portfolioWebsite').value;
+
+      localStorage.setItem('candidate_profile', JSON.stringify(candidateProfile));
+      showAlert('alert-container', 'Profile updated successfully! (Demo Mode)', 'success');
+      
+      // Update global user
+      user.fullName = candidateProfile.fullName;
+      localStorage.setItem('user', JSON.stringify(user));
+      renderHeader();
+    });
+
+    // Add Project
+    document.getElementById('project-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('projectTitle').value;
+      const description = document.getElementById('projectDesc').value;
+      const projectUrl = document.getElementById('projectLink').value;
+      const github_url = document.getElementById('projectGit').value;
+      const thumbnail_url = document.getElementById('projectThumb').value.trim() || "📁";
+
+      const newProj = {
+        id: Date.now(),
+        title,
+        description,
+        project_url,
+        github_url,
+        thumbnail_url
+      };
+
+      projectsList.push(newProj);
+      localStorage.setItem('candidate_projects', JSON.stringify(projectsList));
+      
+      // Reset fields
+      document.getElementById('projectTitle').value = "";
+      document.getElementById('projectDesc').value = "";
+      document.getElementById('projectLink').value = "";
+      document.getElementById('projectGit').value = "";
+      document.getElementById('projectThumb').value = "";
+
+      renderProjects();
+      showAlert('alert-container', 'Project added successfully! +50 XP (Demo Mode)', 'success');
+    });
+
+    function deleteProject(id) {
+      if (!confirm("Are you sure you want to delete this project?")) return;
+      projectsList = projectsList.filter(p => p.id !== id);
+      localStorage.setItem('candidate_projects', JSON.stringify(projectsList));
+      renderProjects();
+      showAlert('alert-container', 'Project removed successfully.', 'success');
+    }
+
+    initFormFields();
+  </script>
+</body>
+</html>
