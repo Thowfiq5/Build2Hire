@@ -10,15 +10,16 @@
   <!-- NAVBAR -->
   <header class="navbar" id="main-nav"></header>
 
-  <main class="flex-center" style="min-height: calc(100vh - 70px); marginTop: 70px; padding: 2rem;">
-    <div class="card" style="width: 100%; maxWidth: 420px; padding: 2.5rem;">
-      <div style="text-align: center; marginBottom: 2rem;">
-        <h1 style="font-family: var(--font-display); fontSize: 2rem; marginBottom: 0.5rem;">Welcome Back</h1>
-        <p style="color: var(--text-secondary); fontSize: 0.95rem;">Sign in to continue to Build2Hire</p>
+  <main class="flex-center" style="min-height: calc(100vh - 70px); margin-top: 70px; padding: 2rem;">
+    <div class="card" style="width: 100%; max-width: 420px; padding: 2.5rem;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 0.5rem;">Welcome Back</h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Sign in to continue to Build2Hire</p>
       </div>
 
       <div id="alert-container"></div>
 
+      <!-- ── Email / Password Form ── -->
       <form id="login-form">
         <div class="form-group">
           <label class="form-label" for="email">Email Address</label>
@@ -31,7 +32,7 @@
           >
         </div>
 
-        <div class="form-group" style="marginBottom: 1.5rem;">
+        <div class="form-group" style="margin-bottom: 1.5rem;">
           <div class="flex-between">
             <label class="form-label" for="password">Password</label>
           </div>
@@ -44,14 +45,14 @@
           >
         </div>
 
-        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; marginTop: 0.5rem;">
+        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
           Sign In
         </button>
       </form>
 
-      <p style="textAlign: center; marginTop: 1.5rem; color: var(--text-secondary); fontSize: 0.9rem;">
+      <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
         Don't have an account? 
-        <a href="register.html" style="color: var(--primary); fontWeight: 600;">Sign Up</a>
+        <a href="register.html" style="color: var(--primary); font-weight: 600;">Sign Up</a>
       </p>
     </div>
   </main>
@@ -60,6 +61,9 @@
   <script>
     renderHeader();
 
+    // ══════════════════════════════════════════════
+    // EMAIL / PASSWORD LOGIN
+    // ══════════════════════════════════════════════
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
@@ -81,18 +85,20 @@
           throw new Error(data.message || "Failed to log in");
         }
 
-        // Successful login
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('user', JSON.stringify(data.data));
         
         if (data.data.role === "recruiter") {
           window.location.href = "recruiter-dashboard.html";
         } else {
-          window.location.href = "portfolio.html";
+          if (data.data.profileCompleted) {
+            window.location.href = "jobs.html";
+          } else {
+            window.location.href = "portfolio.html";
+          }
         }
       } catch (err) {
         console.warn("Backend auth offline, using mock login fallback:", err.message);
         
-        // Mock Auth Fallback for Vercel/Static Demo
         let mockRole = "candidate";
         let mockName = "John Builder";
         
@@ -104,22 +110,47 @@
           mockName = "Admin User";
         }
 
-        const mockUser = {
-          id: 999,
-          email: email,
-          role: mockRole,
-          fullName: mockName
-        };
+        const dbState = dbGet();
+        let existingUser = dbState.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        
+        if (!existingUser) {
+          existingUser = {
+            id: Date.now(),
+            email: email,
+            role: mockRole,
+            fullName: mockName
+          };
+          if (mockRole === 'candidate') {
+            existingUser.phone = "+1 (555) 019-1122";
+            existingUser.bio = "Active builder on Build2Hire.";
+            existingUser.skills = ["React", "JavaScript", "HTML", "CSS Variables"];
+            existingUser.xp_points = 0;
+            existingUser.level = 1;
+            existingUser.talent_score = 0;
+            existingUser.portfolio_score = 40;
+            existingUser.challenge_score = 0;
+            existingUser.assessment_score = 0;
+            existingUser.projects = [];
+          } else {
+            existingUser.companyName = "InnovateTech";
+            existingUser.jobTitle = "Hiring Manager";
+          }
+          dbState.users.push(existingUser);
+          dbSave(dbState);
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(existingUser));
         showAlert('alert-container', 'Backend offline. Logged in with Demo Account!', 'success');
         
         setTimeout(() => {
           if (mockRole === "recruiter") {
             window.location.href = "recruiter-dashboard.html";
           } else {
-            window.location.href = "portfolio.html";
+            if (existingUser.profileCompleted) {
+              window.location.href = "jobs.html";
+            } else {
+              window.location.href = "portfolio.html";
+            }
           }
         }, 1000);
 

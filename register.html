@@ -18,7 +18,7 @@
       </div>
 
       <!-- Role Toggle Button Switch -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 4px; background-color: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 2rem;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 4px; background-color: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
         <button
           type="button"
           id="btn-candidate"
@@ -137,6 +137,10 @@
     renderHeader();
     let currentRole = "candidate";
 
+    // ══════════════════════════════════════════════
+    // EMAIL SIGN-UP
+    // ══════════════════════════════════════════════
+
     function setRole(role) {
       currentRole = role;
       const btnCandidate = document.getElementById('btn-candidate');
@@ -208,19 +212,47 @@
           throw new Error(data.message || "Failed to register");
         }
 
-        localStorage.setItem('user', JSON.stringify(data.data));
+        sessionStorage.setItem('user', JSON.stringify(data.data));
         window.location.href = currentRole === "recruiter" ? "recruiter-dashboard.html" : "portfolio.html";
       } catch (err) {
         console.warn("Backend offline, using mock registration fallback:", err.message);
 
-        const mockUser = {
-          id: 999,
-          email: email,
-          role: currentRole,
-          fullName: fullName
-        };
+        const dbState = dbGet();
+        let existingUser = dbState.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
-        localStorage.setItem('user', JSON.stringify(mockUser));
+        if (!existingUser) {
+          existingUser = {
+            id: Date.now(),
+            email: email,
+            role: currentRole,
+            fullName: fullName
+          };
+          if (currentRole === 'candidate') {
+            existingUser.phone = document.getElementById('phone').value || "";
+            existingUser.bio = document.getElementById('bio').value || "";
+            existingUser.githubUrl = "";
+            existingUser.linkedinUrl = "";
+            existingUser.portfolioWebsite = "";
+            existingUser.skills = ["React", "JavaScript", "HTML", "CSS Variables"];
+            existingUser.skillLevels = { "React": "Basic", "JavaScript": "Basic", "HTML": "Basic", "CSS Variables": "Basic" };
+            existingUser.profileCompleted = false;
+            existingUser.preferredRole = "";
+            existingUser.xp_points = 0;
+            existingUser.level = 1;
+            existingUser.talent_score = 0;
+            existingUser.portfolio_score = 40;
+            existingUser.challenge_score = 0;
+            existingUser.assessment_score = 0;
+            existingUser.projects = [];
+          } else {
+            existingUser.companyName = document.getElementById('companyName').value || "InnovateTech";
+            existingUser.jobTitle = document.getElementById('jobTitle').value || "Hiring Manager";
+          }
+          dbState.users.push(existingUser);
+          dbSave(dbState);
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(existingUser));
         showAlert('alert-container', 'Backend offline. Registered successfully with Demo account!', 'success');
 
         setTimeout(() => {

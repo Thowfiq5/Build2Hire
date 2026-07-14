@@ -24,11 +24,7 @@
                 💼 <span>Hiring Board</span>
               </a>
             </li>
-            <li>
-              <a href="marketplace.html" class="sidebar-link">
-                🧩 <span>All Challenges</span>
-              </a>
-            </li>
+
             <li>
               <a href="leaderboard.html" class="sidebar-link">
                 🏆 <span>Leaderboard</span>
@@ -61,8 +57,7 @@
         </div>
         
         <div style="display: flex; gap: 0.5rem; flex-direction: column; justify-content: center; padding-left: 1.5rem; border-left: 1px solid var(--border-color);">
-          <span style="font-size: 0.85rem;">📋 Published Tasks: <strong id="stat-challenges">0</strong></span>
-          <span style="font-size: 0.85rem;">📥 Submissions to Grade: <strong id="stat-pending" style="color: var(--warning);">0</strong></span>
+          <span style="font-size: 0.85rem;">👥 Pipeline Candidates: <strong id="stat-candidates">0</strong></span>
           <span style="font-size: 0.85rem;">🤝 Scheduled Interviews: <strong id="stat-interviews">0</strong></span>
         </div>
       </div>
@@ -71,8 +66,8 @@
 
       <!-- Navigation tabs -->
       <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
-        <button id="tab-submissions" onclick="switchTab('submissions')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--primary); border-bottom: 2px solid var(--primary);">
-          Grade Submissions (<span id="tab-submissions-count">0</span>)
+        <button id="tab-discover" onclick="switchTab('discover')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--primary); border-bottom: 2px solid var(--primary);">
+          Discover Talent
         </button>
         <button id="tab-pipeline" onclick="switchTab('pipeline')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
           Shortlist Pipeline (<span id="tab-pipeline-count">0</span>)
@@ -80,26 +75,51 @@
         <button id="tab-interviews" onclick="switchTab('interviews')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
           Scheduled Interviews (<span id="tab-interviews-count">0</span>)
         </button>
-        <button id="tab-challenges" onclick="switchTab('challenges')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
-          My Published Tasks (<span id="tab-challenges-count">0</span>)
-        </button>
       </div>
 
-      <!-- TAB CONTENT: GRADE SUBMISSIONS -->
-      <div id="content-submissions" class="tab-content">
-        <div id="submissions-list" style="display: flex; flex-direction: column; gap: 1rem;">
-          <!-- Submissions render here -->
+      <!-- TAB CONTENT: DISCOVER -->
+      <div id="content-discover" class="tab-content">
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+          <div class="form-group" style="margin: 0; flex-grow: 1; min-width: 200px;">
+            <label class="form-label" style="font-size: 0.8rem;">Filter by Role</label>
+            <select id="filter-role" class="form-control" onchange="renderTabContent('discover')">
+              <option value="All">All Roles</option>
+              <option value="Frontend Developer">Frontend Developer</option>
+              <option value="Backend Engineer">Backend Engineer</option>
+              <option value="Database Administrator">Database Administrator</option>
+              <option value="Full Stack Engineer">Full Stack Engineer</option>
+              <option value="Video Editor">Video Editor</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0; flex-grow: 1; min-width: 150px;">
+            <label class="form-label" style="font-size: 0.8rem;">Min XP Points</label>
+            <input type="number" id="filter-xp" class="form-control" placeholder="e.g. 1000" onkeyup="renderTabContent('discover')">
+          </div>
+          <div class="form-group" style="margin: 0; flex-grow: 1; min-width: 150px;">
+            <label class="form-label" style="font-size: 0.8rem;">Min Talent Score</label>
+            <input type="number" id="filter-score" class="form-control" placeholder="e.g. 80" onkeyup="renderTabContent('discover')">
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.75rem;">
+            <input type="checkbox" id="anonymous-mode" onchange="renderTabContent('discover')" style="width: 1.2rem; height: 1.2rem; accent-color: var(--primary);">
+            <label for="anonymous-mode" style="font-size: 0.9rem; font-weight: 600; cursor: pointer;">Anonymous Mode 🕵️</label>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="discover-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Candidates render here -->
         </div>
       </div>
 
       <!-- TAB CONTENT: PIPELINE -->
-      <div id="content-pipeline" class="tab-content" style="display: none;">
+      <div id="content-pipeline" class="tab-content">
         <div class="card" style="padding: 1rem; overflow-x: auto;">
           <table class="leaderboard-table" style="width: 100%;">
             <thead>
               <tr>
                 <th class="leaderboard-th">Candidate</th>
-                <th class="leaderboard-th">Challenge Task</th>
+                <th class="leaderboard-th">Target Job / Position</th>
                 <th class="leaderboard-th">Talent Score</th>
                 <th class="leaderboard-th">Status</th>
                 <th class="leaderboard-th">Actions</th>
@@ -116,13 +136,6 @@
       <div id="content-interviews" class="tab-content" style="display: none;">
         <div id="interviews-list" style="display: flex; flex-direction: column; gap: 1rem;">
           <!-- Interviews render here -->
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: MY CHALLENGES -->
-      <div id="content-challenges" class="tab-content" style="display: none;">
-        <div id="challenges-list" class="grid-3">
-          <!-- Recruiter challenges render here -->
         </div>
       </div>
 
@@ -146,8 +159,8 @@
         <p id="grade-desc" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; white-space: pre-line;"></p>
         
         <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-          <a id="grade-github" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">View Github repo</a>
-          <a id="grade-live" href="#" target="_blank" class="btn btn-primary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">View Live demo</a>
+          <a id="grade-github" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">View Github repo</a>
+          <a id="grade-live" href="#" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">View Live demo</a>
         </div>
       </div>
 
@@ -197,72 +210,81 @@
     </div>
   </div>
 
+  <!-- 3. CANDIDATE PORTFOLIO MODAL -->
+  <div id="portfolio-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 5vh; overflow-y: auto;">
+    <div class="modal-box" style="max-width: 700px; width: 100%; margin-bottom: 5vh;">
+      <button class="modal-close" onclick="closePortfolioModal()">✕</button>
+      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        Candidate Portfolio
+      </h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        <div>
+          <h4 id="port-name" style="font-size: 1.2rem; margin-bottom: 0.25rem;">Candidate Name</h4>
+          <p id="port-role" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Role</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="port-links"></div>
+        </div>
+        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">XP Level:</span>
+            <strong id="port-level" style="color: var(--primary);">1</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">Total XP:</span>
+            <strong id="port-xp">0</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">Talent Score:</span>
+            <strong id="port-score" style="color: var(--warning);">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Bio</h4>
+        <p id="port-bio" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;"></p>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Skills Matrix</h4>
+        <div id="port-skills" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+      </div>
+
+      <div>
+        <h4 style="font-size: 1rem; margin-bottom: 0.75rem;">Verified Projects</h4>
+        <div id="port-projects" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+
   <script src="shared.js"></script>
   <script>
-    const user = getUser();
-    if (!user || user.role !== "recruiter") {
-      window.location.href = "login.html";
-    } else {
+    const auth = withAuth(['recruiter', 'admin']);
+    if (auth) {
+      const { user, db: dbState } = auth;
       document.getElementById('user-role-badge').textContent = user.role;
       document.getElementById('recruiter-name').textContent = user.fullName || "Jane Recruiter";
-      renderHeader();
-    }
+      document.getElementById('recruiter-company').textContent = user.companyName || "InnovateTech";
 
-    // Mock Dashboard Data Database
-    let dashboardData = {
-      recruiter: {
-        full_name: user.fullName || "Jane Recruiter",
-        company_name: "InnovateTech",
-        location: "San Francisco, CA",
-        industry: "Information Technology"
-      },
-      challenges: [
-        { id: 1, title: "Custom Video Editor Dashboard UI", difficulty: "hard", category: "Frontend", max_xp: 250 },
-        { id: 2, title: "Video Editor", difficulty: "medium", category: "Creative", max_xp: 100 }
-      ],
-      submissions: [
-        { id: 101, candidate_name: "Alex Rivera", challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, current_level: "Elite Talent", status: "pending", description: "Created an in-browser timeline drop zone with canvas timeline rendering and responsive grid views.", github_url: "https://github.com/alexrivera/timeline", submission_url: "https://timeline-demo.vercel.app" },
-        { id: 102, candidate_name: "Sarah Chen", challenge_title: "Video Editor", talent_score: 92, current_level: "Elite Talent", status: "pending", description: "Edited the 2-minute promotional clip with clean overlays and high compression format.", github_url: "", submission_url: "https://vimeo.com/sarahvid" }
-      ],
-      applications: [
-        { id: 201, candidate_name: "Alex Rivera", challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, status: "applied" },
-        { id: 202, candidate_name: "Sarah Chen", challenge_title: "Video Editor", talent_score: 92, status: "shortlisted" }
-      ],
-      interviews: [
-        { id: 301, candidate_name: "Marcus Aurelius", challenge_title: "Custom Video Editor Dashboard UI", scheduled_at: "2026-07-10T15:00:00", location_url: "https://meet.google.com/xyz-abc-def", notes: "Review timeline grid coding details." }
-      ]
-    };
 
-    // Load from LocalStorage if demo state exists
-    if (localStorage.getItem('recruiter_dashboard_data')) {
-      dashboardData = JSON.parse(localStorage.getItem('recruiter_dashboard_data'));
-    }
-
-    function saveState() {
-      localStorage.setItem('recruiter_dashboard_data', JSON.stringify(dashboardData));
-      updateStats();
-      renderAllTabs();
-    }
 
     function updateStats() {
-      const pendingSubCount = dashboardData.submissions.filter(s => s.status === 'pending').length;
+      dbState = dbGet();
+      const recruiterCompany = user.companyName || "InnovateTech";
+      const candidatesCount = dbState.users.filter(u => u.role === 'candidate').length;
       
-      document.getElementById('stat-challenges').textContent = dashboardData.challenges.length;
-      document.getElementById('stat-pending').textContent = pendingSubCount;
-      document.getElementById('stat-interviews').textContent = dashboardData.interviews.length;
+      document.getElementById('stat-candidates').textContent = candidatesCount;
+      document.getElementById('stat-interviews').textContent = dbState.interviews.length;
 
-      document.getElementById('tab-submissions-count').textContent = pendingSubCount;
-      document.getElementById('tab-pipeline-count').textContent = dashboardData.applications.length;
-      document.getElementById('tab-interviews-count').textContent = dashboardData.interviews.length;
-      document.getElementById('tab-challenges-count').textContent = dashboardData.challenges.length;
+      document.getElementById('tab-pipeline-count').textContent = dbState.applications.length;
+      document.getElementById('tab-interviews-count').textContent = dbState.interviews.length;
     }
 
-    let activeTab = 'submissions';
+    let activeTab = 'pipeline';
     function switchTab(tab) {
       activeTab = tab;
       
-      // Update Tab CSS
-      const tabs = ['submissions', 'pipeline', 'interviews', 'challenges'];
+      const tabs = ['discover', 'pipeline', 'interviews'];
       tabs.forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
         if (t === tab) {
@@ -274,67 +296,92 @@
         }
         
         const content = document.getElementById(`content-${t}`);
-        content.style.display = t === tab ? "block" : "none";
+        if (content) {
+          content.style.display = t === tab ? "block" : "none";
+        }
       });
       
       renderTabContent(tab);
     }
 
     function renderAllTabs() {
-      renderTabContent('submissions');
+      dbState = dbGet();
+      renderTabContent('discover');
       renderTabContent('pipeline');
       renderTabContent('interviews');
-      renderTabContent('challenges');
     }
 
     function renderTabContent(tab) {
-      if (tab === 'submissions') {
-        const list = document.getElementById('submissions-list');
-        const pending = dashboardData.submissions.filter(s => s.status === 'pending');
-        
-        list.innerHTML = "";
-        if (pending.length === 0) {
-          list.innerHTML = `
-            <div class="card" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-              <p>All candidate submissions have been reviewed and graded! Good job.</p>
-            </div>
-          `;
-          return;
-        }
+      if (tab === 'discover') {
+        const grid = document.getElementById('discover-grid');
+        grid.innerHTML = "";
 
-        pending.forEach(sub => {
+        const roleFilter = document.getElementById('filter-role').value;
+        const xpFilter = parseInt(document.getElementById('filter-xp').value) || 0;
+        const scoreFilter = parseInt(document.getElementById('filter-score').value) || 0;
+        const isAnonymous = document.getElementById('anonymous-mode').checked;
+
+        const candidates = dbState.users.filter(u => u.role === 'candidate' && u.profileCompleted);
+
+        let matchCount = 0;
+        candidates.forEach(cand => {
+          if (roleFilter !== 'All' && cand.preferredRole !== roleFilter) return;
+          if (cand.xp_points < xpFilter) return;
+          if (cand.talent_score < scoreFilter) return;
+          
+          matchCount++;
+
+          const nameToDisplay = isAnonymous ? `Candidate #${cand.id}` : (cand.fullName || "Unnamed Candidate");
+          const avatarUrl = isAnonymous ? 'https://ui-avatars.com/api/?name=C&background=random&color=fff' : `https://ui-avatars.com/api/?name=${encodeURIComponent(nameToDisplay)}&background=random&color=fff`;
+
           const card = document.createElement('div');
-          card.className = "card flex-between";
-          card.style.padding = "1.25rem";
+          card.className = "card";
+          card.style.cssText = "padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;";
+          
+          let skillsHtml = "";
+          if (cand.skills && cand.skills.length > 0) {
+             skillsHtml = cand.skills.slice(0, 3).map(s => `<span class="badge badge-secondary" style="font-size: 0.7rem;">${s}</span>`).join('');
+             if (cand.skills.length > 3) skillsHtml += `<span class="badge badge-outline" style="font-size: 0.7rem;">+${cand.skills.length - 3}</span>`;
+          }
+
           card.innerHTML = `
-            <div>
-              <strong style="font-size: 1.1rem; display: block;">${sub.candidate_name}</strong>
-              <span style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">
-                Submitted for: <strong>${sub.challenge_title}</strong>
-              </span>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
-                Talent Score: <strong style="color: var(--primary);">${Math.round(sub.talent_score)}</strong> | Level: <strong>${sub.current_level}</strong>
-              </p>
+            <div style="display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+              <img src="${avatarUrl}" alt="Avatar" style="width: 45px; height: 45px; border-radius: 50%;">
+              <div>
+                <strong style="font-size: 1.1rem; display: block;">${nameToDisplay}</strong>
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">${cand.preferredRole || "Open to roles"}</span>
+              </div>
             </div>
-            
-            <button onclick="openGradeModal(${sub.id})" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
-              Review Build
-            </button>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span style="color: var(--text-secondary);">XP: <strong style="color: var(--primary);">${cand.xp_points || 0}</strong></span>
+              <span style="color: var(--text-secondary);">Score: <strong style="color: var(--warning);">${cand.talent_score || 0}</strong></span>
+            </div>
+            <div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Verified Skills:</p>
+              <div style="display: flex; gap: 0.25rem; flex-wrap: wrap;">
+                ${skillsHtml || "<span style='font-size: 0.75rem; color: var(--text-muted);'>No skills listed</span>"}
+              </div>
+            </div>
+            <button onclick="viewCandidatePortfolio(${cand.id})" class="btn btn-outline" style="width: 100%; margin-top: auto; padding: 0.5rem; font-size: 0.85rem;">View Full Portfolio</button>
           `;
-          list.appendChild(card);
+          grid.appendChild(card);
         });
+
+        if (matchCount === 0) {
+          grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem;">No candidates match your filters.</p>`;
+        }
       }
 
       if (tab === 'pipeline') {
         const tbody = document.getElementById('pipeline-table-body');
         tbody.innerHTML = "";
         
-        if (dashboardData.applications.length === 0) {
+        if (dbState.applications.length === 0) {
           tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No applications found in the pipeline yet.</td></tr>`;
           return;
         }
 
-        dashboardData.applications.forEach(app => {
+        dbState.applications.forEach(app => {
           let badgeClass = "badge-primary";
           if (app.status === 'shortlisted') badgeClass = "badge-warning";
           if (app.status === 'hired') badgeClass = "badge-success";
@@ -347,7 +394,7 @@
           if (app.status === 'applied') {
             actionBtns = `<button onclick="openSchedulerModal(${app.id})" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">🗓️ Schedule Meet</button>`;
           } else if (app.status === 'shortlisted') {
-            actionBtns = `<button onclick="changeStatus(${app.id}, 'hired')" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background-color: var(--success);">🎉 Hire Candidate</button>`;
+            actionBtns = `<button onclick="changeStatus(${app.id}, 'hired')" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; background-color: var(--success); border-radius: 4px;">🎉 Hire Candidate</button>`;
           }
           
           if (app.status !== 'rejected' && app.status !== 'hired') {
@@ -371,12 +418,12 @@
         const list = document.getElementById('interviews-list');
         list.innerHTML = "";
         
-        if (dashboardData.interviews.length === 0) {
+        if (dbState.interviews.length === 0) {
           list.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No upcoming scheduled interviews.</p>`;
           return;
         }
 
-        dashboardData.interviews.forEach(meet => {
+        dbState.interviews.forEach(meet => {
           const card = document.createElement('div');
           card.className = "card flex-between";
           card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--warning);";
@@ -398,45 +445,14 @@
           list.appendChild(card);
         });
       }
-
-      if (tab === 'challenges') {
-        const list = document.getElementById('challenges-list');
-        list.innerHTML = "";
-        
-        if (dashboardData.challenges.length === 0) {
-          list.innerHTML = `<div class="card" style="text-align: center; padding: 2rem; color: var(--text-muted);"><p>You haven't published any challenges yet.</p></div>`;
-          return;
-        }
-
-        dashboardData.challenges.forEach(chal => {
-          const card = document.createElement('div');
-          card.className = "card";
-          card.style.cssText = "display: flex; flex-direction: column; justify-content: space-between;";
-          card.innerHTML = `
-            <div>
-              <span class="badge ${chal.difficulty === 'easy' ? 'badge-success' : chal.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'}" style="margin-bottom: 0.5rem;">
-                ${chal.difficulty}
-              </span>
-              <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${chal.title}</h4>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                Max XP: <strong>${chal.max_xp} XP</strong> | Category: <strong>${chal.category}</strong>
-              </p>
-            </div>
-            <span class="badge badge-primary" style="padding: 0.4rem; align-self: flex-start; margin-top: 1rem;">
-              Active Status
-            </span>
-          `;
-          list.appendChild(card);
-        });
-      }
     }
 
-    // Modal Action variables
+    // Modal action flags
     let selectedSubmissionId = null;
     let selectedApplicationId = null;
 
     function openGradeModal(id) {
-      const sub = dashboardData.submissions.find(s => s.id === id);
+      const sub = dbState.submissions.find(s => s.id === id);
       if (!sub) return;
       
       selectedSubmissionId = id;
@@ -470,62 +486,143 @@
     // Submit Grade Form
     document.getElementById('grading-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const score = document.getElementById('scoreInput').value;
+      const score = parseInt(document.getElementById('scoreInput').value, 10);
       const feedback = document.getElementById('feedbackInput').value;
 
-      // Grade the submission
-      const sub = dashboardData.submissions.find(s => s.id === selectedSubmissionId);
+      const sub = dbState.submissions.find(s => s.id === selectedSubmissionId);
       if (sub) {
         sub.status = "graded";
-        // Also update shortlist status in application pipeline
-        const app = dashboardData.applications.find(a => a.candidate_name === sub.candidate_name && a.challenge_title === sub.challenge_title);
+        sub.grade = score;
+        sub.feedback = feedback;
+
+        // Move application pipeline status to Shortlisted
+        const app = dbState.applications.find(a => a.candidate_id === sub.candidate_id && a.challenge_title === sub.challenge_title);
         if (app) {
           app.status = "shortlisted";
         }
+
+        // Update the candidate's scores in database
+        const candidateUser = dbState.users.find(u => u.id === sub.candidate_id);
+        if (candidateUser) {
+          candidateUser.challenge_score = score;
+          
+          // Award XP (retrieve match challenge XP limit or default 150)
+          const challengeItem = dbState.challenges.find(c => c.id === sub.challenge_id);
+          const xpGained = challengeItem ? (challengeItem.max_xp || challengeItem.maxXp || 100) : 150;
+          candidateUser.xp_points = (candidateUser.xp_points || 0) + xpGained;
+
+          recalculateScores(candidateUser);
+        }
       }
 
+      dbSave(dbState);
+
+      // Reset Form fields
       document.getElementById('scoreInput').value = "";
       document.getElementById('feedbackInput').value = "";
       closeGradeModal();
       
-      showAlert('alert-container', 'Graded successfully! Candidate shortlisted for pipeline.', 'success');
-      saveState();
+      showAlert('alert-container', 'Graded successfully! Candidate scores updated and shortlisted.', 'success');
+      triggerConfetti();
+      updateStats();
+      renderAllTabs();
     });
 
     function openSchedulerModal(appId) {
-      const app = dashboardData.applications.find(a => a.id === appId);
-      if (!app) return;
       selectedApplicationId = appId;
-      document.getElementById('sched-candidate').textContent = app.candidate_name;
+      const app = dbState.applications.find(a => a.id === appId);
+      document.getElementById('sched-candidate').textContent = app ? app.candidate_name : "Candidate";
       document.getElementById('scheduler-modal').style.display = "flex";
     }
 
     function closeSchedulerModal() {
+      selectedApplicationId = null;
       document.getElementById('scheduler-modal').style.display = "none";
     }
 
-    // Schedule Interview Form
+    function viewCandidatePortfolio(candId) {
+      const cand = dbState.users.find(u => String(u.id) === String(candId));
+      if (!cand) return;
+      
+      const isAnonymous = document.getElementById('anonymous-mode').checked;
+      document.getElementById('port-name').textContent = isAnonymous ? `Candidate #${cand.id}` : (cand.fullName || "Unnamed Candidate");
+      document.getElementById('port-role').textContent = cand.preferredRole || "No Role Specified";
+      document.getElementById('port-bio').textContent = cand.bio || "No bio provided.";
+      document.getElementById('port-level').textContent = cand.level || 1;
+      document.getElementById('port-xp').textContent = cand.xp_points || 0;
+      document.getElementById('port-score').textContent = cand.talent_score || 0;
+
+      const linksDiv = document.getElementById('port-links');
+      linksDiv.innerHTML = "";
+      if (!isAnonymous) {
+        if (cand.githubUrl) linksDiv.innerHTML += `<a href="${cand.githubUrl}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">GitHub</a>`;
+        if (cand.linkedinUrl) linksDiv.innerHTML += `<a href="${cand.linkedinUrl}" target="_blank" class="badge badge-primary" style="text-decoration: none;">LinkedIn</a>`;
+        if (cand.portfolioWebsite) linksDiv.innerHTML += `<a href="${cand.portfolioWebsite}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">Website</a>`;
+      }
+
+      const skillsDiv = document.getElementById('port-skills');
+      skillsDiv.innerHTML = "";
+      if (cand.skills && cand.skills.length > 0) {
+        cand.skills.forEach(s => {
+          skillsDiv.innerHTML += `<span class="badge badge-primary" style="font-size: 0.8rem;">${s}</span>`;
+        });
+      } else {
+        skillsDiv.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">No skills listed.</span>`;
+      }
+
+      const projectsDiv = document.getElementById('port-projects');
+      projectsDiv.innerHTML = "";
+      if (cand.projects && cand.projects.length > 0) {
+        cand.projects.forEach(p => {
+          projectsDiv.innerHTML += `
+            <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <h5 style="font-size: 1.05rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                ${p.thumbnail || "📁"} ${p.title}
+              </h5>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">${p.description}</p>
+              <div style="display: flex; gap: 0.5rem;">
+                ${p.github_url ? `<a href="${p.github_url}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">Source Code</a>` : ""}
+                ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="badge badge-success" style="text-decoration: none;">Live Demo</a>` : ""}
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        projectsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">No projects published yet.</p>`;
+      }
+
+      document.getElementById('portfolio-modal').style.display = "flex";
+    }
+
+    function closePortfolioModal() {
+      document.getElementById('portfolio-modal').style.display = "none";
+    }
+
+    // Modal Submissionsterview Form
     document.getElementById('scheduler-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const meetDate = document.getElementById('meetDate').value;
       const meetLink = document.getElementById('meetLink').value;
       const meetNotes = document.getElementById('meetNotes').value;
 
-      const app = dashboardData.applications.find(a => a.id === selectedApplicationId);
+      const app = dbState.applications.find(a => a.id === selectedApplicationId);
       if (app) {
         app.status = "shortlisted";
         
-        // Add to interviews list
+        // Add to global DB interviews
         const newMeet = {
           id: Date.now(),
+          candidate_id: app.candidate_id,
           candidate_name: app.candidate_name,
           challenge_title: app.challenge_title,
           scheduled_at: meetDate,
           location_url: meetLink,
           notes: meetNotes
         };
-        dashboardData.interviews.push(newMeet);
+        dbState.interviews.push(newMeet);
       }
+
+      dbSave(dbState);
 
       document.getElementById('meetDate').value = "";
       document.getElementById('meetLink').value = "";
@@ -533,21 +630,28 @@
       closeSchedulerModal();
       
       showAlert('alert-container', 'Interview invitation sent to candidate successfully!', 'success');
-      saveState();
+      triggerConfetti();
+      updateStats();
+      renderAllTabs();
     });
 
     function changeStatus(appId, nextStatus) {
-      const app = dashboardData.applications.find(a => a.id === appId);
+      const app = dbState.applications.find(a => a.id === appId);
       if (app) {
         app.status = nextStatus;
+        dbSave(dbState);
+        
         showAlert('alert-container', `Application status updated to "${nextStatus}".`, 'success');
-        saveState();
+        triggerConfetti();
+        updateStats();
+        renderAllTabs();
       }
     }
 
     // Load initial states
-    updateStats();
-    renderAllTabs();
+      updateStats();
+      renderAllTabs();
+    }
   </script>
 </body>
 </html>

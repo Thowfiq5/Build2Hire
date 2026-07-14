@@ -9,16 +9,49 @@
 <body>
   <!-- NAVBAR -->
   <header class="navbar" id="main-nav"></header>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
 
-  <main class="container section-padding" style="margin-top: 70px; min-height: 100vh;">
+    <main class="main-content" style="min-height: 100vh;">
     <!-- Banner header -->
-    <div style="text-align: center; margin-bottom: 3rem;">
-      <h1 style="font-family: var(--font-display); font-size: 2.4rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="font-family: var(--font-display); font-size: 2.4rem; margin-bottom: 0.75rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
         Talent Leaderboard
       </h1>
-      <p style="color: var(--text-secondary); font-size: 1.05rem;">
-        Real-time standings of top Builders ranked by their verification scores.
+      <span style="display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.2rem 0.75rem; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.85rem;">
+        🎓 Learners Only
+      </span>
+      <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 650px; margin: 0 auto;">
+        Only candidates who have <strong>completed at least one skill assessment</strong> or hold a platform certificate appear here. Study a roadmap, pass a quiz, and earn your rank!
       </p>
+    </div>
+
+    <!-- PERSONAL LEARNING CTA -->
+    <div id="learning-cta-card" class="card" style="display: none; max-width: 1000px; margin: 0 auto 2rem auto; border-left: 4px solid var(--warning); padding: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <strong style="color: var(--warning); font-size: 1.1rem; display: block;">🎓 Start Your Learning Journey!</strong>
+          <span style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; display: block;">
+            You are not currently ranked on the leaderboard. Study roadmaps and pass assessments to earn XP, unlock certificates, and show recruiters your verified skill score!
+          </span>
+        </div>
+        <a href="recommendations.html" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: var(--radius-sm);">
+          🗺️ View My AI Roadmap
+        </a>
+      </div>
+    </div>
+
+    <!-- ASSESSMENT LOCK GATE -->
+    <div id="locked-state" class="card flex-center" style="display: none; flex-direction: column; text-align: center; max-width: 800px; margin: 4rem auto; padding: 4rem 2rem; border-top: 4px solid var(--primary); background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);">
+      <span style="font-size: 3.5rem; margin-bottom: 1rem;">🔒</span>
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 0.75rem;">Leaderboard Locked</h2>
+      <p style="color: var(--text-secondary); max-width: 500px; line-height: 1.6; margin-bottom: 2rem;">
+        You haven't completed any skill assessments yet! To view the leaderboard and see how you rank against other builders, you must study a course and pass an assessment first.
+      </p>
+      <a href="recommendations.html" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 700;">
+        📚 Go to Learners Section to Unlock
+      </a>
     </div>
 
     <div id="alert-container"></div>
@@ -28,8 +61,9 @@
     </div>
 
     <div id="empty-state" class="card" style="display: none; text-align: center; padding: 4rem 0; color: var(--text-muted); max-width: 800px; margin: 0 auto;">
-      <span style="font-size: 2.5rem;">🏆</span>
-      <h3 style="font-size: 1.2rem; margin-top: 1rem;">Leaderboard is empty. Be the first to build and score!</h3>
+      <span style="font-size: 2.5rem;">🎓</span>
+      <h3 style="font-size: 1.2rem; margin-top: 1rem;">No learners ranked yet.</h3>
+      <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">Complete an assessment or earn a certificate to appear here.</p>
     </div>
 
     <div id="leaderboard-card" class="card" style="display: none; max-width: 1000px; margin: 0 auto; padding: 1.5rem; overflow-x: auto;">
@@ -40,6 +74,7 @@
             <th class="leaderboard-th">Builder</th>
             <th class="leaderboard-th">Level / XP</th>
             <th class="leaderboard-th" style="text-align: center;">Scores Breakdown</th>
+            <th class="leaderboard-th" style="text-align: center;">Certs</th>
             <th class="leaderboard-th" style="width: 120px; text-align: right;">Talent Score</th>
           </tr>
         </thead>
@@ -48,25 +83,33 @@
         </tbody>
       </table>
     </div>
-  </main>
+    </main>
+  </div>
 
   <script src="shared.js"></script>
   <script>
-    renderHeader();
+    const auth = withAuth(['candidate', 'recruiter', 'admin']);
+    if (auth) {
+      const { user, db, candidate } = auth;
 
-    const mockLeaderboard = [
-      { id: 1, full_name: "Alex Rivera", avatar_url: "👨‍💻", current_level: "Elite Talent", xp_points: 4800, talent_score: 95, portfolio_score: 98, challenge_score: 92, assessment_score: 95 },
-      { id: 2, full_name: "Sarah Chen", avatar_url: "👩‍💻", current_level: "Elite Talent", xp_points: 4200, talent_score: 92, portfolio_score: 94, challenge_score: 90, assessment_score: 93 },
-      { id: 3, full_name: "Marcus Aurelius", avatar_url: "🤖", current_level: "Master Builder", xp_points: 3800, talent_score: 88, portfolio_score: 87, challenge_score: 89, assessment_score: 90 },
-      { id: 4, full_name: "Taylor Swift (Dev)", avatar_url: "👩‍🎤", current_level: "Master Builder", xp_points: 3100, talent_score: 84, portfolio_score: 82, challenge_score: 85, assessment_score: 88 },
-      { id: 5, full_name: "David Kim", avatar_url: "🧑‍💻", current_level: "Skilled Builder", xp_points: 2400, talent_score: 79, portfolio_score: 80, challenge_score: 78, assessment_score: 81 }
-    ];
+      async function loadLeaderboard() {
+        const loadingState = document.getElementById('loading-state');
+        const emptyState = document.getElementById('empty-state');
+        const leaderboardCard = document.getElementById('leaderboard-card');
+        const learningCta = document.getElementById('learning-cta-card');
+        const lockedState = document.getElementById('locked-state');
 
-    async function loadLeaderboard() {
-      const loadingState = document.getElementById('loading-state');
-      const emptyState = document.getElementById('empty-state');
-      const leaderboardCard = document.getElementById('leaderboard-card');
-      const leaderboardBody = document.getElementById('leaderboard-body');
+        // Check Assessment Gate
+        if (candidate && candidate.role === 'candidate') {
+        if (!user.assessment_score || user.assessment_score === 0) {
+          loadingState.style.display = "none";
+          emptyState.style.display = "none";
+          leaderboardCard.style.display = "none";
+          learningCta.style.display = "none";
+          lockedState.style.display = "flex";
+          return; // Stop loading leaderboard
+        }
+      }
 
       try {
         const res = await fetch("/api/talent/leaderboard");
@@ -75,14 +118,49 @@
         loadingState.style.display = "none";
         
         if (data.success && data.data.length > 0) {
-          renderTable(data.data);
+          // Filter API results to learners only too
+          const learners = data.data.filter(u =>
+            (u.assessment_score || 0) > 0 || (u.certificates && u.certificates.length > 0)
+          );
+          if (learners.length > 0) {
+            renderTable(learners);
+          } else {
+            emptyState.style.display = "block";
+          }
         } else {
           emptyState.style.display = "block";
         }
       } catch (err) {
-        console.warn("Backend offline, using mock leaderboard data:", err.message);
+        console.warn("Backend offline, loading dynamically from local database:", err.message);
         loadingState.style.display = "none";
-        renderTable(mockLeaderboard);
+        
+        const dbState = dbGet();
+
+        // Show personalised CTA only if the logged-in candidate is NOT a learner yet
+        const loggedUser = getUser();
+        if (loggedUser && loggedUser.role === 'candidate') {
+          const latestMe = dbState.users.find(u => String(u.id) === String(user.id));
+          const isLearner = latestMe &&
+            ((latestMe.assessment_score || 0) > 0 || (latestMe.certificates && latestMe.certificates.length > 0));
+          if (!isLearner) {
+            document.getElementById('learning-cta-card').style.display = "block";
+          }
+        }
+
+        // Strictly: only candidates who have passed at least one quiz OR hold a certificate
+        const learners = dbState.users.filter(u =>
+          u.role === 'candidate' &&
+          ((u.assessment_score || 0) > 0 || (u.certificates && u.certificates.length > 0))
+        );
+
+        // Sort by talent_score descending, fallback to xp_points
+        learners.sort((a, b) => (b.talent_score || b.xp_points || 0) - (a.talent_score || a.xp_points || 0));
+        
+        if (learners.length > 0) {
+          renderTable(learners);
+        } else {
+          emptyState.style.display = "block";
+        }
       }
     }
 
@@ -99,6 +177,7 @@
         else if (rank === 2) rankDisplay = "🥈";
         else if (rank === 3) rankDisplay = "🥉";
 
+        const certCount = (cand.certificates || []).length;
         const tr = document.createElement('tr');
         tr.className = "leaderboard-tr";
         tr.innerHTML = `
@@ -110,6 +189,7 @@
               <span style="font-size: 1.5rem;">${cand.avatar_url || "👤"}</span>
               <div>
                 <strong style="font-size: 1rem;">${cand.full_name || cand.fullName}</strong>
+                ${cand.preferredRole ? `<span style="display:block; font-size:0.72rem; color:var(--text-muted); margin-top:0.1rem;">${cand.preferredRole}</span>` : ''}
               </div>
             </div>
           </td>
@@ -130,6 +210,11 @@
               </span>
             </div>
           </td>
+          <td class="leaderboard-td" style="text-align: center;">
+            <span style="display:inline-flex; align-items:center; gap:0.25rem; padding:0.2rem 0.6rem; border-radius:4px; background:var(--success-light); color:var(--success); font-size:0.78rem; font-weight:700;">
+              🎓 ${certCount}
+            </span>
+          </td>
           <td class="leaderboard-td" style="text-align: right;">
             <div style="display: inline-flex; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background-color: var(--primary-light); color: var(--primary); font-weight: 800; font-size: 1.1rem; border: 1px solid var(--border-glow); font-family: var(--font-display);">
               ${Math.round(cand.talent_score)}
@@ -140,9 +225,10 @@
       });
       
       leaderboardCard.style.display = "block";
-    }
+        }
+      }
 
-    loadLeaderboard();
+      loadLeaderboard();
   </script>
 </body>
 </html>

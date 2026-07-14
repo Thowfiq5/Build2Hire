@@ -115,9 +115,326 @@ button, input, select, textarea { font-family: inherit; }
 .modal-box { background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 2.5rem; position: relative; }
 .modal-close { position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); }
 
+/* Dashboard Layout & Sidebar styling */
+.dashboard-layout {
+  display: flex;
+  min-height: calc(100vh - 70px);
+  margin-top: 70px;
+}
+.sidebar {
+  width: 280px;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.main-content {
+  flex-grow: 1;
+  padding: 2.5rem;
+  background-color: var(--bg-primary);
+  overflow-x: hidden;
+}
+.sidebar-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: var(--transition);
+}
+.sidebar-link:hover, .sidebar-link.active {
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+/* Mobile Hamburger Menu Drawer styles */
+.burger-menu-btn {
+  display: none;
+}
+.mobile-menu-drawer {
+  position: fixed;
+  top: 70px;
+  right: -300px;
+  width: 300px;
+  height: calc(100vh - 70px);
+  background-color: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  z-index: 200;
+  transition: var(--transition);
+  box-shadow: var(--card-shadow);
+  display: block;
+}
+.mobile-menu-drawer.active {
+  right: 0;
+}
+
+/* Split-Screen Code Sandbox Layout */
+.sandbox-container {
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  height: 520px;
+}
+.sandbox-editors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+.sandbox-textarea {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  resize: none;
+  flex-grow: 1;
+  font-size: 0.85rem;
+  outline: none;
+  transition: var(--transition);
+}
+.sandbox-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--border-glow);
+}
+.sandbox-preview {
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  border-radius: var(--radius-sm);
+  height: 100%;
+  width: 100%;
+}
+
+/* Interactive Timed Quiz assessment styling */
+.quiz-option {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  text-align: left;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  width: 100%;
+  outline: none;
+}
+.quiz-option:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.quiz-option.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.quiz-option.correct {
+  background-color: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+.quiz-option.incorrect {
+  background-color: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+/* Recommendations timeline roadmap layout */
+.roadmap-container {
+  position: relative;
+  padding: 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.roadmap-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background-color: var(--border-color);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.roadmap-node {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+.roadmap-node:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.roadmap-card {
+  width: 45%;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+}
+.roadmap-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 12px 25px -5px rgba(99,102,241,0.15), var(--card-shadow);
+}
+.roadmap-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  border: 4px solid var(--bg-primary);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  transition: var(--transition);
+}
+.roadmap-dot.active {
+  background-color: var(--primary);
+  border-color: var(--primary-light);
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/* Animations */
+.xp-bar-container {
+  height: 10px;
+  background-color: var(--bg-tertiary);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  margin-top: 0.5rem;
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  width: 0%;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.level-up-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 1.25rem 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 9999;
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Sponsored Challenges Gold Glow Card */
+.card-sponsored {
+  border: 2px solid var(--warning) !important;
+  animation: goldGlow 3s infinite alternate;
+}
+@keyframes goldGlow {
+  from { box-shadow: 0 0 8px rgba(245, 158, 11, 0.15), var(--card-shadow); }
+  to { box-shadow: 0 0 20px rgba(245, 158, 11, 0.45), var(--card-shadow); }
+}
+
+/* Sandbox Terminal Console panel */
+.sandbox-console {
+  background-color: #090d16;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  height: 120px;
+  overflow-y: auto;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-left: 3px solid var(--primary);
+}
+.console-line {
+  display: block;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.console-line-info {
+  color: #a6accd;
+}
+.console-line-error {
+  color: var(--danger);
+  font-weight: 600;
+}
+.console-line-success {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* Sandbox Unit Testing panel styles */
+.test-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.test-item.passed {
+  border-color: var(--success);
+  background-color: var(--success-light);
+}
+.test-item.failed {
+  border-color: var(--danger);
+  background-color: var(--danger-light);
+}
+
 @media (max-width: 768px) {
-  .nav-links { display: none; }
+  .desktop-nav { display: none !important; }
+  .burger-menu-btn { display: block; position: relative; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-secondary); transition: var(--transition); }
+  .burger-menu-btn:hover { color: var(--primary); }
   .container { padding: 0 1rem; }
   h1 { font-size: 2.2rem !important; }
   .grid-2col { grid-template-columns: 1fr !important; }
+  
+  /* Mobile Sidebar responsive stack */
+  .dashboard-layout { flex-direction: column; }
+  .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 1.5rem 1rem; gap: 1.5rem; }
+  .main-content { padding: 1.5rem 1rem; }
+  
+  /* Mobile Sandbox stack */
+  .sandbox-container { grid-template-columns: 1fr; height: auto; }
+  .sandbox-preview { min-height: 250px; }
+  
+  /* Mobile Roadmap timeline */
+  .roadmap-line { left: 20px; }
+  .roadmap-node { flex-direction: row !important; }
+  .roadmap-card { width: calc(100% - 40px); margin-left: 40px; padding: 1.25rem; }
+  .roadmap-dot { left: 20px; }
 }

@@ -12,42 +12,7 @@
 
   <div class="dashboard-layout">
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div style="display: flex; flex-direction: column; gap: 2rem;">
-        <div>
-          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
-            Workspace
-          </p>
-          <ul class="sidebar-menu">
-            <li>
-              <a href="portfolio.html" class="sidebar-link">
-                🎨 <span>My Showcase</span>
-              </a>
-            </li>
-            <li>
-              <a href="marketplace.html" class="sidebar-link">
-                🧩 <span>Challenges</span>
-              </a>
-            </li>
-            <li>
-              <a href="recommendations.html" class="sidebar-link active">
-                🤖 <span>AI Recommendations</span>
-              </a>
-            </li>
-            <li>
-              <a href="leaderboard.html" class="sidebar-link">
-                🏆 <span>Leaderboard</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
-        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
-        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">candidate</p>
-      </div>
-    </aside>
+    <aside class="sidebar" id="main-sidebar"></aside>
 
     <main class="main-content">
       <div style="margin-bottom: 2rem;">
@@ -66,41 +31,230 @@
         <a href="portfolio.html" class="btn btn-primary" style="margin-top: 1rem;">Add Skills</a>
       </div>
 
-      <div id="recommendations-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <!-- ====== HOW TO LEARN GUIDE ====== -->
+      <div id="how-to-learn-guide" class="card" style="margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(139,92,246,0.07) 100%); border: 1px solid var(--border-glow);">
+        <div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <span style="font-size:1.6rem;">🎓</span>
+          <div>
+            <h3 style="font-size:1.15rem; font-family: var(--font-display); margin:0; color: var(--text-primary);">How to Learn & Get Ranked</h3>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Follow these 4 steps to upgrade your skills, earn certificates, and appear on the Leaderboard.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+
+          <!-- Step 1 -->
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">1</div>
+            <div style="font-size:1.6rem; margin-bottom:0.6rem;">👤</div>
+            <strong style="font-size:0.9rem; color: var(--primary); display:block; margin-bottom:0.35rem;">1. Complete Your Profile</strong>
+            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Add your skills and set your preferred job role in <strong>My Showcase</strong>. This unlocks your personalised roadmap below.</p>
+            <a href="portfolio.html" style="display:inline-block; margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--primary); text-decoration:none;">→ Go to My Showcase</a>
+          </div>
+
+          <!-- Step 2 -->
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">2</div>
+            <div style="font-size:1.6rem; margin-bottom:0.6rem;">🗺️</div>
+            <strong style="font-size:0.9rem; color: var(--secondary); display:block; margin-bottom:0.35rem;">2. View Your AI Roadmap</strong>
+            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Click <strong>"View Career Roadmap"</strong> on your matched role card below. The AI generates a step-by-step learning path tailored to your current skill level.</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">3</div>
+            <div style="font-size:1.6rem; margin-bottom:0.6rem;">📚</div>
+            <strong style="font-size:0.9rem; color: var(--warning); display:block; margin-bottom:0.35rem;">3. Study & Upgrade Skills</strong>
+            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Find a skill at <strong>Basic stage</strong> and click <strong>⚡ Upgrade to Medium</strong>. Read the study slides, then click <strong>"Take Quiz ⚡"</strong> to start your assessment.</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">4</div>
+            <div style="font-size:1.6rem; margin-bottom:0.6rem;">🏆</div>
+            <strong style="font-size:0.9rem; color: var(--success); display:block; margin-bottom:0.35rem;">4. Earn Certificate & Rank</strong>
+            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Score <strong>50% or above</strong> in any quiz to earn a verified certificate, gain XP, and unlock your rank on the <strong>Leaderboard</strong>.</p>
+            <a href="leaderboard.html" style="display:inline-block; margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--success); text-decoration:none;">→ View Leaderboard</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LEARNING PROGRESS SUMMARY CARD -->
+      <div id="learning-progress-card" class="card" style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid var(--border-color); display: none;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+          <span style="font-size: 1.4rem;">📈</span>
+          <div>
+            <strong style="font-size: 1rem; color: var(--text-primary); display: block;">Your Learning Progress</strong>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Track your skill stage journey from Basic to Advanced.</p>
+          </div>
+          <div id="learning-overall-pct" style="margin-left: auto; font-size: 1.5rem; font-weight: 800; color: var(--primary); font-family: var(--font-display);">0%</div>
+        </div>
+        <!-- Progress Bar -->
+        <div style="background: var(--bg-tertiary); border-radius: 999px; height: 8px; margin-bottom: 1.5rem; overflow: hidden;">
+          <div id="learning-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--warning), var(--primary), var(--success)); border-radius: 999px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1);"></div>
+        </div>
+        <!-- Stage Counters -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--border-color); text-align: center;">
+            <div id="basic-count" style="font-size: 1.8rem; font-weight: 800; color: var(--text-muted); font-family: var(--font-display);">0</div>
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Basic Skills</span>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Needs upgrading</div>
+          </div>
+          <div style="background: var(--warning-light, rgba(245,158,11,0.1)); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--warning); text-align: center;">
+            <div id="medium-count" style="font-size: 1.8rem; font-weight: 800; color: var(--warning); font-family: var(--font-display);">0</div>
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--warning); text-transform: uppercase;">Medium Skills</span>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Keep learning!</div>
+          </div>
+          <div style="background: var(--success-light); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--success); text-align: center;">
+            <div id="advanced-count" style="font-size: 1.8rem; font-weight: 800; color: var(--success); font-family: var(--font-display);">0</div>
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--success); text-transform: uppercase;">Advanced Skills</span>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Expert level ✔</div>
+          </div>
+        </div>
+        <!-- CTA if skills at Basic -->
+        <div id="basic-upgrade-cta" style="display: none; margin-top: 1.25rem; padding: 0.85rem 1rem; background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(99,102,241,0.1)); border-radius: var(--radius-sm); border: 1px solid var(--warning); font-size: 0.82rem; color: var(--text-secondary);">
+          ⚡ You have <strong id="basic-cta-count" style="color: var(--warning);">0</strong> skill(s) at Basic level. <strong>Click "View Career Roadmap"</strong> on your matched role below to see the upgrade path, study course slides, and take a quiz to level up!
+        </div>
+      </div>
+
+      <!-- RECOMMENDATION LIST CONTAINER -->
+      <div id="recommendations-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
         <!-- Dynamic Recommendation Cards -->
+      </div>
+
+      <!-- AI CAREER ADVISOR CHAT -->
+      <div class="card" style="margin-bottom: 3rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        <h3 style="font-size: 1.25rem; font-family: var(--font-display); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          🤖 <span>Build2Hire Career Advisor</span>
+        </h3>
+        
+        <div id="advisor-chat-history" style="height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <!-- Dynamic chatbot conversation -->
+        </div>
+
+        <form id="advisor-chat-form" style="display: flex; gap: 0.5rem;">
+          <input type="text" id="advisor-chat-input" class="form-control" placeholder="Ask advisor: e.g. How do I earn more XP?" style="flex-grow: 1; font-size: 0.85rem;">
+          <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Ask AI</button>
+        </form>
+      </div>
+
+      <!-- INTERACTIVE ROADMAP TIMELINE CONTAINER (HIDDEN BY DEFAULT) -->
+      <div id="roadmap-section" class="card" style="display: none; padding: 2.5rem; border-top: 4px solid var(--primary); margin-top: 2rem;">
+        <div class="flex-between" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem;">
+          <div>
+            <span class="badge badge-success" style="font-weight: 700;">AI GENERATED</span>
+            <h3 id="roadmap-title" style="font-size: 1.4rem; font-family: var(--font-display); margin-top: 0.25rem;">Interactive Learning Roadmap</h3>
+          </div>
+          <button onclick="closeRoadmap()" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">✕ Close Roadmap</button>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 0.95rem;">
+          Here is your step-by-step career path checklist. Complete missing milestones to unlock 100% eligibility.
+        </p>
+
+        <!-- Vertical Timeline Grid -->
+        <div class="roadmap-container">
+          <div class="roadmap-line"></div>
+          <div id="roadmap-nodes-container">
+            <!-- Dynamic Nodes will render here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- COURSE STUDY MODAL -->
+      <div id="study-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1100; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
+          <!-- Modal Header -->
+          <div class="flex-between" style="border-bottom: 1px solid var(--border-color); padding: 1.25rem 1.5rem; background-color: var(--bg-tertiary);">
+            <div>
+              <span class="badge badge-primary" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Build2Hire Academy</span>
+              <h3 id="study-title" style="font-size: 1.25rem; font-family: var(--font-display); margin-top: 0.25rem; color: var(--text-primary);">Course Title</h3>
+            </div>
+            <button onclick="window.closeStudyModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; padding: 0.25rem;">✕</button>
+          </div>
+
+          <!-- Modal Body (Slides) -->
+          <div id="study-body" style="padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 1rem; color: var(--text-primary);">
+            <!-- Dynamic study slide content -->
+          </div>
+
+          <!-- Modal Footer -->
+          <div style="border-top: 1px solid var(--border-color); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; background-color: var(--bg-tertiary);">
+            <button onclick="window.prevSlide()" id="study-prev-btn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Previous</button>
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+              Slide <span id="study-slide-num">1</span> of 3
+            </div>
+            <button onclick="window.nextSlide()" id="study-next-btn" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Next Slide</button>
+            <a href="" id="study-quiz-btn" class="btn btn-success" style="display: none; padding: 0.5rem 1.25rem; font-size: 0.85rem; font-weight: 700; text-decoration: none; text-align: center;">Take Quiz ⚡</a>
+          </div>
+        </div>
       </div>
     </main>
   </div>
 
   <script src="shared.js"></script>
   <script>
-    const user = getUser();
-    if (!user) {
-      window.location.href = "login.html";
-    } else {
-      document.getElementById('user-role-badge').textContent = user.role;
-      renderHeader();
+    const auth = withAuth(['candidate']);
+    if (auth) {
+      const { user, db, candidate } = auth;
+
+    // Refresh XP Progress layout inside the sidebar
+    function refreshSidebarStats() {
+      document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+      document.getElementById('level-num').textContent = candidate.level || 1;
+      document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+
+      let maxLvlXp = 1000;
+      let minLvlXp = 0;
+      if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+      else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+      else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+
+      const pct = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+      setTimeout(() => {
+        document.getElementById('xp-bar-fill').style.width = `${pct}%`;
+      }, 100);
     }
+
+    refreshSidebarStats();
 
     // Default template roles to map candidate skills against
     const jobTemplates = [
       {
+        key: "frontend",
         roleName: "Frontend Developer",
         description: "Focuses on user interfaces, responsive design layouts, client-side frameworks, and state integrations.",
         requiredSkills: ["React", "JavaScript", "HTML", "CSS Variables", "Next.js", "TailwindCSS"],
         reasoning: "Excellent UI aesthetics. Build more reactive dashboard components to reach full eligibility."
       },
       {
+        key: "backend",
+        roleName: "Backend Engineer",
+        description: "Focuses on databases, server setups, API routings, and modular backend system pipelines.",
+        requiredSkills: ["Node.js", "Express", "MySQL", "API Design", "Redis", "Database"],
+        reasoning: "Excellent server query structuring. Study relational caches to improve endpoint speed."
+      },
+      {
+        key: "database",
+        roleName: "Database Administrator",
+        description: "Specializes in database design, query caching, indexing configurations, and scalable schemas.",
+        requiredSkills: ["MySQL", "Database", "MongoDB", "SQL", "Database Design", "Redis"],
+        reasoning: "Consider taking backend schema challenges to reinforce database index and cache configurations."
+      },
+      {
+        key: "fullstack",
         roleName: "Full Stack Engineer",
         description: "Handles both client application workflows and scalable servers, database entities, and endpoint interfaces.",
         requiredSkills: ["React", "JavaScript", "PHP", "MySQL", "Node.js", "Express", "API Design"],
         reasoning: "Great combination of client layout design and server querying capabilities."
       },
       {
-        roleName: "Database Administrator",
-        description: "Specializes in relational/non-relational database design, query caching, indexing configurations, and scalable schemas.",
-        requiredSkills: ["MySQL", "Database", "MongoDB", "SQL", "Database Design", "Redis"],
-        reasoning: "Consider taking backend schema challenges to reinforce performance optimizations."
+        key: "video",
+        roleName: "Video Editor",
+        description: "Focuses on creative media assembly, sound design, transitions, encoding, and video promos.",
+        requiredSkills: ["Premiere Pro", "After Effects", "Color Grading", "Final Cut Pro", "Audio Design"],
+        reasoning: "Superb portfolio. Take creative media quizzes to showcase verified capability speed."
       }
     ];
 
@@ -113,33 +267,61 @@
       container.style.display = "none";
       emptyState.style.display = "none";
 
-      try {
-        const res = await fetch("/api/career/recommend");
-        const data = await res.json();
-        
+      // Simulate a small delay for premium AI feel
+      setTimeout(() => {
         loading.style.display = "none";
-        if (data.success && data.data.length > 0) {
-          renderRecs(data.data);
-        } else {
-          generateMockRecommendations();
-        }
-      } catch (err) {
-        console.warn("Backend offline, generating real-time match analysis locally:", err.message);
-        loading.style.display = "none";
-        generateMockRecommendations();
+        generateMatchingRecommendations();
+      }, 600);
+    }
+
+    // ==========================================
+    // 📊 LEARNING PROGRESS CARD RENDERER
+    // ==========================================
+    function renderLearningProgress(skillsList) {
+      const card = document.getElementById('learning-progress-card');
+      if (!card || skillsList.length === 0) return;
+
+      const levels = candidate.skillLevels || {};
+      let basicCount = 0, mediumCount = 0, advancedCount = 0;
+
+      skillsList.forEach(sk => {
+        const lvl = levels[sk] || 'Basic';
+        if (lvl === 'Basic') basicCount++;
+        else if (lvl === 'Medium') mediumCount++;
+        else if (lvl === 'Advanced') advancedCount++;
+      });
+
+      // Weighted score: Basic=0pts, Medium=1pt, Advanced=2pts out of max 2pts per skill
+      const totalPoints = (mediumCount * 1) + (advancedCount * 2);
+      const maxPoints = skillsList.length * 2;
+      const pct = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+
+      card.style.display = 'block';
+      document.getElementById('basic-count').textContent = basicCount;
+      document.getElementById('medium-count').textContent = mediumCount;
+      document.getElementById('advanced-count').textContent = advancedCount;
+      document.getElementById('learning-overall-pct').textContent = pct + '%';
+
+      setTimeout(() => {
+        document.getElementById('learning-progress-bar').style.width = pct + '%';
+      }, 200);
+
+      // Show CTA if user has basic skills to upgrade
+      const ctaDiv = document.getElementById('basic-upgrade-cta');
+      const ctaCount = document.getElementById('basic-cta-count');
+      if (basicCount > 0) {
+        ctaDiv.style.display = 'block';
+        if (ctaCount) ctaCount.textContent = basicCount;
+      } else {
+        ctaDiv.style.display = 'none';
       }
     }
 
-    function generateMockRecommendations() {
+    function generateMatchingRecommendations() {
       const container = document.getElementById('recommendations-container');
       const emptyState = document.getElementById('no-skills-state');
       
-      // Get skills list from localStorage (same as portfolio page)
-      let skillsList = ["React", "CSS Variables", "JavaScript", "PHP", "MySQL"];
-      if (localStorage.getItem('candidate_profile')) {
-        const prof = JSON.parse(localStorage.getItem('candidate_profile'));
-        skillsList = prof.skills || [];
-      }
+      const skillsList = candidate.skills || [];
 
       if (skillsList.length === 0) {
         emptyState.style.display = "block";
@@ -147,7 +329,10 @@
         return;
       }
 
-      // Calculate matching ratios dynamically!
+      // Render learning progress card
+      renderLearningProgress(skillsList);
+
+      // Calculate matching ratios dynamically
       const recs = jobTemplates.map(tpl => {
         const matched = tpl.requiredSkills.filter(s => 
           skillsList.some(userSkill => userSkill.toLowerCase() === s.toLowerCase())
@@ -158,6 +343,7 @@
         const matchPercentage = Math.round((matched.length / tpl.requiredSkills.length) * 100);
 
         return {
+          key: tpl.key,
           roleName: tpl.roleName,
           description: tpl.description,
           matchPercentage,
@@ -184,7 +370,7 @@
 
         const card = document.createElement('div');
         card.className = "card";
-        card.style.cssText = `padding: 2rem; border-left: 5px solid ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--text-muted)'}; margin-bottom: 1.5rem;`;
+        card.style.cssText = `padding: 2rem; border-left: 5px solid ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--text-muted)'}; margin-bottom: 0.5rem;`;
 
         let matchedBadges = rec.matchedSkills.length === 0 
           ? `<span style="font-size: 0.85rem; color: var(--text-muted);">None yet</span>`
@@ -242,14 +428,387 @@
             <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 520px;">
               💡 <strong>Engine Feedback:</strong> ${rec.reasoning}
             </p>
-            ${rec.missingSkills.length > 0 ? `<a href="marketplace.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Find Challenges</a>` : ""}
+            <div style="display: flex; gap: 0.5rem;">
+              <button onclick="generateRoadmap('${rec.key}')" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+                🗺️ View Career Roadmap
+              </button>
+              ${rec.missingSkills.length > 0 ? `<a href="quiz.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Take Quizzes</a>` : ""}
+            </div>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
+    // ==========================================
+    // 🗺️ ROADMAP GENERATION ENGINE
+    // ==========================================
+    // ==========================================
+    // 🗺️ ROADMAP GENERATION ENGINE
+    // ==========================================
+    const ROADMAP_STEPS = {
+      frontend: [
+        {
+          title: "Sleek CSS Variables styling",
+          desc: "Construct cohesive, harmonic global style color palettes and layout radius tokens.",
+          skill: "CSS Variables",
+          category: "Frontend",
+          slides: [
+            "<h3>What are CSS Variables?</h3><p>CSS Custom Properties (variables) let you store style values globally and dynamically swap themes (like light/dark modes) in real-time without rewriting stylesheets.</p><pre style='background:var(--bg-tertiary);padding:0.5rem;border-radius:4px;border:1px solid var(--border-color);margin:0.5rem 0;'>:root {\n  --primary: #6366f1;\n}</pre>",
+            "<h3>Theme Switching</h3><p>By defining standard styling values under a selector like <code>[data-theme='dark']</code>, you can alter styles on the document root via simple JS classes.</p>",
+            "<h3>Best Practices</h3><p>Always use fallback values in case your root variable isn't fully defined yet, e.g. <code>var(--primary, #000)</code>. This ensures style resiliency.</p>"
+          ]
+        },
+        {
+          title: "Core JavaScript logic",
+          desc: "Handle dynamic DOM selections, clicks, array mappings, and state objects in browser.",
+          skill: "JavaScript",
+          category: "Frontend",
+          slides: [
+            "<h3>JavaScript DOM Control</h3><p>Modern JS allows querying the webpage elements using <code>document.querySelector</code> and adding event triggers to capture user interactions.</p>",
+            "<h3>Client State & LocalStorage</h3><p>Persist simple candidate states by parsing and writing JSON objects to <code>localStorage</code>, which stores state across sessions.</p>",
+            "<h3>Functional Arrays</h3><p>Master array manipulation tools like <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> to dynamically map structured data arrays to markup.</p>"
+          ]
+        },
+        {
+          title: "Modular React structure",
+          desc: "Learn hooks, states, rendering lifecycles, and component code structures.",
+          skill: "React",
+          category: "Frontend",
+          slides: [
+            "<h3>React Components & Props</h3><p>React builds interfaces using isolated components that accept custom parameters called props. This keeps UI modular and reusable.</p>",
+            "<h3>React Hook State</h3><p>Use <code>useState</code> to track local state. Modifying state automatically triggers React to re-render the components to reflect the update.</p>",
+            "<h3>Lvl Up Assessments</h3><p>Ready to prove your Frontend React credentials? Study React rendering optimization patterns and pass the assessment with 50%+ to earn your certificate.</p>"
+          ]
+        }
+      ],
+      backend: [
+        {
+          title: "NodeJS Server Routing",
+          desc: "Construct HTTP REST API endpoint parameters, headers, and payload structures.",
+          skill: "Node.js",
+          category: "Backend",
+          slides: [
+            "<h3>API Server Basics</h3><p>NodeJS uses frameworks like Express to setup HTTP request listeners that parse route directories and return structured JSON responses.</p>",
+            "<h3>JSON Web Tokens (JWT)</h3><p>Secure backend routes by signing session payloads with private secret keys. Verify client headers to authenticate incoming user scopes.</p>",
+            "<h3>REST API design</h3><p>Follow standard HTTP methods: GET to retrieve info, POST to create resources, PUT to update details, and DELETE to remove entities.</p>"
+          ]
+        },
+        {
+          title: "Scalable Server Caches",
+          desc: "Setup Redis caches to reduce database query execution bottlenecks.",
+          skill: "Redis",
+          category: "Backend",
+          slides: [
+            "<h3>What is Caching?</h3><p>Reduce query database lookup times by storing high-frequency read results in key-value caches like Redis in-memory tables.</p>",
+            "<h3>Cache Invalidation</h3><p>Ensure client cache updates when database fields modify. Set TTL (Time-To-Live) expirations on cache keys to automatically purge stale details.</p>",
+            "<h3>Assessment Target</h3><p>Passing the Backend timed quiz with 50%+ will award your Verified Backend Engineer credential on your candidate profile!</p>"
+          ]
+        }
+      ],
+      database: [
+        {
+          title: "Relational SQL indexes",
+          desc: "Speed up table read queries by defining indexes, key constraints, and joins.",
+          skill: "MySQL",
+          category: "Database",
+          slides: [
+            "<h3>SQL Database Schema</h3><p>Relational databases structure data in strict tables with column datatypes and rows. Use Primary and Foreign keys to link tables.</p>",
+            "<h3>Query Indexing</h3><p>Speed up heavy read filters by indexing columns. Indexes allow the database engine to locate values quickly without scanning entire tables.</p>",
+            "<h3>Optimizing Joins</h3><p>Use INNER, LEFT, and RIGHT joins to combine tables. Avoid nested subqueries inside select statements to maintain quick execution.</p>"
+          ]
+        },
+        {
+          title: "NoSQL document collections",
+          desc: "Structure high-concurrency non-relational query schemas in MongoDB.",
+          skill: "MongoDB",
+          category: "Database",
+          slides: [
+            "<h3>NoSQL vs SQL</h3><p>NoSQL databases like MongoDB store records as JSON documents instead of strict rows. This supports highly flexible, changing schemas.</p>",
+            "<h3>MongoDB Aggregations</h3><p>Aggregate results using stage pipelines: <code>$match</code> to filter, <code>$group</code> to collect values, and <code>$sort</code> to order documents.</p>",
+            "<h3>Study Verification</h3><p>Earn your Database Admin Certificate by taking the verification assessment. Score >= 50% to show recruiters your index configurations work.</p>"
+          ]
+        }
+      ],
+      fullstack: [
+        {
+          title: "Fullstack Architecture mapping",
+          desc: "Connect React web UI frameworks with backends, MySQL tables, and auth channels.",
+          skill: "React",
+          category: "Frontend",
+          slides: [
+            "<h3>Integrating Client & Server</h3><p>Fullstack apps bridge client pages (React) with servers (NodeJS) using fetch requests to fetch or submit structured database entries.</p>",
+            "<h3>Full Stack Security</h3><p>Store encrypted passwords inside databases using secure hash frameworks like bcrypt, keeping candidate login data safe.</p>",
+            "<h3>Hiring Target</h3><p>Recruiters check for full stack capability. Score 50%+ on assessments to lock in your Verified Fullstack credential badge.</p>"
+          ]
+        }
+      ],
+      video: [
+        {
+          title: "Creative Video Assembly",
+          desc: "Produce and polish daily YouTube advertisements, optimize exports, and compile clip segments.",
+          skill: "Premiere Pro",
+          category: "Creative",
+          slides: [
+            "<h3>Timeline Editing</h3><p>Good video assembly depends on fast cuts, audio track alignments, transitions, and pacing. Keep cut-aways clean and matching audio cues.</p>",
+            "<h3>H.264 Web Compression</h3><p>Export web-optimized formats. Target 1080p MP4 clips with H.264 codecs to deliver crisp visual output at low file sizes.</p>",
+            "<h3>Creative Assessment</h3><p>Unlock your Creative Video Editor Certificate by completing the timed assessment quiz with a score of 50% or above.</p>"
+          ]
+        }
+      ]
+    };
+
+    function generateRoadmap(roleKey) {
+      const section = document.getElementById('roadmap-section');
+      const container = document.getElementById('roadmap-nodes-container');
+      const title = document.getElementById('roadmap-title');
+
+      const template = jobTemplates.find(tpl => tpl.key === roleKey);
+      title.textContent = `${template.roleName} Learning Roadmap`;
+      container.innerHTML = "";
+
+      const steps = ROADMAP_STEPS[roleKey] || [];
+      const userSkills = candidate.skills || [];
+
+      steps.forEach((step, idx) => {
+        // Evaluate if step is completed
+        let isCompleted = false;
+        let skillLvl = "None";
+        
+        if (step.skill) {
+          const hasSkill = userSkills.some(s => s.toLowerCase() === step.skill.toLowerCase());
+          if (hasSkill) {
+            skillLvl = (candidate.skillLevels && candidate.skillLevels[step.skill]) || "Basic";
+            // Completed if skill level is Medium or Advanced
+            if (skillLvl === "Medium" || skillLvl === "Advanced") {
+              isCompleted = true;
+            }
+          }
+        } else {
+          isCompleted = (candidate.assessment_score || 0) >= 50;
+        }
+
+        const node = document.createElement('div');
+        node.className = "roadmap-node";
+
+        let actionBtn = "";
+        let levelStatus = "";
+
+        if (step.skill) {
+          if (skillLvl === "None") {
+            levelStatus = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.7rem; text-transform: none; border: 1px solid var(--danger);">Unlearned</span>`;
+            actionBtn = `<button onclick="window.openStudyModal('${roleKey}', ${idx}, 'Basic')" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem;">📖 Study Basic Course</button>`;
+          } else if (skillLvl === "Basic") {
+            levelStatus = `<span class="badge" style="background-color: var(--warning-light); color: var(--warning); font-size: 0.7rem; text-transform: none; border: 1px solid var(--warning);">⚠️ Basic Stage</span>`;
+            actionBtn = `<button onclick="window.openStudyModal('${roleKey}', ${idx}, 'Medium')" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; background: linear-gradient(135deg, var(--warning) 0%, var(--secondary) 100%); border: none;">⚡ Upgrade to Medium</button>`;
+          } else {
+            levelStatus = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.7rem; text-transform: none; border: 1px solid var(--success);">✅ ${skillLvl} Stage</span>`;
+            actionBtn = `<div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
+              <span style="color:var(--success); font-size:0.8rem; font-weight:600;">✓ Milestone Completed</span>
+              <button onclick="window.openStudyModal('${roleKey}', ${idx}, '${skillLvl}')" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.7rem; border-radius:4px;">Review</button>
+            </div>`;
+          }
+        } else {
+          // General assessment step
+          if (!isCompleted) {
+            levelStatus = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.7rem; text-transform: none; border: 1px solid var(--danger);">Pending Exam</span>`;
+            actionBtn = `<a href="quiz.html?category=${step.category ? step.category.toLowerCase() : 'frontend'}" class="btn btn-success" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:white; font-weight:700;">⚡ Take Final Assessment</a>`;
+          } else {
+            levelStatus = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.7rem; text-transform: none; border: 1px solid var(--success);">Verified Certified</span>`;
+            actionBtn = `<div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
+              <span style="color:var(--success); font-size:0.8rem; font-weight:600;">✓ Verified Certificate Unlocked</span>
+              <a href="quiz.html" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.7rem; border-radius:4px;">Review Exam</a>
+            </div>`;
+          }
+        }
+
+        node.innerHTML = `
+          <div class="roadmap-dot ${isCompleted ? 'active' : ''}"></div>
+          <div class="roadmap-card" style="border-left: 4px solid ${isCompleted ? 'var(--success)' : 'var(--border-color)'};">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge" style="background-color:var(--bg-tertiary); color:var(--text-secondary); font-size:0.7rem;">Step ${idx + 1}</span>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                ${levelStatus}
+                ${isCompleted ? '<span style="color:var(--success); font-size:1.1rem;">✅</span>' : '<span style="color:var(--text-muted); font-size:0.9rem;">🔒 Pending</span>'}
+              </div>
+            </div>
+            <h4 style="font-size:1.1rem; margin-top:0.5rem; margin-bottom:0.25rem; font-family:var(--font-sans);">${step.title}</h4>
+            <p style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4;">${step.desc}</p>
+            ${actionBtn}
+          </div>
+        `;
+        container.appendChild(node);
+      });
+
+      section.style.display = "block";
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // 📖 STUDY SLIDES STATE CONTROLLERS
+    // ==========================================
+    let currentStudySlides = [];
+    let currentStudySlideIdx = 0;
+    let currentStudyQuizLink = "";
+
+    window.openStudyModal = function(roleKey, idx, targetLevel = "Medium") {
+      const step = ROADMAP_STEPS[roleKey][idx];
+      if (!step) return;
+
+      currentStudySlides = step.slides || [];
+      currentStudySlideIdx = 0;
+      
+      let categoryParam = "Frontend";
+      if (step.category) {
+        categoryParam = step.category;
+      }
+      
+      let skillParam = step.skill || "";
+      currentStudyQuizLink = `quiz.html?category=${categoryParam.toLowerCase()}&skill=${encodeURIComponent(skillParam)}&targetLevel=${targetLevel}`;
+
+      document.getElementById('study-title').textContent = `${step.title} (${targetLevel} prep)`;
+      document.getElementById('study-modal').style.display = "flex";
+      
+      renderCurrentSlide();
+    }
+
+    window.closeStudyModal = function() {
+      document.getElementById('study-modal').style.display = "none";
+    }
+
+    function renderCurrentSlide() {
+      const body = document.getElementById('study-body');
+      body.innerHTML = currentStudySlides[currentStudySlideIdx] || "";
+      
+      document.getElementById('study-slide-num').textContent = currentStudySlideIdx + 1;
+      
+      const prevBtn = document.getElementById('study-prev-btn');
+      const nextBtn = document.getElementById('study-next-btn');
+      const quizBtn = document.getElementById('study-quiz-btn');
+
+      prevBtn.disabled = currentStudySlideIdx === 0;
+
+      if (currentStudySlideIdx === currentStudySlides.length - 1) {
+        nextBtn.style.display = "none";
+        quizBtn.style.display = "inline-block";
+        quizBtn.href = currentStudyQuizLink;
+      } else {
+        nextBtn.style.display = "inline-block";
+        quizBtn.style.display = "none";
+      }
+    }
+
+    window.nextSlide = function() {
+      if (currentStudySlideIdx < currentStudySlides.length - 1) {
+        currentStudySlideIdx++;
+        renderCurrentSlide();
+      }
+    }
+
+    window.prevSlide = function() {
+      if (currentStudySlideIdx > 0) {
+        currentStudySlideIdx--;
+        renderCurrentSlide();
+      }
+    }
+
+    function closeRoadmap() {
+      document.getElementById('roadmap-section').style.display = "none";
+    }
+
+    // ==========================================
+    // 🤖 AI ADVISOR CHAT ENGINE
+    // ==========================================
+    function initAdvisorChat() {
+      const history = document.getElementById('advisor-chat-history');
+      if (!history) return;
+
+      const firstName = candidate.fullName ? candidate.fullName.split(' ')[0] : "Candidate";
+      history.innerHTML = `
+        <div style="align-self: flex-start; background-color: var(--border-color); color: var(--text-primary); padding: 0.5rem 0.85rem; border-radius: 12px 12px 12px 0; font-size: 0.85rem; max-width: 80%; line-height: 1.4;">
+          Hi <strong>${firstName}</strong>! 🤖 I am your Build2Hire Career Advisor. Ask me how to increase your Talent Score, view roadmaps, or find jobs!
+        </div>
+      `;
+
+      document.getElementById('advisor-chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('advisor-chat-input');
+        const query = input.value.trim();
+        if (!query) return;
+
+        // User message
+        appendChatMessage(query, 'user');
+        input.value = "";
+
+        // Typing indicator
+        const typingId = appendChatMessage("...", 'typing');
+
+        setTimeout(() => {
+          // Remove typing indicator
+          const typingEl = document.getElementById(typingId);
+          if (typingEl) typingEl.remove();
+
+          // Generate response
+          const reply = getAIAdvisorReply(query);
+          appendChatMessage(reply, 'advisor');
+        }, 800 + Math.random() * 400);
+      });
+    }
+
+    function appendChatMessage(text, sender) {
+      const history = document.getElementById('advisor-chat-history');
+      const msg = document.createElement('div');
+      const msgId = 'msg-' + Date.now();
+      msg.id = msgId;
+
+      let style = "";
+      if (sender === 'user') {
+        style = "align-self: flex-end; background-color: var(--primary); color: white; padding: 0.5rem 0.85rem; border-radius: 12px 12px 0 12px; font-size: 0.85rem; max-width: 80%; line-height: 1.4;";
+      } else if (sender === 'typing') {
+        style = "align-self: flex-start; background-color: var(--border-color); color: var(--text-muted); padding: 0.5rem 0.85rem; border-radius: 12px 12px 12px 0; font-size: 0.85rem; max-width: 80%; font-style: italic;";
+      } else {
+        style = "align-self: flex-start; background-color: var(--border-color); color: var(--text-primary); padding: 0.5rem 0.85rem; border-radius: 12px 12px 12px 0; font-size: 0.85rem; max-width: 80%; line-height: 1.4;";
+      }
+
+      msg.style.cssText = style;
+      msg.innerHTML = text;
+      history.appendChild(msg);
+      history.scrollTop = history.scrollHeight;
+      return msgId;
+    }
+
+    function getAIAdvisorReply(query) {
+      const q = query.toLowerCase();
+      const score = candidate.talent_score || 0;
+      const level = candidate.level || 1;
+
+      if (q.includes('score') || q.includes('talent')) {
+        return `Your verified Talent Score is currently at <strong>${score}%</strong>. You can improve this by taking category quizzes (under the Quizzes tab) and publishing new projects in your portfolio (+15% rating per project).`;
+      }
+      if (q.includes('level') || q.includes('xp') || q.includes('xp_points')) {
+        return `You are currently Lvl <strong>${level}</strong> with <strong>${candidate.xp_points || 0} XP</strong>. You earn +50 XP for publishing projects and up to +200 XP for scoring well on technical quizzes!`;
+      }
+      if (q.includes('job') || q.includes('apply')) {
+        return `Explore the <strong>Job Portal</strong> (💼 in your sidebar) to see tailored developer positions. Select a role and submit your GitHub links directly to recruiters.`;
+      }
+      if (q.includes('skill') || q.includes('react') || q.includes('node')) {
+        return `I recommend updating your portfolio page to list all framework skills. We match skills like <strong>React, Node.js, and MongoDB</strong> against active positions to compute your hiring match percentage.`;
+      }
+      if (q.includes('hello') || q.includes('hi ') || q.includes('hey')) {
+        return `Hello! How can I help you optimize your hiring portfolio today? Ask me about scores, quizzes, or jobs!`;
+      }
+
+      const tips = [
+        `To stand out to recruiters like Vercel and Airbnb, try to score 80%+ on your technical quizzes. This sets your credentials apart on the unified leaderboard!`,
+        `Did you know? Adding a live demo URL to your portfolio showcases increases recruiter click-through rates by over 40%!`,
+        `Keep building! Your profile level progresses from Beginner to Master and Elite Builder as you publish showcases and clear assessment goals.`
+      ];
+      return tips[Math.floor(Math.random() * tips.length)];
+    }
+
     loadRecommendations();
-  </script>
+    initAdvisorChat();
+    }
+</script>
 </body>
 </html>

@@ -6,6 +6,22 @@
   <title>Build2Hire | Show Your Work, Not Your Resume</title>
   <meta name="description" content="Build2Hire is a modern project-based hiring platform where candidates are hired based on actual completed challenges and portfolios, not traditional resumes."/>
   <link rel="stylesheet" href="styles.css"/>
+  <!-- Redirect: no session → login, has session → dashboard -->
+  <script>
+    (function() {
+      try {
+        const session = sessionStorage.getItem('user');
+        if (!session) {
+          window.location.replace('login.html');
+        } else {
+          const u = JSON.parse(session);
+          window.location.replace(u.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html');
+        }
+      } catch(e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -22,7 +38,7 @@
 
       <h1 style="font-family:var(--font-display);font-size:3.5rem;font-weight:800;letter-spacing:-0.02em;line-height:1.15;max-width:850px;margin:0 auto 1.5rem auto;">
         Don't Tell What You Can Do. <br/>
-        <span style="background:linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+        <span style="background:linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">
           Show What You Can Build.
         </span>
       </h1>
@@ -33,13 +49,12 @@
 
       <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
         <a href="register.html" class="btn btn-primary" style="padding:1rem 2rem;font-size:1.05rem;">Start Building</a>
-        <a href="marketplace.html" class="btn btn-secondary" style="padding:1rem 2rem;font-size:1.05rem;">Explore Challenges</a>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:700px;margin:5rem auto 0 auto;border-top:1px solid var(--border-color);padding-top:2.5rem;">
         <div>
           <strong style="font-size:2.5rem;font-weight:800;color:var(--primary);font-family:var(--font-display);">50+</strong>
-          <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.25rem;">Active Challenges</p>
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.25rem;">Assessments Taken</p>
         </div>
         <div>
           <strong style="font-size:2.5rem;font-weight:800;color:var(--secondary);font-family:var(--font-display);">85%</strong>
@@ -64,13 +79,13 @@
       <div class="grid-3">
         <div class="card" style="padding:2rem;">
           <div class="flex-center" style="width:50px;height:50px;border-radius:var(--radius-md);background-color:var(--primary-light);font-size:1.5rem;color:var(--primary);margin-bottom:1.5rem;font-weight:bold;">1</div>
-          <h3 style="font-size:1.25rem;margin-bottom:0.75rem;">Choose a Challenge</h3>
-          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.5;">Explore the marketplace and select developer, designer, or creator challenges posted by top companies looking to hire immediately.</p>
+          <h3 style="font-size:1.25rem;margin-bottom:0.75rem;">Build a Portfolio</h3>
+          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.5;">Showcase your projects by publishing custom source codes, screenshots, descriptions, and tag technical skills.</p>
         </div>
         <div class="card" style="padding:2rem;">
           <div class="flex-center" style="width:50px;height:50px;border-radius:var(--radius-md);background-color:var(--secondary-light);font-size:1.5rem;color:var(--secondary);margin-bottom:1.5rem;font-weight:bold;">2</div>
-          <h3 style="font-size:1.25rem;margin-bottom:0.75rem;">Show Your Work</h3>
-          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.5;">Build the project, submit your code repository or live deployment link, and receive structured technical feedback from real engineers.</p>
+          <h3 style="font-size:1.25rem;margin-bottom:0.75rem;">Complete Assessments</h3>
+          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.5;">Take timed skill assessments across Frontend, Backend, and Database tags to prove your knowledge base.</p>
         </div>
         <div class="card" style="padding:2rem;">
           <div class="flex-center" style="width:50px;height:50px;border-radius:var(--radius-md);background-color:var(--success-light);font-size:1.5rem;color:var(--success);margin-bottom:1.5rem;font-weight:bold;">3</div>
@@ -90,7 +105,7 @@
         <h2 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:1rem;">For Candidates</h2>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;color:var(--text-secondary);">
           <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Unified Portfolio:</strong> Showcase live builds instead of boring PDF resumes.</span></li>
-          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Talent Score (40-40-20):</strong> Get an overall rank based on projects, challenges, and quizzes.</span></li>
+          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Talent Score:</strong> Get an overall ranking based on portfolio projects and interactive quizzes.</span></li>
           <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>AI Career Advice:</strong> Real-time mapping of your skill tags to standard developer/designer roles.</span></li>
           <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Gamified System:</strong> Level up from Beginner to Elite, unlocking verified badges as you build.</span></li>
         </ul>
@@ -101,8 +116,8 @@
         <span style="font-size:2.5rem;display:block;margin-bottom:1rem;">💼</span>
         <h2 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:1rem;">For Recruiters</h2>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;color:var(--text-secondary);">
-          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Publish Challenge specs:</strong> Dictate exact guidelines for what you need built.</span></li>
-          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Direct Code & Live Reviews:</strong> Access actual source code, skipping candidate resume fluff.</span></li>
+          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Review Developer Portfolios:</strong> Evaluate live projects, code quality, and active developer stats.</span></li>
+          <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Direct Code Reviews:</strong> Access verified repositories and active skill credentials.</span></li>
           <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>Integrated Scheduler:</strong> Book Google Meet/Zoom interviews directly inside your pipeline.</span></li>
           <li style="display:flex;gap:0.5rem;"><span>✓</span> <span><strong>AI-Assisted Leaderboard:</strong> View and search candidates based on performance metrics.</span></li>
         </ul>
@@ -120,7 +135,6 @@
         <p style="margin-top:0.5rem;">"Don't Tell What You Can Do. Show What You Can Build."</p>
       </div>
       <div style="display:flex;gap:2rem;">
-        <a href="marketplace.html">Challenges</a>
         <a href="leaderboard.html">Leaderboard</a>
         <a href="login.html">Sign In</a>
       </div>
