@@ -30,118 +30,27 @@ const DEFAULT_USERS = [
   {
     id: 1001,
     email: "candidate@build2hire.com",
-    fullName: "Alex Rivera",
+    fullName: "Candidate User",
     role: "candidate",
     phone: "+1 (555) 019-2834",
-    bio: "Full Stack Engineer passionate about UI aesthetics and robust database architectures. Building modular platforms.",
-    githubUrl: "https://github.com/alexrivera",
-    linkedinUrl: "https://linkedin.com/in/alexrivera",
-    portfolioWebsite: "https://alexrivera.vercel.app",
-    skills: ["React", "CSS Variables", "JavaScript", "HTML", "Next.js", "TailwindCSS"],
-    skillLevels: { "React": "Advanced", "CSS Variables": "Advanced", "JavaScript": "Medium", "HTML": "Advanced", "Next.js": "Basic", "TailwindCSS": "Basic" },
-    profileCompleted: true,
-    xp_points: 4800,
-    level: 4,
-    talent_score: 95,
-    portfolio_score: 98,
-    challenge_score: 92,
-    assessment_score: 95,
-    preferredRole: "Frontend Developer",
-    certificates: [
-      { id: 1, title: "Frontend Frameworks Certificate", score: 95, date: "2026-07-01" }
-    ]
-  },
-  {
-    id: 1002,
-    email: "sarah@build2hire.com",
-    fullName: "Sarah Chen",
-    role: "candidate",
-    phone: "+1 (555) 019-5566",
-    bio: "Backend developer specializing in NodeJS, API designs, and scalable cloud architectures.",
-    githubUrl: "https://github.com/sarahchen",
-    linkedinUrl: "https://linkedin.com/in/sarahchen",
-    portfolioWebsite: "https://sarahchen.dev",
-    skills: ["React", "JavaScript", "PHP", "MySQL", "Node.js"],
-    skillLevels: { "React": "Basic", "JavaScript": "Advanced", "PHP": "Medium", "MySQL": "Medium", "Node.js": "Medium" },
-    profileCompleted: true,
-    xp_points: 4200,
-    level: 4,
-    talent_score: 92,
-    portfolio_score: 94,
-    challenge_score: 90,
-    assessment_score: 93,
-    preferredRole: "Backend Engineer",
-    certificates: [
-      { id: 2, title: "Backend Systems Certificate", score: 93, date: "2026-07-02" }
-    ]
-  },
-  {
-    id: 1003,
-    email: "marcus@build2hire.com",
-    fullName: "Marcus Aurelius",
-    role: "candidate",
-    phone: "+1 (555) 019-7788",
-    bio: "Systems architect. Stoic programmer. Focusing on low-level databases and index optimizations.",
-    githubUrl: "https://github.com/marcus",
-    linkedinUrl: "https://linkedin.com/in/marcus",
-    portfolioWebsite: "https://marcus.dev",
-    skills: ["HTML", "CSS Variables", "MySQL", "Database"],
-    skillLevels: { "HTML": "Medium", "CSS Variables": "Basic", "MySQL": "Medium", "Database": "Medium" },
-    profileCompleted: true,
-    xp_points: 3800,
-    level: 3,
-    talent_score: 88,
-    portfolio_score: 87,
-    challenge_score: 89,
-    assessment_score: 90,
-    preferredRole: "Database Administrator",
-    certificates: []
-  },
-  {
-    id: 1005,
-    email: "david@build2hire.com",
-    fullName: "David Kim",
-    role: "candidate",
-    phone: "+1 (555) 019-9999",
-    bio: "Creative Video Editor with a knack for pacing, rhythm, and color grading. Telling stories through visual media.",
+    bio: "Passionate engineer eager to show my skills to recruiters. Click edit to set my details.",
     githubUrl: "",
-    linkedinUrl: "https://linkedin.com/in/davidkim",
-    portfolioWebsite: "https://davidkim.media",
-    skills: ["Premiere Pro", "After Effects", "Color Grading"],
-    skillLevels: { "Premiere Pro": "Advanced", "After Effects": "Advanced", "Color Grading": "Medium" },
-    profileCompleted: true,
-    xp_points: 2100,
-    level: 2,
-    talent_score: 85,
-    portfolio_score: 88,
-    challenge_score: 83,
-    assessment_score: 85,
-    preferredRole: "Video Editor",
-    certificates: []
-  },
-  {
-    id: 1006,
-    email: "emily@build2hire.com",
-    fullName: "Emily Rodriguez",
-    role: "candidate",
-    phone: "+1 (555) 019-1122",
-    bio: "Full Stack Engineer obsessed with performance. I build things that scale gracefully from day one.",
-    githubUrl: "https://github.com/emilyrod",
-    linkedinUrl: "https://linkedin.com/in/emilyrod",
-    portfolioWebsite: "https://emily.dev",
-    skills: ["React", "Node.js", "PostgreSQL", "Next.js"],
-    skillLevels: { "React": "Advanced", "Node.js": "Advanced", "PostgreSQL": "Medium", "Next.js": "Medium" },
-    profileCompleted: true,
-    xp_points: 5200,
-    level: 4,
-    talent_score: 97,
-    portfolio_score: 96,
-    challenge_score: 98,
-    assessment_score: 97,
-    preferredRole: "Full Stack Engineer",
-    certificates: [
-      { id: 3, title: "Full Stack Excellence", score: 98, date: "2026-07-05" }
-    ]
+    linkedinUrl: "",
+    portfolioWebsite: "",
+    skills: [],
+    skillLevels: {},
+    profileCompleted: false,
+    xp_points: 0,
+    level: 1,
+    talent_score: 0,
+    portfolio_score: 0,
+    challenge_score: 0,
+    assessment_score: 0,
+    preferredRole: "",
+    education: "Bachelor of Engineering in Computer Science",
+    certificates: [],
+    projects: [],
+    enrolled_courses: []
   },
   {
     id: 1004,
@@ -150,45 +59,44 @@ const DEFAULT_USERS = [
     role: "recruiter",
     companyName: "InnovateTech",
     jobTitle: "Hiring Manager"
+  },
+  {
+    id: 1002,
+    email: "admin@build2hire.com",
+    fullName: "Admin User",
+    role: "admin",
+    xp_points: 9999,
+    talent_score: 100
   }
 ];
 
-const DEFAULT_SUBMISSIONS = [
-  { id: 2001, candidate_id: 1001, candidate_name: "Alex Rivera", challenge_id: 1, challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, current_level: "Elite Talent", status: "pending", description: "Created an in-browser timeline drop zone with canvas timeline rendering and responsive grid views.", github_url: "https://github.com/alexrivera/timeline", submission_url: "https://timeline-demo.vercel.app" },
-  { id: 2002, candidate_id: 1002, candidate_name: "Sarah Chen", challenge_id: 2, challenge_title: "Video Editor Specs Assessment", talent_score: 92, current_level: "Elite Talent", status: "pending", description: "Edited the 2-minute promotional clip with clean overlays and high compression format.", github_url: "", submission_url: "https://vimeo.com/sarahvid" }
-];
-
-const DEFAULT_APPLICATIONS = [
-  { id: 3001, candidate_id: 1001, candidate_name: "Alex Rivera", challenge_id: 1, challenge_title: "Custom Video Editor Dashboard UI", talent_score: 95, status: "applied" },
-  { id: 3002, candidate_id: 1002, candidate_name: "Sarah Chen", challenge_id: 2, challenge_title: "Video Editor Specs Assessment", talent_score: 92, status: "shortlisted" }
-];
-
-const DEFAULT_INTERVIEWS = [
-  { id: 4001, candidate_id: 1003, candidate_name: "Marcus Aurelius", challenge_title: "Custom Video Editor Dashboard UI", scheduled_at: "2026-07-10T15:00:00", location_url: "https://meet.google.com/xyz-abc-def", notes: "Review timeline grid coding details." }
-];
+const DEFAULT_SUBMISSIONS = [];
+const DEFAULT_APPLICATIONS = [];
+const DEFAULT_INTERVIEWS = [];
+const DEFAULT_COMPANY_REGISTRATIONS = [];
 
 // Seed and fetch Mock DB
-function dbGet() {
-  function tryParse(dataStr) {
-    if (!dataStr) return null;
+function dbParse(dataStr) {
+  if (!dataStr) return null;
+  try {
+    return JSON.parse(decodeURIComponent(atob(dataStr)));
+  } catch (e1) {
     try {
-      return JSON.parse(decodeURIComponent(atob(dataStr)));
-    } catch (e1) {
-      try {
-        return JSON.parse(dataStr);
-      } catch (e2) {
-        return null;
-      }
+      return JSON.parse(dataStr);
+    } catch (e2) {
+      return null;
     }
   }
+}
 
+function dbGet() {
   let db = localStorage.getItem('build2hire_db');
-  let parsed = tryParse(db);
+  let parsed = dbParse(db);
 
   if (!parsed) {
     // Attempt recovery from backup
     let backup = localStorage.getItem('build2hire_db_backup');
-    parsed = tryParse(backup);
+    parsed = dbParse(backup);
     if (parsed) {
       console.warn("Recovered database from backup.");
     }
@@ -199,9 +107,28 @@ function dbGet() {
   }
   
   let updated = false;
+  
+  const hasAlex = parsed.users && parsed.users.some(u => u.fullName === "Alex Rivera");
+  if (hasAlex) {
+    parsed.users = DEFAULT_USERS;
+    parsed.submissions = DEFAULT_SUBMISSIONS;
+    parsed.applications = DEFAULT_APPLICATIONS;
+    parsed.interviews = DEFAULT_INTERVIEWS;
+    parsed.company_registrations = DEFAULT_COMPANY_REGISTRATIONS;
+    updated = true;
+  }
+
   if (!parsed.users || parsed.users.length === 0) {
     parsed.users = DEFAULT_USERS;
     updated = true;
+  } else {
+    DEFAULT_USERS.forEach(defU => {
+      const exists = parsed.users.some(u => u.email.toLowerCase() === defU.email.toLowerCase());
+      if (!exists) {
+        parsed.users.push(defU);
+        updated = true;
+      }
+    });
   }
   if (!parsed.challenges || parsed.challenges.length === 0) {
     parsed.challenges = DEFAULT_CHALLENGES;
@@ -221,6 +148,88 @@ function dbGet() {
   }
   if (!parsed.interviews) {
     parsed.interviews = DEFAULT_INTERVIEWS;
+    updated = true;
+  }
+  if (!parsed.company_registrations || parsed.company_registrations.length === 0) {
+    parsed.company_registrations = DEFAULT_COMPANY_REGISTRATIONS;
+    updated = true;
+  }
+  if (!parsed.conversations || parsed.conversations.length === 0) {
+    parsed.conversations = [
+      {
+        id: "c1",
+        clientId: 1004,
+        clientName: "Jane Recruiter",
+        companyName: "InnovateTech",
+        clientPhone: "+1 (555) 012-9843",
+        candidateId: 1001,
+        candidateName: "Candidate User",
+        messages: [
+          { senderId: 1004, senderName: "Jane Recruiter", text: "Hello! I saw your portfolio and assessments on Build2Hire. Your projects look very impressive.", timestamp: Date.now() - 3600000 * 3 },
+          { senderId: 1001, senderName: "Candidate User", text: "Thank you, Jane! I appreciate you looking at my work. I have worked on React dashboards and database indexing optimizations.", timestamp: Date.now() - 3600000 * 2.5 },
+          { senderId: 1004, senderName: "Jane Recruiter", text: "Awesome. I'd love to chat about a freelance micro-gig we have for an Interactive Video Editor UI. Could we schedule a live call to go over the scope?", timestamp: Date.now() - 3600000 * 2 }
+        ],
+        lastUpdated: Date.now() - 3600000 * 2
+      }
+    ];
+    updated = true;
+  }
+  if (!parsed.meetings) {
+    parsed.meetings = [];
+    updated = true;
+  }
+  if (!parsed.contracts || parsed.contracts.length === 0) {
+    parsed.contracts = [
+      {
+        id: "cnt1",
+        candidateId: 1001,
+        jobId: 104,
+        title: "Short Marketing Video assembly",
+        company: "InnovateTech",
+        salary: "$1,200 Flat",
+        amount: 1200,
+        status: "active",
+        dateStarted: "2026-06-10",
+        dateCompleted: null,
+        milestones: [
+          { id: 1, title: "Storyboard and Footage Selection", description: "Select raw footage and align storyboard.", weight: 30, status: "completed", deliverable: "Draft storyboard document shared." },
+          { id: 2, title: "First Cut and Transitions", description: "Apply transitions, color correction, and audio track.", weight: 40, status: "in-progress", deliverable: "" },
+          { id: 3, title: "Final Rendering & H.264 Export", description: "Deliver final high-res MP4 video.", weight: 30, status: "pending", deliverable: "" }
+        ]
+      },
+      {
+        id: "cnt2",
+        candidateId: 1001,
+        jobId: 105,
+        title: "Social Media Reel Editor",
+        company: "CreativeHub",
+        salary: "$600 / Reel",
+        amount: 600,
+        status: "completed",
+        dateStarted: "2026-05-15",
+        dateCompleted: "2026-05-20",
+        milestones: [
+          { id: 1, title: "Audio Sync and Cut", description: "Sync audio overlays and clip selection.", weight: 50, status: "completed", deliverable: "Reel_Draft_v1.mp4" },
+          { id: 2, title: "Subtitles and Emojis", description: "Add auto-captions and animated emojis.", weight: 50, status: "completed", deliverable: "Reel_Final_Vercel.mp4" }
+        ]
+      },
+      {
+        id: "cnt3",
+        candidateId: 1001,
+        jobId: 101,
+        title: "Interactive React Chart Component",
+        company: "Vercel Inc",
+        salary: "$2,500 Flat",
+        amount: 2500,
+        status: "completed",
+        dateStarted: "2026-04-01",
+        dateCompleted: "2026-04-07",
+        milestones: [
+          { id: 1, title: "Chart Setup", description: "Setup D3.js and SVG wrappers in React.", weight: 40, status: "completed", deliverable: "GitHub Repository setup complete." },
+          { id: 2, title: "Interactive Tooltips", description: "Add responsive tooltips and hover triggers.", weight: 60, status: "completed", deliverable: "Tooltip styling complete." }
+        ]
+      }
+    ];
     updated = true;
   }
 
@@ -245,6 +254,67 @@ function dbGet() {
           });
           updated = true;
         }
+        if (!u.course_progress) {
+          u.course_progress = {
+            frontend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            backend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            database: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            creative: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            devops: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            system: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            security: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+            mobile: { level: "basic", basic_score: null, medium_score: null, advanced_score: null }
+          };
+          updated = true;
+        } else {
+          if (!u.course_progress.devops) {
+            u.course_progress.devops = { level: "basic", basic_score: null, medium_score: null, advanced_score: null };
+            updated = true;
+          }
+          if (!u.course_progress.system) {
+            u.course_progress.system = { level: "basic", basic_score: null, medium_score: null, advanced_score: null };
+            updated = true;
+          }
+          if (!u.course_progress.security) {
+            u.course_progress.security = { level: "basic", basic_score: null, medium_score: null, advanced_score: null };
+            updated = true;
+          }
+          if (!u.course_progress.mobile) {
+            u.course_progress.mobile = { level: "basic", basic_score: null, medium_score: null, advanced_score: null };
+            updated = true;
+          }
+        }
+      }
+    });
+  }
+
+  // Schema migration for company registration statistics
+  if (parsed.company_registrations) {
+    parsed.company_registrations.forEach(r => {
+      if (r.client_visits === undefined) {
+        r.client_visits = Math.floor(Math.random() * 15) + 3;
+        r.client_logs = [
+          { clientName: "Google Inc.", action: "Viewed Website", timestamp: Date.now() - 3600000 * 2 },
+          { clientName: "Stripe", action: "Sent Inquiry: Custom Developer Integration", timestamp: Date.now() - 3600000 * 1 }
+        ];
+        updated = true;
+      }
+    });
+  }
+
+  // Schema migration for custom contracts properties
+  if (parsed.contracts) {
+    parsed.contracts.forEach(c => {
+      if (c.durationMonths === undefined) {
+        c.durationMonths = c.id === 'cnt1' ? 3 : 1;
+        c.paymentSplitType = "installments";
+        c.autoPayLinked = c.id === 'cnt3';
+        c.weeklyProgress = c.weeklyProgress || [];
+        c.invoices = c.invoices || [];
+        if (c.id === 'cnt3' && c.invoices.length === 0) {
+          c.invoices.push({ invoiceNo: "INV-9821", amount: 2500, paidDate: "2026-04-07" });
+        }
+        updated = true;
       }
     });
   }
@@ -277,14 +347,354 @@ function dbSave(data) {
   }
 }
 
+// ==========================================
+// 🏢 COMPANY REGISTRATION & SOCIAL MEDIA CONTROLLER
+// ==========================================
+
+function submitCompanyRegistration(payload) {
+  const db = dbGet();
+  
+  payload.id = Date.now();
+  payload.status = "pending";
+  payload.submitted_at = Date.now();
+  
+  db.company_registrations.unshift(payload);
+  
+  const user = db.users.find(u => String(u.id) === String(payload.candidate_id));
+  if (user) {
+    user.companyRegistrationStatus = "pending";
+    user.companyRegistrationId = payload.id;
+  }
+  
+  dbSave(db);
+  
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(payload.candidate_id)) {
+    currentUser.companyRegistrationStatus = "pending";
+    currentUser.companyRegistrationId = payload.id;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return payload;
+}
+
+function approveCompanyRegistration(id) {
+  const db = dbGet();
+  const reg = db.company_registrations.find(r => String(r.id) === String(id));
+  if (!reg) return false;
+  
+  reg.status = "approved";
+  reg.approved_at = Date.now();
+  reg.github = reg.github || "";
+  reg.linkedin = reg.linkedin || "";
+  reg.website = reg.website || "";
+  reg.last_social_update = Date.now();
+  
+  const user = db.users.find(u => String(u.id) === String(reg.candidate_id));
+  if (user) {
+    user.companyRegistrationStatus = "approved";
+    user.companyName = reg.business_name;
+    user.companyRegistrationStatusChanged = true;
+  }
+  
+  dbSave(db);
+  
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(reg.candidate_id)) {
+    currentUser.companyRegistrationStatus = "approved";
+    currentUser.companyName = reg.business_name;
+    currentUser.companyRegistrationStatusChanged = true;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return true;
+}
+
+function rejectCompanyRegistration(id) {
+  const db = dbGet();
+  const reg = db.company_registrations.find(r => String(r.id) === String(id));
+  if (!reg) return false;
+  
+  reg.status = "rejected";
+  
+  const user = db.users.find(u => String(u.id) === String(reg.candidate_id));
+  if (user) {
+    user.companyRegistrationStatus = "rejected";
+    user.companyRegistrationStatusChanged = true;
+  }
+  
+  dbSave(db);
+  
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(reg.candidate_id)) {
+    currentUser.companyRegistrationStatus = "rejected";
+    currentUser.companyRegistrationStatusChanged = true;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return true;
+}
+
+function updateSocialMediaPages(candidateId, github, linkedin, website) {
+  const db = dbGet();
+  const reg = db.company_registrations.find(r => String(r.candidate_id) === String(candidateId) && r.status === "approved");
+  if (!reg) return false;
+  
+  reg.github = github;
+  reg.linkedin = linkedin;
+  reg.website = website;
+  reg.last_social_update = Date.now();
+  
+  const user = db.users.find(u => String(u.id) === String(candidateId));
+  if (user) {
+    user.githubUrl = github;
+    user.linkedinUrl = linkedin;
+    user.portfolioWebsite = website;
+  }
+  
+  dbSave(db);
+  
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(candidateId)) {
+    currentUser.githubUrl = github;
+    currentUser.linkedinUrl = linkedin;
+    currentUser.portfolioWebsite = website;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return true;
+}
+
+function incrementCompanyVisits(candidateId, clientName, action) {
+  const db = dbGet();
+  
+  // Update candidate directly
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (cand) {
+    if (cand.client_visits === undefined) cand.client_visits = 0;
+    if (!cand.client_logs) cand.client_logs = [];
+    cand.client_visits += 1;
+    cand.client_logs.unshift({
+      clientName: clientName || "Anonymous Visitor",
+      action: action || "Viewed Portfolio",
+      timestamp: Date.now()
+    });
+    if (cand.client_logs.length > 20) {
+      cand.client_logs = cand.client_logs.slice(0, 20);
+    }
+  }
+
+  // Also update registered company details if approved
+  const reg = db.company_registrations.find(r => String(r.candidate_id) === String(candidateId) && r.status === "approved");
+  if (reg) {
+    if (reg.client_visits === undefined) reg.client_visits = 0;
+    if (!reg.client_logs) reg.client_logs = [];
+    reg.client_visits += 1;
+    reg.client_logs.unshift({
+      clientName: clientName || "Anonymous Visitor",
+      action: action || "Viewed Website",
+      timestamp: Date.now()
+    });
+    if (reg.client_logs.length > 20) {
+      reg.client_logs = reg.client_logs.slice(0, 20);
+    }
+  }
+  
+  dbSave(db);
+  
+  // If the currently logged in user is this candidate, sync sessionStorage
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(candidateId) && cand) {
+    currentUser.client_visits = cand.client_visits;
+    currentUser.client_logs = cand.client_logs;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return true;
+}
+
+function completeCourseLevel(candidateId, courseKey, level, score, correctAnswersCount) {
+  const db = dbGet();
+  const candidate = db.users.find(u => String(u.id) === String(candidateId));
+  if (!candidate) return false;
+  
+  if (!candidate.course_progress) {
+    candidate.course_progress = {
+      frontend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+      backend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+      database: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+      creative: { level: "basic", basic_score: null, medium_score: null, advanced_score: null }
+    };
+  }
+  
+  const prog = candidate.course_progress[courseKey];
+  if (!prog) return false;
+  
+  if (level === 'basic') {
+    prog.basic_score = score;
+    prog.level = "medium";
+  } else if (level === 'medium') {
+    prog.medium_score = score;
+    prog.level = "advanced";
+  } else if (level === 'advanced') {
+    prog.advanced_score = score;
+    prog.level = "completed";
+  }
+  
+  if (!candidate.certificates) {
+    candidate.certificates = [];
+  }
+  
+  const courseNames = {
+    frontend: "Frontend Frameworks & UI",
+    backend: "Backend & API Architectures",
+    database: "Database Schema & Caching",
+    creative: "Creative Media & Video Editing"
+  };
+  const courseTitle = courseNames[courseKey] || courseKey;
+  
+  const levelNames = {
+    basic: "Basic Level",
+    medium: "Medium Level",
+    advanced: "Advanced Level"
+  };
+  const levelTitle = levelNames[level] || level;
+  
+  const certId = `${courseKey}_${level}_${Date.now()}`;
+  const correctCount = correctAnswersCount !== undefined ? correctAnswersCount : Math.round((score / 100) * 5);
+  const newCert = {
+    id: certId,
+    title: `${courseTitle} - ${levelTitle} Certificate`,
+    course: courseTitle,
+    level: levelTitle,
+    score: score,
+    correct_count: correctCount,
+    total_count: 5,
+    xp_gained: correctCount * 100,
+    date: new Date().toISOString().split('T')[0],
+    authority: "Build2Hire Verification Authority"
+  };
+  
+  candidate.certificates = candidate.certificates.filter(c => !(c.course === courseTitle && c.level === levelTitle));
+  candidate.certificates.push(newCert);
+  
+  if (!candidate.activity_log) candidate.activity_log = [];
+  candidate.activity_log.push({
+    type: "assessment_complete",
+    details: `Completed "${courseTitle} (${levelTitle})" assessment with score: ${score}%`,
+    timestamp: new Date().toISOString()
+  });
+
+  let xpAward = correctCount * 100;
+  candidate.xp_points = (candidate.xp_points || 0) + xpAward;
+  candidate.assessment_score = Math.round(
+    ((candidate.assessment_score || 0) * 0.4) + (score * 0.6)
+  );
+  
+  recalculateScores(candidate);
+  dbSave(db);
+  
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(candidateId)) {
+    currentUser.course_progress = candidate.course_progress;
+    currentUser.certificates = candidate.certificates;
+    currentUser.xp_points = candidate.xp_points;
+    currentUser.level = candidate.level;
+    currentUser.current_level = candidate.current_level;
+    currentUser.assessment_score = candidate.assessment_score;
+    currentUser.talent_score = candidate.talent_score;
+    currentUser.activity_log = candidate.activity_log;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  
+  return newCert;
+}
+
+function enrollInCourse(candidateId, courseId) {
+  const db = dbGet();
+  const candidate = db.users.find(u => String(u.id) === String(candidateId));
+  if (!candidate) return false;
+  
+  if (!candidate.enrolled_courses) {
+    candidate.enrolled_courses = [];
+  }
+  
+  if (candidate.enrolled_courses.some(c => c.courseId === courseId)) return false;
+  
+  candidate.enrolled_courses.push({
+    courseId: courseId,
+    enrolledDate: new Date().toISOString().split('T')[0],
+    progress: 15 // Seed with 15% progress on start
+  });
+
+  if (!candidate.activity_log) candidate.activity_log = [];
+  candidate.activity_log.push({
+    type: "course_enroll",
+    details: `Enrolled in course: "${courseId}"`,
+    timestamp: new Date().toISOString()
+  });
+  
+  dbSave(db);
+  
+  // Sync to session storage if current user
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(candidateId)) {
+    currentUser.enrolled_courses = candidate.enrolled_courses;
+    currentUser.activity_log = candidate.activity_log;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  return true;
+}
+
+function withdrawFromCourse(candidateId, courseId) {
+  const db = dbGet();
+  const candidate = db.users.find(u => String(u.id) === String(candidateId));
+  if (!candidate) return false;
+  
+  if (!candidate.enrolled_courses) return false;
+  
+  candidate.enrolled_courses = candidate.enrolled_courses.filter(c => c.courseId !== courseId);
+  dbSave(db);
+  
+  // Sync to session storage if current user
+  const currentUser = getUser();
+  if (currentUser && String(currentUser.id) === String(candidateId)) {
+    currentUser.enrolled_courses = candidate.enrolled_courses;
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+  }
+  return true;
+}
+
 // User helper: Fetch from database by matching session details
 function getUser() {
   try {
     const session = sessionStorage.getItem('user');
     if (!session) return null;
-    const sessionUser = JSON.parse(session);
+    let sessionUser = JSON.parse(session);
+    
+    // Automatically correct placeholder names (e.g. John Builder) from email prefix
+    if (sessionUser.fullName === "John Builder" || sessionUser.fullName === "Jane Recruiter") {
+      const emailPrefix = sessionUser.email.split('@')[0];
+      const derivedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+      sessionUser.fullName = derivedName;
+      sessionStorage.setItem('user', JSON.stringify(sessionUser));
+    }
+
     const db = dbGet();
-    const latestUser = db.users.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase());
+    let latestUser = db.users.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase());
+    
+    if (latestUser) {
+      if (latestUser.fullName === "John Builder" || latestUser.fullName === "Jane Recruiter") {
+        const emailPrefix = latestUser.email.split('@')[0];
+        const derivedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+        latestUser.fullName = derivedName;
+        dbSave(db);
+      }
+      if (!latestUser.enrolled_courses) {
+        latestUser.enrolled_courses = [];
+        dbSave(db);
+      }
+    }
     
     if (!latestUser) {
       // Sync real API user into mock DB for gamification logic
@@ -299,6 +709,17 @@ function getUser() {
         newUser.projects = newUser.projects || [];
         newUser.skills = newUser.skills || [];
         newUser.skillLevels = newUser.skillLevels || {};
+        newUser.enrolled_courses = [];
+        newUser.course_progress = {
+          frontend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          backend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          database: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          creative: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          devops: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          system: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          security: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          mobile: { level: "basic", basic_score: null, medium_score: null, advanced_score: null }
+        };
         newUser.profileCompleted = false;
       }
       db.users.push(newUser);
@@ -319,7 +740,7 @@ function withAuth(allowedRoles = ['candidate', 'recruiter', 'admin']) {
   }
   
   if (!allowedRoles.includes(user.role)) {
-    if (user.role === 'recruiter') window.location.href = "recruiter-dashboard.html";
+    if (user.role === 'recruiter' || user.role === 'admin') window.location.href = "recruiter-dashboard.html";
     else window.location.href = "portfolio.html";
     return null;
   }
@@ -328,7 +749,7 @@ function withAuth(allowedRoles = ['candidate', 'recruiter', 'admin']) {
   const path = window.location.pathname.split('/').pop() || "index.html";
   if (typeof renderSidebar === 'function') {
     // If the page has a sidebar container, render it
-    const sidebar = document.getElementById('sidebar-container');
+    const sidebar = document.getElementById('main-sidebar');
     if (sidebar) renderSidebar(path);
   }
   
@@ -398,24 +819,52 @@ function triggerConfetti() {
 function initTheme() {
   const saved = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-  
-  const mBtn = document.getElementById('m-theme-toggle');
-  if (mBtn) mBtn.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  // Defer slightly to ensure DOM is fully rendered
+  setTimeout(() => { updateThemeUI(saved); }, 50);
 }
 
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
-  
-  const mBtn = document.getElementById('m-theme-toggle');
-  if (mBtn) mBtn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  updateThemeUI(theme);
+}
+
+function updateThemeUI(theme) {
+  const btnLight = document.getElementById('theme-btn-light');
+  const btnDark = document.getElementById('theme-btn-dark');
+  if (btnLight && btnDark) {
+    if (theme === 'light') {
+      btnLight.style.backgroundColor = 'var(--primary)';
+      btnLight.style.color = '#ffffff';
+      btnLight.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+      btnDark.style.backgroundColor = 'transparent';
+      btnDark.style.color = 'var(--text-secondary)';
+      btnDark.style.boxShadow = 'none';
+    } else {
+      btnDark.style.backgroundColor = 'var(--primary)';
+      btnDark.style.color = '#ffffff';
+      btnDark.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+      btnLight.style.backgroundColor = 'transparent';
+      btnLight.style.color = 'var(--text-secondary)';
+      btnLight.style.boxShadow = 'none';
+    }
+  }
+
+  const mBtnLight = document.getElementById('m-theme-btn-light');
+  const mBtnDark = document.getElementById('m-theme-btn-dark');
+  if (mBtnLight && mBtnDark) {
+    if (theme === 'light') {
+      mBtnLight.style.backgroundColor = 'var(--primary)';
+      mBtnLight.style.color = '#ffffff';
+      mBtnDark.style.backgroundColor = 'var(--bg-tertiary)';
+      mBtnDark.style.color = 'var(--text-secondary)';
+    } else {
+      mBtnDark.style.backgroundColor = 'var(--primary)';
+      mBtnDark.style.color = '#ffffff';
+      mBtnLight.style.backgroundColor = 'var(--bg-tertiary)';
+      mBtnLight.style.color = 'var(--text-secondary)';
+    }
+  }
 }
 
 // ==========================================
@@ -445,7 +894,7 @@ function renderHeader() {
   if (!nav) return;
 
   const dashboardPage = user
-    ? (user.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html')
+    ? ((user.role === 'recruiter' || user.role === 'admin') ? 'recruiter-dashboard.html' : 'portfolio.html')
     : 'login.html';
 
   const userControls = user
@@ -454,9 +903,11 @@ function renderHeader() {
     : `<a href="login.html" class="nav-link" style="font-size:0.95rem;">Sign In</a>
        <a href="register.html" class="btn btn-primary" style="padding:0.5rem 1.25rem;font-size:0.9rem;">Get Started</a>`;
 
+  const homeLink = user ? dashboardPage : 'index.html';
+
   nav.innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;">
-      <a href="index.html" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+      <a href="${homeLink}" onclick="window.handleLogoClick(event, '${homeLink}')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
         Build2<span style="color: var(--primary);">Hire</span>
       </a>
     </div>
@@ -464,7 +915,7 @@ function renderHeader() {
     <!-- DESKTOP NAV -->
     <nav class="desktop-nav" style="display:flex;align-items:center;gap:1.5rem;">
       <ul class="nav-links">
-        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="${homeLink}" class="nav-link">Home</a></li>
         
         ${user && user.role === 'candidate' 
           ? (user.assessment_score > 0 
@@ -479,7 +930,10 @@ function renderHeader() {
         ${user && user.role === 'candidate' ? '<li><a href="quiz.html" class="nav-link">⚡ Quizzes</a></li>' : ''}
       </ul>
       <div style="display:flex;align-items:center;gap:1rem;">
-        <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        <div class="theme-switch" style="display: inline-flex; align-items: center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
+          <span id="theme-btn-light" onclick="setTheme('light')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">☀️</span>
+          <span id="theme-btn-dark" onclick="setTheme('dark')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">🌙</span>
+        </div>
         <div style="display:flex;align-items:center;gap:0.75rem;">
           ${userControls}
         </div>
@@ -495,7 +949,7 @@ function renderHeader() {
         <strong style="font-family:var(--font-display); font-size:1.4rem; color:var(--primary);">Build2Hire</strong>
       </div>
       <ul style="list-style:none; padding: 1.5rem; display:flex; flex-direction:column; gap:1.5rem; font-size:1.1rem;">
-        <li><a href="index.html" onclick="toggleMobileMenu()">🏠 Home</a></li>
+        <li><a href="${homeLink}" onclick="toggleMobileMenu()">🏠 Home</a></li>
         ${user && user.role === 'candidate' 
           ? (user.assessment_score > 0 
               ? '<li><a href="leaderboard.html" onclick="toggleMobileMenu()">🏆 Leaderboard</a></li>' 
@@ -508,7 +962,10 @@ function renderHeader() {
         ${user && user.role === 'candidate' ? '<li><a href="recommendations.html" onclick="toggleMobileMenu()">📚 Learners</a></li>' : ''}
         ${user ? `<li><a href="${dashboardPage}" onclick="toggleMobileMenu()">👤 Dashboard (${user.role})</a></li>` : ''}
         <li style="border-top:1px solid var(--border-color); padding-top:1.5rem; display:flex; flex-direction:column; gap:1rem;">
-          <button id="m-theme-toggle" class="btn btn-secondary" onclick="toggleTheme()" style="width:100%;">☀️ Light</button>
+          <div style="display: flex; gap: 0.5rem; width: 100%;">
+            <button id="m-theme-btn-light" onclick="setTheme('light')" class="btn btn-secondary" style="flex: 1; padding: 0.5rem; font-size: 0.85rem; border: 1px solid var(--border-color);">☀️ Light</button>
+            <button id="m-theme-btn-dark" onclick="setTheme('dark')" class="btn btn-secondary" style="flex: 1; padding: 0.5rem; font-size: 0.85rem; border: 1px solid var(--border-color);">🌙 Dark</button>
+          </div>
           ${user 
             ? `<button onclick="handleLogout()" class="btn btn-danger" style="width:100%;">Logout</button>`
             : `<a href="login.html" class="btn btn-secondary" style="width:100%;">Sign In</a>
@@ -522,13 +979,135 @@ function renderHeader() {
   initTheme();
 }
 
+let logoClickTimeout = null;
+window.handleLogoClick = function(event, homeLink) {
+  event.preventDefault();
+  if (logoClickTimeout) {
+    clearTimeout(logoClickTimeout);
+    logoClickTimeout = null;
+    return; // It's a double click! Cancel standard navigation.
+  }
+  
+  logoClickTimeout = setTimeout(() => {
+    window.location.href = homeLink;
+    logoClickTimeout = null;
+  }, 250); // Delay slightly to await double click
+};
+
+window.openAdminLoginModal = function() {
+  // Check if modal already exists, if not, create it
+  let modal = document.getElementById('admin-secret-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'admin-secret-modal';
+    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:999999; backdrop-filter:blur(5px);";
+    modal.innerHTML = `
+      <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding:2rem; border-radius:12px; width:100%; max-width:400px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+        <h3 style="font-family:var(--font-display); color:var(--primary); font-size:1.4rem; margin-bottom:0.5rem; text-align:center;">🔑 Management Sign In</h3>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem; text-align:center;">Enter credential to access Build2Hire administration panel.</p>
+        
+        <div style="text-align:left; margin-bottom:1.25rem;">
+          <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.5rem; color:var(--text-primary);">Management Password</label>
+          <input type="password" id="admin-secret-pwd" style="width:100%; padding:0.6rem 0.75rem; border-radius:6px; background:var(--bg-tertiary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.9rem;" placeholder="Enter admin password">
+        </div>
+        
+        <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem;">
+          <button onclick="document.getElementById('admin-secret-modal').remove()" class="btn btn-secondary" style="padding:0.5rem 1rem; border-radius:6px; font-size:0.85rem; cursor:pointer;">Cancel</button>
+          <button onclick="window.submitSecretAdminLogin()" class="btn btn-primary" style="padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">Sign In</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Add enter key support
+    document.getElementById('admin-secret-pwd').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') window.submitSecretAdminLogin();
+    });
+  }
+  document.getElementById('admin-secret-pwd').focus();
+};
+
+window.submitSecretAdminLogin = function() {
+  const pwd = document.getElementById('admin-secret-pwd').value;
+  if (pwd === 'admin123' || pwd === 'admin') {
+    // Perform simulated admin login
+    const email = "admin@build2hire.com";
+    const db = dbGet();
+    let adminUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    
+    if (!adminUser) {
+      adminUser = {
+        id: 1002,
+        email: email,
+        fullName: "Admin User",
+        role: "admin",
+        xp_points: 9999,
+        talent_score: 100
+      };
+      db.users.push(adminUser);
+      dbSave(db);
+    }
+    
+    // Log session
+    sessionStorage.setItem('user', JSON.stringify(adminUser));
+    
+    // Remove modal
+    document.getElementById('admin-secret-modal').remove();
+    
+    alert("Welcome, Admin! Logging into Build2Hire Management System...");
+    window.location.href = "recruiter-dashboard.html";
+  } else {
+    alert("Invalid management credentials! Access Denied.");
+  }
+};
+
 // Render Sidebar (App Shell)
 function renderSidebar(activePage) {
   const sidebar = document.getElementById('main-sidebar');
   if (!sidebar) return;
 
   const user = getUser();
-  if (!user) return; // Only render if logged in
+  if (!user) return;
+
+  if (user.role === 'recruiter' || user.role === 'admin') {
+    sidebar.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
+            Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="recruiter-dashboard.html" class="sidebar-link ${activePage === 'recruiter-dashboard.html' ? 'active' : ''}">
+                💼 <span>Hiring Board</span>
+              </a>
+            </li>
+            <li>
+              <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
+                🤝 <span>Agreement Builder</span>
+              </a>
+            </li>
+            <li>
+              <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
+                💬 <span>Inbox & Meetings</span>
+              </a>
+            </li>
+            <li>
+              <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+          <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
+          <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">${user.role}</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
 
   sidebar.innerHTML = `
     <div style="display: flex; flex-direction: column; gap: 2rem;">
@@ -541,7 +1120,17 @@ function renderSidebar(activePage) {
         <ul class="sidebar-menu">
           <li>
             <a href="portfolio.html" class="sidebar-link ${activePage === 'portfolio.html' ? 'active' : ''}">
-              🏠 <span>Dashboard</span>
+              👤 <span>My Portfolio</span>
+            </a>
+          </li>
+          <li>
+            <a href="candidate-dashboard.html" class="sidebar-link ${activePage === 'candidate-dashboard.html' ? 'active' : ''}">
+              📊 <span>Freelancer Analytics</span>
+            </a>
+          </li>
+          <li>
+            <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
+              💬 <span>Inbox & Meetings</span>
             </a>
           </li>
         </ul>
@@ -753,32 +1342,8 @@ function initAutoLogout() {
 // ==========================================
 
 function initRefreshRedirect() {
-  const publicPages = ['index.html', 'login.html', 'register.html', ''];
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-  // Don't redirect if already on a public page
-  if (publicPages.includes(currentPage)) return;
-
-  // Detect a browser refresh using PerformanceNavigationTiming (modern) or legacy API
-  let isRefresh = false;
-
-  try {
-    const navEntries = performance.getEntriesByType('navigation');
-    if (navEntries.length > 0) {
-      isRefresh = navEntries[0].type === 'reload';
-    } else {
-      // Fallback for older browsers
-      isRefresh = performance.navigation && performance.navigation.type === 1;
-    }
-  } catch (e) {
-    isRefresh = false;
-  }
-
-  if (isRefresh) {
-    // Clear session on refresh — user must log in again
-    sessionStorage.removeItem('user');
-    window.location.replace('login.html');
-  }
+  // Disabled: Keep user session logged in on page refresh/reload
+  return;
 }
 
 // Helper to decode JWT tokens (used for Google Sign-In)
@@ -796,7 +1361,247 @@ function parseJwt(token) {
 }
 
 // Run refresh check immediately (before DOM is fully ready)
-initRefreshRedirect();
+// initRefreshRedirect();
+
+function downloadCertificateHelper(candidateName, courseTitle, scorePct) {
+  const certId = `B2H-${Math.floor(100000 + Math.random() * 900000)}-${String(scorePct)}`;
+  const dateString = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const printWindow = window.open('', '_blank', 'width=900,height=650');
+  
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Certificate of Completion - ${candidateName}</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+      <style>
+        body {
+          font-family: 'Montserrat', sans-serif;
+          background-color: #f1f5f9;
+          color: #1e293b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        .cert-border-outer {
+          width: 850px;
+          height: 600px;
+          padding: 24px;
+          background-color: #ffffff;
+          border: 16px solid #0f172a;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          position: relative;
+          box-sizing: border-box;
+          background-image: radial-gradient(circle, #fbfbfb 0%, #f7f7f7 100%);
+        }
+        .cert-border-inner {
+          width: 100%;
+          height: 100%;
+          border: 4px solid #b45309;
+          padding: 2.5rem;
+          box-sizing: border-box;
+          position: relative;
+          text-align: center;
+        }
+        .cert-header {
+          margin-top: 0.5rem;
+        }
+        .cert-logo {
+          font-weight: 800;
+          font-size: 1.4rem;
+          color: #0f172a;
+          letter-spacing: 0.05em;
+          margin-bottom: 0.5rem;
+        }
+        .cert-logo span {
+          color: #b45309;
+        }
+        .cert-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 2.2rem;
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0.5rem 0;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .cert-subtitle {
+          font-family: 'Playfair Display', serif;
+          font-style: italic;
+          font-size: 1.1rem;
+          color: #475569;
+          margin-bottom: 1.5rem;
+        }
+        .cert-name {
+          font-family: 'Alex Brush', cursive;
+          font-size: 3.8rem;
+          color: #b45309;
+          margin: 0.5rem 0;
+          font-weight: 400;
+          line-height: 1;
+        }
+        .cert-divider {
+          width: 250px;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #b45309, transparent);
+          margin: 0 auto 1.5rem auto;
+        }
+        .cert-description {
+          font-size: 0.95rem;
+          color: #334155;
+          max-width: 580px;
+          margin: 0 auto 2.5rem auto;
+          line-height: 1.6;
+        }
+        .cert-description strong {
+          color: #0f172a;
+        }
+        .cert-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-top: 1rem;
+          padding: 0 1.5rem;
+        }
+        .signature-block {
+          text-align: center;
+          width: 200px;
+        }
+        .signature-line {
+          border-top: 2px solid #94a3b8;
+          margin-top: 0.5rem;
+          padding-top: 0.25rem;
+          font-size: 0.72rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #64748b;
+          font-weight: 700;
+        }
+        .signature-pic {
+          font-family: 'Alex Brush', cursive;
+          font-size: 1.8rem;
+          color: #1e3a8a;
+          margin-bottom: -0.25rem;
+          user-select: none;
+        }
+        .badge-container {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .cert-badge {
+          width: 80px;
+          height: 80px;
+          background: radial-gradient(circle, #f59e0b 0%, #b45309 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 4px solid #ffffff;
+          box-shadow: 0 4px 10px rgba(180, 83, 9, 0.3);
+          color: white;
+          font-size: 1.8rem;
+          z-index: 2;
+        }
+        .ribbon-left, .ribbon-right {
+          width: 15px;
+          height: 50px;
+          background-color: #b45309;
+          position: absolute;
+          top: 55px;
+          z-index: 1;
+        }
+        .ribbon-left {
+          transform: rotate(20deg);
+          left: 20px;
+        }
+        .ribbon-right {
+          transform: rotate(-20deg);
+          right: 20px;
+        }
+        .verification-info {
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 0.65rem;
+          color: #94a3b8;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        @media print {
+          body {
+            background-color: #ffffff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .cert-border-outer {
+            box-shadow: none;
+            border: 16px solid #0f172a !important;
+            background-image: none !important;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="cert-border-outer">
+        <div class="cert-border-inner">
+          <div class="cert-header">
+            <div class="cert-logo">Build<span>2</span>Hire</div>
+            <div class="cert-title">Certificate of Completion</div>
+            <div class="cert-subtitle">This verified credential is proudly presented to</div>
+          </div>
+          
+          <div class="cert-name">${candidateName}</div>
+          <div class="cert-divider"></div>
+          
+          <div class="cert-description">
+            For successfully completing all advanced technical assessment modules for <br>
+            <strong>${courseTitle}</strong> with a verified passing score of <strong>${scorePct}%</strong>.
+          </div>
+          
+          <div class="cert-footer">
+            <div class="signature-block">
+              <div class="signature-pic">Build2Hire AI</div>
+              <div class="signature-line">Authority</div>
+            </div>
+            
+            <div class="badge-container">
+              <div class="cert-badge">🏆</div>
+              <div class="ribbon-left"></div>
+              <div class="ribbon-right"></div>
+            </div>
+            
+            <div class="signature-block">
+              <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #0f172a;">${dateString}</div>
+              <div class="signature-line">Date Issued</div>
+            </div>
+          </div>
+          
+          <div class="verification-info">
+            Verification ID: ${certId} &bull; Security Secured &bull; verify.build2hire.com
+          </div>
+        </div>
+      </div>
+      <script>
+        window.onload = function() {
+          window.print();
+          setTimeout(() => { window.close(); }, 500);
+        }
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
 
 // Kick off auto-logout on every page load
 document.addEventListener('DOMContentLoaded', initAutoLogout);
@@ -806,8 +1611,8 @@ document.addEventListener('DOMContentLoaded', initAutoLogout);
 try {
   const rawDb = localStorage.getItem('build2hire_db');
   if (rawDb) {
-    const testParse = JSON.parse(rawDb);
-    if (!testParse || !testParse.challenges || testParse.challenges.length === 0 || !testParse.users || testParse.users.length === 0 || !testParse.jobs || testParse.jobs.length === 0 || !testParse.users[0].preferredRole) {
+    const testParse = dbParse(rawDb);
+    if (!testParse || !testParse.challenges || testParse.challenges.length === 0 || !testParse.users || testParse.users.length === 0 || !testParse.jobs || testParse.jobs.length === 0) {
       localStorage.removeItem('build2hire_db');
       console.warn("Corrupted/empty database cache detected and auto-wiped.");
     }
@@ -816,3 +1621,301 @@ try {
   localStorage.removeItem('build2hire_db');
 }
 
+function logUserActivity(userId, activityType, details) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (user) {
+    if (!user.activity_log) user.activity_log = [];
+    user.activity_log.push({
+      type: activityType,
+      details: details,
+      timestamp: new Date().toISOString()
+    });
+    dbSave(db);
+    
+    const curUser = getUser();
+    if (curUser && String(curUser.id) === String(userId)) {
+      curUser.activity_log = user.activity_log;
+      sessionStorage.setItem('user', JSON.stringify(curUser));
+    }
+  }
+}
+
+// ==========================================
+// 💬 CHAT & LIVE MEETINGS HELPERS
+// ==========================================
+
+function startConversation(clientId, clientName, companyName, clientPhone, candidateId, candidateName) {
+  const db = dbGet();
+  if (!db.conversations) db.conversations = [];
+  
+  let conv = db.conversations.find(c => String(c.clientId) === String(clientId) && String(c.candidateId) === String(candidateId));
+  if (!conv) {
+    conv = {
+      id: "c_" + Date.now(),
+      clientId: clientId,
+      clientName: clientName,
+      companyName: companyName || "Build2Hire Client",
+      clientPhone: clientPhone || "+1 (555) 019-2834",
+      candidateId: candidateId,
+      candidateName: candidateName,
+      messages: [],
+      lastUpdated: Date.now()
+    };
+    db.conversations.push(conv);
+    dbSave(db);
+  }
+  return conv;
+}
+
+function sendMessage(convId, senderId, text) {
+  const db = dbGet();
+  const conv = db.conversations.find(c => String(c.id) === String(convId));
+  if (!conv) return null;
+  
+  const sender = db.users.find(u => String(u.id) === String(senderId));
+  const senderName = sender ? sender.fullName : (String(senderId) === String(conv.clientId) ? conv.clientName : conv.candidateName);
+  
+  const newMsg = {
+    senderId: senderId,
+    senderName: senderName,
+    text: text,
+    timestamp: Date.now()
+  };
+  
+  conv.messages.push(newMsg);
+  conv.lastUpdated = Date.now();
+  dbSave(db);
+  
+  return newMsg;
+}
+
+function createMeeting(convId, schedulerId, topic, date, time) {
+  const db = dbGet();
+  const conv = db.conversations.find(c => String(c.id) === String(convId));
+  if (!conv) return null;
+  
+  const newMeet = {
+    id: "meet_" + Date.now(),
+    convId: convId,
+    schedulerId: schedulerId,
+    topic: topic,
+    scheduledDate: date,
+    scheduledTime: time,
+    status: "scheduled", // scheduled, active, completed
+    duration: null,
+    recordingUrl: null,
+    transcript: null,
+    clientId: conv.clientId,
+    clientName: conv.clientName,
+    candidateId: conv.candidateId,
+    candidateName: conv.candidateName
+  };
+  
+  if (!db.meetings) db.meetings = [];
+  db.meetings.push(newMeet);
+  dbSave(db);
+  
+  // Append a notification message in the chat
+  sendMessage(convId, 1000, `🤝 Live Meeting Scheduled! Topic: "${topic}" on ${date} at ${time}. [Join Room](meeting-room.html?id=${newMeet.id})`);
+  
+  return newMeet;
+}
+
+function saveMeetingRecording(meetingId, duration, recordingUrl, transcript) {
+  const db = dbGet();
+  if (!db.meetings) db.meetings = [];
+  
+  const meet = db.meetings.find(m => String(m.id) === String(meetingId));
+  if (!meet) return false;
+  
+  meet.status = "completed";
+  meet.duration = duration;
+  meet.recordingUrl = recordingUrl || "mock_recording_" + meetingId + ".mp4";
+  meet.transcript = transcript || ["Hello, testing meeting recording."];
+  meet.completedAt = Date.now();
+  
+  dbSave(db);
+  
+  // Send recording link in chat
+  sendMessage(meet.convId, 1000, `🎥 Live Meeting Ended. Recording is ready! Duration: ${duration}. [Play Recording](meeting-room.html?id=${meetingId}&play=true)`);
+  
+  return true;
+}
+
+function generateJobReport(candidateId, period = "monthly") {
+  const db = dbGet();
+  const contracts = db.contracts ? db.contracts.filter(c => String(c.candidateId) === String(candidateId)) : [];
+  
+  // Grouping by date
+  let completedCount = 0;
+  let activeCount = 0;
+  let totalEarnings = 0;
+  let details = [];
+  
+  contracts.forEach(c => {
+    let completedMilestones = c.milestones.filter(m => m.status === 'completed').length;
+    let totalMilestones = c.milestones.length;
+    let completionPct = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+    
+    if (c.status === "completed") {
+      completedCount++;
+      totalEarnings += c.amount || 0;
+    } else {
+      activeCount++;
+      // Partial earnings from completed milestones
+      c.milestones.forEach(m => {
+        if (m.status === 'completed') {
+          totalEarnings += Math.round((c.amount || 0) * (m.weight / 100));
+        }
+      });
+    }
+    
+    details.push({
+      title: c.title,
+      company: c.company,
+      status: c.status,
+      milestonesCompleted: `${completedMilestones}/${totalMilestones}`,
+      completionPct: completionPct,
+      amount: c.amount,
+      dateStarted: c.dateStarted,
+      dateCompleted: c.dateCompleted || "In Progress"
+    });
+  });
+  
+  return {
+    completedCount,
+    activeCount,
+    totalEarnings,
+    details
+  };
+}
+
+function linkBankAccount(contractId, cardNo, bankName) {
+  const db = dbGet();
+  const contract = db.contracts.find(c => String(c.id) === String(contractId));
+  if (!contract) return false;
+  
+  contract.autoPayLinked = true;
+  const maskedCard = "🔒 Card ending in *" + cardNo.substring(cardNo.length - 4);
+  contract.bankDetails = {
+    bankName: bankName || "Build2Hire Partner Bank",
+    cardNumber: maskedCard,
+    linkedAt: Date.now()
+  };
+  
+  dbSave(db);
+  return contract;
+}
+
+function submitWeeklyUpdate(contractId, progressText, completionDelta) {
+  const db = dbGet();
+  const contract = db.contracts.find(c => String(c.id) === String(contractId));
+  if (!contract) return false;
+  
+  if (!contract.weeklyProgress) contract.weeklyProgress = [];
+  
+  const weekNum = contract.weeklyProgress.length + 1;
+  const newUpdate = {
+    week: weekNum,
+    text: progressText,
+    timestamp: Date.now(),
+    completionPct: completionDelta
+  };
+  
+  contract.weeklyProgress.push(newUpdate);
+  dbSave(db);
+  return newUpdate;
+}
+
+function triggerMonthlyAutoDeduction(contractId, monthIndex) {
+  const db = dbGet();
+  const contract = db.contracts.find(c => String(c.id) === String(contractId));
+  if (!contract || !contract.autoPayLinked) return false;
+  
+  // Find conversation
+  if (!db.conversations) db.conversations = [];
+  const conv = db.conversations.find(c => String(c.candidateId) === String(contract.candidateId));
+  const convId = conv ? conv.id : "c1";
+  
+  // Calculate installment amount
+  const duration = contract.durationMonths || 1;
+  const instAmount = Math.round((contract.amount || 1000) / duration);
+  
+  // Deduct cash (Simulated)
+  const invoiceNo = "INV-" + Math.floor(100000 + Math.random() * 900000);
+  const newInvoice = {
+    invoiceNo: invoiceNo,
+    amount: instAmount,
+    paidDate: new Date().toISOString().split('T')[0],
+    monthLabel: `Installment Month ${monthIndex}`
+  };
+  
+  if (!contract.invoices) contract.invoices = [];
+  contract.invoices.push(newInvoice);
+  
+  // Mark milestone associated with this installment if pending
+  // Map monthIndex to milestone index
+  const milestoneIdx = monthIndex - 1;
+  if (contract.milestones && contract.milestones[milestoneIdx]) {
+    contract.milestones[milestoneIdx].status = "approved"; // Auto-released
+    const nextMil = contract.milestones[milestoneIdx + 1];
+    if (nextMil) nextMil.status = "in-progress";
+  }
+  
+  // Add XP points to candidate
+  const candidateUser = db.users.find(u => String(u.id) === String(contract.candidateId));
+  if (candidateUser) {
+    candidateUser.xp_points = (candidateUser.xp_points || 0) + 200;
+    recalculateScores(candidateUser);
+  }
+  
+  dbSave(db);
+  
+  // Log message and send system message
+  const alertMsg = `💰 Autopay executed! ${newInvoice.monthLabel} payment of $${instAmount} has been released automatically via linked bank account. Invoice: #${invoiceNo}`;
+  sendMessage(convId, 1000, alertMsg);
+  
+  // Log activity
+  logUserActivity(contract.candidateId, "payment_received", `Received autopay installment of $${instAmount} from ${contract.company}`);
+  
+  return newInvoice;
+}
+
+function generateInvoice(contractId, amount) {
+  const db = dbGet();
+  const contract = db.contracts.find(c => String(c.id) === String(contractId));
+  if (!contract) return null;
+  
+  const invoiceNo = "INV-" + Math.floor(100000 + Math.random() * 900000);
+  const newInvoice = {
+    invoiceNo: invoiceNo,
+    amount: amount,
+    paidDate: new Date().toISOString().split('T')[0]
+  };
+  
+  if (!contract.invoices) contract.invoices = [];
+  contract.invoices.push(newInvoice);
+  dbSave(db);
+  
+  return newInvoice;
+}
+
+function closeContract(contractId) {
+  const db = dbGet();
+  const contract = db.contracts.find(c => String(c.id) === String(contractId));
+  if (!contract) return false;
+  
+  contract.status = "completed";
+  contract.dateCompleted = new Date().toISOString().split('T')[0];
+  
+  // Send final closure notification
+  if (!db.conversations) db.conversations = [];
+  const conv = db.conversations.find(c => String(c.candidateId) === String(contract.candidateId));
+  const convId = conv ? conv.id : "c1";
+  
+  sendMessage(convId, 1000, `🤝 Contract Closed! Project "${contract.title}" has been successfully completed. Final printable service agreement and closing statement are now shared in both dashboards. Thank you for building on Build2Hire!`);
+  
+  dbSave(db);
+  return true;
+}
