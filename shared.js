@@ -342,6 +342,10 @@ function dbSave(data) {
     
     localStorage.setItem('build2hire_db', encodedStr);
     localStorage.setItem('build2hire_db_backup', encodedStr);
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage('db_updated', '*');
+    }
   } catch (e) {
     console.error("Failed to save database:", e);
   }
@@ -739,23 +743,43 @@ function withAuth(allowedRoles = ['candidate', 'recruiter', 'admin']) {
     return null;
   }
   
-  if (!allowedRoles.includes(user.role)) {
-    if (user.role === 'recruiter' || user.role === 'admin') window.location.href = "recruiter-dashboard.html";
+  // Always allow admin access to any page
+  if (user.role !== 'admin' && !allowedRoles.includes(user.role)) {
+    if (user.role === 'recruiter') window.location.href = "recruiter-dashboard.html";
     else window.location.href = "portfolio.html";
     return null;
   }
   
-  renderHeader();
-  const path = window.location.pathname.split('/').pop() || "index.html";
-  if (typeof renderSidebar === 'function') {
-    // If the page has a sidebar container, render it
-    const sidebar = document.getElementById('main-sidebar');
-    if (sidebar) renderSidebar(path);
+  if (window.self !== window.top) {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      header.navbar, aside.sidebar, #main-nav, #main-sidebar { display: none !important; }
+      .dashboard-layout { display: block !important; margin: 0 !important; padding: 0 !important; }
+      main.main-content { margin-left: 0 !important; padding: 1rem !important; }
+    `;
+    document.head.appendChild(style);
+  } else {
+    renderHeader();
+    const path = window.location.pathname.split('/').pop() || "index.html";
+    if (typeof renderSidebar === 'function') {
+      const sidebar = document.getElementById('main-sidebar');
+      if (sidebar) renderSidebar(path);
+    }
   }
   
   const db = dbGet();
   let candidate = db.users.find(u => String(u.id) === String(user.id));
   if (!candidate) candidate = user;
+
+  // Resolve candidate selection override for admin
+  const urlParams = new URLSearchParams(window.location.search);
+  const adminViewCandidateId = urlParams.get('candidateId');
+  if (adminViewCandidateId && user.role === 'admin') {
+    const foundCand = db.users.find(u => String(u.id) === String(adminViewCandidateId));
+    if (foundCand) {
+      candidate = foundCand;
+    }
+  }
   
   return { user, db, candidate };
 }
@@ -1070,6 +1094,50 @@ function renderSidebar(activePage) {
   if (!user) return;
 
   if (user.role === 'recruiter' || user.role === 'admin') {
+    let menuHTML = "";
+    if (user.role === 'admin') {
+      menuHTML = `
+        <li>
+          <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
+            🏆 <span>Leaderboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="recruiter-dashboard.html?tab=manage-candidates" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && window.location.search.includes('tab=manage-candidates')) ? 'active' : ''}">
+            👥 <span>Manage Candidates</span>
+          </a>
+        </li>
+        <li>
+          <a href="recruiter-dashboard.html?tab=manage-recruiters" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && window.location.search.includes('tab=manage-recruiters')) ? 'active' : ''}">
+            💼 <span>Manage Recruiters</span>
+          </a>
+        </li>
+      `;
+    } else {
+      menuHTML = `
+        <li>
+          <a href="recruiter-dashboard.html" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && !window.location.search.includes('tab=')) ? 'active' : ''}">
+            💼 <span>Hiring Board</span>
+          </a>
+        </li>
+        <li>
+          <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
+            🤝 <span>Agreement Builder</span>
+          </a>
+        </li>
+        <li>
+          <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
+            💬 <span>Inbox & Meetings</span>
+          </a>
+        </li>
+        <li>
+          <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
+            🏆 <span>Leaderboard</span>
+          </a>
+        </li>
+      `;
+    }
+
     sidebar.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2rem;">
         <div>
@@ -1077,26 +1145,7 @@ function renderSidebar(activePage) {
             Workspace
           </p>
           <ul class="sidebar-menu">
-            <li>
-              <a href="recruiter-dashboard.html" class="sidebar-link ${activePage === 'recruiter-dashboard.html' ? 'active' : ''}">
-                💼 <span>Hiring Board</span>
-              </a>
-            </li>
-            <li>
-              <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
-                🤝 <span>Agreement Builder</span>
-              </a>
-            </li>
-            <li>
-              <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
-                💬 <span>Inbox & Meetings</span>
-              </a>
-            </li>
-            <li>
-              <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
-                🏆 <span>Leaderboard</span>
-              </a>
-            </li>
+            ${menuHTML}
           </ul>
         </div>
 
