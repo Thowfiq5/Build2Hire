@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox & Meeting Center | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Chat layout styling */
+    .chat-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 170px);
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    .chat-threads {
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    .chat-threads-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 700;
+      font-size: 1.1rem;
+      font-family: var(--font-display);
+    }
+    .threads-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .thread-item {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .thread-item:hover, .thread-item.active {
+      background-color: var(--primary-light);
+    }
+    .thread-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+    }
+    .thread-meta {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+    .thread-preview {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .chat-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-secondary);
+    }
+    .chat-user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .chat-user-name {
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+    }
+    .chat-user-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      background-color: var(--success-light);
+      color: var(--success);
+      font-weight: 700;
+    }
+    .chat-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .chat-messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      background-color: var(--bg-primary);
+    }
+    .message-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+    }
+    .message-row.me {
+      align-self: flex-end;
+    }
+    .message-row.them {
+      align-self: flex-start;
+    }
+    .message-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .message-row.me .message-meta {
+      text-align: right;
+    }
+    .message-bubble {
+      padding: 0.85rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .message-row.me .message-bubble {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+    .message-row.them .message-bubble {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-bottom-left-radius: 0;
+    }
+    .system-card {
+      align-self: center;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      max-width: 80%;
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-left: 4px solid var(--warning);
+    }
+    .chat-input-area {
+      padding: 1.25rem;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .chat-input-field {
+      flex-grow: 1;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      outline: none;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .chat-input-field:focus {
+      border-color: var(--primary);
+      background-color: var(--bg-secondary);
+    }
+    /* Scheduler side panel */
+    .schedule-panel {
+      border-left: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Inbox & Call Center</h2>
+          <p style="color: var(--text-secondary);">Direct message clients and launch encrypted voice/video sessions.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- MAIN CONTAINER -->
+      <div class="chat-container">
+        
+        <!-- SIDEBAR THREADS -->
+        <div class="chat-threads">
+          <div class="chat-threads-header">Conversations</div>
+          <div class="threads-list" id="threads-list-container">
+            <!-- Threads dynamically rendered -->
+          </div>
+        </div>
+
+        <!-- MAIN CHAT SCREEN -->
+        <div class="chat-main" id="chat-main-view">
+          
+          <!-- CHAT HEADER -->
+          <div class="chat-header">
+            <div class="chat-user-details">
+              <div class="chat-user-name" id="chat-header-name">Client Name</div>
+              <div class="chat-user-sub">
+                <span id="chat-header-company">Company Name</span> &bull; 
+                <span id="chat-header-phone">Masked Number</span> 
+                <span class="privacy-badge">🔒 Encrypted Channel</span>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button onclick="openMeetingScheduler()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm);">
+                📅 Schedule Meeting
+              </button>
+              <button onclick="initiateInstantCall('voice')" class="btn btn-secondary" style="padding: 0.5rem; font-size: 0.9rem; border-radius: var(--radius-sm);" title="Simulate Voice Call">
+                📞 Call Client
+              </button>
+              <button onclick="initiateInstantCall('video')" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm);" title="Simulate Video Meeting">
+                🎥 Start Video Call
+              </button>
+            </div>
+          </div>
+
+          <!-- MESSAGES BOX -->
+          <div class="chat-messages" id="chat-messages-container">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- INPUT AREA -->
+          <div class="chat-input-area">
+            <input type="text" id="chat-message-input" class="chat-input-field" placeholder="Write a message scope, ask query..." onkeydown="handleInputKeydown(event)">
+            <button onclick="sendChatMessage()" class="btn btn-primary" style="padding: 0.85rem 1.5rem; border-radius: var(--radius-sm); font-size: 0.9rem;">
+              Send 🚀
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MEETING SCHEDULER MODAL -->
+  <div id="scheduler-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeMeetingScheduler()">✕</button>
+      <h3 style="font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--primary);">
+        📅 Schedule Live Project Meeting
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        This meeting will be recorded. The final recording link will automatically post to both your chats.
+      </p>
+
+      <form id="scheduler-form" onsubmit="handleScheduleForm(event)">
+        <div class="form-group">
+          <label class="form-label" for="meet-topic">Meeting Topic/Scope</label>
+          <input type="text" id="meet-topic" required class="form-control" placeholder="e.g. Discussing Phase 2 Design Deliverables">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="meet-date">Date</label>
+            <input type="date" id="meet-date" required class="form-control">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="meet-time">Time</label>
+            <input type="time" id="meet-time" required class="form-control">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Schedule Meeting & Room 🤝
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = withAuth(['candidate', 'recruiter']);
+    let currentConversationId = null;
+    let dbState = null;
+
+    if (auth) {
+      dbState = dbGet();
+      initializeInbox();
+    }
+
+    function initializeInbox() {
+      const user = getUser();
+      const params = new URLSearchParams(window.location.search);
+      const startWithClient = params.get('client');
+
+      // Populate threads list
+      const threadsList = document.getElementById('threads-list-container');
+      let userConvs = [];
+      
+      if (user.role === 'candidate') {
+        userConvs = dbState.conversations.filter(c => String(c.candidateId) === String(user.id));
+      } else {
+        userConvs = dbState.conversations.filter(c => String(c.clientId) === String(user.id));
+      }
+
+      // If "client" query param is set and doesn't exist, create it!
+      if (startWithClient && user.role === 'candidate') {
+        const hasConv = userConvs.some(c => c.clientName.toLowerCase() === startWithClient.toLowerCase());
+        if (!hasConv) {
+          // Find recruiter profile
+          const clientUser = dbState.users.find(u => u.fullName.toLowerCase() === startWithClient.toLowerCase() && u.role === 'recruiter');
+          if (clientUser) {
+            const newConv = startConversation(
+              clientUser.id, 
+              clientUser.fullName, 
+              clientUser.companyName || "InnovateTech", 
+              clientUser.phone || "+1 (555) 012-9843",
+              user.id, 
+              user.fullName
+            );
+            userConvs.unshift(newConv);
+            dbState = dbGet(); // Refresh
+          }
+        }
+      }
+
+      if (userConvs.length === 0) {
+        threadsList.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem;">No active conversations yet.</div>`;
+        document.getElementById('chat-main-view').style.opacity = '0.3';
+        document.getElementById('chat-main-view').style.pointerEvents = 'none';
+        return;
+      }
+
+      // Select first conversation
+      let selectedConv = userConvs[0];
+      if (startWithClient) {
+        const found = userConvs.find(c => c.clientName.toLowerCase() === startWithClient.toLowerCase());
+        if (found) selectedConv = found;
+      }
+
+      currentConversationId = selectedConv.id;
+      renderThreads(userConvs);
+      renderChatScreen(selectedConv);
+    }
+
+    function renderThreads(convs) {
+      const container = document.getElementById('threads-list-container');
+      const user = getUser();
+
+      container.innerHTML = convs.map(c => {
+        const isActive = String(c.id) === String(currentConversationId) ? 'active' : '';
+        const displayName = user.role === 'candidate' ? c.clientName : c.candidateName;
+        const lastMsg = c.messages.length > 0 ? c.messages[c.messages.length - 1].text : "No messages yet";
+        const dateStr = c.messages.length > 0 ? new Date(c.messages[c.messages.length - 1].timestamp).toLocaleDateString([], {month:'short', day:'numeric'}) : '';
+
+        return `
+          <div class="thread-item ${isActive}" onclick="selectConversation('${c.id}')">
+            <div class="thread-meta">
+              <span class="thread-name">${displayName}</span>
+              <span>${dateStr}</span>
+            </div>
+            <span style="font-size: 0.72rem; color: var(--primary); font-weight:700;">${c.companyName}</span>
+            <div class="thread-preview">${lastMsg}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectConversation(convId) {
+      currentConversationId = convId;
+      dbState = dbGet();
+      const conv = dbState.conversations.find(c => String(c.id) === String(convId));
+      
+      // Update thread highlights
+      let userConvs = [];
+      const user = getUser();
+      if (user.role === 'candidate') {
+        userConvs = dbState.conversations.filter(c => String(c.candidateId) === String(user.id));
+      } else {
+        userConvs = dbState.conversations.filter(c => String(c.clientId) === String(user.id));
+      }
+      renderThreads(userConvs);
+
+      renderChatScreen(conv);
+    }
+
+    function renderChatScreen(conv) {
+      const user = getUser();
+      const headerName = user.role === 'candidate' ? conv.clientName : conv.candidateName;
+      document.getElementById('chat-header-name').textContent = headerName;
+      document.getElementById('chat-header-company').textContent = conv.companyName;
+
+      // Privacy number masking logic
+      let phoneStr = '';
+      if (user.role === 'candidate') {
+        const rawPhone = conv.clientPhone || "+1 (555) 012-9843";
+        // Mask the phone number for freelancer view
+        const prefix = rawPhone.substring(0, 7);
+        const suffix = rawPhone.substring(rawPhone.length - 4);
+        phoneStr = `🔒 Masked: ${prefix}******${suffix} (Secure Voice Routing active)`;
+      } else {
+        // Recruiters can see candidate number since candidate registers to be found
+        const candidateProfile = dbState.users.find(u => u.id === conv.candidateId);
+        phoneStr = candidateProfile ? candidateProfile.phone || "+1 (555) 019-2834" : "+1 (555) 019-2834";
+      }
+      document.getElementById('chat-header-phone').textContent = phoneStr;
+
+      // Render Messages
+      const msgContainer = document.getElementById('chat-messages-container');
+      if (conv.messages.length === 0) {
+        msgContainer.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.85rem;">This is the start of your secure direct message channel. Discuss your deliverables or click "Start Video Call" above to meet.</div>`;
+        return;
+      }
+
+      msgContainer.innerHTML = conv.messages.map(msg => {
+        // System message from Build2Hire Coordinator (senderId = 1000)
+        if (msg.senderId === 1000) {
+          // If message contains markdown links, convert them simple HTML links
+          let cleanText = msg.text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="btn btn-primary" style="padding:0.25rem 0.5rem; font-size:0.7rem; border-radius:4px; margin-top:0.35rem; display:inline-flex; align-items:center; width:fit-content; background:linear-gradient(135deg, var(--warning) 0%, var(--primary) 100%);">$1</a>');
+          return `
+            <div class="system-card">
+              <strong style="color: var(--warning);">🤖 Build2Hire Meeting Coordinator</strong>
+              <span>${cleanText}</span>
+            </div>
+          `;
+        }
+
+        const isMe = String(msg.senderId) === String(user.id);
+        const rowClass = isMe ? 'me' : 'them';
+        const dateStr = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        return `
+          <div class="message-row ${rowClass}">
+            <div class="message-meta">${msg.senderName} &bull; ${dateStr}</div>
+            <div class="message-bubble">${msg.text}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Scroll to bottom
+      setTimeout(() => {
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }, 300);
+    }
+
+    function handleInputKeydown(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-message-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const user = getUser();
+      const sentMsg = sendMessage(currentConversationId, user.id, text);
+      
+      if (sentMsg) {
+        input.value = '';
+        dbState = dbGet(); // Refresh
+        const conv = dbState.conversations.find(c => String(c.id) === String(currentConversationId));
+        renderChatScreen(conv);
+
+        // Simulated Auto Response (if Recruiter receives message or Candidate receives it)
+        if (user.role === 'candidate') {
+          simulateClientReply(text);
+        }
+      }
+    }
+
+    function simulateClientReply(candidateText) {
+      setTimeout(() => {
+        dbState = dbGet();
+        const conv = dbState.conversations.find(c => String(c.id) === String(currentConversationId));
+        if (!conv) return;
+
+        let responseText = "Got it! Let's schedule a recorded video meeting to discuss this milestone details.";
+        if (candidateText.toLowerCase().includes("milestone") || candidateText.toLowerCase().includes("work")) {
+          responseText = "I see your milestone progress. Please schedule a call so we can do a screenshare review and I will release the milestone payout.";
+        } else if (candidateText.toLowerCase().includes("hello") || candidateText.toLowerCase().includes("hi")) {
+          responseText = "Hello! Thanks for reaching out. Let me know what you think about the project description, or let's schedule a meeting directly.";
+        }
+
+        sendMessage(currentConversationId, conv.clientId, responseText);
+        dbState = dbGet();
+        renderChatScreen(conv);
+      }, 2000);
+    }
+
+    function openMeetingScheduler() {
+      document.getElementById('scheduler-modal').style.display = 'flex';
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('meet-date').value = today;
+      document.getElementById('meet-time').value = "10:00";
+    }
+
+    function closeMeetingScheduler() {
+      document.getElementById('scheduler-modal').style.display = 'none';
+    }
+
+    function handleScheduleForm(e) {
+      e.preventDefault();
+      const topic = document.getElementById('meet-topic').value;
+      const date = document.getElementById('meet-date').value;
+      const time = document.getElementById('meet-time').value;
+
+      const user = getUser();
+      const newMeet = createMeeting(currentConversationId, user.id, topic, date, time);
+      
+      if (newMeet) {
+        closeMeetingScheduler();
+        dbState = dbGet();
+        const conv = dbState.conversations.find(c => String(c.id) === String(currentConversationId));
+        renderChatScreen(conv);
+        showAlert('alert-container', 'Live meeting scheduled successfully! Room invitation link sent to chat.', 'success');
+      }
+    }
+
+    function initiateInstantCall(type) {
+      const db = dbGet();
+      const conv = db.conversations.find(c => String(c.id) === String(currentConversationId));
+      if (!conv) return;
+
+      const user = getUser();
+      const newMeet = {
+        id: "meet_" + Date.now(),
+        convId: currentConversationId,
+        schedulerId: user.id,
+        topic: `Instant ${type === 'video' ? 'Video' : 'Voice'} Call`,
+        scheduledDate: new Date().toISOString().split('T')[0],
+        scheduledTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false}),
+        status: "active",
+        duration: null,
+        recordingUrl: null,
+        clientId: conv.clientId,
+        clientName: conv.clientName,
+        candidateId: conv.candidateId,
+        candidateName: conv.candidateName
+      };
+
+      if (!db.meetings) db.meetings = [];
+      db.meetings.push(newMeet);
+      dbSave(db);
+
+      // Launch meeting room directly
+      window.location.href = `meeting-room.html?id=${newMeet.id}&call=true`;
+    }
+
+    // Auto-refresh chat list and active screen every 3 seconds to catch external updates (e.g. autopay or meeting endings)
+    setInterval(() => {
+      if (!currentConversationId) return;
+      const latestDb = dbGet();
+      // Check if message count changed for the active conversation
+      const currentConv = latestDb.conversations.find(c => String(c.id) === String(currentConversationId));
+      if (!currentConv) return;
+      
+      const loadedConv = dbState.conversations.find(c => String(c.id) === String(currentConversationId));
+      const loadedMsgCount = loadedConv ? loadedConv.messages.length : 0;
+      
+      if (currentConv.messages.length !== loadedMsgCount) {
+        dbState = latestDb;
+        // Refresh conversations thread highlights list
+        const user = getUser();
+        let userConvs = [];
+        if (user.role === 'candidate') {
+          userConvs = dbState.conversations.filter(c => String(c.candidateId) === String(user.id));
+        } else {
+          userConvs = dbState.conversations.filter(c => String(c.clientId) === String(user.id));
+        }
+        renderThreads(userConvs);
+        renderChatScreen(currentConv);
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
