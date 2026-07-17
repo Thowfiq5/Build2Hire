@@ -57,7 +57,7 @@
     </div>
   </main>
 
-  <script src="shared.js"></script>
+  <script src="shared.js?v=1.0.1"></script>
   <script>
     renderHeader();
 
@@ -97,53 +97,21 @@
           }
         }
       } catch (err) {
-        console.warn("Backend auth offline, using mock login fallback:", err.message);
+        console.warn("Backend auth offline, using local database fallback:", err.message);
         
-        let mockRole = "candidate";
-        let mockName = "John Builder";
-        
-        if (email.includes("recruiter")) {
-          mockRole = "recruiter";
-          mockName = "Jane Recruiter";
-        } else if (email.includes("admin")) {
-          mockRole = "admin";
-          mockName = "Admin User";
-        }
-
         const dbState = dbGet();
         let existingUser = dbState.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
         if (!existingUser) {
-          existingUser = {
-            id: Date.now(),
-            email: email,
-            role: mockRole,
-            fullName: mockName
-          };
-          if (mockRole === 'candidate') {
-            existingUser.phone = "+1 (555) 019-1122";
-            existingUser.bio = "Active builder on Build2Hire.";
-            existingUser.skills = ["React", "JavaScript", "HTML", "CSS Variables"];
-            existingUser.xp_points = 0;
-            existingUser.level = 1;
-            existingUser.talent_score = 0;
-            existingUser.portfolio_score = 40;
-            existingUser.challenge_score = 0;
-            existingUser.assessment_score = 0;
-            existingUser.projects = [];
-          } else {
-            existingUser.companyName = "InnovateTech";
-            existingUser.jobTitle = "Hiring Manager";
-          }
-          dbState.users.push(existingUser);
-          dbSave(dbState);
+          showAlert('alert-container', '⚠️ User not found! Please register / sign up first or use default demo accounts.', 'error');
+          return;
         }
 
         sessionStorage.setItem('user', JSON.stringify(existingUser));
-        showAlert('alert-container', 'Backend offline. Logged in with Demo Account!', 'success');
+        showAlert('alert-container', 'Logged in successfully!', 'success');
         
         setTimeout(() => {
-          if (mockRole === "recruiter") {
+          if (existingUser.role === "recruiter" || existingUser.role === "admin") {
             window.location.href = "recruiter-dashboard.html";
           } else {
             if (existingUser.profileCompleted) {
