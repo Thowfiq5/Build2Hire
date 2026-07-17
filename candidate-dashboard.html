@@ -67,7 +67,10 @@
         <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--secondary);">
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Client Visits</span>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; display:flex; align-items:center; gap:0.35rem;">
+                Client Visits
+                <button id="admin-edit-visits-btn" onclick="editProfileVisitsAdmin()" class="btn btn-secondary" style="display:none; padding: 0.1rem 0.3rem; font-size: 0.6rem; border-radius: 3px; font-weight: 600; line-height: 1; border: 1px solid var(--border-color);">✏️ Edit</button>
+              </span>
               <div id="stat-visits" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">0</div>
             </div>
             <span style="font-size: 2rem; background: var(--secondary-light); padding: 0.4rem; border-radius: var(--radius-sm);">👁️</span>
@@ -167,36 +170,37 @@
     </main>
   </div>
 
-  <script src="shared.js"></script>
+  <script src="shared.js?v=1.0.5"></script>
   <script>
-    const auth = withAuth(['candidate']);
+    let activeCandidate = null;
+    const auth = withAuth(['candidate', 'admin']);
     if (auth) {
+      activeCandidate = auth.candidate;
       renderDashboard();
     }
 
     let reportPeriod = "monthly";
 
     function renderDashboard() {
-      const db = dbGet();
-      const user = getUser();
+      const db = auth.db;
       
       // Load user statistics
-      const clientVisits = user.client_visits || 0;
+      const clientVisits = activeCandidate.client_visits || 0;
       document.getElementById('stat-visits').textContent = clientVisits;
 
-      const reportData = generateJobReport(user.id);
+      const reportData = generateJobReport(activeCandidate.id);
       document.getElementById('stat-active-gigs').textContent = reportData.activeCount;
       document.getElementById('stat-completed-gigs').textContent = reportData.completedCount;
       document.getElementById('stat-earnings').textContent = `$${reportData.totalEarnings.toLocaleString()}`;
 
       // Render Active Milestones
-      renderActiveMilestones(db, user.id);
+      renderActiveMilestones(db, activeCandidate.id);
 
       // Render Client Logs
-      renderClientLogs(user);
+      renderClientLogs(activeCandidate);
 
       // Render Meeting Recordings
-      renderMeetingRecordings(db, user.id);
+      renderMeetingRecordings(db, activeCandidate.id);
 
       // Render Financial Report and Chart
       renderFinancialReport(reportData);
@@ -206,10 +210,12 @@
       const container = document.getElementById('active-milestones-container');
       const activeContracts = db.contracts ? db.contracts.filter(c => String(c.candidateId) === String(userId) && c.status === 'active') : [];
 
-      if (activeContracts.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.85rem;">No active milestone gigs. Explore Gigs in the Freelance Hub.</div>`;
-        return;
-      }
+      const isAdminViewing = (() => {
+        try {
+          const ru = JSON.parse(sessionStorage.getItem('user'));
+          return ru && ru.role === 'admin';
+        } catch { return false; }
+      })();
 
       container.innerHTML = activeContracts.map(c => {
         const milestonesHTML = c.milestones.map(m => {
@@ -218,6 +224,14 @@
           else if (m.status === 'in-progress') statusBadge = '<span class="badge badge-warning" style="font-size: 0.65rem;">In Progress</span>';
           else statusBadge = '<span class="badge badge-primary" style="font-size: 0.65rem; background-color: var(--bg-tertiary); color: var(--text-secondary);">Pending</span>';
 
+          const statusControl = isAdminViewing
+            ? `<select onchange="updateMilestoneStatusAdmin('${c.id}', ${m.id}, this.value)" style="padding:0.2rem 0.4rem; font-size:0.7rem; background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:4px;">
+                 <option value="pending" ${m.status === 'pending' ? 'selected' : ''}>Pending</option>
+                 <option value="in-progress" ${m.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                 <option value="completed" ${m.status === 'completed' ? 'selected' : ''}>Completed</option>
+               </select>`
+            : statusBadge;
+
           return `
             <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
               <div>
@@ -225,8 +239,8 @@
                 <span style="font-size: 0.75rem; color: var(--text-secondary);">${m.description} (${m.weight}% weight)</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.5rem;">
-                ${statusBadge}
-                ${m.status === 'in-progress' ? `<button onclick="submitMilestoneDeliverable('${c.id}', ${m.id})" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 4px;">Submit</button>` : ''}
+                ${statusControl}
+                ${m.status === 'in-progress' && !isAdminViewing ? `<button onclick="submitMilestoneDeliverable('${c.id}', ${m.id})" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.7 4px;">Submit</button>` : ''}
               </div>
             </div>
           `;
@@ -250,6 +264,10 @@
           </div>
         `).join('');
 
+        const terminateBtn = isAdminViewing
+          ? `<button onclick="terminateContractAdmin('${c.id}')" class="btn" style="background:#ef4444; color:white; padding:0.3rem 0.6rem; font-size:0.7rem; border-radius:4px; font-weight:700; border:none;">🗑️ Terminate</button>`
+          : '';
+
         return `
           <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
@@ -257,7 +275,10 @@
                 <h4 style="font-size: 1rem; color: var(--primary);">${c.title}</h4>
                 <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Client: ${c.company} | Salary: ${c.salary}</span>
               </div>
-              <span style="font-size: 0.85rem; font-weight: 700; color: var(--success);">${completionPct}% Completed</span>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="font-size: 0.85rem; font-weight: 700; color: var(--success);">${completionPct}% Completed</span>
+                ${terminateBtn}
+              </div>
             </div>
             
             <div style="background: var(--bg-tertiary); border-radius: 99px; height: 6px; margin-bottom: 1.25rem; overflow: hidden;">
@@ -468,8 +489,7 @@
       document.getElementById('btn-rep-yearly').style.backgroundColor = period === 'yearly' ? 'var(--primary)' : 'var(--bg-secondary)';
       document.getElementById('btn-rep-yearly').style.color = period === 'yearly' ? '#ffffff' : 'var(--text-primary)';
       
-      const user = getUser();
-      const reportData = generateJobReport(user.id);
+      const reportData = generateJobReport(activeCandidate.id);
       
       document.getElementById('chart-title').textContent = period === 'monthly' ? "Monthly Earnings Trend (2026)" : "Yearly Earnings Breakdown (2024 - 2026)";
       renderFinancialReport(reportData);
@@ -582,6 +602,81 @@
         alert("Report generated successfully!\n\nBuild2Hire Verified Developer Earnings Report\nFreelancer: Candidate User\nTotal Earnings: " + document.getElementById('stat-earnings').textContent + "\nActive Jobs: " + document.getElementById('stat-active-gigs').textContent + "\nStatus: Certified compliant.");
       }, 1000);
     }
+
+    // Admin Freelance and Visits Dashboard Modifiers
+    if (isAdminViewing) {
+      const editBtn = document.getElementById('admin-edit-visits-btn');
+      if (editBtn) editBtn.style.display = 'inline-block';
+    }
+
+    window.editProfileVisitsAdmin = function() {
+      const currentVisits = parseInt(document.getElementById('stat-visits').textContent) || 0;
+      const val = prompt("Enter new client visits count:", currentVisits);
+      if (val !== null) {
+        const newVal = parseInt(val) || 0;
+        const dbState = dbGet();
+        const dbCand = dbState.users.find(u => String(u.id) === String(activeCandidate.id));
+        if (dbCand) {
+          dbCand.client_visits = newVal;
+          dbSave(dbState);
+          activeCandidate = dbCand;
+          document.getElementById('stat-visits').textContent = newVal;
+          showAlert('alert-container', 'Visits count updated successfully.', 'success');
+          
+          window.postMessage('db_updated', '*');
+        }
+      }
+    };
+
+    window.updateMilestoneStatusAdmin = function(contractId, milestoneId, newStatus) {
+      const dbState = dbGet();
+      const contract = dbState.contracts.find(c => String(c.id) === String(contractId));
+      if (contract) {
+        const m = contract.milestones.find(ms => ms.id === milestoneId);
+        if (m) {
+          m.status = newStatus;
+          
+          // If a milestone is completed, generate mock invoice!
+          if (newStatus === 'completed') {
+            if (!contract.invoices) contract.invoices = [];
+            const hasInv = contract.invoices.some(inv => inv.milestoneId === milestoneId);
+            if (!hasInv) {
+              const amt = Math.round(contract.budget * (m.weight / 100));
+              contract.invoices.push({
+                invoiceNo: Math.floor(1000 + Math.random() * 9000),
+                amount: amt,
+                paidDate: new Date().toISOString().split('T')[0],
+                monthLabel: m.title,
+                milestoneId: milestoneId
+              });
+            }
+          } else {
+            // Revoke payment if reverted
+            if (contract.invoices) {
+              contract.invoices = contract.invoices.filter(inv => inv.milestoneId !== milestoneId);
+            }
+          }
+
+          dbSave(dbState);
+          showAlert('alert-container', 'Milestone status updated successfully.', 'success');
+          renderDashboard();
+          
+          window.postMessage('db_updated', '*');
+        }
+      }
+    };
+
+    window.terminateContractAdmin = function(contractId) {
+      if (confirm("Are you sure you want to terminate this freelance contract?")) {
+        const dbState = dbGet();
+        dbState.contracts = dbState.contracts.filter(c => String(c.id) !== String(contractId));
+        dbSave(dbState);
+        showAlert('alert-container', 'Contract terminated successfully.', 'success');
+        renderDashboard();
+        
+        window.postMessage('db_updated', '*');
+      }
+    };
   </script>
 </body>
 </html>
