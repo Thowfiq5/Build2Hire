@@ -250,6 +250,18 @@
           }
           dbState.users.push(existingUser);
           dbSave(dbState);
+        } else {
+          // If the user already exists (like a seeded user email), update their name and details to match what they typed!
+          existingUser.fullName = fullName;
+          existingUser.role = currentRole;
+          if (currentRole === 'candidate') {
+            existingUser.phone = document.getElementById('phone').value || existingUser.phone || "";
+            existingUser.bio = document.getElementById('bio').value || existingUser.bio || "";
+          } else {
+            existingUser.companyName = document.getElementById('companyName').value || existingUser.companyName || "InnovateTech";
+            existingUser.jobTitle = document.getElementById('jobTitle').value || existingUser.jobTitle || "Hiring Manager";
+          }
+          dbSave(dbState);
         }
 
         sessionStorage.setItem('user', JSON.stringify(existingUser));
