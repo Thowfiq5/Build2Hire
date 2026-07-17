@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Showcase Portfolio | Build2Hire</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- NAVBAR -->
@@ -151,11 +154,20 @@
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
               <div><strong>Name:</strong> <span id="view-fullName" style="color: var(--text-secondary);"></span></div>
               <div><strong>Role:</strong> <span id="view-role" style="color: var(--text-secondary);"></span></div>
+              <div><strong>Education:</strong> <span id="view-education" style="color: var(--text-secondary);"></span></div>
               <div><strong>Phone:</strong> <span id="view-phone" style="color: var(--text-secondary);"></span></div>
               <div><strong>Bio:</strong> <p id="view-bio" style="color: var(--text-secondary); margin-top: 0.25rem; font-size: 0.9rem; line-height: 1.4;"></p></div>
               
               <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;" id="view-links">
                 <!-- Links inserted here dynamically -->
+              </div>
+
+              <div id="view-resume-container" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: none; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <strong>Attached Resume:</strong>
+                <a href="#" id="view-resume-link" target="_blank" class="badge" style="background-color: #10b981; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                  📄 <span id="view-resume-filename">resume.pdf</span>
+                </a>
+                <span id="view-resume-type" class="badge badge-primary" style="font-size: 0.75rem;">ATS Format</span>
               </div>
             </div>
 
@@ -181,6 +193,11 @@
               <div class="form-group">
                 <label class="form-label" for="phone">Phone Number</label>
                 <input type="tel" id="phone" class="form-control" placeholder="+1 (555) 000-0000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="education">Education / Degree</label>
+                <input type="text" id="education" class="form-control" placeholder="e.g. B.Tech in Computer Science">
               </div>
 
               <div class="form-group">
@@ -212,6 +229,32 @@
               <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label class="form-label" for="portfolioWebsite">Live Portfolio Website</label>
                 <input type="url" id="portfolioWebsite" class="form-control" placeholder="https://mywebsite.com">
+              </div>
+
+              <!-- Resume Upload Component -->
+              <div class="form-group" style="margin-bottom: 1.5rem; background-color: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+                <label class="form-label" style="font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                  📄 Resume Attachment <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Required - Choose ATS or Design format)</span>
+                </label>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+                  <div>
+                    <label class="form-label" style="font-size: 0.8rem;" for="resumeType">Resume Format type</label>
+                    <select id="resumeType" class="form-control" style="background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; width: 100%;">
+                      <option value="">-- Choose Format --</option>
+                      <option value="ATS">ATS Format (Simple text layout)</option>
+                      <option value="Design">With Design Format (Visual template layout)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size: 0.8rem;" for="resumeFile">Select Resume File</label>
+                    <input type="file" id="resumeFile" class="form-control" accept=".pdf,.docx,.png,.jpg,.jpeg,.doc" style="padding: 0.35rem 0.5rem;">
+                  </div>
+                </div>
+
+                <div id="profile-resume-status" style="font-size: 0.85rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.08); margin-top: 0.5rem;">
+                  <span style="color: var(--text-muted);">No resume attached yet.</span>
+                </div>
               </div>
 
               <!-- Skills Section -->
@@ -308,14 +351,142 @@
         </div>
 
       </div>
+
+      <!-- PEER-TO-PEER GIG MANAGER -->
+      <div class="card" id="p2p-gigs-section" style="margin-top: 2rem; border-top: 4px solid var(--primary); padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <h3 style="font-size: 1.25rem; margin: 0; font-family: var(--font-display);">👥 Peer-to-Peer (P2P) Jobs & Collaboration Board</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0.25rem 0 0 0;">Post gigs/tasks, recruit other builders to your project, and review applicants.</p>
+          </div>
+          <button onclick="openCreateP2PJobModal()" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700;">+ Post P2P Job / Gig</button>
+        </div>
+
+        <div id="p2p-jobs-list" style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+          <!-- Candidate posted P2P jobs rendered here -->
+        </div>
+      </div>
+
+      <!-- CREATE P2P JOB MODAL -->
+      <div id="p2p-create-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 10vh; overflow-y: auto; z-index: 1100;">
+        <div class="modal-box" style="max-width: 580px; width: 100%; padding: 2rem; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); position: relative;">
+          <button class="modal-close" onclick="closeCreateP2PJobModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer;">✕</button>
+          <h3 style="font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);">
+            🚀 Post P2P Job / Gig
+          </h3>
+          <form id="p2p-job-form">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" for="p2p-title" style="display: block; margin-bottom: 0.25rem;">Job Title / Role Needed</label>
+              <input type="text" required id="p2p-title" class="form-control" style="width: 100%;" placeholder="e.g. Need Frontend Helper for Hackathon Project">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="p2p-category" style="display: block; margin-bottom: 0.25rem;">Category</label>
+                <select id="p2p-category" class="form-control" style="background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; width: 100%;">
+                  <option value="Frontend">Frontend</option>
+                  <option value="Backend">Backend</option>
+                  <option value="Design">Design</option>
+                  <option value="Fullstack">Fullstack</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="p2p-xp" style="display: block; margin-bottom: 0.25rem;">XP Reward / Budget</label>
+                <input type="number" required id="p2p-xp" class="form-control" style="width: 100%;" min="50" max="1000" placeholder="e.g. 150">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" for="p2p-skills" style="display: block; margin-bottom: 0.25rem;">Required Skills (Comma separated)</label>
+              <input type="text" required id="p2p-skills" class="form-control" style="width: 100%;" placeholder="e.g. React, CSS, JavaScript">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" for="p2p-desc" style="display: block; margin-bottom: 0.25rem;">Job Description</label>
+              <textarea required id="p2p-desc" class="form-control" rows="3" style="width: 100%; resize: vertical;" placeholder="Describe what tasks need to be done..."></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label class="form-label" for="p2p-reqs" style="display: block; margin-bottom: 0.25rem;">Requirements</label>
+              <textarea required id="p2p-reqs" class="form-control" rows="2" style="width: 100%; resize: vertical;" placeholder="e.g. Must have completed basic assessment quiz."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-weight: 700;">Publish P2P Job Post</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- CANDIDATE DETAIL MODAL -->
+      <div id="details-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 10vh; overflow-y: auto; z-index: 1100;">
+        <div class="modal-box" style="max-width: 500px; width: 100%; padding: 2rem; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); position: relative;">
+          <button class="modal-close" onclick="closeDetailsModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer;">✕</button>
+          <h3 style="font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);" id="det-name">
+            Candidate Profile
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+            <div><strong>Preferred Role:</strong> <span id="det-role" style="color: var(--text-secondary);"></span></div>
+            <div><strong>XP Points:</strong> <span id="det-xp" style="color: var(--text-secondary);"></span></div>
+            <div><strong>Talent Score:</strong> <span id="det-score" style="color: var(--text-secondary);"></span></div>
+            <div><strong>Education:</strong> <span id="det-education" style="color: var(--text-secondary);"></span></div>
+            <div><strong>Phone:</strong> <a id="det-phone" href="#" style="color: var(--primary); text-decoration: none; font-weight: bold;"></a></div>
+            <div><strong>Bio:</strong> <p id="det-bio" style="color: var(--text-secondary); line-height: 1.4; margin-top: 0.25rem;"></p></div>
+            <div id="det-resume-sec" style="display: none; margin-top: 0.5rem;">
+              <strong>Resume:</strong>
+              <a id="det-resume-link" href="#" target="_blank" class="badge" style="background-color: #10b981; color: white; text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center;">📄 Download Resume</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATE UNLOCK MODAL -->
+      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 580px; background: radial-gradient(circle, #fbfbfb 0%, #f7f7f7 100%); color: #0f172a; border: 12px solid #0f172a; padding: 1.5rem; border-radius: 8px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; overflow: visible; box-sizing: border-box;">
+          <div style="border: 3px solid #b45309; padding: 2rem 1.5rem; box-sizing: border-box; position: relative;">
+            
+            <!-- Seal decoration -->
+            <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; background: radial-gradient(circle, #f59e0b 0%, #b45309 100%); border-radius: 50%; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.4); border: 3px solid #ffffff; z-index: 2;">
+              🏆
+            </div>
+            
+            <div style="margin-top: 1rem;">
+              <div style="font-weight: 800; font-size: 1.1rem; color: #0f172a; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Build<span>2</span>Hire</div>
+              <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0.5rem 0; letter-spacing: 0.05em; text-transform: uppercase;">Certificate of Completion</h2>
+              <p style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 0.85rem; color: #475569; margin-bottom: 1rem;">This verified credential is proudly presented to</p>
+              
+              <h3 id="cert-candidate-name" style="font-family: 'Alex Brush', cursive; font-size: 2.8rem; color: #b45309; margin: 0.25rem 0; font-weight: 400; line-height: 1;">Candidate Name</h3>
+              <div style="width: 150px; height: 1px; background: linear-gradient(90deg, transparent, #b45309, transparent); margin: 0.5rem auto 1rem auto;"></div>
+              
+              <p style="font-size: 0.85rem; color: #334155; max-width: 440px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
+                For successfully completing all advanced technical assessment modules for <br>
+                <strong id="cert-course-name" style="color: #0f172a;">Frontend Course</strong> with a verified passing score of <strong id="cert-score-val" style="color: #b45309;">80%</strong>.
+              </p>
+
+              <!-- Signature line -->
+              <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 1rem; margin-top: 1.5rem;">
+                <div style="text-align: center;">
+                  <span style="font-family: 'Alex Brush', cursive; font-size: 1.5rem; color: #1e3a8a; display: block; margin-bottom: -0.15rem; line-height: 1;">Build2Hire AI</span>
+                  <div style="border-top: 1.5px solid #94a3b8; width: 140px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Authority</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 0.35rem;" id="cert-date-val">Verified</div>
+                  <div style="border-top: 1.5px solid #94a3b8; width: 140px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Date Issued</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+              <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
+              <button onclick="window.printCurrentCertificate()" class="btn" style="background-color: #10b981; border: 1px solid #10b981; color: #ffffff; padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 700;">Download / Print 📥</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
-  <script src="shared.js"></script>
+  <script src="shared.js?v=1.0.1"></script>
   <script>
     const auth = withAuth(['candidate']);
     if (auth) {
-      const { user, db, candidate } = auth;
+      let { user, db, candidate } = auth;
+      let lastUnlockedCertData = null;
+      let currentResumeData = null;
+      let currentResumeName = "";
 
     if (!candidate.projects) {
       candidate.projects = [
@@ -419,6 +590,7 @@
     function loadProfileForm() {
       document.getElementById('fullName').value = candidate.fullName || "";
       document.getElementById('phone').value = candidate.phone || "";
+      document.getElementById('education').value = candidate.education || "";
       
       const roleSel = document.getElementById('preferredRole');
       if (candidate.preferredRole) {
@@ -435,6 +607,22 @@
       document.getElementById('linkedinUrl').value = candidate.linkedinUrl || "";
       document.getElementById('portfolioWebsite').value = candidate.portfolioWebsite || "";
       
+      // Populate current resume details:
+      const statusDiv = document.getElementById('profile-resume-status');
+      if (candidate.resume_filename) {
+        statusDiv.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="color: #10b981; font-weight: 600;">✓ Current Active Resume:</span> 
+            <strong style="color: var(--text-primary);">${candidate.resume_filename}</strong> 
+            <span class="badge badge-primary" style="font-size: 0.7rem;">${candidate.resume_type === 'ATS' ? 'ATS Format' : 'With Design'}</span>
+            <button type="button" onclick="window.removeProfileResume()" class="btn" style="background-color: var(--danger); color: white; padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; height: auto; border: none; cursor: pointer;">Delete Resume 🗑️</button>
+          </div>
+        `;
+        document.getElementById('resumeType').value = candidate.resume_type || "";
+      } else {
+        statusDiv.innerHTML = `<span style="color: var(--danger); font-weight: 600;">⚠ No resume attached yet. Uploading a resume is required to apply for jobs.</span>`;
+      }
+      
       renderSkills();
       populateProfileView();
       toggleViewStates();
@@ -443,6 +631,7 @@
     function populateProfileView() {
       document.getElementById('view-fullName').textContent = candidate.fullName || "Not provided";
       document.getElementById('view-role').textContent = candidate.preferredRole || "Not provided";
+      document.getElementById('view-education').textContent = candidate.education || "Not provided";
       document.getElementById('view-phone').textContent = candidate.phone || "Not provided";
       document.getElementById('view-bio').textContent = candidate.bio || "No professional bio added.";
       
@@ -456,6 +645,16 @@
       }
       if (candidate.portfolioWebsite) {
         linksContainer.innerHTML += `<a href="${candidate.portfolioWebsite}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">Portfolio</a>`;
+      }
+
+      const resumeView = document.getElementById('view-resume-container');
+      if (candidate.resume_filename) {
+        resumeView.style.display = "flex";
+        document.getElementById('view-resume-filename').textContent = candidate.resume_filename;
+        document.getElementById('view-resume-type').textContent = candidate.resume_type === 'ATS' ? 'ATS Format' : 'With Design';
+        document.getElementById('view-resume-link').href = candidate.resume_data || "#";
+      } else {
+        resumeView.style.display = "none";
       }
     }
 
@@ -530,18 +729,63 @@
         return;
       }
 
-      certs.forEach(c => {
+      certs.forEach((c, idx) => {
+        const pointsInfo = c.correct_count !== undefined ? `${c.correct_count}/${c.total_count || 5} Points` : '';
+        const xpInfo = c.xp_gained !== undefined ? `+${c.xp_gained} XP` : '';
         const row = document.createElement('div');
         row.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);";
         row.innerHTML = `
           <div>
             <strong style="font-size: 0.9rem; display: block; color: var(--text-primary);">🏅 ${c.title}</strong>
-            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 0.15rem;">Issued: ${c.date}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 0.15rem;">
+              Issued: ${c.date} ${xpInfo ? `• <strong style="color: var(--warning);">${xpInfo}</strong>` : ''}
+            </span>
           </div>
-          <span class="badge badge-success" style="font-size: 0.85rem; font-weight: 700;">${c.score}% Pass</span>
+          <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-end;">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge badge-success" style="font-size: 0.85rem; font-weight: 700;">${c.score}% Pass</span>
+              <button onclick="window.viewCertificatePopup(${idx})" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; border-radius: 4px;">View</button>
+            </div>
+            ${pointsInfo ? `<span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">${pointsInfo}</span>` : ''}
+          </div>
         `;
         container.appendChild(row);
       });
+    }
+
+    window.viewCertificatePopup = function(idx) {
+      const certs = candidate.certificates || [];
+      const c = certs[idx];
+      if (!c) return;
+
+      document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate";
+      
+      const courseTitle = c.course || c.title.replace(" Certificate", "");
+      const levelTitle = c.level || "";
+      
+      document.getElementById('cert-course-name').innerHTML = `${courseTitle} ${levelTitle ? `- <strong style="color: #34d399;">${levelTitle}</strong>` : ""}`;
+      document.getElementById('cert-score-val').textContent = `${c.score}%`;
+
+      const dateText = c.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const dateEl = document.getElementById('cert-date-val');
+      if (dateEl) dateEl.textContent = dateText;
+
+      lastUnlockedCertData = {
+        candidateName: candidate.fullName || "Candidate",
+        courseTitle: `${courseTitle} ${levelTitle ? `- ${levelTitle}` : ""}`,
+        scorePct: c.score
+      };
+
+      document.getElementById('cert-modal').style.display = "flex";
+    }
+
+    window.closeCertModal = function() {
+      document.getElementById('cert-modal').style.display = "none";
+    }
+
+    window.printCurrentCertificate = function() {
+      if (!lastUnlockedCertData) return;
+      downloadCertificateHelper(lastUnlockedCertData.candidateName, lastUnlockedCertData.courseTitle, lastUnlockedCertData.scorePct);
     }
 
     function renderSkills() {
@@ -804,14 +1048,37 @@
       const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
 
       if (dbCand) {
+        const resumeType = document.getElementById('resumeType').value;
+        const hasUploadedNew = !!currentResumeData;
+        const hasExisting = !!dbCand.resume_filename;
+
+        if (!hasExisting && !hasUploadedNew) {
+          alert("Please upload your resume in either ATS or Design format to complete your profile!");
+          return;
+        }
+        
+        if (hasUploadedNew && !resumeType) {
+          alert("Please select the resume format type (ATS or Design) for your uploaded file!");
+          return;
+        }
+
         dbCand.fullName = document.getElementById('fullName').value;
         dbCand.phone = document.getElementById('phone').value;
+        dbCand.education = document.getElementById('education').value;
         dbCand.preferredRole = document.getElementById('preferredRole').value;
         dbCand.bio = document.getElementById('bio').value;
         dbCand.githubUrl = document.getElementById('githubUrl').value;
         dbCand.linkedinUrl = document.getElementById('linkedinUrl').value;
         dbCand.portfolioWebsite = document.getElementById('portfolioWebsite').value;
         dbCand.profileCompleted = true;
+
+        if (hasUploadedNew) {
+          dbCand.resume_filename = currentResumeName;
+          dbCand.resume_type = resumeType;
+          dbCand.resume_data = currentResumeData;
+        } else if (hasExisting && resumeType) {
+          dbCand.resume_type = resumeType;
+        }
 
         dbSave(dbState);
         candidate = dbCand;
@@ -832,6 +1099,69 @@
         }, 1500);
       }
     });
+
+    document.getElementById('resumeFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          currentResumeData = evt.target.result;
+          currentResumeName = file.name;
+          document.getElementById('profile-resume-status').innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="color: #34d399; font-weight: 600;">✓ Ready to Upload:</span> 
+              <strong style="color: var(--text-primary);">${file.name}</strong>
+              <button type="button" onclick="window.clearSelectedResume()" class="btn" style="background-color: var(--border-color); color: var(--text-primary); padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; height: auto; border: none; cursor: pointer;">Remove ✕</button>
+            </div>
+          `;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    window.clearSelectedResume = function() {
+      document.getElementById('resumeFile').value = "";
+      currentResumeData = null;
+      currentResumeName = "";
+      
+      const statusDiv = document.getElementById('profile-resume-status');
+      if (candidate.resume_filename) {
+        statusDiv.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="color: #10b981; font-weight: 600;">✓ Current Active Resume:</span> 
+            <strong style="color: var(--text-primary);">${candidate.resume_filename}</strong> 
+            <span class="badge badge-primary" style="font-size: 0.7rem;">${candidate.resume_type === 'ATS' ? 'ATS' : 'Design'}</span>
+            <button type="button" onclick="window.removeProfileResume()" class="btn" style="background-color: var(--danger); color: white; padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; height: auto; border: none; cursor: pointer;">Delete Resume 🗑️</button>
+          </div>
+        `;
+        document.getElementById('resumeType').value = candidate.resume_type || "";
+      } else {
+        statusDiv.innerHTML = `<span style="color: var(--danger); font-weight: 600;">⚠ No resume attached yet. Uploading a resume is required to apply for jobs.</span>`;
+        document.getElementById('resumeType').value = "";
+      }
+    };
+
+    window.removeProfileResume = function() {
+      if (confirm("Are you sure you want to delete your active resume from your profile? You will need to upload a new one to apply for jobs.")) {
+        const dbState = dbGet();
+        const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+        if (dbCand) {
+          dbCand.resume_filename = null;
+          dbCand.resume_type = null;
+          dbCand.resume_data = null;
+          dbSave(dbState);
+          candidate = dbCand;
+          sessionStorage.setItem('user', JSON.stringify(dbCand));
+          
+          currentResumeData = null;
+          currentResumeName = "";
+          document.getElementById('resumeFile').value = "";
+          
+          loadProfileForm();
+          populateProfileView();
+        }
+      }
+    };
 
     // Add Project
     document.getElementById('project-form').addEventListener('submit', (e) => {
@@ -933,7 +1263,232 @@
       }, 4500);
     }
 
+    // ==========================================
+    // 👥 P2P JOB BOARD CONTROLLER
+    // ==========================================
+    window.openCreateP2PJobModal = function() {
+      document.getElementById('p2p-create-modal').style.display = 'flex';
+    };
+
+    window.closeCreateP2PJobModal = function() {
+      document.getElementById('p2p-create-modal').style.display = 'none';
+      document.getElementById('p2p-job-form').reset();
+    };
+
+    document.getElementById('p2p-job-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('p2p-title').value.trim();
+      const category = document.getElementById('p2p-category').value;
+      const xp = parseInt(document.getElementById('p2p-xp').value, 10) || 100;
+      const skillsStr = document.getElementById('p2p-skills').value;
+      const skills = skillsStr ? skillsStr.split(',').map(s => s.trim()).filter(s => s !== '') : [];
+      const description = document.getElementById('p2p-desc').value.trim();
+      const requirements = document.getElementById('p2p-reqs').value.trim();
+
+      const newJob = {
+        id: Date.now(),
+        title: title,
+        company: candidate.fullName || "Peer Builder",
+        logo: "👥",
+        location: "Remote (P2P)",
+        type: "P2P Gig",
+        category: category,
+        xp: xp,
+        skills: skills,
+        description: description,
+        requirements: requirements,
+        posted_by: candidate.id
+      };
+
+      db.jobs = db.jobs || [];
+      db.jobs.unshift(newJob);
+      dbSave(db);
+
+      // Log activity
+      candidate.activity_log = candidate.activity_log || [];
+      candidate.activity_log.push({
+        timestamp: new Date().toISOString(),
+        type: 'job_post',
+        details: `Posted P2P gig: "${title}"`
+      });
+      dbSave(db);
+
+      showAlert('alert-container', 'P2P Job published successfully!', 'success');
+      closeCreateP2PJobModal();
+      renderP2PJobs();
+    });
+
+    window.deleteP2PJob = function(jobId) {
+      if (!confirm("Are you sure you want to delete this job post?")) return;
+
+      db.jobs = (db.jobs || []).filter(j => j.id !== jobId);
+      db.applications = (db.applications || []).filter(a => a.job_id !== jobId);
+      dbSave(db);
+
+      showAlert('alert-container', 'Job post deleted.', 'success');
+      renderP2PJobs();
+    };
+
+    window.changeP2PApplicationStatus = function(appId, newStatus) {
+      const app = (db.applications || []).find(a => a.id === appId);
+      if (app) {
+        app.status = newStatus;
+        dbSave(db);
+
+        // Also update submission status if exists
+        const sub = (db.submissions || []).find(s => s.candidate_id === app.candidate_id && s.challenge_id === app.job_id);
+        if (sub) {
+          sub.status = newStatus;
+          dbSave(db);
+        }
+
+        showAlert('alert-container', `Applicant status updated to "${newStatus}".`, 'success');
+        if (newStatus === 'hired') {
+          if (window.confetti) {
+            window.confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+          }
+        }
+        renderP2PJobs();
+      }
+    };
+
+    function renderP2PJobs() {
+      const listEl = document.getElementById('p2p-jobs-list');
+      if (!listEl) return;
+
+      listEl.innerHTML = "";
+      const myJobs = (db.jobs || []).filter(j => j.posted_by === candidate.id);
+
+      if (myJobs.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align: center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
+            <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">👥</span>
+            <p style="font-size: 0.9rem; margin: 0;">You haven't posted any peer-to-peer collaborative jobs yet. Recruit fellow builders to help with your projects!</p>
+          </div>
+        `;
+        return;
+      }
+
+      myJobs.forEach(job => {
+        const apps = (db.applications || []).filter(a => a.job_id === job.id);
+        
+        let appsHtml = "";
+        if (apps.length === 0) {
+          appsHtml = `<p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">No applicants yet. Share this gig in the Job Portal!</p>`;
+        } else {
+          appsHtml = `
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem;">
+              <strong style="font-size: 0.8rem; color: var(--text-secondary);">Applications (${apps.length}):</strong>
+              ${apps.map(app => {
+                const appUser = db.users.find(u => u.id === app.candidate_id) || {};
+                let statusBadge = `<span class="badge" style="background-color: var(--bg-tertiary); color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">${app.status}</span>`;
+                let actionBtns = "";
+
+                if (app.status === 'applied') {
+                  actionBtns = `
+                    <button onclick="changeP2PApplicationStatus(${app.id}, 'hired')" class="btn" style="background-color: var(--success); color: white; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; border:none; cursor:pointer;">Accept ✅</button>
+                    <button onclick="changeP2PApplicationStatus(${app.id}, 'rejected')" class="btn" style="background-color: var(--danger); color: white; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; border:none; cursor:pointer;">Reject ❌</button>
+                  `;
+                } else if (app.status === 'hired') {
+                  statusBadge = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.72rem; text-transform: uppercase;">Hired 🎉</span>`;
+                } else if (app.status === 'rejected') {
+                  statusBadge = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.72rem; text-transform: uppercase;">Rejected</span>`;
+                }
+
+                return `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: 6px; border: 1px solid var(--border-color);">
+                    <div>
+                      <strong style="font-size: 0.82rem; color: var(--text-primary);">${app.candidate_name}</strong>
+                      <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 0.5rem;">(Talent Score: ${app.talent_score || 50})</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      ${statusBadge}
+                      ${actionBtns}
+                      <button onclick="viewP2PApplicantDetails(${app.candidate_id})" class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px;">Profile 👤</button>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          `;
+        }
+
+        const skillBadges = (job.skills || []).map(s => `<span class="badge badge-secondary" style="font-size: 0.72rem;">${s}</span>`).join(" ");
+
+        listEl.innerHTML += `
+          <div class="card" style="padding: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 0.75rem; background-color: var(--bg-secondary); margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h4 style="font-size: 1.05rem; margin: 0; color: var(--text-primary); font-family: var(--font-display);">${job.title}</h4>
+                <div style="margin-top: 0.25rem;">
+                  <span class="badge badge-primary" style="font-size: 0.72rem;">${job.category}</span>
+                  <span class="badge" style="background-color: var(--warning-light); color: var(--warning); font-size: 0.72rem; font-weight: 700; margin-left: 0.25rem;">💰 ${job.xp} XP Reward</span>
+                </div>
+              </div>
+              <button onclick="deleteP2PJob(${job.id})" class="btn" style="background-color: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px; cursor:pointer;">Delete 🗑</button>
+            </div>
+            
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">${job.description}</p>
+            
+            <div>
+              <strong style="font-size: 0.8rem; color: var(--text-muted);">Required Skills:</strong>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem;">
+                ${skillBadges || '<span style="font-size: 0.75rem; color: var(--text-muted);">None</span>'}
+              </div>
+            </div>
+
+            ${appsHtml}
+          </div>
+        `;
+      });
+    }
+
+    window.viewP2PApplicantDetails = function(candId) {
+      const dbState = dbGet();
+      const cand = dbState.users.find(u => String(u.id) === String(candId));
+      if (!cand) return;
+
+      const detModal = document.getElementById('details-modal');
+      if (detModal) {
+        document.getElementById('det-name').textContent = cand.fullName || cand.full_name || "Unnamed";
+        document.getElementById('det-role').textContent = cand.preferredRole || "Not specified";
+        document.getElementById('det-xp').textContent = `${cand.xp_points || 0} XP`;
+        document.getElementById('det-score').textContent = cand.talent_score || 0;
+        document.getElementById('det-education').textContent = cand.education || "Not provided";
+        
+        const phoneEl = document.getElementById('det-phone');
+        if (cand.phone) {
+          phoneEl.textContent = cand.phone;
+          phoneEl.href = `tel:${cand.phone}`;
+          phoneEl.style.pointerEvents = "auto";
+        } else {
+          phoneEl.textContent = "Not provided";
+          phoneEl.removeAttribute('href');
+          phoneEl.style.pointerEvents = "none";
+        }
+
+        document.getElementById('det-bio').textContent = cand.bio || "No bio listed.";
+        
+        const resSec = document.getElementById('det-resume-sec');
+        const resLink = document.getElementById('det-resume-link');
+        if (cand.resume_filename) {
+          resSec.style.display = "block";
+          resLink.textContent = `📄 Resume (${cand.resume_filename})`;
+          resLink.href = cand.resume_data || '#';
+        } else {
+          resSec.style.display = "none";
+        }
+
+        detModal.style.display = "flex";
+      }
+    };
+
+    window.closeDetailsModal = function() {
+      document.getElementById('details-modal').style.display = "none";
+    };
+
     initFormFields();
+    renderP2PJobs();
     }
 </script>
 </body>
