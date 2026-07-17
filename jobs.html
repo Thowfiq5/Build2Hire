@@ -107,6 +107,32 @@
           <input type="url" id="demoUrl" class="form-control" placeholder="https://demo-app.vercel.app">
         </div>
 
+        <!-- Resume Attachment inside Job Application -->
+        <div class="form-group" style="margin-bottom: 1.5rem; background-color: rgba(255,255,255,0.02); padding: 1rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+          <label class="form-label" style="font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            📄 Resume Attachment <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Required - ATS or Design format)</span>
+          </label>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;" for="applyResumeType">Resume Format Type</label>
+              <select id="applyResumeType" class="form-control" style="background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem; width: 100%;">
+                <option value="">-- Choose Format --</option>
+                <option value="ATS">ATS Format (Simple text layout)</option>
+                <option value="Design">With Design Format (Visual template layout)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;" for="applyResumeFile">Upload New File</label>
+              <input type="file" id="applyResumeFile" class="form-control" accept=".pdf,.docx,.png,.jpg,.jpeg,.doc" style="padding: 0.25rem 0.5rem;">
+            </div>
+          </div>
+
+          <div id="apply-resume-status" style="font-size: 0.8rem; padding-top: 0.4rem; border-top: 1px dashed rgba(255,255,255,0.08); margin-top: 0.4rem;">
+            <span style="color: var(--text-muted);">No resume attached yet.</span>
+          </div>
+        </div>
+
         <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
           <button type="button" onclick="closeApplyModal()" class="btn btn-secondary">Cancel</button>
           <button type="submit" class="btn btn-primary">Submit Application</button>
@@ -141,6 +167,17 @@
       }
       
       refreshSidebarStats();
+
+      // Log job searches
+      const searchInput = document.getElementById('job-search');
+      if (searchInput) {
+        searchInput.addEventListener('change', (e) => {
+          const q = e.target.value.trim();
+          if (q) {
+            logUserActivity(user.id, "job_search", `Searched for jobs with query: "${q}"`);
+          }
+        });
+      }
 
       const candidateRole = candidate.preferredRole || "";
       
@@ -223,23 +260,47 @@
       // RENDER JOBS
       function createJobCard(job, canApply) {
         const hasApplied = db.applications.some(app => app.candidate_id === candidate.id && app.job_id === job.id);
+        const isMyOwnJob = job.posted_by && String(job.posted_by) === String(candidate.id);
         const div = document.createElement('div');
         div.className = "card";
         div.style.cssText = "display: flex; flex-direction: column; justify-content: space-between; padding: 1.5rem; gap: 1.25rem;";
         
         const skillsBadges = job.skills.map(s => `<span class="badge badge-secondary" style="font-size: 0.75rem;">${s}</span>`).join(" ");
 
+        let applyBtnHtml = "";
+        if (isMyOwnJob) {
+          applyBtnHtml = `
+            <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;" disabled>
+              Your Own Job Post 👤
+            </button>
+          `;
+        } else if (canApply) {
+          applyBtnHtml = `
+            <button onclick="window.openApplyModal(${job.id})" class="btn ${hasApplied ? 'btn-secondary' : 'btn-primary'}" style="width: 100%; justify-content: center; font-size: 0.85rem;" ${hasApplied ? 'disabled' : ''}>
+              ${hasApplied ? 'Applied ✅' : 'Apply Now 🚀'}
+            </button>
+          `;
+        } else {
+          applyBtnHtml = `
+            <a href="recommendations.html" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;">Upgrade Skills to Apply</a>
+          `;
+        }
+
+        const p2pBadge = job.posted_by ? `<span class="badge" style="background-color: var(--warning-light); color: var(--warning); margin-left: 0.5rem; font-size: 0.75rem;">👥 Peer Post</span>` : '';
+
         div.innerHTML = `
           <div>
             <div class="flex-between" style="align-items: flex-start;">
               <div>
                 <span style="font-size: 2.2rem; display: block; margin-bottom: 0.5rem;">${job.logo}</span>
-                <h3 style="font-size: 1.2rem; font-family: var(--font-sans); font-weight: 700; margin-bottom: 0.25rem;">${job.title}</h3>
+                <h3 style="font-size: 1.2rem; font-family: var(--font-sans); font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; flex-wrap: wrap;">
+                  ${job.title} ${p2pBadge}
+                </h3>
                 <span style="font-size: 0.85rem; color: var(--text-secondary);">by <strong>${job.company}</strong></span>
               </div>
               <div style="text-align: right; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end;">
                 <span class="badge badge-primary">${job.location}</span>
-                <span style="font-size: 0.85rem; font-weight: 600; color: var(--success);">${job.salary}</span>
+                <span style="font-size: 0.85rem; font-weight: 600; color: var(--success);">${job.xp ? job.xp + ' XP' : (job.salary || 'Unpaid')}</span>
               </div>
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">
@@ -251,11 +312,7 @@
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               ${skillsBadges}
             </div>
-            ${canApply ? `
-              <button onclick="window.openApplyModal(${job.id})" class="btn ${hasApplied ? 'btn-secondary' : 'btn-primary'}" style="width: 100%; justify-content: center; font-size: 0.85rem;" ${hasApplied ? 'disabled' : ''}>
-                ${hasApplied ? 'Applied ✅' : 'Apply Now 🚀'}
-              </button>
-            ` : `<a href="recommendations.html" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;">Upgrade Skills to Apply</a>`}
+            ${applyBtnHtml}
           </div>
         `;
         return div;
@@ -285,7 +342,7 @@
         const search = document.getElementById('job-search').value.toLowerCase().trim();
         
         // Filter strictly by the current active category (matching candidate role) and the selected type (Job vs Freelance)
-        let filtered = allJobs.filter(job => job.type === currentJobType);
+        let filtered = allJobs.filter(job => job.type === currentJobType || job.type === 'P2P Gig');
 
         if (search) {
           filtered = filtered.filter(job => 
@@ -299,14 +356,36 @@
 
       // APPLICATION MODAL ACTIONS
       let selectedJobId = null;
+      let applyResumeData = null;
+      let applyResumeName = "";
 
       window.openApplyModal = function(jobId) {
         const job = allJobs.find(j => j.id === jobId);
         if (!job) return;
 
+        logUserActivity(user.id, "job_view", `Viewed details for job: "${job.title}" at ${job.company}`);
+
         selectedJobId = jobId;
         document.getElementById('modal-job-title').textContent = job.title;
         document.getElementById('modal-job-company').textContent = job.company;
+
+        const statusDiv = document.getElementById('apply-resume-status');
+        if (candidate.resume_filename) {
+          statusDiv.innerHTML = `
+            <span style="color: #10b981; font-weight: 600;">✓ Auto-filled from Profile:</span> 
+            <strong style="color: var(--text-primary);">${candidate.resume_filename}</strong> 
+            <span class="badge badge-primary" style="font-size: 0.65rem;">${candidate.resume_type === 'ATS' ? 'ATS Format' : 'With Design'}</span>
+          `;
+          document.getElementById('applyResumeType').value = candidate.resume_type || "";
+          applyResumeName = candidate.resume_filename;
+          applyResumeData = candidate.resume_data;
+        } else {
+          statusDiv.innerHTML = `<span style="color: var(--danger); font-weight: 600;">⚠ No profile resume found. Please select format and upload your file.</span>`;
+          document.getElementById('applyResumeType').value = "";
+          applyResumeName = "";
+          applyResumeData = null;
+        }
+
         document.getElementById('apply-modal').style.display = "flex";
       }
 
@@ -314,7 +393,25 @@
         document.getElementById('apply-modal').style.display = "none";
         document.getElementById('apply-form').reset();
         selectedJobId = null;
+        applyResumeData = null;
+        applyResumeName = "";
       }
+
+      document.getElementById('applyResumeFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            applyResumeData = evt.target.result;
+            applyResumeName = file.name;
+            document.getElementById('apply-resume-status').innerHTML = `
+              <span style="color: #34d399; font-weight: 600;">✓ Ready to Upload:</span> 
+              <strong style="color: var(--text-primary);">${file.name}</strong>
+            `;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
 
       document.getElementById('apply-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -322,6 +419,19 @@
 
         const job = allJobs.find(j => j.id === selectedJobId);
         if (!job) return;
+
+        const resumeType = document.getElementById('applyResumeType').value;
+        const hasExisting = !!candidate.resume_filename;
+
+        if (!hasExisting && !applyResumeData) {
+          alert("Please upload your resume in either ATS or Design format to apply for this job!");
+          return;
+        }
+
+        if (applyResumeData && (applyResumeName !== candidate.resume_filename) && !resumeType) {
+          alert("Please select the resume format type (ATS or Design) for your uploaded file!");
+          return;
+        }
 
         const coverLetter = document.getElementById('coverLetter').value;
         const githubUrl = document.getElementById('githubUrl').value;
@@ -339,7 +449,10 @@
           status: "applied",
           cover_letter: coverLetter,
           github_url: githubUrl,
-          demo_url: demoUrl
+          demo_url: demoUrl,
+          resume_filename: applyResumeName,
+          resume_type: resumeType || candidate.resume_type,
+          resume_data: applyResumeData
         };
 
         dbState.applications.unshift(newApp);
@@ -356,9 +469,30 @@
           status: "pending",
           description: coverLetter,
           github_url: githubUrl,
-          submission_url: demoUrl
+          submission_url: demoUrl,
+          resume_filename: applyResumeName,
+          resume_type: resumeType || candidate.resume_type,
+          resume_data: applyResumeData
         };
         
+        if (!candidate.activity_log) candidate.activity_log = [];
+        candidate.activity_log.push({
+          type: "job_apply",
+          details: `Applied to job: "${job.title}" at ${job.company}`,
+          timestamp: new Date().toISOString()
+        });
+
+        const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+        if (dbCand) {
+          dbCand.activity_log = candidate.activity_log;
+        }
+
+        const sessionUser = getUser();
+        if (sessionUser && String(sessionUser.id) === String(candidate.id)) {
+          sessionUser.activity_log = candidate.activity_log;
+          sessionStorage.setItem('user', JSON.stringify(sessionUser));
+        }
+
         dbState.submissions.unshift(newSub);
         dbSave(dbState);
 
@@ -367,7 +501,7 @@
         // Refresh list to show disabled "Applied ✅" state
         const refreshedDb = dbGet();
         db.applications = refreshedDb.applications; // Sync active applications collection
-        allJobs = (refreshedDb.jobs || []).filter(job => job.category.toLowerCase() === candidateRole.toLowerCase());
+        allJobs = refreshedDb.jobs || [];
         window.filterJobs();
 
         // Trigger alerts and celebration
