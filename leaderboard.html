@@ -19,12 +19,6 @@
       <h1 style="font-family: var(--font-display); font-size: 2.4rem; margin-bottom: 0.75rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
         Talent Leaderboard
       </h1>
-      <span style="display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.2rem 0.75rem; border-radius: 999px; text-transform: uppercase; margin-bottom: 0.85rem;">
-        🎓 Learners Only
-      </span>
-      <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 650px; margin: 0 auto;">
-        Only candidates who have <strong>completed at least one skill assessment</strong> or hold a platform certificate appear here. Study a roadmap, pass a quiz, and earn your rank!
-      </p>
     </div>
 
     <!-- PERSONAL LEARNING CTA -->
@@ -69,7 +63,7 @@
     <div id="leaderboard-card" class="card" style="display: none; max-width: 1000px; margin: 0 auto; padding: 1.5rem; overflow-x: auto;">
       <table class="leaderboard-table" style="width: 100%;">
         <thead>
-          <tr>
+          <tr id="leaderboard-header-row">
             <th class="leaderboard-th" style="width: 80px; text-align: center;">Rank</th>
             <th class="leaderboard-th">Builder</th>
             <th class="leaderboard-th">Level / XP</th>
@@ -84,6 +78,28 @@
       </table>
     </div>
     </main>
+  </div>
+
+  <!-- CANDIDATE DETAIL MODAL -->
+  <div id="details-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 10vh; overflow-y: auto; z-index: 1000;">
+    <div class="modal-box" style="max-width: 500px; width: 100%; padding: 2rem;">
+      <button class="modal-close" onclick="closeDetailsModal()">✕</button>
+      <h3 style="font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);" id="det-name">
+        Candidate Profile
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+        <div><strong>Preferred Role:</strong> <span id="det-role" style="color: var(--text-secondary);"></span></div>
+        <div><strong>XP Points:</strong> <span id="det-xp" style="color: var(--text-secondary);"></span></div>
+        <div><strong>Talent Score:</strong> <span id="det-score" style="color: var(--text-secondary);"></span></div>
+        <div><strong>Education:</strong> <span id="det-education" style="color: var(--text-secondary);"></span></div>
+        <div><strong>Phone:</strong> <a id="det-phone" href="#" style="color: var(--primary); text-decoration: none; font-weight: bold;"></a></div>
+        <div> Bio: <p id="det-bio" style="color: var(--text-secondary); line-height: 1.4; margin-top: 0.25rem;"></p></div>
+        <div id="det-resume-sec" style="display: none; margin-top: 0.5rem;">
+          <strong>Resume:</strong>
+          <a id="det-resume-link" href="#" target="_blank" class="badge" style="background-color: #10b981; color: white; text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center;">📄 Download Resume</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="shared.js"></script>
@@ -101,15 +117,16 @@
 
         // Check Assessment Gate
         if (candidate && candidate.role === 'candidate') {
-        if (!user.assessment_score || user.assessment_score === 0) {
-          loadingState.style.display = "none";
-          emptyState.style.display = "none";
-          leaderboardCard.style.display = "none";
-          learningCta.style.display = "none";
-          lockedState.style.display = "flex";
-          return; // Stop loading leaderboard
+          const isLearner = (candidate.assessment_score || 0) > 0 || (candidate.certificates && candidate.certificates.length > 0);
+          if (!isLearner) {
+            loadingState.style.display = "none";
+            emptyState.style.display = "none";
+            leaderboardCard.style.display = "none";
+            learningCta.style.display = "none";
+            lockedState.style.display = "flex";
+            return; // Stop loading leaderboard
+          }
         }
-      }
 
       try {
         const res = await fetch("/api/talent/leaderboard");
@@ -169,6 +186,12 @@
       const leaderboardBody = document.getElementById('leaderboard-body');
       
       leaderboardBody.innerHTML = "";
+
+      const isRecruiterOrAdmin = user.role === 'recruiter' || user.role === 'admin';
+      const headerRow = document.getElementById('leaderboard-header-row');
+      if (isRecruiterOrAdmin && !document.getElementById('th-ai-suggestion')) {
+        headerRow.innerHTML += `<th id="th-ai-suggestion" class="leaderboard-th" style="width: 180px; text-align: center;">AI Suggestion</th>`;
+      }
       
       data.forEach((cand, idx) => {
         const rank = idx + 1;
@@ -178,6 +201,55 @@
         else if (rank === 3) rankDisplay = "🥉";
 
         const certCount = (cand.certificates || []).length;
+
+        let aiColumnHtml = "";
+        if (isRecruiterOrAdmin) {
+          const dbState = dbGet();
+          const recruiterCompany = user.companyName || "InnovateTech";
+          const myJobs = (dbState.jobs || []).filter(j => j.company === recruiterCompany);
+
+          let bestMatch = null;
+          let bestScore = 0;
+
+          myJobs.forEach(job => {
+            const reqSkills = Array.isArray(job.skills) ? job.skills : (job.skills ? String(job.skills).split(',').map(s => s.trim()) : []);
+            let skillMatchCount = 0;
+            reqSkills.forEach(s => {
+              if (cand.skills && cand.skills.some(cs => cs.toLowerCase().includes(s.toLowerCase()))) {
+                skillMatchCount++;
+              }
+            });
+            const skillsPct = reqSkills.length > 0 ? (skillMatchCount / reqSkills.length) * 40 : 40;
+            const xpPct = Math.min(30, ((cand.xp_points || 0) / 3000) * 30);
+            const assessmentPct = ((cand.assessment_score || 0) / 100) * 30;
+            const matchScore = Math.round(skillsPct + xpPct + assessmentPct);
+
+            if (matchScore > bestScore) {
+              bestScore = matchScore;
+              bestMatch = job;
+            }
+          });
+
+          const applicants = dbState.applications || [];
+          const appRecord = bestMatch ? applicants.find(a => a.candidate_id === cand.id && a.job_id === bestMatch.id) : null;
+          const statusLabel = appRecord ? appRecord.status : "";
+
+          let actionBtn = "";
+          if (bestMatch) {
+            if (!appRecord) {
+              actionBtn = `<button onclick="directShortlistFromLeaderboard(${cand.id}, ${bestMatch.id})" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; white-space: nowrap;">Shortlist (AI Match: ${bestScore}%)</button>`;
+            } else if (appRecord.status === 'applied') {
+              actionBtn = `<button onclick="changeStatusFromLeaderboard(${appRecord.id}, 'shortlisted')" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; white-space: nowrap;">Shortlist (${bestScore}%)</button>`;
+            } else {
+              actionBtn = `<span class="badge" style="font-size: 0.7rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); text-transform: uppercase;">${appRecord.status}</span>`;
+            }
+          } else {
+            actionBtn = `<span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Suggest based on XP: ${cand.xp_points > 400 ? '🔥 High Match' : 'Normal'}</span>`;
+          }
+
+          aiColumnHtml = `<td class="leaderboard-td" style="text-align: center;">${actionBtn}</td>`;
+        }
+
         const tr = document.createElement('tr');
         tr.className = "leaderboard-tr";
         tr.innerHTML = `
@@ -188,7 +260,7 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.5rem;">${cand.avatar_url || "👤"}</span>
               <div>
-                <strong style="font-size: 1rem;">${cand.full_name || cand.fullName}</strong>
+                <strong style="font-size: 1rem; color: var(--text-primary); cursor: pointer;" onclick="viewCandidateDetails(${cand.id})">${cand.full_name || cand.fullName}</strong>
                 ${cand.preferredRole ? `<span style="display:block; font-size:0.72rem; color:var(--text-muted); margin-top:0.1rem;">${cand.preferredRole}</span>` : ''}
               </div>
             </div>
@@ -220,15 +292,117 @@
               ${Math.round(cand.talent_score)}
             </div>
           </td>
+          ${aiColumnHtml}
         `;
         leaderboardBody.appendChild(tr);
       });
       
       leaderboardCard.style.display = "block";
-        }
+    }
+
+    window.directShortlistFromLeaderboard = function(candId, jobId) {
+      const dbState = dbGet();
+      const cand = dbState.users.find(u => u.id === candId);
+      const job = dbState.jobs.find(j => j.id === jobId);
+      if (!cand || !job) return;
+
+      const newApp = {
+        id: Date.now(),
+        candidate_id: cand.id,
+        candidate_name: cand.fullName || cand.full_name,
+        job_id: job.id,
+        challenge_title: `${job.title} (${job.company})`,
+        talent_score: cand.talent_score || 50,
+        status: "shortlisted",
+        cover_letter: "Directly invited & shortlisted from Leaderboard suggestion.",
+        github_url: cand.githubUrl || "",
+        demo_url: cand.portfolioWebsite || "",
+        resume_filename: cand.resume_filename || "",
+        resume_type: cand.resume_type || "",
+        resume_data: cand.resume_data || ""
+      };
+
+      dbState.applications.unshift(newApp);
+
+      const newSub = {
+        id: Date.now(),
+        candidate_id: cand.id,
+        candidate_name: cand.fullName || cand.full_name,
+        challenge_id: job.id,
+        challenge_title: `${job.title} (${job.company})`,
+        talent_score: cand.talent_score || 50,
+        current_level: cand.current_level || 'Beginner Builder',
+        status: "shortlisted",
+        description: "Directly invited & shortlisted from Leaderboard suggestion.",
+        github_url: cand.githubUrl || "",
+        submission_url: cand.portfolioWebsite || "",
+        resume_filename: cand.resume_filename || "",
+        resume_type: cand.resume_type || "",
+        resume_data: cand.resume_data || ""
+      };
+
+      dbState.submissions.unshift(newSub);
+      dbSave(dbState);
+
+      showAlert('alert-container', `Candidate ${cand.fullName || cand.full_name} has been directly shortlisted!`, 'success');
+      loadLeaderboard();
+    };
+
+    window.changeStatusFromLeaderboard = function(appId, nextStatus) {
+      const dbState = dbGet();
+      const app = dbState.applications.find(a => a.id === appId);
+      if (app) {
+        app.status = nextStatus;
+        dbSave(dbState);
+        
+        showAlert('alert-container', `Application status updated to "${nextStatus}".`, 'success');
+        loadLeaderboard();
+      }
+    };
+
+    window.viewCandidateDetails = function(candId) {
+      const dbState = dbGet();
+      const cand = dbState.users.find(u => String(u.id) === String(candId));
+      if (!cand) return;
+
+      document.getElementById('det-name').textContent = cand.fullName || cand.full_name || "Unnamed";
+      document.getElementById('det-role').textContent = cand.preferredRole || "Not specified";
+      document.getElementById('det-xp').textContent = `${cand.xp_points || 0} XP`;
+      document.getElementById('det-score').textContent = cand.talent_score || 0;
+      document.getElementById('det-education').textContent = cand.education || "Not provided";
+      
+      const phoneEl = document.getElementById('det-phone');
+      if (cand.phone) {
+        phoneEl.textContent = cand.phone;
+        phoneEl.href = `tel:${cand.phone}`;
+        phoneEl.style.pointerEvents = "auto";
+      } else {
+        phoneEl.textContent = "Not provided";
+        phoneEl.removeAttribute('href');
+        phoneEl.style.pointerEvents = "none";
       }
 
-      loadLeaderboard();
+      document.getElementById('det-bio').textContent = cand.bio || "No bio listed.";
+      
+      const resSec = document.getElementById('det-resume-sec');
+      const resLink = document.getElementById('det-resume-link');
+      if (cand.resume_filename) {
+        resSec.style.display = "block";
+        resLink.textContent = `📄 Resume (${cand.resume_filename})`;
+        resLink.href = cand.resume_data || '#';
+      } else {
+        resSec.style.display = "none";
+      }
+
+      document.getElementById('details-modal').style.display = "flex";
+    };
+
+    window.closeDetailsModal = function() {
+      document.getElementById('details-modal').style.display = "none";
+    };
+
+    loadLeaderboard();
+  }
   </script>
 </body>
 </html>
