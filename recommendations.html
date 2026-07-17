@@ -123,6 +123,53 @@
         <!-- Dynamic Recommendation Cards -->
       </div>
 
+      <!-- ====== SKILL ACADEMY & COURSE CENTER ====== -->
+      <div class="card" style="margin-bottom: 2.5rem; padding: 2rem; border-top: 4px solid var(--primary);">
+        <h3 style="font-size: 1.3rem; font-family: var(--font-display); border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          🏫 <span>Build2Hire Skill Academy & AI Course Advisor</span>
+        </h3>
+
+        <!-- My Enrolled Courses Section -->
+        <div id="enrolled-section-wrapper" style="display: none; margin-bottom: 2.5rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: var(--success); margin-bottom: 1rem; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+            📚 <span>My Active Courses</span>
+          </h4>
+          <div id="enrolled-courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <!-- Active courses render here -->
+          </div>
+        </div>
+
+        <!-- AI Course Suggestions Section -->
+        <div style="margin-bottom: 2.5rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: var(--warning); margin-bottom: 1rem; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+            🤖 <span>AI Smart Recommendations for You</span>
+          </h4>
+          <div id="ai-suggested-courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <!-- AI recommended courses render here -->
+          </div>
+        </div>
+
+        <!-- Browse All Courses Section -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-bottom: 1.25rem;">
+            <h4 style="font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin: 0; letter-spacing: 0.05em;">
+              🔍 Browse All Academy Courses
+            </h4>
+            <!-- Category filter tabs -->
+            <div id="course-filter-tabs" style="display: flex; gap: 0.35rem;">
+              <button onclick="filterAcademyCourses('all')" class="btn btn-secondary active" id="course-tab-all" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">All</button>
+              <button onclick="filterAcademyCourses('frontend')" class="btn btn-secondary" id="course-tab-frontend" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Frontend</button>
+              <button onclick="filterAcademyCourses('backend')" class="btn btn-secondary" id="course-tab-backend" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Backend</button>
+              <button onclick="filterAcademyCourses('database')" class="btn btn-secondary" id="course-tab-database" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Database</button>
+              <button onclick="filterAcademyCourses('creative')" class="btn btn-secondary" id="course-tab-creative" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Creative</button>
+            </div>
+          </div>
+          <div id="all-courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <!-- All courses render here -->
+          </div>
+        </div>
+      </div>
+
       <!-- AI CAREER ADVISOR CHAT -->
       <div class="card" style="margin-bottom: 3rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
         <h3 style="font-size: 1.25rem; font-family: var(--font-display); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -190,14 +237,54 @@
           </div>
         </div>
       </div>
+
+      <!-- CERTIFICATE UNLOCK MODAL -->
+      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 550px; background-color: #1e293b; color: #f8fafc; border: 4px solid #d97706; padding: 2.5rem 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.6); position: relative; overflow: visible;">
+          
+          <!-- Seal decoration -->
+          <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 3rem; background: #d97706; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); border: 3px solid #f8fafc;">
+            🎓
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: #fbbf24; font-weight: 700; display: block; margin-bottom: 0.5rem;">Verified Skill Credential</span>
+            <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: #fbbf24; margin-bottom: 1.5rem; letter-spacing: -0.01em;">CERTIFICATE OF COMPLETION</h2>
+            
+            <p style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 1.5rem;">This verified credential is proud to be presented to</p>
+            
+            <h3 id="cert-candidate-name" style="font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; text-decoration: underline; color: #f8fafc;">Candidate Name</h3>
+            
+            <p style="font-size: 0.9rem; color: #cbd5e1; max-width: 420px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
+              For successfully completing all technical assessment modules for <strong id="cert-course-name" style="color: #fbbf24;">Frontend Course</strong> with a verified passing grade.
+            </p>
+
+            <!-- Signature line -->
+            <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem;">
+              <div style="text-align: center;">
+                <span style="font-family: 'Outfit', sans-serif; font-style: italic; font-size: 1.1rem; color: #fbbf24; display: block; margin-bottom: 0.25rem;">Build2Hire AI</span>
+                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Verification Authority</span>
+              </div>
+              <div style="text-align: center;">
+                <strong style="font-size: 1.1rem; display: block; color: #34d399; margin-bottom: 0.25rem;" id="cert-score-val">80%</strong>
+                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Passing Score</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+              <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
-  <script src="shared.js"></script>
+  <script src="shared.js?v=1.0.1"></script>
   <script>
     const auth = withAuth(['candidate']);
     if (auth) {
-      const { user, db, candidate } = auth;
+      let { user, db, candidate } = auth;
 
     // Refresh XP Progress layout inside the sidebar
     function refreshSidebarStats() {
@@ -443,116 +530,121 @@
     // ==========================================
     // 🗺️ ROADMAP GENERATION ENGINE
     // ==========================================
-    // ==========================================
-    // 🗺️ ROADMAP GENERATION ENGINE
-    // ==========================================
     const ROADMAP_STEPS = {
       frontend: [
         {
-          title: "Sleek CSS Variables styling",
-          desc: "Construct cohesive, harmonic global style color palettes and layout radius tokens.",
-          skill: "CSS Variables",
-          category: "Frontend",
+          level: "basic",
+          title: "Level 1: Basic CSS Variables & HTML5",
+          desc: "Master cohesive CSS variables, global colors, styling tokens, and semantic HTML structure.",
           slides: [
-            "<h3>What are CSS Variables?</h3><p>CSS Custom Properties (variables) let you store style values globally and dynamically swap themes (like light/dark modes) in real-time without rewriting stylesheets.</p><pre style='background:var(--bg-tertiary);padding:0.5rem;border-radius:4px;border:1px solid var(--border-color);margin:0.5rem 0;'>:root {\n  --primary: #6366f1;\n}</pre>",
-            "<h3>Theme Switching</h3><p>By defining standard styling values under a selector like <code>[data-theme='dark']</code>, you can alter styles on the document root via simple JS classes.</p>",
-            "<h3>Best Practices</h3><p>Always use fallback values in case your root variable isn't fully defined yet, e.g. <code>var(--primary, #000)</code>. This ensures style resiliency.</p>"
+            "<h3>What are CSS Variables?</h3><p>CSS Custom Properties (variables) let you store style values globally and dynamically swap themes (like light/dark modes) in real-time.</p><pre style='background:var(--bg-tertiary);padding:0.5rem;border-radius:4px;border:1px solid var(--border-color);margin:0.5rem 0;'>:root {\n  --primary: #6366f1;\n}</pre>",
+            "<h3>HTML5 Semantics</h3><p>Semantic HTML elements (like <code>&lt;header&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;article&gt;</code>) improve SEO indexing and layout structure.</p>"
           ]
         },
         {
-          title: "Core JavaScript logic",
+          level: "medium",
+          title: "Level 2: Medium JavaScript DOM & States",
           desc: "Handle dynamic DOM selections, clicks, array mappings, and state objects in browser.",
-          skill: "JavaScript",
-          category: "Frontend",
           slides: [
-            "<h3>JavaScript DOM Control</h3><p>Modern JS allows querying the webpage elements using <code>document.querySelector</code> and adding event triggers to capture user interactions.</p>",
+            "<h3>JavaScript DOM Control</h3><p>Modern JS allows querying elements using <code>document.querySelector</code> and adding event triggers to capture user interactions.</p>",
             "<h3>Client State & LocalStorage</h3><p>Persist simple candidate states by parsing and writing JSON objects to <code>localStorage</code>, which stores state across sessions.</p>",
             "<h3>Functional Arrays</h3><p>Master array manipulation tools like <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> to dynamically map structured data arrays to markup.</p>"
           ]
         },
         {
-          title: "Modular React structure",
-          desc: "Learn hooks, states, rendering lifecycles, and component code structures.",
-          skill: "React",
-          category: "Frontend",
+          level: "advanced",
+          title: "Level 3: Advanced React Components & Hooks",
+          desc: "Learn hooks, states, rendering lifecycles, and component code structures in React frameworks.",
           slides: [
             "<h3>React Components & Props</h3><p>React builds interfaces using isolated components that accept custom parameters called props. This keeps UI modular and reusable.</p>",
-            "<h3>React Hook State</h3><p>Use <code>useState</code> to track local state. Modifying state automatically triggers React to re-render the components to reflect the update.</p>",
-            "<h3>Lvl Up Assessments</h3><p>Ready to prove your Frontend React credentials? Study React rendering optimization patterns and pass the assessment with 50%+ to earn your certificate.</p>"
+            "<h3>React Hook State</h3><p>Use <code>useState</code> to track local state. Modifying state automatically triggers React to re-render the components to reflect the update.</p>"
           ]
         }
       ],
       backend: [
         {
-          title: "NodeJS Server Routing",
+          level: "basic",
+          title: "Level 1: Basic REST APIs & HTTP Routing",
           desc: "Construct HTTP REST API endpoint parameters, headers, and payload structures.",
-          skill: "Node.js",
-          category: "Backend",
           slides: [
-            "<h3>API Server Basics</h3><p>NodeJS uses frameworks like Express to setup HTTP request listeners that parse route directories and return structured JSON responses.</p>",
-            "<h3>JSON Web Tokens (JWT)</h3><p>Secure backend routes by signing session payloads with private secret keys. Verify client headers to authenticate incoming user scopes.</p>",
-            "<h3>REST API design</h3><p>Follow standard HTTP methods: GET to retrieve info, POST to create resources, PUT to update details, and DELETE to remove entities.</p>"
+            "<h3>REST API Design</h3><p>Follow standard HTTP methods: GET to retrieve info, POST to create resources, PUT to update details, and DELETE to remove entities.</p>",
+            "<h3>HTTP Status Codes</h3><p>Common status codes include 200 OK (success), 201 Created, 400 Bad Request, 401 Unauthorized, 404 Not Found, and 500 Internal Server Error.</p>"
           ]
         },
         {
-          title: "Scalable Server Caches",
+          level: "medium",
+          title: "Level 2: Medium Express Server Routing & Event Loops",
+          desc: "Build Express request middleware pipelines and understand event loop concurrency.",
+          slides: [
+            "<h3>Express Middleware Routing</h3><p>Middleware functions intercept incoming HTTP requests, letting you parse cookies, execute authentication steps, or validate body payloads.</p>",
+            "<h3>NodeJS Event Loops</h3><p>Node.js runs on a single-threaded asynchronous event loop, delegating slow input/output tasks to background threads to keep requests non-blocking.</p>"
+          ]
+        },
+        {
+          level: "advanced",
+          title: "Level 3: Advanced Caching Policies & Redis Optimizations",
           desc: "Setup Redis caches to reduce database query execution bottlenecks.",
-          skill: "Redis",
-          category: "Backend",
           slides: [
             "<h3>What is Caching?</h3><p>Reduce query database lookup times by storing high-frequency read results in key-value caches like Redis in-memory tables.</p>",
-            "<h3>Cache Invalidation</h3><p>Ensure client cache updates when database fields modify. Set TTL (Time-To-Live) expirations on cache keys to automatically purge stale details.</p>",
-            "<h3>Assessment Target</h3><p>Passing the Backend timed quiz with 50%+ will award your Verified Backend Engineer credential on your candidate profile!</p>"
+            "<h3>Cache Invalidation</h3><p>Ensure client cache updates when database fields modify. Set TTL (Time-To-Live) expirations on cache keys to automatically purge stale details.</p>"
           ]
         }
       ],
       database: [
         {
-          title: "Relational SQL indexes",
-          desc: "Speed up table read queries by defining indexes, key constraints, and joins.",
-          skill: "MySQL",
-          category: "Database",
+          level: "basic",
+          title: "Level 1: Basic SQL Schemas & Keys",
+          desc: "Relational database tables, Column datatypes, Primary and Foreign key references.",
           slides: [
             "<h3>SQL Database Schema</h3><p>Relational databases structure data in strict tables with column datatypes and rows. Use Primary and Foreign keys to link tables.</p>",
+            "<h3>Foreign Key Constraints</h3><p>Maintain data referential integrity by linking child tables to parent tables using strict Foreign Key bounds.</p>"
+          ]
+        },
+        {
+          level: "medium",
+          title: "Level 2: Medium Table Indexing & Query Joins",
+          desc: "Speed up table read queries by defining indexes, key constraints, and joins.",
+          slides: [
             "<h3>Query Indexing</h3><p>Speed up heavy read filters by indexing columns. Indexes allow the database engine to locate values quickly without scanning entire tables.</p>",
             "<h3>Optimizing Joins</h3><p>Use INNER, LEFT, and RIGHT joins to combine tables. Avoid nested subqueries inside select statements to maintain quick execution.</p>"
           ]
         },
         {
-          title: "NoSQL document collections",
+          level: "advanced",
+          title: "Level 3: Advanced Document Schema & MongoDB Aggregations",
           desc: "Structure high-concurrency non-relational query schemas in MongoDB.",
-          skill: "MongoDB",
-          category: "Database",
           slides: [
             "<h3>NoSQL vs SQL</h3><p>NoSQL databases like MongoDB store records as JSON documents instead of strict rows. This supports highly flexible, changing schemas.</p>",
-            "<h3>MongoDB Aggregations</h3><p>Aggregate results using stage pipelines: <code>$match</code> to filter, <code>$group</code> to collect values, and <code>$sort</code> to order documents.</p>",
-            "<h3>Study Verification</h3><p>Earn your Database Admin Certificate by taking the verification assessment. Score >= 50% to show recruiters your index configurations work.</p>"
+            "<h3>MongoDB Aggregations</h3><p>Aggregate results using stage pipelines: <code>$match</code> to filter, <code>$group</code> to collect values, and <code>$sort</code> to order documents.</p>"
           ]
         }
       ],
-      fullstack: [
+      creative: [
         {
-          title: "Fullstack Architecture mapping",
-          desc: "Connect React web UI frameworks with backends, MySQL tables, and auth channels.",
-          skill: "React",
-          category: "Frontend",
-          slides: [
-            "<h3>Integrating Client & Server</h3><p>Fullstack apps bridge client pages (React) with servers (NodeJS) using fetch requests to fetch or submit structured database entries.</p>",
-            "<h3>Full Stack Security</h3><p>Store encrypted passwords inside databases using secure hash frameworks like bcrypt, keeping candidate login data safe.</p>",
-            "<h3>Hiring Target</h3><p>Recruiters check for full stack capability. Score 50%+ on assessments to lock in your Verified Fullstack credential badge.</p>"
-          ]
-        }
-      ],
-      video: [
-        {
-          title: "Creative Video Assembly",
-          desc: "Produce and polish daily YouTube advertisements, optimize exports, and compile clip segments.",
-          skill: "Premiere Pro",
-          category: "Creative",
+          level: "basic",
+          title: "Level 1: Basic Video Assembly & Transitions",
+          desc: "Produce and polish video clips, manage layouts, transitions, and clip cutting.",
           slides: [
             "<h3>Timeline Editing</h3><p>Good video assembly depends on fast cuts, audio track alignments, transitions, and pacing. Keep cut-aways clean and matching audio cues.</p>",
-            "<h3>H.264 Web Compression</h3><p>Export web-optimized formats. Target 1080p MP4 clips with H.264 codecs to deliver crisp visual output at low file sizes.</p>",
-            "<h3>Creative Assessment</h3><p>Unlock your Creative Video Editor Certificate by completing the timed assessment quiz with a score of 50% or above.</p>"
+            "<h3>Frame Rates & Cinema Pacing</h3><p>Cinema uses 24fps for motion blur, while online videos use 30fps or 60fps. Pick the rate that fits your target device.</p>"
+          ]
+        },
+        {
+          level: "medium",
+          title: "Level 2: Medium Color Grading & Audio Mixing",
+          desc: "Learn creative LUT adjustments, ambient sound filters, and L/J cut spacing.",
+          slides: [
+            "<h3>Color Grading</h3><p>Adjust brightness, contrast, and color balance to achieve a cohesive style. Use LUTs (Look-Up Tables) to quickly style footage.</p>",
+            "<h3>Audio Mixing & L/J Cuts</h3><p>Smoothen transitions by letting the audio start before the video clip cuts (J-cut) or vice versa (L-cut).</p>"
+          ]
+        },
+        {
+          level: "advanced",
+          title: "Level 3: Advanced Compression Formats & Bitrates",
+          desc: "Export web-optimized files, HEVC/H.264 renders, and dynamic bitrate bounds.",
+          slides: [
+            "<h3>High-efficiency Codec Compressions</h3><p>Export web-optimized formats. Target 1080p MP4 clips with H.264 or HEVC codecs to deliver crisp visual output at low file sizes.</p>",
+            "<h3>Bitrate Controls</h3><p>Use VBR (Variable Bit Rate) to let complex motion scenes use higher bits while static frames use less, minimizing final export sizes.</p>"
           ]
         }
       ]
@@ -567,25 +659,50 @@
       title.textContent = `${template.roleName} Learning Roadmap`;
       container.innerHTML = "";
 
-      const steps = ROADMAP_STEPS[roleKey] || [];
-      const userSkills = candidate.skills || [];
+      let courseKey = roleKey;
+      if (roleKey === 'fullstack') courseKey = 'frontend';
+      if (roleKey === 'video') courseKey = 'creative';
+
+      const steps = ROADMAP_STEPS[courseKey] || [];
+      
+      if (!candidate.course_progress) {
+        candidate.course_progress = {
+          frontend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          backend: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          database: { level: "basic", basic_score: null, medium_score: null, advanced_score: null },
+          creative: { level: "basic", basic_score: null, medium_score: null, advanced_score: null }
+        };
+      }
+      
+      const progress = candidate.course_progress[courseKey] || { level: "basic" };
 
       steps.forEach((step, idx) => {
-        // Evaluate if step is completed
+        let isUnlocked = false;
         let isCompleted = false;
-        let skillLvl = "None";
+        let scoreVal = null;
         
-        if (step.skill) {
-          const hasSkill = userSkills.some(s => s.toLowerCase() === step.skill.toLowerCase());
-          if (hasSkill) {
-            skillLvl = (candidate.skillLevels && candidate.skillLevels[step.skill]) || "Basic";
-            // Completed if skill level is Medium or Advanced
-            if (skillLvl === "Medium" || skillLvl === "Advanced") {
-              isCompleted = true;
-            }
+        if (step.level === "basic") {
+          isUnlocked = true;
+          if (progress.level !== "basic") {
+            isCompleted = true;
+            scoreVal = progress.basic_score || 80;
           }
-        } else {
-          isCompleted = (candidate.assessment_score || 0) >= 50;
+        } else if (step.level === "medium") {
+          if (progress.level === "medium" || progress.level === "advanced" || progress.level === "completed") {
+            isUnlocked = true;
+          }
+          if (progress.level !== "basic" && progress.level !== "medium") {
+            isCompleted = true;
+            scoreVal = progress.medium_score || 85;
+          }
+        } else if (step.level === "advanced") {
+          if (progress.level === "advanced" || progress.level === "completed") {
+            isUnlocked = true;
+          }
+          if (progress.level === "completed") {
+            isCompleted = true;
+            scoreVal = progress.advanced_score || 90;
+          }
         }
 
         const node = document.createElement('div');
@@ -594,45 +711,31 @@
         let actionBtn = "";
         let levelStatus = "";
 
-        if (step.skill) {
-          if (skillLvl === "None") {
-            levelStatus = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.7rem; text-transform: none; border: 1px solid var(--danger);">Unlearned</span>`;
-            actionBtn = `<button onclick="window.openStudyModal('${roleKey}', ${idx}, 'Basic')" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem;">📖 Study Basic Course</button>`;
-          } else if (skillLvl === "Basic") {
-            levelStatus = `<span class="badge" style="background-color: var(--warning-light); color: var(--warning); font-size: 0.7rem; text-transform: none; border: 1px solid var(--warning);">⚠️ Basic Stage</span>`;
-            actionBtn = `<button onclick="window.openStudyModal('${roleKey}', ${idx}, 'Medium')" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; background: linear-gradient(135deg, var(--warning) 0%, var(--secondary) 100%); border: none;">⚡ Upgrade to Medium</button>`;
-          } else {
-            levelStatus = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.7rem; text-transform: none; border: 1px solid var(--success);">✅ ${skillLvl} Stage</span>`;
-            actionBtn = `<div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
-              <span style="color:var(--success); font-size:0.8rem; font-weight:600;">✓ Milestone Completed</span>
-              <button onclick="window.openStudyModal('${roleKey}', ${idx}, '${skillLvl}')" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.7rem; border-radius:4px;">Review</button>
+        if (!isUnlocked) {
+          levelStatus = `<span class="badge" style="background-color: var(--border-color); color: var(--text-muted); font-size: 0.7rem; border: 1px solid var(--border-color);">🔒 Locked</span>`;
+          actionBtn = `<p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.75rem;">Complete previous levels to unlock this course stage.</p>`;
+        } else if (isCompleted) {
+          levelStatus = `<span class="badge badge-success" style="font-size: 0.7rem;">✅ Completed (Score: ${scoreVal}%)</span>`;
+          actionBtn = `
+            <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.75rem;">
+              <button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', true)" class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px;">Review Slides</button>
+              <button onclick="window.viewLevelCertificate('${courseKey}', '${step.level}')" class="btn btn-secondary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700;">🏅 View Certificate</button>
             </div>`;
-          }
         } else {
-          // General assessment step
-          if (!isCompleted) {
-            levelStatus = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.7rem; text-transform: none; border: 1px solid var(--danger);">Pending Exam</span>`;
-            actionBtn = `<a href="quiz.html?category=${step.category ? step.category.toLowerCase() : 'frontend'}" class="btn btn-success" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:white; font-weight:700;">⚡ Take Final Assessment</a>`;
-          } else {
-            levelStatus = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.7rem; text-transform: none; border: 1px solid var(--success);">Verified Certified</span>`;
-            actionBtn = `<div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
-              <span style="color:var(--success); font-size:0.8rem; font-weight:600;">✓ Verified Certificate Unlocked</span>
-              <a href="quiz.html" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.7rem; border-radius:4px;">Review Exam</a>
-            </div>`;
-          }
+          levelStatus = `<span class="badge badge-warning" style="font-size: 0.7rem;">⚡ In Progress</span>`;
+          actionBtn = `<button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', false)" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; background: linear-gradient(135deg, var(--warning) 0%, var(--secondary) 100%); border: none;">📖 Study & Take Quiz</button>`;
         }
 
         node.innerHTML = `
           <div class="roadmap-dot ${isCompleted ? 'active' : ''}"></div>
-          <div class="roadmap-card" style="border-left: 4px solid ${isCompleted ? 'var(--success)' : 'var(--border-color)'};">
+          <div class="roadmap-card" style="border-left: 4px solid ${isCompleted ? 'var(--success)' : (isUnlocked ? 'var(--warning)' : 'var(--border-color)')}; opacity: ${isUnlocked ? '1' : '0.6'};">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="badge" style="background-color:var(--bg-tertiary); color:var(--text-secondary); font-size:0.7rem;">Step ${idx + 1}</span>
+              <span class="badge" style="background-color:var(--bg-tertiary); color:var(--text-secondary); font-size:0.7rem;">Level ${idx + 1}</span>
               <div style="display: flex; gap: 0.5rem; align-items: center;">
                 ${levelStatus}
-                ${isCompleted ? '<span style="color:var(--success); font-size:1.1rem;">✅</span>' : '<span style="color:var(--text-muted); font-size:0.9rem;">🔒 Pending</span>'}
               </div>
             </div>
-            <h4 style="font-size:1.1rem; margin-top:0.5rem; margin-bottom:0.25rem; font-family:var(--font-sans);">${step.title}</h4>
+            <h4 style="font-size:1.1rem; margin-top:0.5rem; margin-bottom:0.25rem; font-family:var(--font-sans); color: ${isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)'};">${step.title}</h4>
             <p style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4;">${step.desc}</p>
             ${actionBtn}
           </div>
@@ -651,32 +754,26 @@
     let currentStudySlideIdx = 0;
     let currentStudyQuizLink = "";
 
-    window.openStudyModal = function(roleKey, idx, targetLevel = "Medium") {
-      const step = ROADMAP_STEPS[roleKey][idx];
+    window.openStudyModal = function(courseKey, idx, targetLevel = "basic", isReview = false) {
+      const step = ROADMAP_STEPS[courseKey][idx];
       if (!step) return;
 
       currentStudySlides = step.slides || [];
       currentStudySlideIdx = 0;
       
-      let categoryParam = "Frontend";
-      if (step.category) {
-        categoryParam = step.category;
-      }
-      
-      let skillParam = step.skill || "";
-      currentStudyQuizLink = `quiz.html?category=${categoryParam.toLowerCase()}&skill=${encodeURIComponent(skillParam)}&targetLevel=${targetLevel}`;
+      currentStudyQuizLink = `quiz.html?course=${courseKey}&level=${targetLevel}`;
 
-      document.getElementById('study-title').textContent = `${step.title} (${targetLevel} prep)`;
+      document.getElementById('study-title').textContent = `${step.title} (${targetLevel.toUpperCase()} level)`;
       document.getElementById('study-modal').style.display = "flex";
       
-      renderCurrentSlide();
+      renderCurrentSlide(isReview);
     }
 
     window.closeStudyModal = function() {
       document.getElementById('study-modal').style.display = "none";
     }
 
-    function renderCurrentSlide() {
+    function renderCurrentSlide(isReview = false) {
       const body = document.getElementById('study-body');
       body.innerHTML = currentStudySlides[currentStudySlideIdx] || "";
       
@@ -690,8 +787,15 @@
 
       if (currentStudySlideIdx === currentStudySlides.length - 1) {
         nextBtn.style.display = "none";
-        quizBtn.style.display = "inline-block";
-        quizBtn.href = currentStudyQuizLink;
+        if (isReview) {
+          quizBtn.style.display = "inline-block";
+          quizBtn.textContent = "Finish Review ✕";
+          quizBtn.href = "javascript:closeStudyModal()";
+        } else {
+          quizBtn.style.display = "inline-block";
+          quizBtn.textContent = "Take Assessment ⚡";
+          quizBtn.href = currentStudyQuizLink;
+        }
       } else {
         nextBtn.style.display = "inline-block";
         quizBtn.style.display = "none";
@@ -710,6 +814,38 @@
         currentStudySlideIdx--;
         renderCurrentSlide();
       }
+    }
+
+    window.viewLevelCertificate = function(courseKey, level) {
+      const certs = candidate.certificates || [];
+      
+      const courseNames = {
+        frontend: "Frontend Frameworks & UI",
+        backend: "Backend & API Architectures",
+        database: "Database Schema & Caching",
+        creative: "Creative Media & Video Editing"
+      };
+      const courseTitle = courseNames[courseKey] || courseKey;
+      
+      const levelNames = {
+        basic: "Basic Level",
+        medium: "Medium Level",
+        advanced: "Advanced Level"
+      };
+      const levelTitle = levelNames[level] || level;
+      
+      const matched = certs.find(c => c.course === courseTitle && c.level === levelTitle);
+      const score = matched ? matched.score : 85;
+      
+      document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate";
+      document.getElementById('cert-course-name').innerHTML = `${courseTitle} - <strong style="color:#34d399;">${levelTitle}</strong>`;
+      document.getElementById('cert-score-val').textContent = `${score}%`;
+      
+      document.getElementById('cert-modal').style.display = "flex";
+    }
+
+    window.closeCertModal = function() {
+      document.getElementById('cert-modal').style.display = "none";
     }
 
     function closeRoadmap() {
@@ -806,8 +942,308 @@
       return tips[Math.floor(Math.random() * tips.length)];
     }
 
+    // ==========================================
+    // 🏫 ACADEMY COURSES DATABASE & RENDERING
+    // ==========================================
+    const ACADEMY_COURSES = [
+      {
+        id: "course_nextjs",
+        title: "Next.js Production Frameworks",
+        category: "frontend",
+        desc: "Master SSR, SSG, dynamic routing, edge handlers, and SEO optimization in Next.js applications.",
+        level: "Advanced",
+        duration: "6 weeks",
+        skills: ["Next.js", "React"],
+        image: "⚛️"
+      },
+      {
+        id: "course_react_state",
+        title: "Advanced React State & Patterns",
+        category: "frontend",
+        desc: "Learn custom hooks, compound components, Context API, Redux Toolkit, and performance paint cycle rendering.",
+        level: "Medium",
+        duration: "4 weeks",
+        skills: ["React", "JavaScript"],
+        image: "⚡"
+      },
+      {
+        id: "course_nodejs_api",
+        title: "Node.js High-Performance REST APIs",
+        category: "backend",
+        desc: "Build scalable event-driven REST APIs with Express, middleware pipelines, rate limiting, and clustering.",
+        level: "Medium",
+        duration: "5 weeks",
+        skills: ["Node.js", "Express"],
+        image: "🟢"
+      },
+      {
+        id: "course_sql_tuning",
+        title: "SQL Index Tuning & Schema Design",
+        category: "database",
+        desc: "Optimize slow queries, design efficient relational databases, master clustered indices and query plans.",
+        level: "Advanced",
+        duration: "4 weeks",
+        skills: ["SQL", "Indexing"],
+        image: "🗄️"
+      },
+      {
+        id: "course_creative_grading",
+        title: "Cinematic Video Editing & Grading",
+        category: "creative",
+        desc: "Master post-production color profiles, J-cuts/L-cuts transitions, audio editing, and H.264 web compression.",
+        level: "Medium",
+        duration: "4 weeks",
+        skills: ["Color Grading", "Video Editing"],
+        image: "🎥"
+      },
+      {
+        id: "course_typescript",
+        title: "TypeScript Enterprise Applications",
+        category: "frontend",
+        desc: "Learn advanced typing, generics, conditional utility types, and building robust type-safe web applications.",
+        level: "Medium",
+        duration: "4 weeks",
+        skills: ["TypeScript", "JavaScript"],
+        image: "🟦"
+      },
+      {
+        id: "course_docker",
+        title: "Docker & Containerized Microservices",
+        category: "backend",
+        desc: "Master Dockerfile creation, multi-stage builds, compose clustering pipelines, and deploying containerized microservices.",
+        level: "Advanced",
+        duration: "5 weeks",
+        skills: ["Docker", "Node.js"],
+        image: "🐳"
+      },
+      {
+        id: "course_mongodb",
+        title: "MongoDB Schema Design & Pipelines",
+        category: "database",
+        desc: "Understand embedding vs referencing documents, indexes, and building complex pipeline aggregation structures.",
+        level: "Medium",
+        duration: "4 weeks",
+        skills: ["MongoDB", "NoSQL"],
+        image: "🍃"
+      },
+      {
+        id: "course_motion",
+        title: "Motion Graphics & UI Animation",
+        category: "creative",
+        desc: "Design dynamic transitions, user interface micro-interactions, canvas animation, and cinematic typography.",
+        level: "Advanced",
+        duration: "5 weeks",
+        skills: ["After Effects", "UI Animation"],
+        image: "✨"
+      }
+    ];
+
+    let activeAcademyCategory = "all";
+
+    // AI suggestion engine logic
+    function getCourseAISuggestion(course) {
+      const preferred = (candidate.preferredRole || '').toLowerCase();
+      const skillsList = candidate.skills || [];
+      const levels = candidate.skillLevels || {};
+
+      // Match 1: Preferred role matches category
+      let matchesRole = false;
+      if (course.category === 'frontend' && (preferred.includes('frontend') || preferred.includes('full stack') || preferred.includes('fullstack'))) {
+        matchesRole = true;
+      } else if (course.category === 'backend' && (preferred.includes('backend') || preferred.includes('full stack') || preferred.includes('fullstack'))) {
+        matchesRole = true;
+      } else if (course.category === 'database' && (preferred.includes('database') || preferred.includes('backend') || preferred.includes('full stack'))) {
+        matchesRole = true;
+      } else if (course.category === 'creative' && (preferred.includes('video') || preferred.includes('creative') || preferred.includes('media'))) {
+        matchesRole = true;
+      }
+
+      // Match 2: Skill gap check (teaches a skill candidate lacks)
+      const missingSkills = course.skills.filter(s => !skillsList.some(cs => cs.toLowerCase() === s.toLowerCase()));
+      const basicSkills = course.skills.filter(s => skillsList.some(cs => cs.toLowerCase() === s.toLowerCase() && (levels[cs] === 'Basic' || levels[cs] === 'basic')));
+
+      if (missingSkills.length > 0) {
+        return {
+          type: "gap",
+          label: "🤖 AI Suggested: Bridge Skill Gap",
+          priority: 2,
+          reason: `Covers missing skills: ${missingSkills.join(', ')}`
+        };
+      }
+
+      if (basicSkills.length > 0) {
+        return {
+          type: "level_up",
+          label: "⚡ Level Up: Basic ➔ Medium",
+          priority: 1,
+          reason: `Improve existing skill: ${basicSkills.join(', ')}`
+        };
+      }
+
+      if (matchesRole) {
+        return {
+          type: "role_match",
+          label: "🔥 High Priority: Role Match",
+          priority: 0,
+          reason: `Matches preferred role: ${candidate.preferredRole}`
+        };
+      }
+
+      return null;
+    }
+
+    function renderAcademy() {
+      const enrolledGrid = document.getElementById('enrolled-courses-grid');
+      const enrolledWrapper = document.getElementById('enrolled-section-wrapper');
+      const suggestedGrid = document.getElementById('ai-suggested-courses-grid');
+      const allGrid = document.getElementById('all-courses-grid');
+
+      if (!enrolledGrid || !suggestedGrid || !allGrid) return;
+
+      const enrolled = candidate.enrolled_courses || [];
+
+      // 1. Render Active Courses
+      enrolledGrid.innerHTML = "";
+      if (enrolled.length > 0) {
+        enrolledWrapper.style.display = "block";
+        enrolled.forEach(ec => {
+          const course = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+          if (!course) return;
+          enrolledGrid.innerHTML += `
+            <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--success);">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.8rem;">${course.image}</span>
+                  <span class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Active</span>
+                </div>
+                <h5 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">${course.title}</h5>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">${course.desc}</p>
+                <div style="margin-bottom: 1rem;">
+                  <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-bottom:0.25rem; font-weight:600;">
+                    <span>Course Progress</span>
+                    <span>${ec.progress || 10}%</span>
+                  </div>
+                  <div style="background:var(--bg-primary); border-radius:999px; height:6px; overflow:hidden;">
+                    <div style="width:${ec.progress || 10}%; height:100%; background:var(--success); border-radius:999px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <a href="quiz.html?course=${course.category}&level=${course.level.toLowerCase()}" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center; text-decoration: none;">Study Roadmap ➔</a>
+                <button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        enrolledWrapper.style.display = "none";
+      }
+
+      // 2. Render AI Suggestions
+      suggestedGrid.innerHTML = "";
+      const suggestedCourses = ACADEMY_COURSES
+        .filter(c => !enrolled.some(ec => ec.courseId === c.id))
+        .map(c => ({ course: c, ai: getCourseAISuggestion(c) }))
+        .filter(item => item.ai !== null)
+        .sort((a, b) => b.ai.priority - a.ai.priority);
+
+      if (suggestedCourses.length > 0) {
+        suggestedCourses.forEach(item => {
+          const c = item.course;
+          const ai = item.ai;
+          suggestedGrid.innerHTML += `
+            <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--warning); transition: transform 0.2s, box-shadow 0.2s;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.8rem;">${c.image}</span>
+                  <span class="badge badge-warning" style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">${ai.label}</span>
+                </div>
+                <h5 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">${c.title}</h5>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem;">${c.desc}</p>
+                <p style="font-size: 0.7rem; color: var(--warning); font-style: italic; margin-bottom: 1rem;">💡 ${ai.reason}</p>
+              </div>
+              <button onclick="handleEnrollCourse('${c.id}')" class="btn btn-outline" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; border-color: var(--warning); color: var(--warning);">Enroll in Course ⚡</button>
+            </div>
+          `;
+        });
+      } else {
+        suggestedGrid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem;">
+            🤖 All suggested courses are currently in progress!
+          </div>
+        `;
+      }
+
+      // 3. Render All Courses
+      allGrid.innerHTML = "";
+      const filtered = activeAcademyCategory === 'all' 
+        ? ACADEMY_COURSES 
+        : ACADEMY_COURSES.filter(c => c.category === activeAcademyCategory);
+
+      filtered.forEach(c => {
+        const isEnrolled = enrolled.some(ec => ec.courseId === c.id);
+        const actionBtn = isEnrolled
+          ? `<button class="btn btn-secondary" disabled style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enrolled ✓</button>`
+          : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll now</button>`;
+
+        allGrid.innerHTML += `
+          <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.8rem;">${c.image}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">${c.duration}</span>
+              </div>
+              <h5 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">${c.title}</h5>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">${c.desc}</p>
+              <div style="display: flex; gap: 0.35rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <span style="font-size: 0.65rem; background: var(--bg-primary); border-radius: 4px; padding: 0.15rem 0.4rem; color: var(--text-muted); border: 1px solid var(--border-color);">${c.level}</span>
+                ${c.skills.map(s => `<span style="font-size: 0.65rem; background: rgba(99,102,241,0.1); border-radius: 4px; padding: 0.15rem 0.4rem; color: var(--primary);">${s}</span>`).join('')}
+              </div>
+            </div>
+            ${actionBtn}
+          </div>
+        `;
+      });
+    }
+
+    window.filterAcademyCourses = function(category) {
+      activeAcademyCategory = category;
+      const buttons = document.querySelectorAll('#course-filter-tabs button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('course-tab-' + category);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderAcademy();
+    }
+
+    window.handleEnrollCourse = function(courseId) {
+      const ok = enrollInCourse(candidate.id, courseId);
+      if (ok) {
+        const db = dbGet();
+        candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
+        renderAcademy();
+        
+        showAlert('alert-container', 'Successfully applied and enrolled in course!', 'success');
+        setTimeout(() => {
+          const el = document.getElementById('alert-container');
+          if (el) el.innerHTML = "";
+        }, 3000);
+      }
+    }
+
+    window.handleWithdrawCourse = function(courseId) {
+      if (confirm('Are you sure you want to withdraw from this course?')) {
+        const ok = withdrawFromCourse(candidate.id, courseId);
+        if (ok) {
+          const db = dbGet();
+          candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
+          renderAcademy();
+        }
+      }
+    }
+
     loadRecommendations();
     initAdvisorChat();
+    renderAcademy();
     }
 </script>
 </body>
