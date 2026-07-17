@@ -180,8 +180,8 @@
   <script>
     let challenges = [];
     const mockChallenges = [
-      { id: 1, title: "Video Editor", recruiter_name: "haufdascb", company_name: "haufdascb", company_logo: "🏢", difficulty: "medium", category: "Creative", description: "YHSJDCMDSLKVN CHERHNJVMOWELPK,CMVNJFDBVNSK,LC", requirements: "- Edit a 2 minute promotional video\n- Include sound assets\n- Export to MP4 1080p", max_xp: 100 },
-      { id: 2, title: "Custom Video Editor Dashboard UI", recruiter_name: "Jane recruiter", company_name: "Vercel Inc", company_logo: "🔺", difficulty: "hard", category: "Frontend", description: "Develop a slick dashboard layout for a cloud-based video editor. Implement file drop areas, timelines, track controls, and video player placeholder. Fully mobile responsive.", requirements: "- React + CSS Variables\n- Smooth dragging timeline mock\n- Clean responsive layout", max_xp: 250 },
+      { id: 1, title: "Custom Video Editor Dashboard UI", recruiter_name: "Jane recruiter", company_name: "Vercel Inc", company_logo: "🔺", difficulty: "hard", category: "Frontend", description: "Develop a slick dashboard layout for a cloud-based video editor. Implement file drop areas, timelines, track controls, and video player placeholder. Fully mobile responsive.", requirements: "- React + CSS Variables\n- Smooth dragging timeline mock\n- Clean responsive layout", max_xp: 250 },
+      { id: 2, title: "Video Editor Specs Assessment", recruiter_name: "Jane recruiter", company_name: "InnovateTech", company_logo: "🏢", difficulty: "medium", category: "Creative", description: "Edit a 2 minute promotional video for our cloud products. Include transitions, audio tracks, and compress it using H.264.", requirements: "- Edit a 2 minute promotional video\n- Include sound assets\n- Export to MP4 1080p", max_xp: 100 },
       { id: 3, title: "MongoDB Database Schema Design", recruiter_name: "DataCorp Admin", company_name: "DataCorp", company_logo: "💾", difficulty: "easy", category: "Database", description: "Design a high-performance database schema pattern for a e-commerce site supporting 10k concurrent users. Outline indexing guidelines.", requirements: "- Detailed JSON schema layout\n- List of indexes proposed\n- Queries breakdown document", max_xp: 80 }
     ];
 
@@ -221,13 +221,15 @@
           challenges = data.data;
           renderChallenges(challenges);
         } else {
-          challenges = mockChallenges;
+          const dbState = dbGet();
+          challenges = dbState.challenges && dbState.challenges.length > 0 ? dbState.challenges : mockChallenges;
           renderChallenges(challenges);
         }
       } catch (err) {
-        console.warn("Backend offline, using mock challenges:", err.message);
+        console.warn("Backend offline, loading dynamically from local database:", err.message);
         loadingState.style.display = "none";
-        challenges = mockChallenges;
+        const dbState = dbGet();
+        challenges = dbState.challenges && dbState.challenges.length > 0 ? dbState.challenges : mockChallenges;
         renderChallenges(challenges);
       }
     }
@@ -387,6 +389,41 @@
         closeViewModal();
       } catch (err) {
         console.warn("Backend offline. Fallback mock submission successful:", err.message);
+        
+        const dbState = dbGet();
+        const candidate = getUser();
+        if (candidate) {
+          const newApp = {
+            id: Date.now(),
+            candidate_id: candidate.id,
+            candidate_name: candidate.fullName || "John Builder",
+            job_id: activeChallenge.id,
+            challenge_title: activeChallenge.title,
+            talent_score: candidate.talent_score || 50,
+            status: "applied",
+            cover_letter: subDesc,
+            github_url: subGit,
+            demo_url: subUrl
+          };
+          dbState.applications.unshift(newApp);
+
+          const newSub = {
+            id: Date.now(),
+            candidate_id: candidate.id,
+            candidate_name: candidate.fullName || "John Builder",
+            challenge_id: activeChallenge.id,
+            challenge_title: activeChallenge.title,
+            talent_score: candidate.talent_score || 50,
+            current_level: candidate.current_level || 'Beginner Builder',
+            status: "pending",
+            description: subDesc,
+            github_url: subGit,
+            submission_url: subUrl
+          };
+          dbState.submissions.unshift(newSub);
+          dbSave(dbState);
+        }
+
         showAlert('alert-container', 'Project solution submitted successfully! Pending recruiter review.', 'success');
         closeViewModal();
       }
@@ -418,18 +455,22 @@
         loadChallenges();
       } catch (err) {
         console.warn("Backend offline. Mock adding challenge:", err.message);
+        const dbState = dbGet();
         const newChallenge = {
-          id: challenges.length + 1,
+          id: Date.now(),
           title,
           description,
           requirements,
           category,
           difficulty,
           max_xp: parseInt(maxXp, 10),
-          company_name: user.fullName || "Your Company",
+          company_name: user ? (user.companyName || user.fullName || "Your Company") : "Your Company",
           company_logo: "🏢"
         };
-        challenges.unshift(newChallenge);
+        dbState.challenges.unshift(newChallenge);
+        dbSave(dbState);
+
+        challenges = dbState.challenges;
         renderChallenges(challenges);
         showAlert('alert-container', 'Challenge published successfully (Demo Mode)!', 'success');
         closeCreateModal();
