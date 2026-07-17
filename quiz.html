@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skill Assessments | Build2Hire</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- NAVBAR -->
@@ -15,9 +18,14 @@
     <aside class="sidebar" id="main-sidebar"></aside>
 
     <main class="main-content">
-      <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Technical Skill Assessments</h2>
-        <p style="color: var(--text-secondary);">Test your developer guidelines knowledge and boost your Quiz Talent score.</p>
+      <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Technical Skill Assessments</h2>
+          <p style="color: var(--text-secondary);">Test your developer guidelines knowledge and boost your Quiz Talent score.</p>
+        </div>
+        <a href="recommendations.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.5rem 1rem; font-size: 0.85rem;">
+          ⬅ Back to Learning Hub
+        </a>
       </div>
 
       <div id="alert-container"></div>
@@ -40,7 +48,7 @@
               Covers React Hooks lifecycle, responsive grids, custom CSS custom variables, and basic design frameworks.
             </p>
           </div>
-          <button onclick="startQuiz('frontend')" class="btn btn-primary" style="width: 100%;">Start Frontend Quiz</button>
+          <button onclick="startQuizFromSelector('frontend')" class="btn btn-primary" style="width: 100%;">Start Frontend Quiz</button>
         </div>
 
         <div class="card" id="quiz-card-backend" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
@@ -51,7 +59,7 @@
               Test your knowledge of Node.js event loops, HTTP response statuses, REST APIs, and Express request flows.
             </p>
           </div>
-          <button onclick="startQuiz('backend')" class="btn btn-primary" style="width: 100%;">Start Backend Quiz</button>
+          <button onclick="startQuizFromSelector('backend')" class="btn btn-primary" style="width: 100%;">Start Backend Quiz</button>
         </div>
 
         <div class="card" id="quiz-card-database" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
@@ -62,7 +70,7 @@
               Covers SQL indexing, transaction ACID bounds, MongoDB document formats, and caching policies like Redis.
             </p>
           </div>
-          <button onclick="startQuiz('database')" class="btn btn-primary" style="width: 100%;">Start Database Quiz</button>
+          <button onclick="startQuizFromSelector('database')" class="btn btn-primary" style="width: 100%;">Start Database Quiz</button>
         </div>
 
         <div class="card" id="quiz-card-creative" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
@@ -73,7 +81,51 @@
               Covers video compression, audio L/J-cuts, cinema frame rates, and color grading basics.
             </p>
           </div>
-          <button onclick="startQuiz('creative')" class="btn btn-primary" style="width: 100%;">Start Creative Quiz</button>
+          <button onclick="startQuizFromSelector('creative')" class="btn btn-primary" style="width: 100%;">Start Creative Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-devops" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">☁️</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Cloud & DevOps Security</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers Docker containerization, AWS cloud deployments, CI/CD pipelines, SSL encryption, and API gateways.
+            </p>
+          </div>
+          <button onclick="startQuizFromSelector('devops')" class="btn btn-primary" style="width: 100%;">Start DevOps Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-system" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🏗️</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">System Design & Scaling</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers load balancing, horizontal scaling, caching strategies, message queues, and system design patterns.
+            </p>
+          </div>
+          <button onclick="startQuizFromSelector('system')" class="btn btn-primary" style="width: 100%;">Start System Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-security" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🛡️</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Cybersecurity & Ethical Hacking</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers XSS protection, SQL injection prevention, CSRF guards, hashing strategies, and OAuth2 standard practices.
+            </p>
+          </div>
+          <button onclick="startQuizFromSelector('security')" class="btn btn-primary" style="width: 100%;">Start Security Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-mobile" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">📱</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Mobile App Development</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers React Native bridges, Flutter states, Swift iOS architectures, Android Gradle, and app stores.
+            </p>
+          </div>
+          <button onclick="startQuizFromSelector('mobile')" class="btn btn-primary" style="width: 100%;">Start Mobile Quiz</button>
         </div>
         </div>
       </div>
@@ -100,7 +152,7 @@
         </div>
 
         <div class="flex-between" style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-          <span style="font-size: 0.85rem; color: var(--text-secondary);">Correct answers earn +100 XP!</span>
+          <button class="btn btn-secondary" onclick="resetQuizScreen()" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Quit Quiz</button>
           <button id="quiz-action-btn" class="btn btn-primary" onclick="submitAnswer()" disabled>Confirm Answer</button>
         </div>
       </div>
@@ -124,47 +176,52 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-          <a href="portfolio.html" class="btn btn-primary">Go to Profile Dashboard</a>
-          <button onclick="resetQuizScreen()" class="btn btn-secondary">Try Another Quiz</button>
+        <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <a href="portfolio.html" class="btn btn-primary" style="text-decoration: none; padding: 0.6rem 1.25rem;">Go to Profile Dashboard</a>
+          <a href="recommendations.html" class="btn btn-outline" style="text-decoration: none; padding: 0.6rem 1.25rem;">Back to Learning Hub</a>
+          <button onclick="resetQuizScreen()" class="btn btn-secondary" style="padding: 0.6rem 1.25rem;">Try Another Quiz</button>
         </div>
       </div>
 
       <!-- CERTIFICATE UNLOCK MODAL -->
-      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
-        <div class="card" style="width: 100%; max-width: 550px; background-color: #1e293b; color: #f8fafc; border: 4px solid #d97706; padding: 2.5rem 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.6); position: relative; overflow: visible;">
-          
-          <!-- Seal decoration -->
-          <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 3rem; background: #d97706; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); border: 3px solid #f8fafc;">
-            🎓
-          </div>
+      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 580px; background: radial-gradient(circle, #fbfbfb 0%, #f7f7f7 100%); color: #0f172a; border: 12px solid #0f172a; padding: 1.5rem; border-radius: 8px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; overflow: visible; box-sizing: border-box;">
+          <div style="border: 3px solid #b45309; padding: 2rem 1.5rem; box-sizing: border-box; position: relative;">
+            
+            <!-- Seal decoration -->
+            <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; background: radial-gradient(circle, #f59e0b 0%, #b45309 100%); border-radius: 50%; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.4); border: 3px solid #ffffff; z-index: 2;">
+              🏆
+            </div>
+            
+            <div style="margin-top: 1rem;">
+              <div style="font-weight: 800; font-size: 1.1rem; color: #0f172a; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Build<span>2</span>Hire</div>
+              <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0.5rem 0; letter-spacing: 0.05em; text-transform: uppercase;">Certificate of Completion</h2>
+              <p style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 0.85rem; color: #475569; margin-bottom: 1rem;">This verified credential is proudly presented to</p>
+              
+              <h3 id="cert-candidate-name" style="font-family: 'Alex Brush', cursive; font-size: 2.8rem; color: #b45309; margin: 0.25rem 0; font-weight: 400; line-height: 1;">Candidate Name</h3>
+              <div style="width: 150px; height: 1px; background: linear-gradient(90deg, transparent, #b45309, transparent); margin: 0.5rem auto 1rem auto;"></div>
+              
+              <p style="font-size: 0.85rem; color: #334155; max-width: 440px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
+                For successfully completing all advanced technical assessment modules for <br>
+                <strong id="cert-course-name" style="color: #0f172a;">Frontend Course</strong> with a verified passing score of <strong id="cert-score-val" style="color: #b45309;">80%</strong>.
+              </p>
 
-          <div style="margin-top: 1.5rem;">
-            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: #fbbf24; font-weight: 700; display: block; margin-bottom: 0.5rem;">Verified Skill Credential</span>
-            <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: #fbbf24; margin-bottom: 1.5rem; letter-spacing: -0.01em;">CERTIFICATE OF COMPLETION</h2>
-            
-            <p style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 1.5rem;">This verified credential is proud to be presented to</p>
-            
-            <h3 id="cert-candidate-name" style="font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; text-decoration: underline; color: #f8fafc;">Candidate Name</h3>
-            
-            <p style="font-size: 0.9rem; color: #cbd5e1; max-width: 420px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
-              For successfully completing all technical assessment modules for <strong id="cert-course-name" style="color: #fbbf24;">Frontend Course</strong> with a verified passing grade.
-            </p>
-
-            <!-- Signature line -->
-            <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem;">
-              <div style="text-align: center;">
-                <span style="font-family: 'Outfit', sans-serif; font-style: italic; font-size: 1.1rem; color: #fbbf24; display: block; margin-bottom: 0.25rem;">Build2Hire AI</span>
-                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Verification Authority</span>
-              </div>
-              <div style="text-align: center;">
-                <strong style="font-size: 1.1rem; display: block; color: #34d399; margin-bottom: 0.25rem;" id="cert-score-val">80%</strong>
-                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Passing Score</span>
+              <!-- Signature line -->
+              <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 1rem; margin-top: 1.5rem;">
+                <div style="text-align: center;">
+                  <span style="font-family: 'Alex Brush', cursive; font-size: 1.5rem; color: #1e3a8a; display: block; margin-bottom: -0.15rem; line-height: 1;">Build2Hire AI</span>
+                  <div style="border-top: 1.5px solid #94a3b8; width: 140px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Authority</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 0.35rem;" id="cert-date-val">Verified</div>
+                  <div style="border-top: 1.5px solid #94a3b8; width: 140px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Date Issued</div>
+                </div>
               </div>
             </div>
 
             <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
               <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
+              <button onclick="window.printCurrentCertificate()" class="btn" style="background-color: #10b981; border: 1px solid #10b981; color: #ffffff; padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 700;">Download / Print 📥</button>
               <a href="portfolio.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; color: white;">Go to Portfolio 💼</a>
             </div>
           </div>
@@ -174,11 +231,11 @@
     </main>
   </div>
 
-  <script src="shared.js"></script>
+  <script src="shared.js?v=1.0.1"></script>
   <script>
     const auth = withAuth(['candidate']);
     if (auth) {
-      const { user, db, candidate } = auth;
+      let { user, db, candidate } = auth;
 
     // Role-based quiz recommendation highlight
     (function highlightRoleQuiz() {
@@ -188,7 +245,11 @@
         'full stack engineer':   'frontend',
         'backend engineer':      'backend',
         'database administrator':'database',
-        'video editor':          'creative'
+        'video editor':          'creative',
+        'devops engineer':       'devops',
+        'systems architect':     'system',
+        'security specialist':   'security',
+        'mobile developer':      'mobile'
       };
       const recKey = map[role];
       if (!recKey) return;
@@ -231,339 +292,1371 @@
 
     refreshSidebarStats();
 
-    // ==========================================
-    // 📚 QUIZ QUESTIONS DATA
-    // ==========================================
-    const QUIZZES = {
-      frontend: {
-        title: "Frontend Frameworks & UI",
-        badge: "⚛️ FRONTEND",
-        questions: [
-          {
-            text: "What does the 'flex-shrink: 0' CSS rule prevent?",
-            options: [
-              "The flex item from shrinking below its base flex-basis layout width.",
-              "The parent flex container box dimensions from collapsing.",
-              "The list elements inside a flex row from wrapping to the next line.",
-              "The sibling layout items from growing when additional spacer width is available."
-            ],
-            answer: 0
-          },
-          {
-            text: "How do you declare a global CSS custom variable that is shared across the layout?",
-            options: [
-              "body { $primary-glow: #6366f1; }",
-              "var primary-glow = '#6366f1';",
-              ":root { --primary-glow: #6366f1; }",
-              "css-variable { primary-glow: #6366f1; }"
-            ],
-            answer: 2
-          },
-          {
-            text: "In React frameworks, what is the main purpose of the useEffect hook?",
-            options: [
-              "To perform side effects (subscriptions, data fetches, DOM mutations) in functional components.",
-              "To cache complex function outputs between renders to speed up paint layout cycles.",
-              "To store reactive local component values that don't trigger layout updates when modified.",
-              "To manage custom input event validation configurations dynamically."
-            ],
-            answer: 0
-          },
-          {
-            text: "What does 'glassmorphism' design primarily rely on for its premium look?",
-            options: [
-              "High-contrast solid borders and flat shadows.",
-              "Vibrant radial gradients, low opacity background fills, and CSS backdrop blur filters.",
-              "Animated SVG paths and three-dimensional rotation layouts.",
-              "Heavy text-shadow properties and black pixelated backgrounds."
-            ],
-            answer: 1
-          },
-          {
-            text: "Which HTML5 semantic element represents content that is tangentially related to the main page content (like a sidebar)?",
-            options: [
-              "<section>",
-              "<article>",
-              "<aside>",
-              "<nav>"
-            ],
-            answer: 2
-          }
-        ]
-      },
-      backend: {
-        title: "Backend Systems & API",
-        badge: "🟢 BACKEND API",
-        questions: [
-          {
-            text: "Which HTTP status code represents a resource that could not be found on the server?",
-            options: [
-              "403 Forbidden",
-              "404 Not Found",
-              "500 Internal Server Error",
-              "502 Bad Gateway"
-            ],
-            answer: 1
-          },
-          {
-            text: "What is the primary role of the event loop inside the Node.js runtime?",
-            options: [
-              "To route HTTP packets between connected client sockets.",
-              "To execute non-blocking asynchronous event callbacks on a single thread.",
-              "To automatically scale system memory limits based on heap structures.",
-              "To balance traffic loads across multiple processor threads concurrently."
-            ],
-            answer: 1
-          },
-          {
-            text: "What is Express middleware in backend JS designs?",
-            options: [
-              "A background process that replicates relational records across servers.",
-              "Functions that intercept, modify, or terminate HTTP request/response pipelines before endpoint handlers execute.",
-              "Client-side scripts that render HTML widgets asynchronously.",
-              "Caching databases like Redis integrated into application routes."
-            ],
-            answer: 1
-          },
-          {
-            text: "Which response header must a server return to allow cross-origin resource requests?",
-            options: [
-              "Access-Control-Allow-Origin",
-              "Allow-Cross-Domain-Requests",
-              "Request-Origin-Scope-Access",
-              "Credentials-Headers-Mode"
-            ],
-            answer: 0
-          },
-          {
-            text: "What is the main benefit of password hashing algorithms (like bcrypt or argon2)?",
-            options: [
-              "They compress passwords to minimize database space.",
-              "They encrypt passwords so they can be decrypted and emailed back to users.",
-              "They generate one-way cryptographic hashes with work factor salts to prevent cracking.",
-              "They validate the strength of a user's password format automatically."
-            ],
-            answer: 2
-          }
-        ]
-      },
-      database: {
-        title: "Database Admin & Caching",
-        badge: "🗄️ DATABASE DESIGN",
-        questions: [
-          {
-            text: "What is the primary advantage of adding a database Index?",
-            options: [
-              "It accelerates read query matching speeds significantly.",
-              "It optimizes disk space allocations by compressing tables.",
-              "It increases the speed of INSERT and UPDATE transactions.",
-              "It automatically checks password fields for syntax compliance."
-            ],
-            answer: 0
-          },
-          {
-            text: "What do the letters in ACID represent for relational databases?",
-            options: [
-              "Async, Cache, Index, Delivery",
-              "Atomicity, Consistency, Isolation, Durability",
-              "Array, Connection, Integrity, Distribution",
-              "Atomicity, Caching, Indexing, Direct-Access"
-            ],
-            answer: 1
-          },
-          {
-            text: "In non-relational MongoDB schema layouts, which index is ideal for full-text search fields?",
-            options: [
-              "Compound index",
-              "Hashed index",
-              "Text index",
-              "Geospatial 2dsphere index"
-            ],
-            answer: 2
-          },
-          {
-            text: "What does database normalization aim to minimize?",
-            options: [
-              "Redundant duplicate data and design anomalies.",
-              "Read speeds for complex JOIN queries.",
-              "Disk write IOPS bounds.",
-              "Primary Key index spaces."
-            ],
-            answer: 0
-          },
-          {
-            text: "What is the primary usage of Redis in backend enterprise designs?",
-            options: [
-              "An in-memory key-value cache to store session tokens and transient SQL queries.",
-              "A heavy relational storage database engine supporting transactional tables.",
-              "An asset content delivery network hosting images.",
-              "An index logger parsing application crash errors."
-            ],
-            answer: 0
-          }
-        ]
-      },
-      creative: {
-        title: "Creative Media & Video Editing",
-        badge: "🎥 CREATIVE MEDIA",
-        questions: [
-          {
-            text: "Which video export codec delivers the best quality-to-filesize compression ratio for web distribution?",
-            options: [
-              "Apple ProRes 4444",
-              "H.264 codec in MP4 container",
-              "AVI uncompressed raw frames",
-              "WMV rendering format"
-            ],
-            answer: 1
-          },
-          {
-            text: "In audio design, what does 'L-cut' mean?",
-            options: [
-              "The video cuts to scene B, but the audio from scene A continues playing.",
-              "The audio cuts to scene B, but the video from scene A continues.",
-              "A low-frequency audio cut-off threshold.",
-              "A volume fade out linear transition."
-            ],
-            answer: 0
-          },
-          {
-            text: "What frame rate is standard for cinema film style playback?",
-            options: [
-              "60 frames per second (fps)",
-              "30 frames per second (fps)",
-              "24 frames per second (fps)",
-              "120 frames per second (fps)"
-            ],
-            answer: 2
-          }
-        ]
-      }
-    };
+    // Quizzes loaded dynamically from COURSE_QUIZZES below.
 
     // ==========================================
-    // 📚 SKILL LEVEL-UP QUIZZES DATA
+    // 📚 progressive COURSE QUIZZES DATA (12 Quizzes total)
     // ==========================================
-    const SKILL_QUIZZES = {
-      "React": {
-        title: "React Framework Upgrade Assessment",
-        questions: [
-          {
-            text: "Which hook should you use to cache the result of an expensive calculation between renders?",
-            options: ["useEffect", "useMemo", "useCallback", "useRef"],
-            answer: 1
-          },
-          {
-            text: "What happens when a component's state variables change in React?",
-            options: ["The component page reloads completely.", "The virtual DOM is refreshed and the component re-renders.", "The server is sent an API request automatically.", "The styling layout stylesheet is re-imported."],
-            answer: 1
-          }
-        ]
+    const COURSE_QUIZZES = {
+      frontend: {
+        basic: {
+          title: "Frontend Frameworks - Basic Level",
+          badge: "⚛️ FRONTEND BASIC",
+          questions: [
+            {
+              text: "How do you declare a global CSS custom variable that is shared across the layout?",
+              options: [
+                "body { $primary-glow: #6366f1; }",
+                "var primary-glow = '#6366f1';",
+                ":root { --primary-glow: #6366f1; }",
+                "css-variable { primary-glow: #6366f1; }"
+              ],
+              answer: 2
+            },
+            {
+              text: "Which HTML5 semantic element represents content that is tangentially related to the main page content (like a sidebar)?",
+              options: [
+                "<section>",
+                "<article>",
+                "<aside>",
+                "<nav>"
+              ],
+              answer: 2
+            },
+            {
+              text: "Which CSS layout model is best suited for designing two-dimensional grid layouts?",
+              options: [
+                "display: flex;",
+                "display: block;",
+                "display: grid;",
+                "display: inline-block;"
+              ],
+              answer: 2
+            },
+            {
+              text: "What does the CSS rule 'box-sizing: border-box;' ensure?",
+              options: [
+                "Padding and border are included in the element's total width and height.",
+                "The element is rendered with a default border style.",
+                "Margins are automatically collapsed to zero.",
+                "Content width is calculated excluding padding."
+              ],
+              answer: 0
+            },
+            {
+              text: "Which HTML anchor attribute opens a link in a new browser tab?",
+              options: [
+                "target=\"_self\"",
+                "target=\"_blank\"",
+                "target=\"_parent\"",
+                "target=\"_top\""
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Frontend Frameworks - Medium Level",
+          badge: "⚛️ FRONTEND MEDIUM",
+          questions: [
+            {
+              text: "What does the 'flex-shrink: 0' CSS rule prevent?",
+              options: [
+                "The flex item from shrinking below its base flex-basis layout width.",
+                "The parent flex container box dimensions from collapsing.",
+                "The list elements inside a flex row from wrapping to the next line.",
+                "The sibling layout items from growing when additional spacer width is available."
+              ],
+              answer: 0
+            },
+            {
+              text: "In JavaScript, what is the main purpose of Array.prototype.map()?",
+              options: [
+                "To mutate the original array keys in place.",
+                "To loop through items without returning any value.",
+                "To create a new array with the results of calling a function on every element.",
+                "To filter out elements that don't match a condition."
+              ],
+              answer: 2
+            },
+            {
+              text: "What is a primary characteristic of variables declared using the JavaScript const keyword?",
+              options: [
+                "They are globally scoped by default.",
+                "They cannot be reassigned after declaration.",
+                "They can be redeclared within the same scope.",
+                "They are automatically hoisted to the top of the script."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the relative CSS unit 'rem' based on?",
+              options: [
+                "The font size of the parent element.",
+                "The font size of the root HTML element.",
+                "The viewport width of the browser window.",
+                "The font size of the closest block container."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which JavaScript DOM event method stops the browser's default form submit behavior?",
+              options: [
+                "event.stopPropagation()",
+                "event.preventDefault()",
+                "event.cancelBubble()",
+                "event.stopImmediatePropagation()"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "Frontend Frameworks - Advanced Level",
+          badge: "⚛️ FRONTEND ADVANCED",
+          questions: [
+            {
+              text: "In React frameworks, what is the main purpose of the useEffect hook?",
+              options: [
+                "To perform side effects (subscriptions, data fetches, DOM mutations) in functional components.",
+                "To cache complex function outputs between renders to speed up paint layout cycles.",
+                "To store reactive local component values that don't trigger layout updates when modified.",
+                "To manage custom input event validation configurations dynamically."
+              ],
+              answer: 0
+            },
+            {
+              text: "What does 'glassmorphism' design primarily rely on for its premium look?",
+              options: [
+                "High-contrast solid borders and flat shadows.",
+                "Vibrant radial gradients, low opacity background fills, and CSS backdrop blur filters.",
+                "Animated SVG paths and three-dimensional rotation layouts.",
+                "Heavy text-shadow properties and black pixelated backgrounds."
+              ],
+              answer: 1
+            },
+            {
+              text: "In React, which hook is used to cache the result of an expensive calculation between renders?",
+              options: [
+                "useCallback",
+                "useRef",
+                "useMemo",
+                "useState"
+              ],
+              answer: 2
+            },
+            {
+              text: "What are the three possible states of a JavaScript Promise?",
+              options: [
+                "start, run, finish",
+                "pending, fulfilled, rejected",
+                "active, paused, completed",
+                "open, resolving, closed"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary benefit of React's Virtual DOM?",
+              options: [
+                "It compiles JavaScript directly to native machine code.",
+                "It updates only the changed elements in the real DOM instead of reloading the entire page.",
+                "It provides secure encryption for local state variables.",
+                "It replaces the need for CSS styling files."
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "CSS Variables": {
-        title: "CSS Variables Advanced Assessment",
-        questions: [
-          {
-            text: "How do you define a fallback color in case the custom variable '--main-accent' is not set?",
-            options: ["color: var(--main-accent, #6366f1);", "color: fallback(--main-accent, #6366f1);", "color: css-variable(--main-accent) || #6366f1;", "color: val(--main-accent, #6366f1);"],
-            answer: 0
-          },
-          {
-            text: "Which selector allows custom variables to be inherited globally by all elements?",
-            options: ["* selector", "body selector", ":root pseudo-class selector", "html selector"],
-            answer: 2
-          }
-        ]
+      backend: {
+        basic: {
+          title: "Backend Systems - Basic Level",
+          badge: "🟢 BACKEND BASIC",
+          questions: [
+            {
+              text: "Which HTTP status code represents a resource that could not be found on the server?",
+              options: [
+                "200 OK",
+                "403 Forbidden",
+                "404 Not Found",
+                "500 Internal Server Error"
+              ],
+              answer: 2
+            },
+            {
+              text: "What HTTP method should be used to request data from a server without modifying it?",
+              options: [
+                "POST",
+                "PUT",
+                "GET",
+                "DELETE"
+              ],
+              answer: 2
+            },
+            {
+              text: "Which format is standard for transmitting structured data over APIs?",
+              options: [
+                "CSV",
+                "XML",
+                "JSON",
+                "YAML"
+              ],
+              answer: 2
+            },
+            {
+              text: "Which HTTP status code signifies that a request succeeded?",
+              options: [
+                "200 OK",
+                "201 Created",
+                "204 No Content",
+                "304 Not Modified"
+              ],
+              answer: 0
+            },
+            {
+              text: "In Node.js, how do you import the core File System module?",
+              options: [
+                "import fs from 'file-system';",
+                "const fs = require('fs');",
+                "const fs = load('fs');",
+                "require-module('fs');"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Backend Systems - Medium Level",
+          badge: "🟢 BACKEND MEDIUM",
+          questions: [
+            {
+              text: "What is the role of the next() function in Express routing handlers?",
+              options: [
+                "To terminate the current HTTP response pipeline.",
+                "To execute the next middleware or request handler in the stack.",
+                "To redirect the client to the next routing page.",
+                "To retry the database connection block."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which statement best describes the Node.js event loop?",
+              options: [
+                "It spawns a new OS thread for every incoming network request.",
+                "It uses synchronous pooling to run database connections in parallel.",
+                "It runs on a single thread and processes asynchronous callbacks non-blockingly.",
+                "It is a multi-threaded task manager that executes blocking operations sequentially."
+              ],
+              answer: 2
+            },
+            {
+              text: "Which HTTP status code represents an Internal Server Error?",
+              options: [
+                "400 Bad Request",
+                "401 Unauthorized",
+                "403 Forbidden",
+                "500 Internal Server Error"
+              ],
+              answer: 3
+            },
+            {
+              text: "In Express routing, what parses dynamic query path placeholders (like /users/:id)?",
+              options: [
+                "req.query.id",
+                "req.params.id",
+                "req.body.id",
+                "req.path.id"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which HTTP response header allows cross-origin requests from browsers?",
+              options: [
+                "Access-Control-Allow-Origin",
+                "X-Frame-Options",
+                "Content-Security-Policy",
+                "Strict-Transport-Security"
+              ],
+              answer: 0
+            }
+          ]
+        },
+        advanced: {
+          title: "Backend Systems - Advanced Level",
+          badge: "🟢 BACKEND ADVANCED",
+          questions: [
+            {
+              text: "How does Redis achieve its extremely fast query response speeds?",
+              options: [
+                "By sharding relational rows across disks.",
+                "By storing and serving all data from system random-access memory (RAM).",
+                "By optimizing deep relational index joins.",
+                "By using multi-threaded write clusters."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does TTL stand for when managing cache keys in Redis?",
+              options: [
+                "Time-To-Live expiration timestamp",
+                "Transaction-Type-Limit",
+                "Total-Transfer-Latency",
+                "Token-Target-Limit"
+              ],
+              answer: 0
+            },
+            {
+              text: "What is the primary benefit of password hashing salts (e.g. in bcrypt)?",
+              options: [
+                "To compress the password length.",
+                "To prevent rainbow table attacks by adding random noise to each password hash.",
+                "To enable reversible decryption.",
+                "To speed up database search queries."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which core Node.js module provides functionality to handle custom event triggers?",
+              options: [
+                "fs",
+                "http",
+                "events",
+                "util"
+              ],
+              answer: 2
+            },
+            {
+              text: "What are the three components of a JSON Web Token (JWT)?",
+              options: [
+                "Username, Password, Signature",
+                "Header, Payload, Signature",
+                "Key, Value, Timestamp",
+                "Issuer, Subject, Expiry"
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "JavaScript": {
-        title: "Core JavaScript Logic Assessment",
-        questions: [
-          {
-            text: "Which array method returns a brand new array populated with the results of calling a function on every element?",
-            options: ["forEach()", "filter()", "map()", "find()"],
-            answer: 2
-          },
-          {
-            text: "What does an asynchronous function return by default in JavaScript?",
-            options: ["An undefined object", "A Promise object", "A JSON string", "A callback reference"],
-            answer: 1
-          }
-        ]
+      database: {
+        basic: {
+          title: "Database Schemas - Basic Level",
+          badge: "🗄️ DATABASE BASIC",
+          questions: [
+            {
+              text: "Which SQL constraint ensures that all values in a column are unique?",
+              options: [
+                "FOREIGN KEY",
+                "UNIQUE",
+                "CHECK",
+                "NOT NULL"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a Foreign Key constraint primarily used for in relational databases?",
+              options: [
+                "To encrypt data fields.",
+                "To speed up text-search queries.",
+                "To establish and enforce a link between data in two tables.",
+                "To cache query results in RAM."
+              ],
+              answer: 2
+            },
+            {
+              text: "What uniquely identifies each row in a database table?",
+              options: [
+                "Index Key",
+                "Primary Key",
+                "Foreign Key",
+                "Unique Key"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which SQL statement retrieves all records from a table named users?",
+              options: [
+                "GET ALL FROM users;",
+                "SELECT * FROM users;",
+                "EXTRACT users;",
+                "RETRIEVE FROM users;"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a database schema?",
+              options: [
+                "A backup file.",
+                "The logical configuration blueprint of tables, fields, and relationships.",
+                "The query interface tool.",
+                "The caching storage path."
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Database Schemas - Medium Level",
+          badge: "🗄️ DATABASE MEDIUM",
+          questions: [
+            {
+              text: "Which index type is automatically created when defining a Primary Key column in MySQL?",
+              options: [
+                "Full-Text Index",
+                "Clustered Unique Index",
+                "Composite Index",
+                "Spatial Index"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which join retrieves all rows from the left table and matched rows from the right table?",
+              options: [
+                "INNER JOIN",
+                "RIGHT JOIN",
+                "LEFT JOIN",
+                "FULL OUTER JOIN"
+              ],
+              answer: 2
+            },
+            {
+              text: "In relational databases, what does the Atomicity property in ACID ensure?",
+              options: [
+                "Data is written securely to disk.",
+                "Transactions are processed fully or not at all (all-or-nothing).",
+                "No two transactions interfere.",
+                "Database logs are encrypted."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does database normalization aim to minimize?",
+              options: [
+                "Index sizes.",
+                "Redundant duplicate data and design anomalies.",
+                "Query response times.",
+                "The number of tables in a database."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the average search time complexity of a B-Tree index lookup?",
+              options: [
+                "O(1) constant time",
+                "O(log N) logarithmic time",
+                "O(N) linear time",
+                "O(N log N)"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "Database Schemas - Advanced Level",
+          badge: "🗄️ DATABASE ADVANCED",
+          questions: [
+            {
+              text: "Which MongoDB aggregation stage is used to filter documents based on query criteria?",
+              options: [
+                "$group",
+                "$match",
+                "$sort",
+                "$project"
+              ],
+              answer: 1
+            },
+            {
+              text: "What format does MongoDB use to store document collections internally?",
+              options: [
+                "Plain CSV formatting",
+                "BSON (Binary JSON) serialization format",
+                "Strict XML schemas",
+                "YAML structures"
+              ],
+              answer: 1
+            },
+            {
+              text: "In MongoDB compound indexing, what is the prefix rule?",
+              options: [
+                "Indexes can only be used on string fields.",
+                "Queries must filter using the index keys in order (from left to right) to utilize the index.",
+                "Prefixes are automatically stripped.",
+                "Every query requires a prefix prefixing."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which database transaction isolation level prevents all concurrency anomalies but is the slowest?",
+              options: [
+                "Read Uncommitted",
+                "Read Committed",
+                "Repeatable Read",
+                "Serializable"
+              ],
+              answer: 3
+            },
+            {
+              text: "What is a write-through caching policy?",
+              options: [
+                "Data is written to cache only and synced later.",
+                "Data is written to cache and database concurrently.",
+                "Data bypasses cache completely.",
+                "Data is written to logs first."
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "Node.js": {
-        title: "NodeJS Server Routing Assessment",
-        questions: [
-          {
-            text: "Which Express method starts a server and binds it to a specified port?",
-            options: ["app.listen()", "app.start()", "app.connect()", "app.bind()"],
-            answer: 0
-          },
-          {
-            text: "What is the role of the next() function in Express routing handlers?",
-            options: ["To terminate the current HTTP response pipeline.", "To execute the next middleware or request handler in the stack.", "To redirect the client to the next routing page.", "To retry the database connection block."],
-            answer: 1
-          }
-        ]
+      creative: {
+        basic: {
+          title: "Creative Media - Basic Level",
+          badge: "🎥 CREATIVE BASIC",
+          questions: [
+            {
+              text: "What frame rate is standard for cinema film style playback?",
+              options: [
+                "60 frames per second (fps)",
+                "30 frames per second (fps)",
+                "24 frames per second (fps)",
+                "120 frames per second (fps)"
+              ],
+              answer: 2
+            },
+            {
+              text: "Which transition is most commonly used to indicate a passage of time in visual storytelling?",
+              options: [
+                "Sharp Jump Cut",
+                "Cross Dissolve",
+                "Slide Left",
+                "Whip Pan"
+              ],
+              answer: 1
+            },
+            {
+              text: "What unit is standard for measuring audio amplitude level?",
+              options: [
+                "Hertz (Hz)",
+                "Decibels (dB)",
+                "Bits",
+                "Pixels"
+              ],
+              answer: 1
+            },
+            {
+              text: "What resolution represents a standard 16:9 widescreen HD aspect ratio?",
+              options: [
+                "1024x768",
+                "1920x1080",
+                "1280x720",
+                "3840x2160"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary timeline component where clips are assembled sequentially in a video editor?",
+              options: [
+                "Media Pool",
+                "Timeline",
+                "Inspector",
+                "Source Monitor"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Creative Media - Medium Level",
+          badge: "🎥 CREATIVE MEDIUM",
+          questions: [
+            {
+              text: "In audio design, what does 'J-cut' mean?",
+              options: [
+                "The audio of the next scene starts playing before the video cuts to it.",
+                "The video cuts to the next scene before the audio starts.",
+                "A sudden jump cut transition.",
+                "A low-frequency audio volume fade out."
+              ],
+              answer: 0
+            },
+            {
+              text: "What is a LUT (Look-Up Table) primarily used for in post-production?",
+              options: [
+                "To compress files.",
+                "To apply color grading profiles.",
+                "To synchronize multi-cam audio.",
+                "To crop aspect ratios."
+              ],
+              answer: 1
+            },
+            {
+              text: "In audio design, what does an 'L-cut' mean?",
+              options: [
+                "The audio of the previous scene continues playing into the next scene.",
+                "The audio of the next scene starts before the video.",
+                "A linear volume fade out.",
+                "A specific type of jump cut."
+              ],
+              answer: 0
+            },
+            {
+              text: "Which frame rate is ideal for filming slow-motion footage in a standard 24fps timeline?",
+              options: [
+                "24 fps",
+                "30 fps",
+                "60 fps or higher",
+                "15 fps"
+              ],
+              answer: 2
+            },
+            {
+              text: "What audio tool adjusts specific frequency bands to shape the tone of a dialogue track?",
+              options: [
+                "Compressor",
+                "Limiter",
+                "Equalizer (EQ)",
+                "Noise Gate"
+              ],
+              answer: 2
+            }
+          ]
+        },
+        advanced: {
+          title: "Creative Media - Advanced Level",
+          badge: "🎥 CREATIVE ADVANCED",
+          questions: [
+            {
+              text: "Which video export codec delivers the best quality-to-filesize compression ratio for web distribution?",
+              options: [
+                "Apple ProRes 4444",
+                "H.264 codec in MP4 container",
+                "AVI uncompressed raw frames",
+                "WMV rendering format"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary benefit of Variable Bitrate (VBR) rendering over Constant Bitrate (CBR)?",
+              options: [
+                "Faster rendering speeds.",
+                "Smaller output file size by adjusting bitrate based on scene complexity.",
+                "Consistent file size estimation before rendering.",
+                "Higher frame rates during playback."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which color space is standard for High Dynamic Range (HDR) video production?",
+              options: [
+                "sRGB",
+                "Rec. 709",
+                "BT.2020 / Rec. 2020",
+                "DCI-P3"
+              ],
+              answer: 2
+            },
+            {
+              text: "What does nesting clips in Premiere Pro accomplish?",
+              options: [
+                "It exports them immediately.",
+                "It combines multiple clips into a single container sequence.",
+                "It deletes silent audio gaps.",
+                "It adds transition effects automatically."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which background screen color is standard for digital green-screen keying?",
+              options: [
+                "Chroma Blue",
+                "Chroma Green",
+                "Pure White",
+                "Chroma Red"
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "Redis": {
-        title: "Redis Server Caching Assessment",
-        questions: [
-          {
-            text: "What does TTL stand for when managing cache keys in Redis?",
-            options: ["Time-To-Live expiration timestamp", "Transaction-Type-Limit", "Total-Transfer-Latency", "Token-Target-Limit"],
-            answer: 0
-          },
-          {
-            text: "How does Redis achieve its extremely fast query response speeds?",
-            options: ["By sharding relational rows across disks.", "By storing and serving all data from system random-access memory (RAM).", "By optimizing deep relational index joins.", "By using multi-threaded write clusters."],
-            answer: 1
-          }
-        ]
+      devops: {
+        basic: {
+          title: "Cloud & DevOps - Basic Level",
+          badge: "☁️ DEVOPS BASIC",
+          questions: [
+            {
+              text: "What is the primary purpose of Docker containerization?",
+              options: [
+                "To optimize SQL database indexing pipelines.",
+                "To isolate applications and their dependencies in portable environments.",
+                "To automatically generate CSS animations.",
+                "To compile javascript code to assembly."
+              ],
+              answer: 1
+            },
+            {
+              text: "In Git version control, which command downloads refs and objects from another repository?",
+              options: [
+                "git push",
+                "git fetch",
+                "git status",
+                "git init"
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the industry term CI/CD stand for?",
+              options: [
+                "Computer Integration / Central Deployment",
+                "Continuous Integration / Continuous Deployment",
+                "Cache Indexing / Database Compilation",
+                "Client Interaction / Component Design"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which file is standard for defining multiple container environments in Docker Compose?",
+              options: [
+                "docker-compose.yml",
+                "Dockerfile",
+                "compose.config.json",
+                "settings.gradle"
+              ],
+              answer: 0
+            },
+            {
+              text: "Which protocol is standard for securely logging in and running commands on a remote Linux server shell?",
+              options: [
+                "FTP",
+                "SSH",
+                "SMTP",
+                "HTTP"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Cloud & DevOps - Medium Level",
+          badge: "🐳 DEVOPS MEDIUM",
+          questions: [
+            {
+              text: "In Docker, what is the primary benefit of utilizing multi-stage builds in a Dockerfile?",
+              options: [
+                "To compile CSS preprocessors.",
+                "To reduce the final image size by discarding unnecessary build dependencies.",
+                "To automatically deploy containers to Kubernetes.",
+                "To enable database horizontal scaling."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which HTTP status code represents a 'Bad Gateway' issue from a reverse proxy server?",
+              options: [
+                "404 Not Found",
+                "502 Bad Gateway",
+                "403 Forbidden",
+                "500 Internal Server Error"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary purpose of utilizing an API Gateway in a microservices deployment?",
+              options: [
+                "To host static frontend assets.",
+                "To manage request routing, rate limiting, and centralized authentication.",
+                "To compile backend NodeJS files.",
+                "To establish relational database schemas."
+              ],
+              answer: 1
+            },
+            {
+              text: "In Kubernetes container orchestration, what is the smallest deployable unit of computing?",
+              options: [
+                "Service",
+                "Pod",
+                "Container",
+                "Namespace"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which Git command merges history by re-applying commits on top of another branch for a linear log history?",
+              options: [
+                "git merge",
+                "git rebase",
+                "git checkout",
+                "git reset"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "Cloud & DevOps - Advanced Level",
+          badge: "⚡ DEVOPS ADVANCED",
+          questions: [
+            {
+              text: "What is the main security implication of running a Docker container with the '--privileged' flag?",
+              options: [
+                "It enables read-only filesystem access.",
+                "It grants the container root-level privileges to all host hardware devices.",
+                "It limits CPU usage to 50%.",
+                "It forces all network connections to utilize TLS."
+              ],
+              answer: 1
+            },
+            {
+              text: "How does a Blue-Green deployment strategy prevent downtime during production releases?",
+              options: [
+                "By updating servers sequentially one by one.",
+                "By maintaining two identical environments (Active/Inactive) and swapping traffic routing instantly.",
+                "By compressing all image files before build pipelines start.",
+                "By routing all traffic to a backup database during update windows."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the 'Least Connections' load balancing algorithm perform?",
+              options: [
+                "Routes traffic to the server with the shortest geographic distance.",
+                "Routes traffic to the server with the fewest active request connections.",
+                "Routes requests in a strict round-robin rotation pattern.",
+                "Disconnects idle server instances automatically."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which HTTP security header enforces that modern browsers only load a website via HTTPS?",
+              options: [
+                "X-Frame-Options",
+                "Strict-Transport-Security (HSTS)",
+                "Content-Security-Policy",
+                "X-Content-Type-Options"
+              ],
+              answer: 1
+            },
+            {
+              text: "In a CI/CD build pipeline, why is caching dependency directories like node_modules recommended?",
+              options: [
+                "To reduce the size of the production bundle.",
+                "To speed up pipeline execution times by avoiding redundant package downloads.",
+                "To encrypt sensitive credentials in codebase settings.",
+                "To automatically run unit tests."
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "MySQL": {
-        title: "MySQL Indexes & Joins Assessment",
-        questions: [
-          {
-            text: "Which index type is automatically created when defining a Primary Key column in MySQL?",
-            options: ["Full-Text Index", "Clustered Unique Index", "Composite Index", "Spatial Index"],
-            answer: 1
-          },
-          {
-            text: "Which join retrieves all rows from the left table and matched rows from the right table?",
-            options: ["INNER JOIN", "RIGHT JOIN", "LEFT JOIN", "FULL OUTER JOIN"],
-            answer: 2
-          }
-        ]
+      system: {
+        basic: {
+          title: "System Design - Basic Level",
+          badge: "🏗️ SYSTEM BASIC",
+          questions: [
+            {
+              text: "What does the term 'Horizontal Scaling' mean in server infrastructure?",
+              options: [
+                "Increasing the CPU power or RAM of a single server.",
+                "Adding more machine instances to the server resource pool.",
+                "Arranging database racks side-by-side in a datacenter.",
+                "Minifying javascript files to load faster."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which system component acts as a reverse proxy, distributing requests across backend servers?",
+              options: [
+                "Message Queue",
+                "Load Balancer",
+                "Relational Database",
+                "Content Delivery Network"
+              ],
+              answer: 1
+            },
+            {
+              text: "In web application performance metrics, what is 'Latency'?",
+              options: [
+                "The size of the HTML payload in bytes.",
+                "The time delay for data to travel from client to server and return.",
+                "The number of requests a server handles per second.",
+                "The uptime percentage of cloud databases."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which cache eviction policy discards the least recently accessed items first when memory is full?",
+              options: [
+                "FIFO (First In, First Out)",
+                "LRU (Least Recently Used)",
+                "LFU (Least Frequently Used)",
+                "Random Eviction"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary target of implementing database replication (master-replica structures)?",
+              options: [
+                "To perform database schema migration.",
+                "To increase high availability, data redundancy, and read query capacity.",
+                "To encrypt database tables automatically.",
+                "To write dynamic joins faster."
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "System Design - Medium Level",
+          badge: "📐 SYSTEM MEDIUM",
+          questions: [
+            {
+              text: "What is the primary function of a Content Delivery Network (CDN)?",
+              options: [
+                "To compile backend server code.",
+                "To cache static assets globally closer to end users for lower latency.",
+                "To manage relational database backups.",
+                "To encrypt passwords before database insertion."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a major advantage of using an asynchronous Message Queue like RabbitMQ?",
+              options: [
+                "It guarantees immediate frontend synchronous rendering.",
+                "It decouples services and buffers workloads to prevent backend service overload.",
+                "It performs SQL query index optimization.",
+                "It hosts static media files for lower cost."
+              ],
+              answer: 1
+            },
+            {
+              text: "In database sharding, what is the role of a 'Shard Key'?",
+              options: [
+                "To encrypt personal data fields in query outputs.",
+                "To determine which server partition stores a particular data record.",
+                "To establish primary key links in table joins.",
+                "To verify user tokens."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the CAP Theorem state about distributed data systems?",
+              options: [
+                "A system can guarantee Capacity, Allocation, and Performance simultaneously.",
+                "A system can only provide two out of Consistency, Availability, and Partition Tolerance.",
+                "All database tables must have clustered indexes.",
+                "Network partitions cannot occur in modern datacenters."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a 'Cache Stampede'?",
+              options: [
+                "A database crash due to storage limit overflow.",
+                "Simultaneous cache expires causing multiple parallel requests to hit the database at once.",
+                "When too many items are added to a cache bucket.",
+                "A network rate limiting block trigger."
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "System Design - Advanced Level",
+          badge: "⚡ SYSTEM ADVANCED",
+          questions: [
+            {
+              text: "How does Consistent Hashing minimize key redistribution when a cache node is added or removed?",
+              options: [
+                "By encrypting cache values dynamically.",
+                "By mapping nodes and keys onto a circular ring and only redistributing a fraction of keys.",
+                "By scaling all database query parameters uniformly.",
+                "By using random allocation maps."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the main objective of using the Circuit Breaker pattern in microservice interactions?",
+              options: [
+                "To delete cache values automatically when a server crashes.",
+                "To prevent cascading failures by failing fast when a downstream service is detected down.",
+                "To increase network bandwidth limits.",
+                "To compress JSON messages."
+              ],
+              answer: 1
+            },
+            {
+              text: "In microservices transaction design, what is the purpose of the Saga Pattern?",
+              options: [
+                "To cache static JSON outputs.",
+                "To manage distributed transactions via a sequence of local transactions and compensation steps.",
+                "To balance traffic across clusters.",
+                "To build relational joins."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a Write-Ahead Log (WAL) primarily used for in relational databases?",
+              options: [
+                "To record recruiter login activity statistics.",
+                "To guarantee durability and write recovery by logging changes before applying them to database files.",
+                "To cache static image files.",
+                "To speed up SELECT query join execution."
+              ],
+              answer: 1
+            },
+            {
+              text: "How does the Token Bucket rate limiting algorithm function?",
+              options: [
+                "It queues requests in a FIFO array until capacity clears.",
+                "It permits requests up to a bucket capacity, refilling tokens at a constant rate to handle bursts.",
+                "It blocks users permanently when capacity drops below 10%.",
+                "It routes traffic to backup CDN servers."
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "MongoDB": {
-        title: "MongoDB Document Schema Assessment",
-        questions: [
-          {
-            text: "Which MongoDB aggregation stage is used to filter documents based on query criteria?",
-            options: ["$group", "$match", "$sort", "$project"],
-            answer: 1
-          },
-          {
-            text: "What format does MongoDB use to store document collections internally?",
-            options: ["Plain CSV formatting", "BSON (Binary JSON) serialization format", "Strict XML schemas", "YAML structures"],
-            answer: 1
-          }
-        ]
+      security: {
+        basic: {
+          title: "Cybersecurity - Basic Level",
+          badge: "🛡️ SECURITY BASIC",
+          questions: [
+            {
+              text: "What is the most effective primary defense against SQL Injection vulnerabilities?",
+              options: [
+                "Encrypting database tables with AES.",
+                "Utilizing parameterized queries (prepared statements).",
+                "Increasing the complexity of user passwords.",
+                "Running firewall scans daily."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the 'S' in HTTPS signify?",
+              options: [
+                "System",
+                "Secure",
+                "Stateful",
+                "Shared"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which HTTP header is commonly configured to protect web layouts from Clickjacking attacks?",
+              options: [
+                "X-Frame-Options",
+                "Content-Type",
+                "X-XSS-Protection",
+                "Strict-Transport-Security"
+              ],
+              answer: 0
+            },
+            {
+              text: "What does the common security acronym XSS represent?",
+              options: [
+                "XML Server Services",
+                "Cross-Site Scripting",
+                "X-linked System Scan",
+                "Extreme System Security"
+              ],
+              answer: 1
+            },
+            {
+              text: "Why is utilizing the MD5 algorithm no longer recommended for password hashing?",
+              options: [
+                "It takes too much CPU memory to run.",
+                "It is highly vulnerable to collision attacks and fast rainbow table lookups.",
+                "It only supports uppercase passwords.",
+                "It does not run on Linux servers."
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Cybersecurity - Medium Level",
+          badge: "🔐 SECURITY MEDIUM",
+          questions: [
+            {
+              text: "How does a CSRF (Cross-Site Request Forgery) token protect a web form submission?",
+              options: [
+                "By encrypting the user's password in transit.",
+                "By verifying that the request originates from the authenticated session and not an external site.",
+                "By running SQL syntax validation.",
+                "By caching form values locally."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary function of the OAuth 2.0 framework?",
+              options: [
+                "To authenticate database queries.",
+                "To provide delegated authorization, letting third-party apps access resources securely.",
+                "To host client-side React components.",
+                "To cache static image assets."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which standard encoding scheme securely represents claims as a JSON object signed cryptographically?",
+              options: [
+                "Base64",
+                "JSON Web Token (JWT)",
+                "UTF-8",
+                "Hexadecimal"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary purpose of CORS (Cross-Origin Resource Sharing)?",
+              options: [
+                "To speed up CSS variable rendering.",
+                "To allow or restrict browsers from loading resources from origins different than the page.",
+                "To backup SQL database records.",
+                "To route traffic across servers."
+              ],
+              answer: 1
+            },
+            {
+              text: "What type of attack involves intercepting and potentially altering communication between two authenticated parties?",
+              options: [
+                "XSS attack",
+                "Man-in-the-Middle (MITM) attack",
+                "SQL Injection",
+                "Replay attack"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "Cybersecurity - Advanced Level",
+          badge: "⚡ SECURITY ADVANCED",
+          questions: [
+            {
+              text: "What is the function of a 'Salt' value when hashing passwords?",
+              options: [
+                "To compress final hash strings.",
+                "To add unique random data to each password input to prevent pre-computed rainbow table attacks.",
+                "To verify user email suffixes.",
+                "To encrypt files before upload."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the role of a Web Application Firewall (WAF) in application security?",
+              options: [
+                "To build client bundles dynamically.",
+                "To monitor, filter, and block malicious HTTP traffic targeted at web applications.",
+                "To design database indexing tables.",
+                "To manage Git commits."
+              ],
+              answer: 1
+            },
+            {
+              text: "In asymmetric encryption, which key is utilized to encrypt a message meant only for a specific receiver?",
+              options: [
+                "The sender's private key.",
+                "The receiver's public key.",
+                "The sender's public key.",
+                "The receiver's private key."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which security mechanism allows site operators to restrict the source domains of dynamic assets?",
+              options: [
+                "X-Content-Type-Options",
+                "Content Security Policy (CSP)",
+                "HSTS header",
+                "Referrer-Policy"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a 'Zero-Day' vulnerability in cybersecurity?",
+              options: [
+                "A vulnerability discovered on the first day of the year.",
+                "A newly discovered software flaw unknown to the vendor, for which no patch is available.",
+                "A vulnerability that takes zero seconds to exploit.",
+                "A database schema change index."
+              ],
+              answer: 1
+            }
+          ]
+        }
       },
-      "Premiere Pro": {
-        title: "Premiere Pro Video Editing Assessment",
-        questions: [
-          {
-            text: "Which codec is standard for exporting high-definition web-optimized video files?",
-            options: ["H.264 in MP4 container", "Apple ProRes 422", "MPEG-2 formatting", "AV1 raw compression"],
-            answer: 0
-          },
-          {
-            text: "What does the timeline J-cut represent in video editing pacing?",
-            options: ["The audio of the next scene starts playing before the video cuts to it.", "The video cuts to the next scene before the audio starts.", "A sudden jump cut transition between consecutive scenes.", "A cross-dissolve gradient video transition."],
-            answer: 0
-          }
-        ]
+      mobile: {
+        basic: {
+          title: "Mobile Development - Basic Level",
+          badge: "📱 MOBILE BASIC",
+          questions: [
+            {
+              text: "Which cross-platform framework uses the Dart programming language to compile native apps?",
+              options: [
+                "React Native",
+                "Flutter",
+                "Ionic",
+                "Xamarin"
+              ],
+              answer: 1
+            },
+            {
+              text: "What package manager utility is standard for configuring iOS dependencies in React Native projects?",
+              options: [
+                "npm",
+                "CocoaPods",
+                "NuGet",
+                "Maven"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which container component is commonly used in Android XML layouts to arrange views in a single row or column?",
+              options: [
+                "ConstraintLayout",
+                "LinearLayout",
+                "FrameLayout",
+                "GridLayout"
+              ],
+              answer: 1
+            },
+            {
+              text: "What state is a mobile application in when it is still running but visible focus is lost?",
+              options: [
+                "Active",
+                "Background / Paused",
+                "Terminated",
+                "Uninitialized"
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the abbreviation APK stand for in Android app distribution?",
+              options: [
+                "Application Package Key",
+                "Android Package Kit",
+                "Active Private Key",
+                "Android Performance Kernel"
+              ],
+              answer: 1
+            }
+          ]
+        },
+        medium: {
+          title: "Mobile Development - Medium Level",
+          badge: "📲 MOBILE MEDIUM",
+          questions: [
+            {
+              text: "In React Native, what is the primary role of the virtual bridge component?",
+              options: [
+                "To optimize CSS stylesheets.",
+                "To handle asynchronous communication between the JavaScript thread and the Native threads.",
+                "To manage SQLite database files.",
+                "To deploy packages to the App Store."
+              ],
+              answer: 1
+            },
+            {
+              text: "Which Flutter class is extended when building a widget that maintains dynamic mutable state?",
+              options: [
+                "StatelessWidget",
+                "StatefulWidget",
+                "InheritedWidget",
+                "RenderObject"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary IDE tool used for compiling, code-signing, and archiving native iOS applications?",
+              options: [
+                "Android Studio",
+                "Xcode",
+                "VS Code",
+                "Eclipse"
+              ],
+              answer: 1
+            },
+            {
+              text: "Which lightweight serverless relational database engine is standard for local mobile app storage?",
+              options: [
+                "PostgreSQL",
+                "SQLite",
+                "MongoDB",
+                "Redis"
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary role of the Gradle build system in Android Studio projects?",
+              options: [
+                "To compile JavaScript code.",
+                "To automate build processes, compile source files, and package outputs into APKs/AABs.",
+                "To mock HTTP responses.",
+                "To hot-reload React Native styles."
+              ],
+              answer: 1
+            }
+          ]
+        },
+        advanced: {
+          title: "Mobile Development - Advanced Level",
+          badge: "⚡ MOBILE ADVANCED",
+          questions: [
+            {
+              text: "What is a 'Native Module' in a hybrid mobile app environment like React Native?",
+              options: [
+                "A library written entirely in JavaScript.",
+                "Custom Swift/Objective-C or Kotlin/Java code exposed to JavaScript for hardware access.",
+                "An SQL database configuration file.",
+                "A mobile app store deployment script."
+              ],
+              answer: 1
+            },
+            {
+              text: "How do CodePush or Over-the-Air (OTA) update engines work in hybrid mobile applications?",
+              options: [
+                "By rewriting native compilation code on the fly.",
+                "By pulling updated JavaScript bundles directly from cloud servers without waiting for app store reviews.",
+                "By changing the device OS versions automatically.",
+                "By bypassing local sandbox permissions."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is a key benefit of Flutter's Skia or Impeller rendering engines?",
+              options: [
+                "They translate Dart directly to Java.",
+                "They render UI elements directly onto a platform canvas to guarantee consistent 60fps+ animations.",
+                "They compress backend JSON payloads.",
+                "They automatically handle OAuth2 sign-ins."
+              ],
+              answer: 1
+            },
+            {
+              text: "What does the sandbox architecture enforce in iOS application environments?",
+              options: [
+                "It restricts apps from accessing internet connections.",
+                "It prevents an application from accessing system files or directories of other applications.",
+                "It requires all apps to use Storyboard layouts.",
+                "It deletes cached files when memory is low."
+              ],
+              answer: 1
+            },
+            {
+              text: "What is the primary advantage of Android App Bundles (AAB) over Android Packages (APK)?",
+              options: [
+                "They compile faster in local debug mode.",
+                "They allow Google Play to generate device-specific optimized APKs, reducing final user download sizes.",
+                "They disable local databases.",
+                "They run on iOS simulators."
+              ],
+              answer: 1
+            }
+          ]
+        }
       }
     };
 
@@ -574,27 +1667,41 @@
     // ⚙️ QUIZ EXECUTION ENGINE STATE
     // ==========================================
     let currentQuizData = null;
-    let currentQuizKey = "";
+    let currentCourseKey = "";
+    let currentLevelKey = "";
     let questionIndex = 0;
     let selectedOptionIndex = null;
     let correctAnswersCount = 0;
-    let quizTimer = 60; // 60 seconds
+    let quizTimer = 60;
     let timerInterval = null;
+    let lastUnlockedCertData = null;
 
-    function startQuiz(categoryKey) {
-      currentQuizKey = categoryKey;
-      
-      const skillParam = urlParams.get('skill');
-      const targetLvl = urlParams.get('targetLevel') || "Medium";
-
-      if (skillParam && SKILL_QUIZZES[skillParam]) {
-        currentQuizData = {
-          title: SKILL_QUIZZES[skillParam].title,
-          badge: `⚡ ${skillParam.toUpperCase()} ${targetLvl.toUpperCase()}`,
-          questions: SKILL_QUIZZES[skillParam].questions
+    window.startQuizFromSelector = function(courseKey) {
+      if (!candidate.course_progress) {
+        candidate.course_progress = {
+          frontend: { level: "basic" },
+          backend: { level: "basic" },
+          database: { level: "basic" },
+          creative: { level: "basic" }
         };
+      }
+      const progress = candidate.course_progress[courseKey] || { level: "basic" };
+      let lvl = progress.level;
+      if (lvl === 'completed') {
+        lvl = 'advanced';
+      }
+      startQuiz(courseKey, lvl);
+    }
+
+    function startQuiz(courseKey, levelKey = 'basic') {
+      currentCourseKey = courseKey;
+      currentLevelKey = levelKey;
+      
+      const courseObj = COURSE_QUIZZES[courseKey];
+      if (!courseObj || !courseObj[levelKey]) {
+        currentQuizData = COURSE_QUIZZES.frontend.basic;
       } else {
-        currentQuizData = QUIZZES[categoryKey];
+        currentQuizData = courseObj[levelKey];
       }
       
       questionIndex = 0;
@@ -611,6 +1718,8 @@
       
       // Start Timer
       document.getElementById('quiz-timer').textContent = `${quizTimer}s`;
+      if (timerInterval) clearInterval(timerInterval);
+      
       timerInterval = setInterval(() => {
         quizTimer--;
         document.getElementById('quiz-timer').textContent = `${quizTimer}s`;
@@ -644,7 +1753,16 @@
       currentQuestion.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = "quiz-option";
-        btn.innerHTML = `<span style="font-weight:700; color:var(--primary); margin-right:0.5rem;">${String.fromCharCode(65 + idx)})</span> ${opt}`;
+        
+        const labelSpan = document.createElement('span');
+        labelSpan.style.cssText = "font-weight:700; color:var(--primary); margin-right:0.5rem;";
+        labelSpan.textContent = `${String.fromCharCode(65 + idx)})`;
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = opt;
+        
+        btn.appendChild(labelSpan);
+        btn.appendChild(textSpan);
         btn.onclick = () => selectOption(idx);
         optionsContainer.appendChild(btn);
       });
@@ -699,100 +1817,80 @@
     function finishQuiz() {
       clearInterval(timerInterval);
 
-      // Calculations
       const scorePct = Math.round((correctAnswersCount / currentQuizData.questions.length) * 100);
-      const xpReward = scorePct * 2; // e.g. 100% score = 200 XP, 80% score = 160 XP
+      let unlockedCert = false;
 
-      // Update Database Candidate Data
+      if (scorePct >= 50) {
+        const cert = completeCourseLevel(candidate.id, currentCourseKey, currentLevelKey, scorePct, correctAnswersCount);
+        if (cert) {
+          unlockedCert = true;
+        }
+      }
+      
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
-      if (dbCand) {
-        // Average the score with existing assessment score
-        dbCand.assessment_score = dbCand.assessment_score 
-          ? Math.round((dbCand.assessment_score + scorePct) / 2) 
-          : scorePct;
+      candidate = dbState.users.find(u => String(u.id) === String(user.id)) || candidate;
 
-        // Add XP points
-        dbCand.xp_points = (dbCand.xp_points || 0) + xpReward;
+      document.getElementById('result-score').textContent = `${scorePct}%`;
+      
+      let xpGained = scorePct >= 50 ? correctAnswersCount * 100 : 0;
+      document.getElementById('result-xp').textContent = `+${xpGained} XP`;
+      document.getElementById('result-desc').textContent = `You answered ${correctAnswersCount} out of ${currentQuizData.questions.length} questions correctly. Your Talent Quiz rating is now updated.`;
 
-        // Skill upgrade check
-        const skillParam = urlParams.get('skill');
-        const targetLvl = urlParams.get('targetLevel') || "Medium";
-        let skillUpgradedText = "";
+      if (scorePct >= 80) {
+        document.getElementById('result-emoji').textContent = "🏆";
+        document.getElementById('result-title').textContent = "Excellent Job!";
+      } else if (scorePct >= 50) {
+        document.getElementById('result-emoji').textContent = "👍";
+        document.getElementById('result-title').textContent = "Quiz Completed";
+      } else {
+        document.getElementById('result-emoji').textContent = "📝";
+        document.getElementById('result-title').textContent = "Keep Practicing!";
+      }
 
-        if (scorePct >= 50 && skillParam) {
-          if (!dbCand.skills) dbCand.skills = [];
-          if (!dbCand.skills.includes(skillParam)) {
-            dbCand.skills.push(skillParam);
-          }
-          if (!dbCand.skillLevels) dbCand.skillLevels = {};
-          dbCand.skillLevels[skillParam] = targetLvl;
-          skillUpgradedText = ` Congratulations! Your skill "${skillParam}" has been successfully upgraded to ${targetLvl} Level!`;
-        }
+      // Trigger screens
+      document.getElementById('quiz-run-screen').style.display = "none";
+      document.getElementById('quiz-result-screen').style.display = "block";
+      
+      triggerConfetti();
+      refreshSidebarStats();
 
-        // Recalculate talent score & check level-up
-        const isLvlUp = recalculateScores(dbCand);
+      if (unlockedCert) {
+        setTimeout(() => {
+          const courseNames = {
+            frontend: "Frontend Frameworks & UI",
+            backend: "Backend & API Architectures",
+            database: "Database Schema & Caching",
+            creative: "Creative Media & Video Editing",
+            devops: "Cloud & DevOps Security",
+            system: "System Design & Scaling",
+            security: "Cybersecurity & Ethical Hacking",
+            mobile: "Mobile App Development"
+          };
+          const courseTitle = courseNames[currentCourseKey] || currentCourseKey;
+          
+          const levelNames = {
+            basic: "Basic Level",
+            medium: "Medium Level",
+            advanced: "Advanced Level"
+          };
+          const levelTitle = levelNames[currentLevelKey] || currentLevelKey;
 
-        // Certificate unlock check
-        let unlockedCert = false;
-        if (scorePct >= 50) {
-          if (!dbCand.certificates) dbCand.certificates = [];
-          const certTitle = skillParam ? `${skillParam} (${targetLvl} Level) Certificate` : `${currentQuizData.title} Certificate`;
-          const alreadyHas = dbCand.certificates.some(c => c.title === certTitle);
-
-          if (!alreadyHas) {
-            dbCand.certificates.push({
-              id: Date.now(),
-              title: certTitle,
-              score: scorePct,
-              date: new Date().toISOString().split('T')[0]
-            });
-            unlockedCert = true;
-          }
-        }
-
-        dbSave(dbState);
-        candidate = dbCand;
-
-        // Update local session
-        sessionStorage.setItem('user', JSON.stringify(dbCand));
-
-        // Display results
-        document.getElementById('result-score').textContent = `${scorePct}%`;
-        document.getElementById('result-xp').textContent = `+${xpReward} XP`;
-        document.getElementById('result-desc').textContent = `You answered ${correctAnswersCount} out of ${currentQuizData.questions.length} questions correctly. Your Talent Quiz rating is now updated.${skillUpgradedText}`;
-
-        if (scorePct >= 80) {
-          document.getElementById('result-emoji').textContent = "🏆";
-          document.getElementById('result-title').textContent = "Excellent Job!";
-        } else if (scorePct >= 50) {
-          document.getElementById('result-emoji').textContent = "👍";
-          document.getElementById('result-title').textContent = "Quiz Completed";
-        } else {
-          document.getElementById('result-emoji').textContent = "📝";
-          document.getElementById('result-title').textContent = "Keep Practicing!";
-        }
-
-        // Trigger screens
-        document.getElementById('quiz-run-screen').style.display = "none";
-        document.getElementById('quiz-result-screen').style.display = "block";
-        
-        triggerConfetti();
-        refreshSidebarStats();
-
-        // Launch certificate modal if unlocked
-        if (unlockedCert) {
-          setTimeout(() => {
-            document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate";
-            document.getElementById('cert-course-name').textContent = skillParam ? `${skillParam} (${targetLvl} Level)` : currentQuizData.title;
-            document.getElementById('cert-score-val').textContent = `${scorePct}%`;
-            document.getElementById('cert-modal').style.display = "flex";
-          }, 1200);
-        }
-
-        if (isLvlUp) {
-          showLevelUpNotification(dbCand.current_level);
-        }
+          document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate";
+          document.getElementById('cert-course-name').innerHTML = `${courseTitle} - <strong style="color: #34d399;">${levelTitle}</strong>`;
+          document.getElementById('cert-score-val').textContent = `${scorePct}%`;
+          
+          const dateString = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          const dateEl = document.getElementById('cert-date-val');
+          if (dateEl) dateEl.textContent = dateString;
+          
+          lastUnlockedCertData = {
+            candidateName: candidate.fullName || "Candidate",
+            courseTitle: `${courseTitle} - ${levelTitle}`,
+            scorePct: scorePct
+          };
+          
+          document.getElementById('cert-modal').style.display = "flex";
+        }, 1200);
       }
     }
 
@@ -800,7 +1898,13 @@
       document.getElementById('cert-modal').style.display = "none";
     }
 
+    window.printCurrentCertificate = function() {
+      if (!lastUnlockedCertData) return;
+      downloadCertificateHelper(lastUnlockedCertData.candidateName, lastUnlockedCertData.courseTitle, lastUnlockedCertData.scorePct);
+    }
+
     function resetQuizScreen() {
+      if (timerInterval) clearInterval(timerInterval);
       document.getElementById('quiz-selector-screen').style.display = "grid";
       document.getElementById('quiz-run-screen').style.display = "none";
       document.getElementById('quiz-result-screen').style.display = "none";
@@ -819,7 +1923,6 @@
       `;
       document.body.appendChild(container);
       
-      // Confetti burst
       let duration = 3 * 1000;
       let end = Date.now() + duration;
 
@@ -834,13 +1937,19 @@
       }, 4500);
     }
 
-    // Auto-start if query parameters are present
-    window.addEventListener('DOMContentLoaded', () => {
-      const cat = urlParams.get('category');
-      if (cat && QUIZZES[cat.toLowerCase()]) {
-        startQuiz(cat.toLowerCase());
+    function checkAutoStart() {
+      const course = urlParams.get('course');
+      const level = urlParams.get('level');
+      if (course && level && COURSE_QUIZZES[course] && COURSE_QUIZZES[course][level]) {
+        startQuiz(course, level);
       }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', checkAutoStart);
+    } else {
+      checkAutoStart();
+    }
     }
 </script>
 </body>
