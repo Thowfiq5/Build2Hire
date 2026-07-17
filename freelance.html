@@ -672,10 +672,18 @@
     </div>
   </div>
 
-  <script src="shared.js?v=1.0.1"></script>
+  <script src="shared.js?v=1.0.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
-    const auth = withAuth(['candidate']);
+    const auth = withAuth(['candidate', 'admin']);
+    const originalGetUser = getUser;
+    getUser = function() {
+      const u = originalGetUser();
+      if (u && u.role === 'admin' && auth) {
+        return auth.candidate;
+      }
+      return u;
+    };
     if (auth) {
       const { user, db: dbState, candidate } = auth;
 
