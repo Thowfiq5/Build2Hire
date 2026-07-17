@@ -25,18 +25,21 @@
         </div>
       </div>
 
+
+
       <div id="alert-container"></div>
 
       <!-- ONBOARDING PROGRESS WIZARD -->
       <div id="onboarding-wizard" style="display: none; margin-bottom: 2rem;">
         <div style="background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.08) 100%); border: 1px solid var(--primary); border-radius: var(--radius-md); padding: 1.75rem; box-shadow: 0 0 20px rgba(99,102,241,0.12);">
-          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
             <span style="font-size: 1.6rem;">🚀</span>
             <div>
               <strong style="color: var(--primary); font-size: 1.05rem; display: block;">Complete Your Onboarding</strong>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Finish all steps below to unlock the Job Portal and your AI Roadmap.</p>
             </div>
-            <div id="onboarding-pct-badge" style="margin-left: auto; background: var(--primary-light); color: var(--primary); font-weight: 800; font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid var(--primary); font-family: var(--font-display);">0%</div>
+            <button id="admin-autocomplete-btn" onclick="autoCompleteOnboardingAdmin()" class="btn" style="margin-left: auto; display: none; background: var(--secondary); border: 1px solid var(--secondary); color: white; padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 700; border-radius: var(--radius-sm); border:none; cursor:pointer;">⚡ Auto-Complete Onboarding</button>
+            <div id="onboarding-pct-badge" style="margin-left: 1rem; background: var(--primary-light); color: var(--primary); font-weight: 800; font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid var(--primary); font-family: var(--font-display);">0%</div>
           </div>
 
           <!-- Progress Bar -->
@@ -479,11 +482,20 @@
     </main>
   </div>
 
-  <script src="shared.js?v=1.0.1"></script>
+  <script src="shared.js?v=1.0.5"></script>
   <script>
-    const auth = withAuth(['candidate']);
+    const auth = withAuth(['candidate', 'admin', 'recruiter']);
     if (auth) {
       let { user, db, candidate } = auth;
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminViewCandidateId = urlParams.get('candidateId');
+      if (adminViewCandidateId && (user.role === 'admin' || user.role === 'recruiter')) {
+        const foundCandidate = db.users.find(u => String(u.id) === String(adminViewCandidateId));
+        if (foundCandidate) {
+          candidate = foundCandidate;
+        }
+      }
+      
       let lastUnlockedCertData = null;
       let currentResumeData = null;
       let currentResumeName = "";
@@ -846,7 +858,7 @@
         
         // Save to Mock DB
         const dbState = dbGet();
-        const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+        const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
         if (dbCand) {
           dbCand.skills = candidate.skills;
           dbCand.skillLevels = candidate.skillLevels;
@@ -868,7 +880,7 @@
       
       // Save to Mock DB
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
       if (dbCand) {
         dbCand.skills = candidate.skills;
         dbCand.skillLevels = candidate.skillLevels;
@@ -1045,7 +1057,7 @@
     document.getElementById('profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
 
       if (dbCand) {
         const resumeType = document.getElementById('resumeType').value;
@@ -1053,19 +1065,25 @@
         const hasExisting = !!dbCand.resume_filename;
 
         if (!hasExisting && !hasUploadedNew) {
-          alert("Please upload your resume in either ATS or Design format to complete your profile!");
-          return;
+          if (user.role === 'admin' || user.role === 'recruiter') {
+            dbCand.resume_filename = "mock_resume_by_admin.pdf";
+            dbCand.resume_type = "ATS";
+            dbCand.resume_data = "data:application/pdf;base64,JVBERi0xLjQKJ...";
+          } else {
+            alert("Please upload your resume in either ATS or Design format to complete your profile!");
+            return;
+          }
         }
         
         if (hasUploadedNew && !resumeType) {
-          alert("Please select the resume format type (ATS or Design) for your uploaded file!");
+          alert("Please select the resume layout type (ATS or Design)!");
           return;
         }
 
         dbCand.fullName = document.getElementById('fullName').value;
-        dbCand.phone = document.getElementById('phone').value;
-        dbCand.education = document.getElementById('education').value;
         dbCand.preferredRole = document.getElementById('preferredRole').value;
+        dbCand.education = document.getElementById('education').value;
+        dbCand.phone = document.getElementById('phone').value;
         dbCand.bio = document.getElementById('bio').value;
         dbCand.githubUrl = document.getElementById('githubUrl').value;
         dbCand.linkedinUrl = document.getElementById('linkedinUrl').value;
@@ -1083,10 +1101,14 @@
         dbSave(dbState);
         candidate = dbCand;
 
-        // Update current user session
-        sessionStorage.setItem('user', JSON.stringify(dbCand));
+        // Prevent admin session overwrite
+        if (user.role !== 'admin') {
+          sessionStorage.setItem('user', JSON.stringify(dbCand));
+          showAlert('alert-container', 'Profile updated successfully! Redirecting...', 'success');
+        } else {
+          showAlert('alert-container', 'Candidate profile updated successfully by Admin! Redirecting...', 'success');
+        }
 
-        showAlert('alert-container', 'Profile updated successfully! Redirecting...', 'success');
         renderHeader();
         populateProfileView();
         toggleViewStates();
@@ -1095,7 +1117,11 @@
         triggerConfetti();
         
         setTimeout(() => {
-          window.location.href = "jobs.html";
+          if (user.role === 'admin') {
+            window.location.href = "recruiter-dashboard.html?tab=manage-candidates";
+          } else {
+            window.location.href = "jobs.html";
+          }
         }, 1500);
       }
     });
@@ -1144,14 +1170,16 @@
     window.removeProfileResume = function() {
       if (confirm("Are you sure you want to delete your active resume from your profile? You will need to upload a new one to apply for jobs.")) {
         const dbState = dbGet();
-        const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+        const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
         if (dbCand) {
           dbCand.resume_filename = null;
           dbCand.resume_type = null;
           dbCand.resume_data = null;
           dbSave(dbState);
           candidate = dbCand;
-          sessionStorage.setItem('user', JSON.stringify(dbCand));
+          if (user.role !== 'admin') {
+            sessionStorage.setItem('user', JSON.stringify(dbCand));
+          }
           
           currentResumeData = null;
           currentResumeName = "";
@@ -1182,7 +1210,7 @@
       };
 
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
       if (dbCand) {
         if (!dbCand.projects) dbCand.projects = [];
         dbCand.projects.push(newProj);
@@ -1222,7 +1250,7 @@
       if (!confirm("Are you sure you want to delete this project?")) return;
       
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
       if (dbCand) {
         dbCand.projects = dbCand.projects.filter(p => p.id !== id);
         dbCand.portfolio_score = Math.min(100, Math.max(10, dbCand.projects.length * 15 + 40));
@@ -1485,6 +1513,43 @@
 
     window.closeDetailsModal = function() {
       document.getElementById('details-modal').style.display = "none";
+    };
+
+    // Admin/Recruiter specific features
+    const isAdminViewing = user && (user.role === 'admin' || user.role === 'recruiter');
+
+    if (isAdminViewing) {
+      const autoBtn = document.getElementById('admin-autocomplete-btn');
+      if (autoBtn) autoBtn.style.display = 'inline-block';
+    }
+
+    window.autoCompleteOnboardingAdmin = function() {
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+      if (dbCand) {
+        dbCand.fullName = dbCand.fullName || "Candidate User";
+        dbCand.preferredRole = dbCand.preferredRole || "Frontend Developer";
+        dbCand.education = dbCand.education || "Bachelor of Computer Science";
+        dbCand.phone = dbCand.phone || "+1 (555) 019-9831";
+        dbCand.bio = dbCand.bio || "Hi, I am an experienced software engineer specialized in building modern web applications with Javascript, React, and CSS variables.";
+        dbCand.skills = ["JavaScript", "React", "CSS"];
+        dbCand.skillLevels = { "JavaScript": "Advanced", "React": "Advanced", "CSS": "Intermediate" };
+        dbCand.profileCompleted = true;
+        
+        dbCand.resume_filename = "mock_resume_by_admin.pdf";
+        dbCand.resume_type = "ATS";
+        dbCand.resume_data = "data:application/pdf;base64,JVBERi0xLjQKJ...";
+
+        dbSave(dbState);
+        candidate = dbCand;
+
+        showAlert('alert-container', 'Candidate onboarding completed successfully by Admin!', 'success');
+        
+        initFormFields();
+        renderP2PJobs();
+
+        window.postMessage('db_updated', '*');
+      }
     };
 
     initFormFields();
