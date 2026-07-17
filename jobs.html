@@ -27,6 +27,16 @@
         </a>
       </div>
 
+      <!-- Admin Applications Manager -->
+      <div id="admin-applications-card" style="display: none; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem; font-weight:700;">⚙️ Admin Applications Manager</h3>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Directly modify application status or withdraw applications for this candidate.</p>
+        
+        <div id="admin-applications-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- Dynamically populated list -->
+        </div>
+      </div>
+
       <!-- Top banner -->
       <div id="portal-top-banner" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
@@ -140,10 +150,18 @@
       </form>
     </div>
   </div>
-<script src="shared.js"></script>
+<script src="shared.js?v=1.0.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
-    const auth = withAuth(['candidate']);
+    const auth = withAuth(['candidate', 'admin']);
+    const originalGetUser = getUser;
+    getUser = function() {
+      const u = originalGetUser();
+      if (u && u.role === 'admin' && auth) {
+        return auth.candidate;
+      }
+      return u;
+    };
     if (auth) {
       const { user, db, candidate } = auth;
 
@@ -520,6 +538,84 @@
         const initialMatchCount = (db.jobs || []).filter(j => j.category.toLowerCase() === candidateRole.toLowerCase() && j.type === 'Full-time').length;
         triggerAINotification(candidateRole, initialMatchCount);
       }
+
+      // Admin Applications Manager Logic
+      const isAdminViewing = (() => {
+        try {
+          const ru = JSON.parse(sessionStorage.getItem('user'));
+          return ru && ru.role === 'admin';
+        } catch { return false; }
+      })();
+
+      if (isAdminViewing) {
+        document.getElementById('admin-applications-card').style.display = 'block';
+        renderAdminApplications();
+      }
+
+      function renderAdminApplications() {
+        const container = document.getElementById('admin-applications-container');
+        const dbState = dbGet();
+        const apps = dbState.applications.filter(app => String(app.candidate_id) === String(candidate.id));
+
+        if (apps.length === 0) {
+          container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding:1rem;">This candidate has not applied for any jobs yet.</div>`;
+        } else {
+          container.innerHTML = apps.map(app => {
+            const job = dbState.jobs.find(j => j.id === app.job_id);
+            const title = job ? job.title : app.jobTitle || 'Unknown Job';
+            const company = job ? job.company : app.companyName || 'Unknown Company';
+            return `
+              <div style="background:var(--bg-tertiary); padding:0.75rem 1rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                <div>
+                  <strong style="color:var(--text-primary); font-size:0.85rem;">${title}</strong>
+                  <span style="display:block; font-size:0.72rem; color:var(--text-muted);">${company} &bull; Applied: ${app.appliedDate || 'N/A'}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <select onchange="updateApplicationStatusAdmin(${app.id}, this.value)" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:4px;">
+                    <option value="applied" ${app.status === 'applied' ? 'selected' : ''}>Applied</option>
+                    <option value="shortlisted" ${app.status === 'shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                    <option value="interviewing" ${app.status === 'interviewing' ? 'selected' : ''}>Interviewing</option>
+                    <option value="hired" ${app.status === 'hired' ? 'selected' : ''}>Hired</option>
+                    <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                  </select>
+                  <button type="button" onclick="deleteApplicationAdmin(${app.id})" class="btn" style="background:#ef4444; color:white; padding:0.25rem 0.5rem; font-size:0.75rem; border-radius:4px;">🗑️ Delete</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      window.updateApplicationStatusAdmin = function(appId, newStatus) {
+        const dbState = dbGet();
+        const app = dbState.applications.find(a => a.id === appId);
+        if (app) {
+          app.status = newStatus;
+          dbSave(dbState);
+          showAlert('alert-container', `Application status updated to "${newStatus}"!`, 'success');
+          renderAdminApplications();
+          
+          // Dispatch change to parent window
+          window.postMessage('db_updated', '*');
+        }
+      };
+
+      window.deleteApplicationAdmin = function(appId) {
+        if (confirm("Are you sure you want to withdraw/delete this job application?")) {
+          const dbState = dbGet();
+          dbState.applications = dbState.applications.filter(a => a.id !== appId);
+          dbSave(dbState);
+          showAlert('alert-container', 'Application deleted successfully.', 'success');
+          renderAdminApplications();
+
+          // Refresh jobs grid to show enabled Apply button
+          db.applications = dbState.applications;
+          window.filterJobs();
+
+          // Dispatch change to parent window
+          window.postMessage('db_updated', '*');
+        }
+      };
     }
   </script>
 </body>
