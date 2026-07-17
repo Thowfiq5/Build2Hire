@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer Analytics & Reports | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Freelancer Analytics & Reports</h2>
+          <p style="color: var(--text-secondary);">Track client interaction traffic, active milestones, and generate earnings reports.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- QUICK STATS ROW -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+        
+        <!-- Active Gigs -->
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Active Gigs</span>
+              <div id="stat-active-gigs" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">0</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--primary-light); padding: 0.4rem; border-radius: var(--radius-sm);">🚀</span>
+          </div>
+        </div>
+
+        <!-- Completed Gigs -->
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--success);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Completed Gigs</span>
+              <div id="stat-completed-gigs" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">0</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--success-light); padding: 0.4rem; border-radius: var(--radius-sm);">✅</span>
+          </div>
+        </div>
+
+        <!-- Total Earnings -->
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--warning);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Total Earnings</span>
+              <div id="stat-earnings" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">$0</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--warning-light); padding: 0.4rem; border-radius: var(--radius-sm);">💰</span>
+          </div>
+        </div>
+
+        <!-- Client visits -->
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--secondary);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Client Visits</span>
+              <div id="stat-visits" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">0</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--secondary-light); padding: 0.4rem; border-radius: var(--radius-sm);">👁️</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ACTIVE GIGS MILESTONES TRACKER -->
+      <div class="card" style="margin-bottom: 2.5rem; border-top: 4px solid var(--primary);">
+        <h3 style="font-size: 1.2rem; font-family: var(--font-display); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          🚧 Active Gig Milestone Progress
+        </h3>
+        <div id="active-milestones-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- Dynamically loaded active milestones -->
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; margin-bottom: 2.5rem; align-items: start;">
+        
+        <!-- REPORT GENERATOR CARD -->
+        <div class="card" style="padding: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 style="font-size: 1.2rem; font-family: var(--font-display);">💼 Financial & Work Reports</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Inspect completed contracts and download earnings summaries.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button onclick="changeReportPeriod('monthly')" id="btn-rep-monthly" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm);">Monthly</button>
+              <button onclick="changeReportPeriod('yearly')" id="btn-rep-yearly" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm);">Yearly</button>
+            </div>
+          </div>
+
+          <!-- SVG CHART CONTAINER -->
+          <div style="background-color: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; text-align: left;" id="chart-title">Monthly Earnings Trend (2026)</span>
+            <svg id="reports-chart-svg" width="100%" height="200" style="overflow: visible;"></svg>
+          </div>
+
+          <!-- REPORTS DETAILS TABLE -->
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.78rem;">
+                  <th style="padding: 0.75rem 0.5rem;">Project Title</th>
+                  <th style="padding: 0.75rem 0.5rem;">Client</th>
+                  <th style="padding: 0.75rem 0.5rem;">Milestones</th>
+                  <th style="padding: 0.75rem 0.5rem;">Total Value</th>
+                  <th style="padding: 0.75rem 0.5rem;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="report-table-body">
+                <!-- Dynamically loaded report entries -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 1.5rem; text-align: right;">
+            <button onclick="triggerDownload()" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: var(--radius-sm);">
+              📥 Download PDF Report
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE: CLIENT LOGS & MEETING ROOM RECORDINGS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- CLIENT VISITOR LOGS -->
+          <div class="card" style="border-top: 4px solid var(--secondary);">
+            <h3 style="font-size: 1.1rem; font-family: var(--font-display); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              🤝 Client Profile Visits & Leads
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+              When clients inspect your portfolio, their visits are logged below. 
+            </p>
+            <div id="visitor-logs-container" style="display: flex; flex-direction: column; gap: 1rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;">
+              <!-- Visitor logs dynamic list -->
+            </div>
+          </div>
+
+          <!-- PAST MEETING RECORDINGS -->
+          <div class="card" style="border-top: 4px solid var(--success);">
+            <h3 style="font-size: 1.1rem; font-family: var(--font-display); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              🎥 Past Meeting Recordings
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+              Recorded video calls with clients are stored here for contract review.
+            </p>
+            <div id="meeting-recordings-container" style="display: flex; flex-direction: column; gap: 1rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;">
+              <!-- Meeting recordings list -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = withAuth(['candidate']);
+    if (auth) {
+      renderDashboard();
+    }
+
+    let reportPeriod = "monthly";
+
+    function renderDashboard() {
+      const db = dbGet();
+      const user = getUser();
+      
+      // Load user statistics
+      const clientVisits = user.client_visits || 0;
+      document.getElementById('stat-visits').textContent = clientVisits;
+
+      const reportData = generateJobReport(user.id);
+      document.getElementById('stat-active-gigs').textContent = reportData.activeCount;
+      document.getElementById('stat-completed-gigs').textContent = reportData.completedCount;
+      document.getElementById('stat-earnings').textContent = `$${reportData.totalEarnings.toLocaleString()}`;
+
+      // Render Active Milestones
+      renderActiveMilestones(db, user.id);
+
+      // Render Client Logs
+      renderClientLogs(user);
+
+      // Render Meeting Recordings
+      renderMeetingRecordings(db, user.id);
+
+      // Render Financial Report and Chart
+      renderFinancialReport(reportData);
+    }
+
+    function renderActiveMilestones(db, userId) {
+      const container = document.getElementById('active-milestones-container');
+      const activeContracts = db.contracts ? db.contracts.filter(c => String(c.candidateId) === String(userId) && c.status === 'active') : [];
+
+      if (activeContracts.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.85rem;">No active milestone gigs. Explore Gigs in the Freelance Hub.</div>`;
+        return;
+      }
+
+      container.innerHTML = activeContracts.map(c => {
+        const milestonesHTML = c.milestones.map(m => {
+          let statusBadge = '';
+          if (m.status === 'completed') statusBadge = '<span class="badge badge-success" style="font-size: 0.65rem;">Completed</span>';
+          else if (m.status === 'in-progress') statusBadge = '<span class="badge badge-warning" style="font-size: 0.65rem;">In Progress</span>';
+          else statusBadge = '<span class="badge badge-primary" style="font-size: 0.65rem; background-color: var(--bg-tertiary); color: var(--text-secondary);">Pending</span>';
+
+          return `
+            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div>
+                <strong style="font-size: 0.85rem; display: block; color: var(--text-primary);">${m.title}</strong>
+                <span style="font-size: 0.75rem; color: var(--text-secondary);">${m.description} (${m.weight}% weight)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                ${statusBadge}
+                ${m.status === 'in-progress' ? `<button onclick="submitMilestoneDeliverable('${c.id}', ${m.id})" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 4px;">Submit</button>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const completedMilestones = c.milestones.filter(m => m.status === 'completed').length;
+        const totalMilestones = c.milestones.length;
+        const completionPct = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+
+        const weeklyHTML = (c.weeklyProgress || []).map(w => `
+          <div style="font-size:0.75rem; color:var(--text-secondary); background:rgba(0,0,0,0.15); padding:0.4rem 0.6rem; border-radius:4px; margin-bottom:0.25rem;">
+            <strong>Week ${w.week}:</strong> ${w.text} <span style="color:var(--success); font-weight:700;">(+${w.completionPct}%)</span>
+          </div>
+        `).join('');
+
+        const invoicesHTML = (c.invoices || []).map(inv => `
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding:0.4rem 0.6rem; border-radius:4px; margin-bottom:0.25rem;">
+            <span>📄 #${inv.invoiceNo} (${inv.monthLabel || 'Payment'})</span>
+            <strong>$${inv.amount.toLocaleString()} - Paid ${inv.paidDate}</strong>
+            <button onclick="printInvoiceReceipt('${c.id}', '${inv.invoiceNo}')" class="btn" style="padding:0.15rem 0.4rem; font-size:0.65rem; background:#10b981; color:white; border:none; cursor:pointer; border-radius:3px; line-height:1;">Print 📥</button>
+          </div>
+        `).join('');
+
+        return `
+          <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <h4 style="font-size: 1rem; color: var(--primary);">${c.title}</h4>
+                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Client: ${c.company} | Salary: ${c.salary}</span>
+              </div>
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--success);">${completionPct}% Completed</span>
+            </div>
+            
+            <div style="background: var(--bg-tertiary); border-radius: 99px; height: 6px; margin-bottom: 1.25rem; overflow: hidden;">
+              <div style="width: ${completionPct}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); border-radius: 99px;"></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              ${milestonesHTML}
+            </div>
+
+            <!-- Weekly progress section -->
+            <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <h5 style="font-size:0.85rem; color:var(--text-primary); margin:0;">Weekly Progress Log Updates</h5>
+                <button onclick="handleAddWeeklyUpdate('${c.id}')" class="btn" style="padding:0.2rem 0.5rem; font-size:0.7rem; background:var(--primary); color:white; border-radius:4px; border:none; cursor:pointer;">+ Weekly Update</button>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                ${weeklyHTML || '<div style="font-size:0.75rem; color:var(--text-muted);">No weekly progress updates logged yet.</div>'}
+              </div>
+            </div>
+
+            <!-- Invoices section -->
+            <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <h5 style="font-size:0.85rem; color:var(--text-primary); margin-bottom:0.5rem;">Paid Invoices & Receipts</h5>
+              <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                ${invoicesHTML || '<div style="font-size:0.75rem; color:var(--text-muted);">No invoices generated yet. Monthly releases will log records here.</div>'}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function submitMilestoneDeliverable(contractId, milestoneId) {
+      const deliverable = prompt("Enter submission deliverable details (e.g. GitHub URL or summary of work):");
+      if (!deliverable) return;
+
+      const db = dbGet();
+      const contract = db.contracts.find(c => String(c.id) === String(contractId));
+      if (contract) {
+        const milestone = contract.milestones.find(m => m.id === milestoneId);
+        if (milestone) {
+          milestone.status = "completed";
+          milestone.deliverable = deliverable;
+          
+          // Check if all milestones are completed to auto-complete contract
+          const remaining = contract.milestones.filter(m => m.status !== 'completed').length;
+          if (remaining === 0) {
+            contract.status = "completed";
+            contract.dateCompleted = new Date().toISOString().split('T')[0];
+          }
+          
+          dbSave(db);
+          showAlert('alert-container', `Milestone deliverable submitted successfully!`, 'success');
+          renderDashboard();
+        }
+      }
+    }
+
+    window.handleAddWeeklyUpdate = function(contractId) {
+      const text = prompt("Enter what tasks/milestones you completed this week:");
+      if (!text) return;
+      const pct = parseInt(prompt("Enter completion percentage increase (e.g. 10):")) || 0;
+      
+      const res = submitWeeklyUpdate(contractId, text, pct);
+      if (res) {
+        showAlert('alert-container', 'Weekly progress log added successfully!', 'success');
+        renderDashboard();
+      } else {
+        alert("Failed to submit weekly update.");
+      }
+    };
+
+    window.printInvoiceReceipt = function(contractId, invoiceNo) {
+      const db = dbGet();
+      const contract = db.contracts.find(c => String(c.id) === String(contractId));
+      if (!contract) return;
+      
+      const invoice = (contract.invoices || []).find(i => i.invoiceNo === invoiceNo);
+      if (!invoice) return;
+
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <html>
+        <head>
+          <title>Invoice #${invoiceNo} | Build2Hire Escrow</title>
+          <style>
+            body { font-family: 'Inter', sans-serif; padding: 40px; color: #334155; }
+            .header { display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+            .details { margin: 30px 0; line-height: 1.6; }
+            .amount-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; text-align: right; font-size: 1.2rem; }
+            .footer { border-top: 1px solid #e2e8f0; margin-top: 40px; padding-top: 20px; font-size: 0.8rem; color: #94a3b8; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <h2 style="margin:0; color:#6366f1;">Build2Hire Escrow</h2>
+              <span style="font-size:0.8rem;">INVOICE STATEMENT</span>
+            </div>
+            <div style="text-align:right;">
+              <strong>Invoice #: \${invoiceNo}</strong><br>
+              Date Paid: \${invoice.paidDate}
+            </div>
+          </div>
+          
+          <div class="details">
+            <strong>Client / Payer:</strong> \${contract.company}<br>
+            <strong>Contractor / Payee:</strong> Candidate User (Freelancer ID: \${contract.candidateId})<br>
+            <strong>Contract Project:</strong> \${contract.title}<br>
+            <strong>Payment Description:</strong> \${invoice.monthLabel || 'Escrow Installment Payout'}
+          </div>
+          
+          <div class="amount-box">
+            Total Released: <strong style="color:#10b981;">$\${invoice.amount.toLocaleString()} USD</strong>
+          </div>
+          
+          <div class="footer">
+            Build2Hire Verification System &bull; Secure Escrow Payment Certified.<br>
+            This is a system generated print copy invoice.
+          </div>
+          
+          <script>window.print();<\/script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    };
+
+    function renderClientLogs(user) {
+      const container = document.getElementById('visitor-logs-container');
+      const logs = user.client_logs || [];
+
+      if (logs.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem;">No visits logged yet. Share your portfolio website link!</div>`;
+        return;
+      }
+
+      container.innerHTML = logs.map(log => {
+        const timeStr = new Date(log.timestamp).toLocaleDateString() + ' ' + new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.8rem;">
+            <div>
+              <strong style="color: var(--text-primary); font-size: 0.85rem;">🏢 ${log.clientName}</strong>
+              <span style="display: block; color: var(--text-muted); font-size: 0.72rem; margin-top: 0.15rem;">${log.action} &bull; ${timeStr}</span>
+            </div>
+            <a href="chat.html?client=${encodeURIComponent(log.clientName)}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; border-radius: 4px;">💬 Chat</a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMeetingRecordings(db, userId) {
+      const container = document.getElementById('meeting-recordings-container');
+      const completedMeetings = db.meetings ? db.meetings.filter(m => String(m.candidateId) === String(userId) && m.status === 'completed') : [];
+
+      if (completedMeetings.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem;">No meetings recorded yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = completedMeetings.map(meet => {
+        const meetDate = meet.completedAt ? new Date(meet.completedAt).toLocaleDateString() : meet.scheduledDate;
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.8rem;">
+            <div>
+              <strong style="color: var(--text-primary); font-size: 0.85rem;">🎥 ${meet.topic}</strong>
+              <span style="display: block; color: var(--text-secondary); font-size: 0.72rem; margin-top: 0.15rem;">With ${meet.clientName} &bull; ${meetDate}</span>
+              <span style="color: var(--success); font-weight: 700; font-size: 0.72rem;">Duration: ${meet.duration}</span>
+            </div>
+            <a href="meeting-room.html?id=${meet.id}&play=true" class="btn btn-primary" style="padding: 0.25rem 0.6rem; font-size: 0.7rem; border-radius: 4px;">▶ Play</a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderFinancialReport(reportData) {
+      const tableBody = document.getElementById('report-table-body');
+      
+      if (reportData.details.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No data available for reports.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = reportData.details.map(det => {
+        let statusBadge = '';
+        if (det.status === 'completed') statusBadge = '<span class="badge badge-success" style="font-size: 0.65rem;">Completed</span>';
+        else statusBadge = '<span class="badge badge-warning" style="font-size: 0.65rem;">Active</span>';
+
+        return `
+          <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-primary);">${det.title}</td>
+            <td style="padding: 0.75rem 0.5rem;">${det.company}</td>
+            <td style="padding: 0.75rem 0.5rem;">${det.milestonesCompleted} (${det.completionPct}%)</td>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700; color: var(--primary);">$${det.amount.toLocaleString()}</td>
+            <td style="padding: 0.75rem 0.5rem;">${statusBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      renderReportChart(reportData);
+    }
+
+    function changeReportPeriod(period) {
+      reportPeriod = period;
+      document.getElementById('btn-rep-monthly').style.backgroundColor = period === 'monthly' ? 'var(--primary)' : 'var(--bg-secondary)';
+      document.getElementById('btn-rep-monthly').style.color = period === 'monthly' ? '#ffffff' : 'var(--text-primary)';
+      document.getElementById('btn-rep-yearly').style.backgroundColor = period === 'yearly' ? 'var(--primary)' : 'var(--bg-secondary)';
+      document.getElementById('btn-rep-yearly').style.color = period === 'yearly' ? '#ffffff' : 'var(--text-primary)';
+      
+      const user = getUser();
+      const reportData = generateJobReport(user.id);
+      
+      document.getElementById('chart-title').textContent = period === 'monthly' ? "Monthly Earnings Trend (2026)" : "Yearly Earnings Breakdown (2024 - 2026)";
+      renderFinancialReport(reportData);
+    }
+
+    function renderReportChart(reportData) {
+      const svg = document.getElementById('reports-chart-svg');
+      svg.innerHTML = ''; // Clear old chart
+      
+      const width = svg.clientWidth || 450;
+      const height = 200;
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      let chartPoints = [];
+      let labels = [];
+
+      if (reportPeriod === 'monthly') {
+        labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        // Generate mock earnings trend based on actual earnings
+        const earningsBase = reportData.totalEarnings > 0 ? reportData.totalEarnings : 4300;
+        chartPoints = [
+          earningsBase * 0.1, 
+          earningsBase * 0.15, 
+          earningsBase * 0.08, 
+          earningsBase * 0.22, 
+          earningsBase * 0.35, 
+          earningsBase * 0.45, 
+          earningsBase * 0.52, 
+          earningsBase * 0.58, 
+          earningsBase * 0.72, 
+          earningsBase * 0.85, 
+          earningsBase * 0.92, 
+          earningsBase
+        ];
+      } else {
+        labels = ["2024", "2025", "2026"];
+        const earningsBase = reportData.totalEarnings > 0 ? reportData.totalEarnings : 4300;
+        chartPoints = [
+          earningsBase * 0.4,
+          earningsBase * 0.7,
+          earningsBase
+        ];
+      }
+
+      const maxEarnings = Math.max(...chartPoints, 1000);
+      const paddingX = 40;
+      const paddingY = 20;
+      const graphWidth = width - paddingX * 2;
+      const graphHeight = height - paddingY * 2;
+
+      // Draw Grid Lines
+      for (let i = 0; i <= 4; i++) {
+        const yVal = paddingY + (graphHeight / 4) * i;
+        const labelVal = Math.round(maxEarnings - (maxEarnings / 4) * i);
+        
+        svg.innerHTML += `
+          <line x1="${paddingX}" y1="${yVal}" x2="${width - paddingX}" y2="${yVal}" stroke="var(--border-color)" stroke-dasharray="4,4" />
+          <text x="${paddingX - 8}" y="${yVal + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end">$${labelVal}</text>
+        `;
+      }
+
+      // Compute Point Coordinates
+      const points = chartPoints.map((val, idx) => {
+        const x = paddingX + (graphWidth / (labels.length - 1)) * idx;
+        const y = paddingY + graphHeight - (val / maxEarnings) * graphHeight;
+        return { x, y, label: labels[idx], value: val };
+      });
+
+      // Draw Polyline and Gradient Fill
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      let fillD = `M ${points[0].x} ${paddingY + graphHeight} L ${points[0].x} ${points[0].y}`;
+      
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x} ${points[i].y}`;
+        fillD += ` L ${points[i].x} ${points[i].y}`;
+      }
+      fillD += ` L ${points[points.length - 1].x} ${paddingY + graphHeight} Z`;
+
+      // Render Area Gradient
+      svg.innerHTML += `
+        <defs>
+          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        <path d="${fillD}" fill="url(#chartGradient)" />
+        <path d="${pathD}" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      `;
+
+      // Render Circles & Labels
+      points.forEach((p, idx) => {
+        // Draw label x-axis
+        svg.innerHTML += `
+          <text x="${p.x}" y="${paddingY + graphHeight + 15}" fill="var(--text-muted)" font-size="10" text-anchor="middle">${p.label}</text>
+        `;
+        
+        // Draw point hover circle
+        svg.innerHTML += `
+          <circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--secondary)" stroke="#ffffff" stroke-width="1.5" style="cursor:pointer;" title="$${Math.round(p.value)}">
+            <title>$${Math.round(p.value)}</title>
+          </circle>
+        `;
+      });
+    }
+
+    function triggerDownload() {
+      showAlert('alert-container', 'Generating financial report... Your PDF download will start in a moment!', 'success');
+      setTimeout(() => {
+        alert("Report generated successfully!\n\nBuild2Hire Verified Developer Earnings Report\nFreelancer: Candidate User\nTotal Earnings: " + document.getElementById('stat-earnings').textContent + "\nActive Jobs: " + document.getElementById('stat-active-gigs').textContent + "\nStatus: Certified compliant.");
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
