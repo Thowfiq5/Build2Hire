@@ -280,9 +280,17 @@
     </main>
   </div>
 
-  <script src="shared.js?v=1.0.1"></script>
+  <script src="shared.js?v=1.0.5"></script>
   <script>
-    const auth = withAuth(['candidate']);
+    const auth = withAuth(['candidate', 'admin']);
+    const originalGetUser = getUser;
+    getUser = function() {
+      const u = originalGetUser();
+      if (u && u.role === 'admin' && auth) {
+        return auth.candidate;
+      }
+      return u;
+    };
     if (auth) {
       let { user, db, candidate } = auth;
 
@@ -1109,6 +1117,11 @@
         enrolled.forEach(ec => {
           const course = ACADEMY_COURSES.find(c => c.id === ec.courseId);
           if (!course) return;
+          
+          const adminProgressBtn = isAdminViewing
+            ? `<button onclick="handleSetProgressAdmin('${course.id}', 100)" class="btn" style="background:#10b981; border:1px solid #10b981; color:white; padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">💯 Complete</button>`
+            : '';
+
           enrolledGrid.innerHTML += `
             <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--success);">
               <div>
@@ -1128,8 +1141,9 @@
                   </div>
                 </div>
               </div>
-              <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+              <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap;">
                 <a href="quiz.html?course=${course.category}&level=${course.level.toLowerCase()}" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center; text-decoration: none;">Study Roadmap ➔</a>
+                ${adminProgressBtn}
                 <button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>
               </div>
             </div>
@@ -1151,6 +1165,14 @@
         suggestedCourses.forEach(item => {
           const c = item.course;
           const ai = item.ai;
+
+          const actionBtn = isAdminViewing
+            ? `<div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
+                 <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Enroll & Complete</button>
+                 <button onclick="handleEnrollCourseAdmin('${c.id}', false)" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll only</button>
+               </div>`
+            : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-outline" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; border-color: var(--warning); color: var(--warning);">Enroll in Course ⚡</button>`;
+
           suggestedGrid.innerHTML += `
             <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--warning); transition: transform 0.2s, box-shadow 0.2s;">
               <div>
@@ -1162,7 +1184,7 @@
                 <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem;">${c.desc}</p>
                 <p style="font-size: 0.7rem; color: var(--warning); font-style: italic; margin-bottom: 1rem;">💡 ${ai.reason}</p>
               </div>
-              <button onclick="handleEnrollCourse('${c.id}')" class="btn btn-outline" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; border-color: var(--warning); color: var(--warning);">Enroll in Course ⚡</button>
+              ${actionBtn}
             </div>
           `;
         });
@@ -1182,9 +1204,17 @@
 
       filtered.forEach(c => {
         const isEnrolled = enrolled.some(ec => ec.courseId === c.id);
-        const actionBtn = isEnrolled
-          ? `<button class="btn btn-secondary" disabled style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enrolled ✓</button>`
-          : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll now</button>`;
+        const actionBtn = isAdminViewing
+          ? `<div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
+               ${isEnrolled 
+                 ? `<button onclick="handleWithdrawCourseAdmin('${c.id}')" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#ef4444; border-color:#ef4444; color:white; font-weight:700;">🗑️ Withdraw Course</button>` 
+                 : `<button onclick="handleEnrollCourseAdmin('${c.id}', false)" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll Candidate</button>`
+               }
+               <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Force Complete</button>
+             </div>`
+          : (isEnrolled
+            ? `<button class="btn btn-secondary" disabled style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enrolled ✓</button>`
+            : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll now</button>`);
 
         allGrid.innerHTML += `
           <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;">
@@ -1240,6 +1270,73 @@
         }
       }
     }
+
+    // Admin Roadmap Management Functions
+    const isAdminViewing = (() => {
+      try {
+        const ru = JSON.parse(sessionStorage.getItem('user'));
+        return ru && ru.role === 'admin';
+      } catch { return false; }
+    })();
+
+    window.handleEnrollCourseAdmin = function(courseId, forceComplete) {
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+      if (dbCand) {
+        if (!dbCand.enrolled_courses) dbCand.enrolled_courses = [];
+        const existing = dbCand.enrolled_courses.find(ec => ec.courseId === courseId);
+        if (!existing) {
+          dbCand.enrolled_courses.push({
+            courseId: courseId,
+            progress: forceComplete ? 100 : 10,
+            enrolledAt: new Date().toISOString()
+          });
+        } else if (forceComplete) {
+          existing.progress = 100;
+        }
+
+        if (forceComplete) {
+          dbCand.xp_points = (dbCand.xp_points || 0) + 250;
+        }
+
+        dbSave(dbState);
+        candidate = dbCand;
+        renderAcademy();
+        showAlert('alert-container', `Course ${forceComplete ? 'completed' : 'enrolled'} successfully.`, 'success');
+      }
+    };
+
+    window.handleWithdrawCourseAdmin = function(courseId) {
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+      if (dbCand) {
+        if (dbCand.enrolled_courses) {
+          dbCand.enrolled_courses = dbCand.enrolled_courses.filter(ec => ec.courseId !== courseId);
+        }
+        dbSave(dbState);
+        candidate = dbCand;
+        renderAcademy();
+        showAlert('alert-container', 'Course withdrawn successfully.', 'success');
+      }
+    };
+
+    window.handleSetProgressAdmin = function(courseId, progressPct) {
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+      if (dbCand) {
+        const ec = dbCand.enrolled_courses.find(item => item.courseId === courseId);
+        if (ec) {
+          ec.progress = progressPct;
+          if (progressPct === 100) {
+            dbCand.xp_points = (dbCand.xp_points || 0) + 250;
+          }
+        }
+        dbSave(dbState);
+        candidate = dbCand;
+        renderAcademy();
+        showAlert('alert-container', 'Course progress updated successfully.', 'success');
+      }
+    };
 
     loadRecommendations();
     initAdvisorChat();
