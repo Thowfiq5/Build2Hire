@@ -918,7 +918,7 @@ function renderHeader() {
   if (!nav) return;
 
   const dashboardPage = user
-    ? ((user.role === 'recruiter' || user.role === 'admin') ? 'recruiter-dashboard.html' : 'portfolio.html')
+    ? (user.role === 'admin' ? 'admin-dashboard.html' : (user.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html'))
     : 'login.html';
 
   const userControls = user
@@ -952,6 +952,7 @@ function renderHeader() {
         ${user && user.role === 'candidate' ? '<li><a href="freelance.html" class="nav-link">🚀 Freelance Hub</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="recommendations.html" class="nav-link">📚 Learners</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="quiz.html" class="nav-link">⚡ Quizzes</a></li>' : ''}
+        ${user && user.role === 'admin' ? '<li><a href="admin-dashboard.html" class="nav-link" style="color:var(--primary); font-weight:700;">⚙️ Admin Control</a></li>' : ''}
       </ul>
       <div style="display:flex;align-items:center;gap:1rem;">
         <div class="theme-switch" style="display: inline-flex; align-items: center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
@@ -984,6 +985,7 @@ function renderHeader() {
         ${user && user.role === 'candidate' ? '<li><a href="freelance.html" onclick="toggleMobileMenu()">🚀 Freelance Hub</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="quiz.html" onclick="toggleMobileMenu()">⚡ Quizzes</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="recommendations.html" onclick="toggleMobileMenu()">📚 Learners</a></li>' : ''}
+        ${user && user.role === 'admin' ? '<li><a href="admin-dashboard.html" onclick="toggleMobileMenu()">⚙️ Admin Dashboard</a></li>' : ''}
         ${user ? `<li><a href="${dashboardPage}" onclick="toggleMobileMenu()">👤 Dashboard (${user.role})</a></li>` : ''}
         <li style="border-top:1px solid var(--border-color); padding-top:1.5rem; display:flex; flex-direction:column; gap:1rem;">
           <div style="display: flex; gap: 0.5rem; width: 100%;">
@@ -1079,7 +1081,7 @@ window.submitSecretAdminLogin = function() {
     document.getElementById('admin-secret-modal').remove();
     
     alert("Welcome, Admin! Logging into Build2Hire Management System...");
-    window.location.href = "recruiter-dashboard.html";
+    window.location.href = "admin-dashboard.html";
   } else {
     alert("Invalid management credentials! Access Denied.");
   }
@@ -1093,50 +1095,127 @@ function renderSidebar(activePage) {
   const user = getUser();
   if (!user) return;
 
-  if (user.role === 'recruiter' || user.role === 'admin') {
-    let menuHTML = "";
-    if (user.role === 'admin') {
-      menuHTML = `
-        <li>
-          <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
-            🏆 <span>Leaderboard</span>
-          </a>
-        </li>
-        <li>
-          <a href="recruiter-dashboard.html?tab=manage-candidates" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && window.location.search.includes('tab=manage-candidates')) ? 'active' : ''}">
-            👥 <span>Manage Candidates</span>
-          </a>
-        </li>
-        <li>
-          <a href="recruiter-dashboard.html?tab=manage-recruiters" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && window.location.search.includes('tab=manage-recruiters')) ? 'active' : ''}">
-            💼 <span>Manage Recruiters</span>
-          </a>
-        </li>
-      `;
-    } else {
-      menuHTML = `
-        <li>
-          <a href="recruiter-dashboard.html" class="sidebar-link ${(activePage === 'recruiter-dashboard.html' && !window.location.search.includes('tab=')) ? 'active' : ''}">
-            💼 <span>Hiring Board</span>
-          </a>
-        </li>
-        <li>
-          <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
-            🤝 <span>Agreement Builder</span>
-          </a>
-        </li>
-        <li>
-          <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
-            💬 <span>Inbox & Meetings</span>
-          </a>
-        </li>
-        <li>
-          <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
-            🏆 <span>Leaderboard</span>
-          </a>
-        </li>
-      `;
-    }
+  if (user.role === 'admin') {
+    const activeTab = new URLSearchParams(window.location.search).get('tab') || 'overview';
+    const isDashboard = activePage === 'admin-dashboard.html';
+
+    sidebar.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">
+            Admin Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="admin-dashboard.html?tab=overview" class="sidebar-link ${isDashboard && activeTab === 'overview' ? 'active' : ''}">
+                📊 <span>Overview</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=candidates" class="sidebar-link ${isDashboard && activeTab === 'candidates' ? 'active' : ''}">
+                👥 <span>Manage Candidates</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=recruiters" class="sidebar-link ${isDashboard && activeTab === 'recruiters' ? 'active' : ''}">
+                💼 <span>Manage Recruiters</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=companies" class="sidebar-link ${isDashboard && activeTab === 'companies' ? 'active' : ''}">
+                🏢 <span>Manage Companies</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=jobs" class="sidebar-link ${isDashboard && activeTab === 'jobs' ? 'active' : ''}">
+                📑 <span>Manage Jobs</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=applications" class="sidebar-link ${isDashboard && activeTab === 'applications' ? 'active' : ''}">
+                📋 <span>Applications</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=interviews" class="sidebar-link ${isDashboard && activeTab === 'interviews' ? 'active' : ''}">
+                🤝 <span>Interviews</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=assessments" class="sidebar-link ${isDashboard && activeTab === 'assessments' ? 'active' : ''}">
+                🎯 <span>Assessments</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=gigs" class="sidebar-link ${isDashboard && activeTab === 'gigs' ? 'active' : ''}">
+                ⚡ <span>Freelance Gigs</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=payments" class="sidebar-link ${isDashboard && activeTab === 'payments' ? 'active' : ''}">
+                💳 <span>Payments</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=reports" class="sidebar-link ${isDashboard && activeTab === 'reports' ? 'active' : ''}">
+                📈 <span>Reports & Analytics</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=notifications" class="sidebar-link ${isDashboard && activeTab === 'notifications' ? 'active' : ''}">
+                🔔 <span>Notifications</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=settings" class="sidebar-link ${isDashboard && activeTab === 'settings' ? 'active' : ''}">
+                ⚙️ <span>Settings</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=activity" class="sidebar-link ${isDashboard && activeTab === 'activity' ? 'active' : ''}">
+                📜 <span>Activity Logs</span>
+              </a>
+            </li>
+            <li style="margin-top:0.5rem; border-top:1px solid var(--border-color); padding-top:0.5rem;">
+              <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div style="padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+          <p style="font-size: 0.7rem; font-weight: 600; color: var(--text-secondary);">System Role</p>
+          <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-top: 0.2rem;">System Administrator</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if (user.role === 'recruiter') {
+    menuHTML = `
+      <li>
+        <a href="recruiter-dashboard.html" class="sidebar-link ${activePage === 'recruiter-dashboard.html' ? 'active' : ''}">
+          💼 <span>Hiring Board</span>
+        </a>
+      </li>
+      <li>
+        <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
+          🤝 <span>Agreement Builder</span>
+        </a>
+      </li>
+      <li>
+        <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
+          💬 <span>Inbox & Meetings</span>
+        </a>
+      </li>
+      <li>
+        <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
+          🏆 <span>Leaderboard</span>
+        </a>
+      </li>
+    `;
 
     sidebar.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2rem;">
@@ -1967,4 +2046,489 @@ function closeContract(contractId) {
   
   dbSave(db);
   return true;
+}
+
+// ==========================================
+// 🛡️ ADMIN MANAGEMENT CONTROLLER METHODS
+// ==========================================
+
+function adminLogActivity(action, details, targetUser) {
+  const db = dbGet();
+  if (!db.activity_logs) db.activity_logs = [];
+  
+  const logEntry = {
+    id: Date.now() + Math.floor(Math.random() * 1000),
+    action: action,
+    details: details,
+    target: targetUser || "System",
+    timestamp: new Date().toISOString()
+  };
+  
+  db.activity_logs.unshift(logEntry);
+  if (db.activity_logs.length > 200) db.activity_logs = db.activity_logs.slice(0, 200);
+  dbSave(db);
+  return logEntry;
+}
+
+function adminGetActivityLogs() {
+  const db = dbGet();
+  if (!db.activity_logs) {
+    db.activity_logs = [
+      { id: 1, action: "User Registration", details: "Candidate User registered", target: "candidate@build2hire.com", timestamp: new Date(Date.now() - 86400000 * 2).toISOString() },
+      { id: 2, action: "Recruiter Registration", details: "Jane Recruiter joined InnovateTech", target: "recruiter@innovatetech.com", timestamp: new Date(Date.now() - 86400000 * 1.5).toISOString() },
+      { id: 3, action: "Job Post", details: "Posted job: Senior Frontend Engineer", target: "Vercel Inc", timestamp: new Date(Date.now() - 86400000).toISOString() }
+    ];
+    dbSave(db);
+  }
+  return db.activity_logs;
+}
+
+function adminAddUser(userData) {
+  const db = dbGet();
+  const newUser = {
+    id: Date.now(),
+    email: userData.email,
+    fullName: userData.fullName,
+    role: userData.role || 'candidate',
+    status: userData.status || 'active',
+    joinedDate: new Date().toISOString().split('T')[0],
+    ...userData
+  };
+  
+  if (newUser.role === 'candidate') {
+    newUser.xp_points = Number(userData.xp_points || 0);
+    newUser.talent_score = Number(userData.talent_score || 0);
+    newUser.bio = userData.bio || "Registered candidate";
+  } else if (newUser.role === 'recruiter') {
+    newUser.companyName = userData.companyName || "Independent";
+    newUser.jobTitle = userData.jobTitle || "Hiring Manager";
+  }
+  
+  db.users.push(newUser);
+  dbSave(db);
+  adminLogActivity("User Created", `Created ${newUser.role}: ${newUser.fullName} (${newUser.email})`, newUser.email);
+  return newUser;
+}
+
+function adminUpdateUser(userId, updatedData) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  Object.assign(user, updatedData);
+  if (user.role === 'candidate') {
+    recalculateScores(user);
+  }
+  dbSave(db);
+  adminLogActivity("User Updated", `Updated user: ${user.fullName}`, user.email);
+  return user;
+}
+
+function adminDeleteUser(userId) {
+  const db = dbGet();
+  const idx = db.users.findIndex(u => String(u.id) === String(userId));
+  if (idx === -1) return false;
+  
+  const deleted = db.users.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("User Deleted", `Deleted user: ${deleted.fullName} (${deleted.email})`, deleted.email);
+  return true;
+}
+
+function adminToggleBlockUser(userId) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  user.status = user.status === 'blocked' ? 'active' : 'blocked';
+  dbSave(db);
+  adminLogActivity("User Status Changed", `${user.status === 'blocked' ? 'Blocked' : 'Unblocked'} user: ${user.fullName}`, user.email);
+  return user;
+}
+
+function adminAddJob(jobData) {
+  const db = dbGet();
+  const newJob = {
+    id: Date.now(),
+    title: jobData.title,
+    company: jobData.company,
+    logo: jobData.logo || "💼",
+    category: jobData.category || "Engineering",
+    location: jobData.location || "Remote",
+    salary: jobData.salary || "$100k - $130k",
+    skills: Array.isArray(jobData.skills) ? jobData.skills : (jobData.skills || "").split(',').map(s => s.trim()).filter(Boolean),
+    description: jobData.description || "",
+    type: jobData.type || "Full-time",
+    status: "active",
+    postedDate: new Date().toISOString().split('T')[0]
+  };
+  
+  db.jobs.unshift(newJob);
+  dbSave(db);
+  adminLogActivity("Job Created", `Created job: ${newJob.title} at ${newJob.company}`, newJob.company);
+  return newJob;
+}
+
+function adminUpdateJob(jobId, jobData) {
+  const db = dbGet();
+  const job = db.jobs.find(j => String(j.id) === String(jobId));
+  if (!job) return false;
+  
+  Object.assign(job, jobData);
+  dbSave(db);
+  adminLogActivity("Job Updated", `Updated job: ${job.title}`, job.company);
+  return job;
+}
+
+function adminDeleteJob(jobId) {
+  const db = dbGet();
+  const idx = db.jobs.findIndex(j => String(j.id) === String(jobId));
+  if (idx === -1) return false;
+  
+  const deleted = db.jobs.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Job Deleted", `Deleted job: ${deleted.title}`, deleted.company);
+  return true;
+}
+
+function adminUpdateApplicationStatus(appId, status) {
+  const db = dbGet();
+  const app = db.applications.find(a => String(a.id) === String(appId));
+  if (!app) return false;
+  
+  app.status = status;
+  dbSave(db);
+  adminLogActivity("Application Status Updated", `Updated application #${appId} to ${status}`, app.candidateName || "Candidate");
+  return app;
+}
+
+function adminDeleteApplication(appId) {
+  const db = dbGet();
+  const idx = db.applications.findIndex(a => String(a.id) === String(appId));
+  if (idx === -1) return false;
+  
+  const deleted = db.applications.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Application Deleted", `Deleted application #${appId}`, deleted.candidateName || "Candidate");
+  return true;
+}
+
+function adminScheduleInterview(interviewData) {
+  const db = dbGet();
+  const newInterview = {
+    id: Date.now(),
+    candidateId: interviewData.candidateId,
+    candidateName: interviewData.candidateName,
+    company: interviewData.company || "Build2Hire Admin",
+    meetDate: interviewData.meetDate,
+    meetLink: interviewData.meetLink,
+    notes: interviewData.notes || "",
+    status: "Scheduled"
+  };
+  
+  if (!db.interviews) db.interviews = [];
+  db.interviews.unshift(newInterview);
+  dbSave(db);
+  adminLogActivity("Interview Scheduled", `Scheduled interview for ${newInterview.candidateName}`, newInterview.candidateName);
+  return newInterview;
+}
+
+function adminDeleteInterview(interviewId) {
+  const db = dbGet();
+  if (!db.interviews) return false;
+  const idx = db.interviews.findIndex(i => String(i.id) === String(interviewId));
+  if (idx === -1) return false;
+  
+  const deleted = db.interviews.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Interview Deleted", `Deleted interview for ${deleted.candidateName}`, deleted.candidateName);
+  return true;
+}
+
+function adminAddAssessment(assessmentData) {
+  const db = dbGet();
+  const newAssessment = {
+    id: Date.now(),
+    title: assessmentData.title,
+    difficulty: assessmentData.difficulty || "medium",
+    category: assessmentData.category || "Frontend",
+    max_xp: Number(assessmentData.max_xp || 100),
+    company_name: assessmentData.company_name || "Build2Hire Platform",
+    company_logo: assessmentData.company_logo || "⚡",
+    description: assessmentData.description || "",
+    requirements: assessmentData.requirements || ""
+  };
+  
+  if (!db.challenges) db.challenges = [];
+  db.challenges.unshift(newAssessment);
+  dbSave(db);
+  adminLogActivity("Assessment Created", `Created assessment: ${newAssessment.title}`, newAssessment.category);
+  return newAssessment;
+}
+
+function adminDeleteAssessment(assessmentId) {
+  const db = dbGet();
+  if (!db.challenges) return false;
+  const idx = db.challenges.findIndex(c => String(c.id) === String(assessmentId));
+  if (idx === -1) return false;
+  
+  const deleted = db.challenges.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Assessment Deleted", `Deleted assessment: ${deleted.title}`, deleted.category);
+  return true;
+}
+
+function adminSendBroadcast(target, messageText) {
+  const db = dbGet();
+  if (!db.notifications) db.notifications = [];
+  
+  const notification = {
+    id: Date.now(),
+    target: target,
+    message: messageText,
+    timestamp: new Date().toISOString(),
+    sentBy: "System Admin"
+  };
+  
+  db.notifications.unshift(notification);
+  dbSave(db);
+  adminLogActivity("Broadcast Notification Sent", `Sent notification to ${target}: ${messageText.substring(0, 40)}...`, target);
+  return notification;
+}
+
+// ==========================================
+// 🎨 CANDIDATE WEBSITE CMS EDITOR CONTROLLER
+// ==========================================
+
+function adminGetCandidateFullCMSData(candidateId) {
+  const db = dbGet();
+  let cand = db.users.find(u => String(u.id) === String(candidateId) && u.role === 'candidate');
+  if (!cand) {
+    cand = db.users.find(u => u.role === 'candidate');
+  }
+  if (!cand) return null;
+
+  // Initialize CMS section visibility & defaults if missing
+  if (!cand.enabledSections) {
+    cand.enabledSections = {
+      dashboard: true,
+      hero: true,
+      profile: true,
+      skills: true,
+      portfolio: true,
+      resume: true,
+      education: true,
+      experience: true,
+      certifications: true,
+      roadmap: true,
+      assessments: true,
+      applications: true,
+      inbox: true,
+      settings: true
+    };
+  }
+
+  cand.heroHeadline = cand.heroHeadline || "Building high-performance web apps & scalable systems";
+  cand.heroSubheadline = cand.heroSubheadline || "Passionate Software Engineer specializing in Full-Stack Web Development & Micro-Frontend Architectures";
+  cand.avatarUrl = cand.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80";
+  cand.location = cand.location || "San Francisco, CA (Remote)";
+  cand.preferredRole = cand.preferredRole || "Full Stack Engineer";
+  cand.resumeSummary = cand.resumeSummary || "Full-stack engineer with 4+ years of hands-on experience developing modern web applications.";
+
+  if (!cand.experience || cand.experience.length === 0) {
+    cand.experience = [
+      { id: 1, role: "Senior Software Engineer", company: "Vercel Inc", duration: "2024 - Present", location: "Remote", description: "Led frontend architecture refactoring using React, CSS Variables, and modular design systems." },
+      { id: 2, role: "Full Stack Developer", company: "DevStudio Inc", duration: "2022 - 2024", location: "Hybrid", description: "Built scalable Node.js microservices and RESTful API gateways serving 500k+ daily users." }
+    ];
+  }
+
+  if (!cand.educationEntries || cand.educationEntries.length === 0) {
+    cand.educationEntries = [
+      { id: 1, degree: "Bachelor of Engineering in Computer Science", school: "University of Technology", year: "2018 - 2022", grade: "3.9 GPA" }
+    ];
+  }
+
+  if (!cand.versionHistory) cand.versionHistory = [];
+
+  return cand;
+}
+
+function adminSaveCandidateDraft(candidateId, draftData) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (!cand) return false;
+
+  cand.draftData = draftData;
+  cand.lastDraftSavedAt = new Date().toISOString();
+  dbSave(db);
+  adminLogActivity("CMS Draft Saved", `Saved CMS draft for candidate: ${cand.fullName}`, cand.email);
+  return cand;
+}
+
+function adminPublishCandidateWebsite(candidateId, publishedData) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (!cand) return false;
+
+  if (publishedData) {
+    Object.assign(cand, publishedData);
+  }
+
+  cand.draftData = null; // Clear draft state on publish
+  cand.lastPublishedAt = new Date().toISOString();
+
+  // Record version snapshot
+  if (!cand.versionHistory) cand.versionHistory = [];
+  const versionSnapshot = {
+    versionId: "v" + Date.now(),
+    timestamp: new Date().toISOString(),
+    snapshot: JSON.parse(JSON.stringify(cand))
+  };
+  cand.versionHistory.unshift(versionSnapshot);
+  if (cand.versionHistory.length > 20) cand.versionHistory = cand.versionHistory.slice(0, 20);
+
+  if (cand.role === 'candidate') {
+    recalculateScores(cand);
+  }
+
+  dbSave(db);
+  adminLogActivity("Candidate Website Published", `Published live site updates for candidate: ${cand.fullName}`, cand.email);
+  return cand;
+}
+
+function adminGetCandidateVersions(candidateId) {
+  const cand = adminGetCandidateFullCMSData(candidateId);
+  return cand ? (cand.versionHistory || []) : [];
+}
+
+function adminRestoreCandidateVersion(candidateId, versionId) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (!cand || !cand.versionHistory) return false;
+
+  const ver = cand.versionHistory.find(v => v.versionId === versionId);
+  if (!ver) return false;
+
+  Object.assign(cand, JSON.parse(JSON.stringify(ver.snapshot)));
+  dbSave(db);
+  adminLogActivity("Version Restored", `Restored candidate site snapshot #${versionId} for ${cand.fullName}`, cand.email);
+  return cand;
+}
+
+// ==========================================
+// 🏢 RECRUITER WEBSITE CMS EDITOR CONTROLLER
+// ==========================================
+
+function adminGetRecruiterFullCMSData(recruiterId) {
+  const db = dbGet();
+  let rec = db.users.find(u => String(u.id) === String(recruiterId) && u.role === 'recruiter');
+  if (!rec) {
+    rec = db.users.find(u => u.role === 'recruiter');
+  }
+  if (!rec) return null;
+
+  // Initialize Recruiter CMS section visibility & defaults if missing
+  if (!rec.enabledRecruiterSections) {
+    rec.enabledRecruiterSections = {
+      info: true,
+      dashboard: true,
+      company_profile: true,
+      company_branding: true,
+      recruiter_profile: true,
+      posted_jobs: true,
+      job_details: true,
+      applications: true,
+      pipeline_candidates: true,
+      shortlist_pipeline: true,
+      interviews: true,
+      manage_jobs: true,
+      milestone_gigs: true,
+      p2p_gigs: true,
+      company_regs: true,
+      analytics: true,
+      leaderboard: true,
+      notifications: true,
+      inbox: true,
+      meetings: true,
+      settings: true,
+      activity: true
+    };
+  }
+
+  rec.companyName = rec.companyName || "InnovateTech";
+  rec.companyIndustry = rec.companyIndustry || "Enterprise Tech / Software";
+  rec.companyDesc = rec.companyDesc || "Leading hiring hub building cloud software solutions and empowering top tech talent.";
+  rec.companyWebsite = rec.companyWebsite || "https://innovatetech.com";
+  rec.companyEmail = rec.companyEmail || "recruitment@innovatetech.com";
+  rec.companyPhone = rec.companyPhone || "+1 (555) 012-9843";
+  rec.companyLocation = rec.companyLocation || "San Francisco, CA (Hybrid)";
+  rec.companyLogo = rec.companyLogo || "🏢";
+  rec.companyCover = rec.companyCover || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80";
+
+  rec.fullName = rec.fullName || "Jane Recruiter";
+  rec.jobTitle = rec.jobTitle || "Hiring Manager & Coordinator";
+  rec.photoUrl = rec.photoUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80";
+  rec.bio = rec.bio || "Tech recruiter connecting Master Builders and Senior Engineers with hyper-growth tech companies.";
+  rec.phone = rec.phone || "+1 (555) 901-2345";
+
+  if (!rec.recruiterVersionHistory) rec.recruiterVersionHistory = [];
+
+  return rec;
+}
+
+function adminSaveRecruiterDraft(recruiterId, draftData) {
+  const db = dbGet();
+  const rec = db.users.find(u => String(u.id) === String(recruiterId));
+  if (!rec) return false;
+
+  rec.recruiterDraftData = draftData;
+  rec.lastRecruiterDraftSavedAt = new Date().toISOString();
+  dbSave(db);
+  adminLogActivity("Recruiter CMS Draft Saved", `Saved recruiter portal draft for ${rec.fullName} (${rec.companyName})`, rec.email);
+  return rec;
+}
+
+function adminPublishRecruiterWebsite(recruiterId, publishedData) {
+  const db = dbGet();
+  const rec = db.users.find(u => String(u.id) === String(recruiterId));
+  if (!rec) return false;
+
+  if (publishedData) {
+    Object.assign(rec, publishedData);
+  }
+
+  rec.recruiterDraftData = null;
+  rec.lastRecruiterPublishedAt = new Date().toISOString();
+
+  if (!rec.recruiterVersionHistory) rec.recruiterVersionHistory = [];
+  const versionSnapshot = {
+    versionId: "rv" + Date.now(),
+    timestamp: new Date().toISOString(),
+    snapshot: JSON.parse(JSON.stringify(rec))
+  };
+  rec.recruiterVersionHistory.unshift(versionSnapshot);
+  if (rec.recruiterVersionHistory.length > 20) rec.recruiterVersionHistory = rec.recruiterVersionHistory.slice(0, 20);
+
+  dbSave(db);
+  adminLogActivity("Recruiter Portal Published", `Published live recruiter portal updates for ${rec.fullName} (${rec.companyName})`, rec.email);
+  return rec;
+}
+
+function adminGetRecruiterVersions(recruiterId) {
+  const rec = adminGetRecruiterFullCMSData(recruiterId);
+  return rec ? (rec.recruiterVersionHistory || []) : [];
+}
+
+function adminRestoreRecruiterVersion(recruiterId, versionId) {
+  const db = dbGet();
+  const rec = db.users.find(u => String(u.id) === String(recruiterId));
+  if (!rec || !rec.recruiterVersionHistory) return false;
+
+  const ver = rec.recruiterVersionHistory.find(v => v.versionId === versionId);
+  if (!ver) return false;
+
+  Object.assign(rec, JSON.parse(JSON.stringify(ver.snapshot)));
+  dbSave(db);
+  adminLogActivity("Recruiter Version Restored", `Restored recruiter portal snapshot #${versionId} for ${rec.fullName}`, rec.email);
+  return rec;
 }
