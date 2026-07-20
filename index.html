@@ -15,7 +15,7 @@
           window.location.replace('login.html');
         } else {
           const u = JSON.parse(session);
-          window.location.replace(u.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html');
+          window.location.replace(u.role === 'admin' ? 'admin-dashboard.html' : (u.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html'));
         }
       } catch(e) {
         window.location.replace('login.html');
