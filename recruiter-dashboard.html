@@ -12,7 +12,33 @@
 
   <div class="dashboard-layout">
     <!-- SIDEBAR -->
-    <aside class="sidebar" id="main-sidebar"></aside>
+    <aside class="sidebar">
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
+            Workspace
+          </p>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="recruiter-dashboard.html" class="sidebar-link active">
+                💼 <span>Hiring Board</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="leaderboard.html" class="sidebar-link">
+                🏆 <span>Leaderboard</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
+        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
+        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">recruiter</p>
+      </div>
+    </aside>
 
     <main class="main-content">
       
@@ -39,33 +65,15 @@
       <div id="alert-container"></div>
 
       <!-- Navigation tabs -->
-      <div style="display: flex; gap: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;">
-        <button id="tab-discover" onclick="switchTab('discover')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--primary); border-bottom: 2px solid var(--primary); white-space: nowrap;">
+      <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+        <button id="tab-discover" onclick="switchTab('discover')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--primary); border-bottom: 2px solid var(--primary);">
           Discover Talent
         </button>
-        <button id="tab-pipeline" onclick="switchTab('pipeline')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); white-space: nowrap;">
+        <button id="tab-pipeline" onclick="switchTab('pipeline')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
           Shortlist Pipeline (<span id="tab-pipeline-count">0</span>)
         </button>
-        <button id="tab-interviews" onclick="switchTab('interviews')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); white-space: nowrap;">
+        <button id="tab-interviews" onclick="switchTab('interviews')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary);">
           Scheduled Interviews (<span id="tab-interviews-count">0</span>)
-        </button>
-        <button id="tab-companies" onclick="switchTab('companies')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); white-space: nowrap;">
-          Company Registrations (<span id="tab-companies-count">0</span>)
-        </button>
-        <button id="tab-jobs" onclick="switchTab('jobs')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); white-space: nowrap;">
-          💼 Manage Jobs (<span id="tab-jobs-count">0</span>)
-        </button>
-        <button id="tab-contracts" onclick="switchTab('contracts')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); white-space: nowrap;">
-          🤝 Milestone Gigs (<span id="tab-contracts-count">0</span>)
-        </button>
-        <button id="tab-p2pgigs" onclick="switchTab('p2pgigs')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); display: none; white-space: nowrap;">
-          👥 P2P Gigs (Admin)
-        </button>
-        <button id="tab-manage-candidates" onclick="switchTab('manage-candidates')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); display: none; white-space: nowrap;">
-          👥 Manage Candidates (<span id="tab-candidates-manage-count">0</span>)
-        </button>
-        <button id="tab-manage-recruiters" onclick="switchTab('manage-recruiters')" class="btn" style="background: none; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; padding-bottom: 0.5rem; color: var(--text-secondary); display: none; white-space: nowrap;">
-          💼 Manage Recruiters (<span id="tab-recruiters-manage-count">0</span>)
         </button>
       </div>
 
@@ -131,161 +139,7 @@
         </div>
       </div>
 
-      <!-- TAB CONTENT: COMPANY REGISTRATIONS -->
-      <div id="content-companies" class="tab-content" style="display: none;">
-        <div class="card" style="padding: 1rem; overflow-x: auto;">
-          <table class="leaderboard-table" style="width: 100%;">
-            <thead>
-              <tr>
-                <th class="leaderboard-th">Proposed Company</th>
-                <th class="leaderboard-th">Owner Name</th>
-                <th class="leaderboard-th">Type / Category</th>
-                <th class="leaderboard-th">Status</th>
-                <th class="leaderboard-th">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="companies-table-body">
-              <!-- Company rows render here -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: MANAGE JOBS -->
-      <div id="content-jobs" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin: 0;">💼 Active Job Board Posts</h3>
-          <button onclick="openCreateJobModal()" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 6px;">➕ Create Job Post</button>
-        </div>
-        <div id="jobs-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <!-- Jobs listed here -->
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: MILESTONE CONTRACTS -->
-      <div id="content-contracts" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin: 0;">🤝 Active Milestone Gigs</h3>
-          <a href="agreement-builder.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 6px; text-decoration: none;">➕ Create Service Agreement</a>
-        </div>
-        <div id="contracts-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <!-- Active contracts listed here -->
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: P2P GIGS (ADMIN MODERATION) -->
-      <div id="content-p2pgigs" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin: 0;">👥 Candidate P2P Jobs & Gigs (Admin Moderation)</h3>
-        </div>
-        <div id="admin-p2p-jobs-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <!-- P2P Gigs listed here -->
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: MANAGE CANDIDATES (ADMIN ONLY) -->
-      <div id="content-manage-candidates" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin: 0;">👥 Platform Candidate Management</h3>
-          <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <label style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap;">Select Candidate to Manage:</label>
-            <select id="admin-manage-candidate-select" class="form-control" style="width: auto; min-width: 250px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm);" onchange="loadAdminCandidatePortfolioIframe()">
-              <!-- Dynamically populated with candidate options -->
-            </select>
-          </div>
-        </div>
-        
-        <!-- Visual Sub-tabs of Candidate Workspace -->
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color);">
-          <button class="btn btn-primary active-iframe-tab" id="iframe-tab-portfolio" onclick="changeAdminIframeTab('portfolio.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">👤 Portfolio</button>
-          <button class="btn btn-secondary" id="iframe-tab-analytics" onclick="changeAdminIframeTab('candidate-dashboard.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">📊 Analytics</button>
-          <button class="btn btn-secondary" id="iframe-tab-chat" onclick="changeAdminIframeTab('chat.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">💬 Inbox & Meetings</button>
-          <button class="btn btn-secondary" id="iframe-tab-jobs" onclick="changeAdminIframeTab('jobs.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">💼 Full-Time Jobs</button>
-          <button class="btn btn-secondary" id="iframe-tab-freelance" onclick="changeAdminIframeTab('freelance.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">⚡ Freelance Gigs</button>
-          <button class="btn btn-secondary" id="iframe-tab-quiz" onclick="changeAdminIframeTab('quiz.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">📝 Assessments</button>
-          <button class="btn btn-secondary" id="iframe-tab-roadmaps" onclick="changeAdminIframeTab('recommendations.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">🎓 Learning Roadmaps</button>
-          <button class="btn btn-secondary" id="iframe-tab-leaderboard" onclick="changeAdminIframeTab('leaderboard.html', this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">🏆 Leaderboard</button>
-          <button class="btn btn-secondary" id="iframe-tab-json" onclick="openAdminCandidateJsonEditor(this)" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-sm); font-weight:600; display:inline-flex; align-items:center; gap:0.25rem;">⚙️ Advanced JSON Editor</button>
-        </div>
-
-        <div id="admin-candidate-iframe-container" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); box-shadow: var(--shadow-sm);">
-          <iframe id="admin-candidate-portfolio-iframe" src="" scrolling="yes" style="width: 100%; height: 85vh; border: none; display: block; overflow-y: auto !important;"></iframe>
-        </div>
-
-        <div id="admin-candidate-json-editor-container" style="display: none; flex-direction: column; gap: 1rem;">
-          <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <div>
-                <strong style="font-size: 1rem; color: var(--text-primary); display: block;">⚙️ Raw Candidate JSON Database Record</strong>
-                <span style="font-size: 0.75rem; color: var(--text-secondary);">Directly edit all candidate states, enrolled courses, certificates, quiz records, and applications.</span>
-              </div>
-              <span id="json-validation-status" class="badge" style="background-color: var(--success-light); color: var(--success); border: 1px solid var(--success); font-weight:700;">Valid JSON</span>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 1.5rem;">
-              <div>
-                <textarea id="admin-candidate-json-textarea" class="form-control" rows="18" style="font-family:monospace; font-size:0.85rem; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 1rem; border-radius: var(--radius-sm);" oninput="validateCandidateJsonInput()"></textarea>
-              </div>
-              <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 1rem;">
-                <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight:700;">Quick Templates</strong>
-                <button type="button" class="btn btn-secondary" style="font-size: 0.75rem; text-align: left; padding: 0.5rem;" onclick="insertJsonTemplate('project')">📂 Add Project template</button>
-                <button type="button" class="btn btn-secondary" style="font-size: 0.75rem; text-align: left; padding: 0.5rem;" onclick="insertJsonTemplate('certificate')">🏅 Add Certificate template</button>
-                <button type="button" class="btn btn-secondary" style="font-size: 0.75rem; text-align: left; padding: 0.5rem;" onclick="insertJsonTemplate('gig')">🤝 Add Contract template</button>
-                <button type="button" class="btn btn-secondary" style="font-size: 0.75rem; text-align: left; padding: 0.5rem;" onclick="insertJsonTemplate('application')">💼 Add Job Application template</button>
-                
-                <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                  <button type="button" class="btn btn-primary" style="width: 100%; background: var(--success); border-color: var(--success); font-weight: 700;" onclick="saveCandidateJsonData()">💾 Save DB Record</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: MANAGE RECRUITERS (ADMIN ONLY) -->
-      <div id="content-manage-recruiters" class="tab-content" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin: 0;">💼 Platform Recruiter Management</h3>
-        </div>
-        <div class="card" style="padding: 1.5rem; overflow-x: auto;">
-          <table class="leaderboard-table" style="width: 100%;">
-            <thead>
-              <tr>
-                <th class="leaderboard-th">Name</th>
-                <th class="leaderboard-th">Email</th>
-                <th class="leaderboard-th">Company</th>
-                <th class="leaderboard-th">Job Title</th>
-                <th class="leaderboard-th" style="text-align: right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="recruiters-manage-list">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </main>
-  </div>
-
-  <!-- 4. COMPANY REVIEW MODAL -->
-  <div id="review-company-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 5vh; overflow-y: auto;">
-    <div class="modal-box" style="max-width: 700px; width: 100%; margin-bottom: 5vh; padding: 2rem;">
-      <button class="modal-close" onclick="closeReviewCompanyModal()">✕</button>
-      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
-        Review Business Registration Application
-      </h3>
-
-      <div style="max-height: 55vh; overflow-y: auto; padding-right: 0.5rem; display: flex; flex-direction: column; gap: 1.25rem;" id="review-company-details">
-        <!-- Details dynamically populated by JS -->
-      </div>
-
-      <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-        <button type="button" onclick="closeReviewCompanyModal()" class="btn btn-secondary">Cancel</button>
-        <button type="button" id="btn-reject-company" class="btn btn-danger" style="background-color: var(--danger);">Reject Application</button>
-        <button type="button" id="btn-approve-company" class="btn btn-primary" style="background-color: var(--success); border-color: var(--success);">Approve Application</button>
-      </div>
-    </div>
   </div>
 
   <!-- 1. GRADE MODAL -->
@@ -304,9 +158,9 @@
         <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Candidate Explanation:</h4>
         <p id="grade-desc" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; white-space: pre-line;"></p>
         
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
           <a id="grade-github" href="#" target="_blank" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">View Github repo</a>
           <a id="grade-live" href="#" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">View Live demo</a>
-          <a id="grade-resume" href="#" target="_blank" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background-color: #10b981; color: white; display: none;">View Resume</a>
         </div>
       </div>
 
@@ -322,158 +176,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Review Grade</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- 5. ADMIN EDIT USER PROFILE MODAL -->
-  <div id="admin-edit-user-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 5vh; overflow-y: auto; z-index: 1300;">
-    <div class="modal-box" style="max-width: 500px; width: 100%; margin-bottom: 5vh; padding: 2rem;">
-      <button class="modal-close" onclick="closeAdminEditUserModal()">✕</button>
-      <h3 id="admin-edit-title" style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);">
-        ✏️ Edit User Profile
-      </h3>
-      <form id="admin-edit-user-form" onsubmit="saveAdminUserEdit(event)">
-        <input type="hidden" id="admin-edit-user-id">
-        <input type="hidden" id="admin-edit-user-role">
-        
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="admin-edit-user-name" required class="form-control">
-        </div>
-        
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label">Email Address</label>
-          <input type="email" id="admin-edit-user-email" required class="form-control">
-        </div>
-
-        <!-- Candidate specific fields -->
-        <div id="candidate-edit-fields" style="display: none; margin-bottom: 1rem;">
-          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <div>
-              <label class="form-label">XP Points</label>
-              <input type="number" id="admin-edit-user-xp" class="form-control" min="0">
-            </div>
-            <div>
-              <label class="form-label">Talent Score</label>
-              <input type="number" id="admin-edit-user-score" class="form-control" min="0" max="100">
-            </div>
-          </div>
-          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <div>
-              <label class="form-label">Phone Number</label>
-              <input type="text" id="admin-edit-user-phone" class="form-control">
-            </div>
-            <div>
-              <label class="form-label">Preferred Job Role</label>
-              <input type="text" id="admin-edit-user-pref-role" class="form-control" placeholder="e.g. Backend Engineer">
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label">Education details</label>
-            <input type="text" id="admin-edit-user-education" class="form-control" placeholder="e.g. B.E. Computer Science">
-          </div>
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label">Skills (comma separated)</label>
-            <input type="text" id="admin-edit-user-skills" class="form-control" placeholder="e.g. HTML, CSS, JavaScript">
-          </div>
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label">Bio Description</label>
-            <textarea id="admin-edit-user-bio" class="form-control" rows="2"></textarea>
-          </div>
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label" style="display:flex; justify-content:space-between;">
-              <span>Projects (JSON Array Format)</span>
-              <span style="font-size:0.7rem; color:var(--text-muted);">[{"title":"P1","description":"D1"}]</span>
-            </label>
-            <textarea id="admin-edit-user-projects" class="form-control" rows="3" style="font-family:monospace; font-size:0.8rem;"></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label" style="display:flex; justify-content:space-between;">
-              <span>Certificates (JSON Array Format)</span>
-              <span style="font-size:0.7rem; color:var(--text-muted);">["Cert 1","Cert 2"]</span>
-            </label>
-            <textarea id="admin-edit-user-certs" class="form-control" rows="2" style="font-family:monospace; font-size:0.8rem;"></textarea>
-          </div>
-        </div>
-
-        <!-- Recruiter specific fields -->
-        <div id="recruiter-edit-fields" style="display: none; margin-bottom: 1rem;">
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label">Company Name</label>
-            <input type="text" id="admin-edit-user-company" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Job Title</label>
-            <input type="text" id="admin-edit-user-title" class="form-control">
-          </div>
-        </div>
-
-        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
-          <button type="button" onclick="closeAdminEditUserModal()" class="btn btn-secondary" style="padding: 0.5rem 1rem; border-radius: 6px;">Cancel</button>
-          <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.25rem; border-radius: 6px;">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- CREATE JOB POST MODAL -->
-  <div id="create-job-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 5vh; overflow-y: auto; z-index: 1200;">
-    <div class="modal-box" style="max-width: 600px; width: 100%; margin-bottom: 5vh; padding: 2rem;">
-      <button class="modal-close" onclick="closeCreateJobModal()">✕</button>
-      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);">
-        ➕ Post New Job Opportunity
-      </h3>
-      <form id="create-job-form">
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="jobPostTitle">Job Title</label>
-          <input type="text" id="jobPostTitle" class="form-control" placeholder="e.g. Senior Frontend Engineer" required>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="jobPostDifficulty">Difficulty level</label>
-            <select id="jobPostDifficulty" class="form-control">
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="jobPostCategory">Category</label>
-            <select id="jobPostCategory" class="form-control">
-              <option value="Frontend">Frontend</option>
-              <option value="Backend">Backend</option>
-              <option value="Fullstack">Fullstack</option>
-              <option value="Mobile">Mobile</option>
-              <option value="Database">Database</option>
-              <option value="Creative">Creative</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="jobPostMaxXp">Max XP Reward</label>
-            <input type="number" id="jobPostMaxXp" class="form-control" value="100" min="10" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="jobPostSkills">Required Skills (comma separated)</label>
-            <input type="text" id="jobPostSkills" class="form-control" placeholder="e.g. React, CSS, JavaScript" required>
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="jobPostDesc">Job Description</label>
-          <textarea id="jobPostDesc" class="form-control" rows="3" placeholder="Describe the role and primary responsibilities..." required></textarea>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1.5rem;">
-          <label class="form-label" for="jobPostReqs">Requirements (one per line)</label>
-          <textarea id="jobPostReqs" class="form-control" rows="3" placeholder="e.g. 3+ years experience with React&#10;Strong communication skills" required></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Job Post 🚀</button>
       </form>
     </div>
   </div>
@@ -543,261 +245,54 @@
         <p id="port-bio" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;"></p>
       </div>
 
-      <div style="margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
-        <div>
-          <span style="font-size: 0.85rem; color: var(--text-muted); display: block;">🎓 Education</span>
-          <strong id="port-education" style="color: var(--text-primary); font-size: 0.95rem;">Not Provided</strong>
-        </div>
-        <div>
-          <span style="font-size: 0.85rem; color: var(--text-muted); display: block;">📞 Contact Number</span>
-          <a id="port-phone-link" href="#" style="color: var(--primary); text-decoration: none; font-size: 0.95rem; font-weight: 700;">Not Provided</a>
-        </div>
-      </div>
-
       <div style="margin-bottom: 1.5rem;">
         <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Skills Matrix</h4>
         <div id="port-skills" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
       </div>
 
-      <div style="margin-bottom: 1.5rem;">
-        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Verified Course Credentials</h4>
-        <div id="port-certificates" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
-      </div>
-
-      <div style="margin-bottom: 1.5rem;">
+      <div>
         <h4 style="font-size: 1rem; margin-bottom: 0.75rem;">Verified Projects</h4>
         <div id="port-projects" style="display: flex; flex-direction: column; gap: 1rem;"></div>
       </div>
-
-      <div style="margin-bottom: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-        <h4 style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--primary);">Activity Timeline & Search History</h4>
-        <div id="port-activity-log" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto;">
-          <!-- Dynamically populated activity log -->
-        </div>
-      </div>
-      <button id="admin-edit-btn" onclick="openAdminEditor()" class="btn" style="background-color: var(--primary); color: white; width: 100%; margin-top: 1.5rem; display: none;">✏️ Edit Candidate Details (Admin Only)</button>
     </div>
   </div>
 
-  <!-- ADMIN CANDIDATE EDITOR MODAL -->
-  <div id="admin-editor-modal" class="modal-overlay" style="display: none; align-items: flex-start; padding-top: 5vh; overflow-y: auto; z-index: 1300;">
-    <div class="modal-box" style="max-width: 600px; width: 100%; margin-bottom: 5vh;">
-      <button class="modal-close" onclick="closeAdminEditorModal()">✕</button>
-      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary);">
-        ✏️ Admin: Edit Candidate Profile
-      </h3>
-      
-      <form id="admin-edit-form">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="adm-fullName">Full Name</label>
-            <input type="text" id="adm-fullName" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-preferredRole">Preferred Role</label>
-            <input type="text" id="adm-preferredRole" class="form-control" placeholder="e.g. Frontend Engineer">
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="adm-phone">Phone Number</label>
-            <input type="text" id="adm-phone" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-education">Education / Degree</label>
-            <input type="text" id="adm-education" class="form-control">
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="adm-level">Level</label>
-            <input type="number" id="adm-level" class="form-control" min="1" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-xp">XP Points</label>
-            <input type="number" id="adm-xp" class="form-control" min="0" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-talentScore">Talent Score</label>
-            <input type="number" id="adm-talentScore" class="form-control" min="0" max="100" required>
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="adm-bio">Bio</label>
-          <textarea id="adm-bio" class="form-control" rows="3"></textarea>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group">
-            <label class="form-label" for="adm-github">GitHub URL</label>
-            <input type="url" id="adm-github" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-linkedin">LinkedIn URL</label>
-            <input type="url" id="adm-linkedin" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-website">Website URL</label>
-            <input type="url" id="adm-website" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="adm-skills">Skills (Comma separated)</label>
-          <input type="text" id="adm-skills" class="form-control" placeholder="HTML, CSS, JavaScript, React">
-        </div>
-
-        <!-- Resume Attachment Editor Section -->
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--primary);">📄 Admin: Manage Resume</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
-            <div class="form-group">
-              <label class="form-label" for="adm-resumeType">Resume Type</label>
-              <select id="adm-resumeType" class="form-control">
-                <option value="">-- No Resume --</option>
-                <option value="ATS">ATS Format</option>
-                <option value="Design">With Design Format</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="adm-resumeFile">Upload New File</label>
-              <input type="file" id="adm-resumeFile" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg" class="form-control">
-            </div>
-          </div>
-          <div id="adm-resume-status" style="font-size: 0.8rem; margin-top: 0.25rem;"></div>
-        </div>
-
-        <!-- Advanced JSON Data Areas for Projects and Certificates -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-          <div class="form-group">
-            <label class="form-label" for="adm-projectsJson" style="display: flex; justify-content: space-between;">
-              <span>Projects (JSON Array)</span>
-              <span style="font-size: 0.7rem; color: var(--text-muted);">[ { "title": "...", "description": "..." } ]</span>
-            </label>
-            <textarea id="adm-projectsJson" class="form-control" rows="4" style="font-family: monospace; font-size: 0.75rem;"></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adm-certsJson" style="display: flex; justify-content: space-between;">
-              <span>Certificates (JSON Array)</span>
-              <span style="font-size: 0.7rem; color: var(--text-muted);">[ { "title": "...", "score": 90 } ]</span>
-            </label>
-            <textarea id="adm-certsJson" class="form-control" rows="4" style="font-family: monospace; font-size: 0.75rem;"></textarea>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; font-weight: 700;">Save Candidate Changes</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="shared.js?v=1.0.5"></script>
+  <script src="shared.js"></script>
   <script>
-    const auth = withAuth(['recruiter', 'admin']);
+    const auth = withAuth(['recruiter']);
     if (auth) {
-      const user = auth.user;
-      let dbState = auth.db;
+      const { user, db: dbState } = auth;
       document.getElementById('user-role-badge').textContent = user.role;
       document.getElementById('recruiter-name').textContent = user.fullName || "Jane Recruiter";
       document.getElementById('recruiter-company').textContent = user.companyName || "InnovateTech";
-
-      if (user.role === 'recruiter') {
-        const compTab = document.getElementById('tab-companies');
-        if (compTab) compTab.style.display = 'none';
-        const p2pTab = document.getElementById('tab-p2pgigs');
-        if (p2pTab) p2pTab.style.display = 'none';
-      } else {
-        const p2pTab = document.getElementById('tab-p2pgigs');
-        if (p2pTab) p2pTab.style.display = 'inline-block';
-        const candTab = document.getElementById('tab-manage-candidates');
-        if (candTab) candTab.style.display = 'inline-block';
-        const recTab = document.getElementById('tab-manage-recruiters');
-        if (recTab) recTab.style.display = 'inline-block';
-      }
 
 
 
     function updateStats() {
       dbState = dbGet();
-      
-      // Automatic One-Time Deduplication of duplicate active contracts
-      if (dbState.contracts && dbState.contracts.length > 1) {
-        const unique = [];
-        const seenKeys = new Set();
-        let databaseChanged = false;
-        
-        dbState.contracts.forEach(c => {
-          if (c.status === 'active') {
-            const key = `${c.candidateId}_${c.title}_${c.amount}`;
-            if (seenKeys.has(key)) {
-              databaseChanged = true;
-              return;
-            }
-            seenKeys.add(key);
-          }
-          unique.push(c);
-        });
-        
-        if (databaseChanged) {
-          dbState.contracts = unique;
-          dbSave(dbState);
-        }
-      }
-
       const recruiterCompany = user.companyName || "InnovateTech";
       const candidatesCount = dbState.users.filter(u => u.role === 'candidate').length;
       
-      const meetingsCount = dbState.meetings ? dbState.meetings.length : 0;
-      const totalInterviews = dbState.interviews.length + meetingsCount;
-
       document.getElementById('stat-candidates').textContent = candidatesCount;
-      document.getElementById('stat-interviews').textContent = totalInterviews;
+      document.getElementById('stat-interviews').textContent = dbState.interviews.length;
 
       document.getElementById('tab-pipeline-count').textContent = dbState.applications.length;
-      document.getElementById('tab-interviews-count').textContent = totalInterviews;
-      
-      const pendingCompanies = (dbState.company_registrations || []).filter(c => c.status === 'pending').length;
-      document.getElementById('tab-companies-count').textContent = pendingCompanies;
-
-      const recruiterJobs = user.role === 'admin'
-        ? (dbState.jobs || []).length
-        : (dbState.jobs || []).filter(j => j.company === recruiterCompany).length;
-      document.getElementById('tab-jobs-count').textContent = recruiterJobs;
-
-      const recruiterContracts = user.role === 'admin'
-        ? (dbState.contracts || []).length
-        : (dbState.contracts || []).filter(c => c.company === recruiterCompany).length;
-      const contractsTabEl = document.getElementById('tab-contracts-count');
-      if (contractsTabEl) contractsTabEl.textContent = recruiterContracts;
-
-      if (user.role === 'admin') {
-        const candManageCount = (dbState.users || []).filter(u => u.role === 'candidate').length;
-        const candTabEl = document.getElementById('tab-candidates-manage-count');
-        if (candTabEl) candTabEl.textContent = candManageCount;
-
-        const recManageCount = (dbState.users || []).filter(u => u.role === 'recruiter').length;
-        const recTabEl = document.getElementById('tab-recruiters-manage-count');
-        if (recTabEl) recTabEl.textContent = recManageCount;
-      }
+      document.getElementById('tab-interviews-count').textContent = dbState.interviews.length;
     }
 
     let activeTab = 'pipeline';
-     function switchTab(tab) {
+    function switchTab(tab) {
       activeTab = tab;
       
-      const tabs = ['discover', 'pipeline', 'interviews', 'companies', 'jobs', 'contracts', 'p2pgigs', 'manage-candidates', 'manage-recruiters'];
+      const tabs = ['discover', 'pipeline', 'interviews'];
       tabs.forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
-        if (btn) {
-          if (t === tab) {
-            btn.style.color = "var(--primary)";
-            btn.style.borderBottom = "2px solid var(--primary)";
-          } else {
-            btn.style.color = "var(--text-secondary)";
-            btn.style.borderBottom = "none";
-          }
+        if (t === tab) {
+          btn.style.color = "var(--primary)";
+          btn.style.borderBottom = "2px solid var(--primary)";
+        } else {
+          btn.style.color = "var(--text-secondary)";
+          btn.style.borderBottom = "none";
         }
         
         const content = document.getElementById(`content-${t}`);
@@ -805,6 +300,7 @@
           content.style.display = t === tab ? "block" : "none";
         }
       });
+      
       renderTabContent(tab);
     }
 
@@ -813,14 +309,9 @@
       renderTabContent('discover');
       renderTabContent('pipeline');
       renderTabContent('interviews');
-      renderTabContent('companies');
-      renderTabContent('jobs');
-      renderTabContent('contracts');
-      renderTabContent('p2pgigs');
     }
 
     function renderTabContent(tab) {
-      const recruiterCompany = user.companyName || "InnovateTech";
       if (tab === 'discover') {
         const grid = document.getElementById('discover-grid');
         grid.innerHTML = "";
@@ -927,18 +418,15 @@
         const list = document.getElementById('interviews-list');
         list.innerHTML = "";
         
-        const meetingsList = dbState.meetings || [];
-        
-        if (dbState.interviews.length === 0 && meetingsList.length === 0) {
+        if (dbState.interviews.length === 0) {
           list.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No upcoming scheduled interviews.</p>`;
           return;
         }
 
-        // Render static/pre-existing interviews
         dbState.interviews.forEach(meet => {
           const card = document.createElement('div');
           card.className = "card flex-between";
-          card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--warning); margin-bottom: 1rem;";
+          card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--warning);";
           card.innerHTML = `
             <div>
               <strong style="font-size: 1.1rem; display: block;">${meet.candidate_name}</strong>
@@ -948,464 +436,15 @@
               <p style="font-size: 0.85rem; color: var(--primary); margin-top: 0.25rem;">
                 🕒 Date: ${new Date(meet.scheduled_at).toLocaleString()}
               </p>
+              ${meet.notes ? `<p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; border-left: 2px solid var(--border-color); padding-left: 0.5rem;">Notes: "${meet.notes}"</p>` : ""}
             </div>
-            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem; text-decoration: none;">
+            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
               Join Call 📞
             </a>
           `;
           list.appendChild(card);
         });
-
-        // Render scheduled/completed meetings from chat scheduler
-        meetingsList.forEach(meet => {
-          const card = document.createElement('div');
-          card.className = "card flex-between";
-          card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--primary); margin-bottom: 1rem;";
-          
-          let actionBtn = "";
-          let statusBadge = "";
-          
-          if (meet.status === 'completed') {
-            statusBadge = `<span class="badge badge-success" style="margin-top:0.25rem; display:inline-block; background-color: rgba(16, 185, 129, 0.1); color: var(--success);">Completed</span>`;
-            actionBtn = `<a href="meeting-room.html?id=${meet.id}&play=true" target="_blank" class="btn btn-success" style="padding: 0.45rem 1rem; font-size: 0.8rem; text-decoration: none; background-color: #10b981; color: white;">🎥 View Recording</a>`;
-          } else {
-            statusBadge = `<span class="badge badge-warning" style="margin-top:0.25rem; display:inline-block; background-color: var(--warning-light); color: var(--warning);">Scheduled</span>`;
-            actionBtn = `<a href="meeting-room.html?id=${meet.id}" target="_blank" class="btn btn-primary" style="padding: 0.45rem 1rem; font-size: 0.8rem; text-decoration: none;">Join Call 📞</a>`;
-          }
-
-          card.innerHTML = `
-            <div>
-              <strong style="font-size: 1.1rem; display: block;">${meet.candidateName}</strong>
-              <span style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">
-                Topic: <strong>${meet.topic}</strong>
-              </span>
-              <p style="font-size: 0.85rem; color: var(--primary); margin-top: 0.25rem;">
-                🕒 Date: ${meet.date} at ${meet.time}
-              </p>
-              ${statusBadge}
-            </div>
-            ${actionBtn}
-          `;
-          list.appendChild(card);
-        });
       }
-
-      if (tab === 'companies') {
-        const body = document.getElementById('companies-table-body');
-        if (!body) return;
-        body.innerHTML = "";
-        
-        const list = dbState.company_registrations || [];
-        if (list.length === 0) {
-          body.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No company applications registered yet.</td></tr>`;
-          return;
-        }
-        
-        list.forEach(comp => {
-          const row = document.createElement('tr');
-          row.style.borderBottom = "1px solid var(--border-color)";
-          
-          let badgeClass = "badge-secondary";
-          if (comp.status === "approved") badgeClass = "badge-success";
-          else if (comp.status === "pending") badgeClass = "badge-warning";
-          else if (comp.status === "rejected") badgeClass = "badge-danger";
-          
-          row.innerHTML = `
-            <td style="padding: 1rem;">
-              <strong style="color: var(--text-primary); font-size: 0.95rem;">${comp.business_name}</strong>
-              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Commence: ${comp.commencement_date}</span>
-            </td>
-            <td style="padding: 1rem; font-size: 0.9rem; color: var(--text-secondary);">${comp.owner_name}</td>
-            <td style="padding: 1rem;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary); display: block;">${comp.business_type}</span>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">${comp.nature_of_business}</span>
-            </td>
-            <td style="padding: 1rem;"><span class="badge ${badgeClass}">${comp.status}</span></td>
-            <td style="padding: 1rem;">
-              <button onclick="reviewCompany(${comp.id})" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Review Application</button>
-            </td>
-          `;
-          body.appendChild(row);
-        });
-      }
-
-      if (tab === 'jobs') {
-        const jobsList = document.getElementById('jobs-list');
-        if (!jobsList) return;
-        jobsList.innerHTML = "";
-
-        const myJobs = user.role === 'admin'
-          ? (dbState.jobs || [])
-          : (dbState.jobs || []).filter(j => j.company === recruiterCompany || j.company_name === recruiterCompany);
-
-        if (myJobs.length === 0) {
-          jobsList.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No jobs posted by your company yet. Click 'Create Job Post' to add one.</p>`;
-          return;
-        }
-
-        myJobs.forEach(job => {
-          const applicants = dbState.applications.filter(a => a.job_id === job.id);
-          const hiredCount = applicants.filter(a => a.status === 'hired').length;
-
-          // Calculate AI recommendations
-          const candidates = dbState.users.filter(u => u.role === 'candidate' && u.profileCompleted);
-          const reqSkills = Array.isArray(job.skills) ? job.skills : (job.skills ? String(job.skills).split(',').map(s => s.trim()) : []);
-
-          const suggestedCandidates = candidates.map(cand => {
-            let skillMatchCount = 0;
-            reqSkills.forEach(s => {
-              if (cand.skills && cand.skills.some(cs => cs.toLowerCase().includes(s.toLowerCase()))) {
-                skillMatchCount++;
-              }
-            });
-            const skillsPct = reqSkills.length > 0 ? (skillMatchCount / reqSkills.length) * 40 : 40;
-            const xpPct = Math.min(30, ((cand.xp_points || 0) / 3000) * 30);
-            const assessmentPct = ((cand.assessment_score || 0) / 100) * 30;
-            const matchScore = Math.round(skillsPct + xpPct + assessmentPct);
-
-            return {
-              cand,
-              matchScore,
-              skillsPct: Math.round(skillsPct),
-              xpPct: Math.round(xpPct),
-              assessmentPct: Math.round(assessmentPct)
-            };
-          }).sort((a, b) => b.matchScore - a.matchScore).slice(0, 3); // top 3 matches
-
-          let recommendationsHtml = "";
-          suggestedCandidates.forEach((sug, idx) => {
-            const c = sug.cand;
-            const appRecord = applicants.find(a => a.candidate_id === c.id);
-            const statusLabel = appRecord ? appRecord.status : "No Application";
-
-            let actionBtn = "";
-            if (!appRecord) {
-              actionBtn = `<button onclick="directShortlistCandidate(${c.id}, ${job.id})" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Invite & Shortlist</button>`;
-            } else if (appRecord.status === 'applied') {
-              actionBtn = `<button onclick="changeStatus(${appRecord.id}, 'shortlisted')" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Shortlist</button>`;
-            } else if (appRecord.status === 'shortlisted') {
-              actionBtn = `<button onclick="changeStatus(${appRecord.id}, 'hired')" class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.72rem; background-color: var(--success); color: white; border: none;">Hire 🎉</button>`;
-            } else {
-              actionBtn = `<span style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">${appRecord.status}</span>`;
-            }
-
-            const aiBadge = idx === 0 && sug.matchScore > 50 ? `<span class="badge" style="background-color: #f59e0b; color: white; font-size: 0.65rem;">💡 AI Recommended</span>` : "";
-
-            recommendationsHtml += `
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.8rem; background-color: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.82rem; margin-bottom: 0.4rem;">
-                <div>
-                  <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <strong style="color: var(--text-primary); cursor: pointer;" onclick="viewCandidatePortfolio(${c.id})">👤 ${c.fullName}</strong>
-                    ${aiBadge}
-                  </div>
-                  <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 0.15rem;">
-                    XP: ${c.xp_points || 0} • Score: ${c.talent_score || 0} • Match Score: <strong style="color: var(--primary);">${sug.matchScore}%</strong> (Skills: ${sug.skillsPct}%, XP: ${sug.xpPct}%, Assessment: ${sug.assessmentPct}%)
-                  </span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span class="badge" style="font-size: 0.68rem; background-color: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-color);">${statusLabel}</span>
-                  ${actionBtn}
-                </div>
-              </div>
-            `;
-          });
-
-          const jobCard = document.createElement('div');
-          jobCard.className = "card";
-          jobCard.style.cssText = "padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; border-left: 4px solid var(--primary);";
-          
-          jobCard.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-              <div>
-                <h4 style="font-size: 1.15rem; margin: 0; color: var(--text-primary);">${job.title}</h4>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">
-                  Category: <strong>${job.category}</strong> • Difficulty: <strong style="text-transform: capitalize;">${job.difficulty}</strong> • Max XP: <strong>${job.max_xp || 100}</strong>
-                </p>
-              </div>
-              <button onclick="deleteJobPost(${job.id})" class="btn" style="border: 1px solid var(--danger); color: var(--danger); font-size: 0.75rem; padding: 0.3rem 0.6rem; background: transparent;" title="Delete Job Post">Delete 🗑️</button>
-            </div>
-            
-            <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4;">
-              <p style="margin-bottom: 0.5rem;">${job.description}</p>
-              <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
-                ${reqSkills.map(sk => `<span class="badge badge-outline" style="font-size: 0.68rem;">${sk}</span>`).join('')}
-              </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; background-color: var(--bg-tertiary); padding: 0.5rem; border-radius: var(--radius-sm);">
-              <span style="color: var(--text-secondary);">Total Applications: <strong style="color: var(--primary);">${applicants.length}</strong></span>
-              <span style="color: var(--text-secondary);">Hired/Selected: <strong style="color: var(--success);">${hiredCount}</strong></span>
-            </div>
-
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.25rem;">
-              <h5 style="font-size: 0.88rem; color: var(--primary); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
-                💡 AI Suggestion Matches & Responses
-              </h5>
-              <div style="display: flex; flex-direction: column;">
-                ${recommendationsHtml || `<p style="color: var(--text-muted); font-size: 0.8rem;">No active candidates available for matching.</p>`}
-              </div>
-            </div>
-          `;
-          jobsList.appendChild(jobCard);
-        });
-      } else if (tab === 'contracts') {
-        const listDiv = document.getElementById('contracts-list');
-        listDiv.innerHTML = "";
-        
-        const contracts = dbState.contracts 
-          ? (user.role === 'admin' ? dbState.contracts : dbState.contracts.filter(c => c.company === recruiterCompany)) 
-          : [];
-        document.getElementById('tab-contracts-count').textContent = contracts.length;
-        
-        if (contracts.length === 0) {
-          listDiv.innerHTML = `<div class="card" style="padding: 2rem; text-align: center; color: var(--text-muted);">No active milestone gigs. Hire a candidate from your Shortlist Pipeline to initiate one!</div>`;
-          return;
-        }
-        
-        contracts.forEach(c => {
-          const card = document.createElement('div');
-          card.className = "card";
-          card.style.padding = "1.5rem";
-          card.style.marginBottom = "1.5rem";
-          
-          let milestonesHTML = c.milestones.map(m => {
-            let actionBtn = "";
-            let statusBadge = "";
-            
-            if (m.status === 'completed') {
-              statusBadge = `<span class="badge badge-success" style="background-color: var(--success-light); color: var(--success);">Deliverable Submitted</span>`;
-              actionBtn = `<button onclick="approveMilestone('${c.id}', ${m.id})" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.72rem; border-radius:4px;">Approve & Release Pay</button>`;
-            } else if (m.status === 'approved') {
-              statusBadge = `<span class="badge badge-success" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success);">Approved & Paid</span>`;
-            } else if (m.status === 'in-progress') {
-              statusBadge = `<span class="badge badge-warning" style="background-color: var(--warning-light); color: var(--warning);">In Progress</span>`;
-            } else {
-              statusBadge = `<span class="badge" style="background: var(--bg-tertiary); color: var(--text-secondary);">Pending</span>`;
-            }
-            
-            return `
-              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                <div>
-                  <strong style="color:var(--text-primary);">${m.title}</strong>
-                  <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.15rem;">${m.description} (${m.weight}% weight)</div>
-                  ${m.deliverable ? `<div style="font-size:0.75rem; color:var(--primary); font-weight:600; margin-top:0.25rem;">Deliverable: <em>"${m.deliverable}"</em></div>` : ""}
-                </div>
-                <div style="display:flex; gap:0.5rem; align-items:center;">
-                  ${statusBadge}
-                  ${actionBtn}
-                </div>
-              </div>
-            `;
-          }).join('');
-          
-          const weeklyLogsHTML = (c.weeklyProgress || []).map(w => `
-            <div style="font-size:0.75rem; color:var(--text-secondary); background:rgba(0,0,0,0.15); padding:0.4rem 0.6rem; border-radius:4px; margin-bottom:0.25rem;">
-              <strong>Week ${w.week}:</strong> ${w.text} <span style="color:var(--success); font-weight:700;">(+${w.completionPct}%)</span>
-            </div>
-          `).join('');
-
-          const invoicesLogHTML = (c.invoices || []).map(inv => `
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; background:rgba(16, 185, 129, 0.05); padding:0.35rem 0.5rem; border-radius:4px; margin-bottom:0.25rem; border:1px solid rgba(16, 185, 129, 0.2);">
-              <span>📄 #${inv.invoiceNo} (${inv.monthLabel || 'Installment Payout'})</span>
-              <strong>$${inv.amount.toLocaleString()} - Released ${inv.paidDate}</strong>
-            </div>
-          `).join('');
-
-          let autopayStatusHTML = "";
-          if (c.autoPayLinked && c.bankDetails) {
-            autopayStatusHTML = `<span class="badge badge-success" style="background-color:rgba(16, 185, 129, 0.1); color:var(--success); border: 1px solid var(--success); font-size:0.75rem;">💳 Autopay Linked: ${c.bankDetails.cardNumber}</span>`;
-          } else {
-            autopayStatusHTML = `<button onclick="linkBankModal('${c.id}')" class="btn" style="padding:0.25rem 0.5rem; font-size:0.72rem; background:var(--warning); color:black; border-radius:4px; border:none; cursor:pointer; font-weight:600;">💳 Link Bank Card (AutoPay)</button>`;
-          }
-
-          let nextInstallmentBtn = "";
-          if (c.autoPayLinked && c.status === 'active') {
-            const nextMonth = (c.invoices || []).length + 1;
-            if (nextMonth <= (c.durationMonths || 1)) {
-              nextInstallmentBtn = `<button onclick="triggerAutoPayDeduction('${c.id}', ${nextMonth})" class="btn" style="padding:0.35rem 0.75rem; font-size:0.75rem; background:var(--primary); color:white; border-radius:4px; border:none; cursor:pointer;">💰 Trigger AutoPay Month ${nextMonth}</button>`;
-            }
-          }
-
-          let closeContractBtn = "";
-          if (c.status === 'active') {
-            closeContractBtn = `<button onclick="handleCloseContract('${c.id}')" class="btn" style="padding:0.35rem 0.75rem; font-size:0.75rem; background:#475569; color:white; border-radius:4px; border:none; cursor:pointer; font-weight:600;">🤝 Close Contract & Share Copy</button>`;
-          } else {
-            closeContractBtn = `<button onclick="printFinalAgreementReceipt('${c.id}')" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px;">Print Closed Contract Copy 📥</button>`;
-          }
-
-          const deleteContractBtn = `<button onclick="deleteContract('${c.id}')" class="btn" style="padding:0.35rem 0.75rem; font-size:0.75rem; background:#ef4444; color:white; border-radius:4px; border:none; cursor:pointer; font-weight:600;">🗑️ Terminate & Delete</button>`;
-
-          card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:0.5rem;">
-              <div>
-                <h4 style="color:var(--primary); font-size:1.1rem; margin:0;">${c.title}</h4>
-                <span style="font-size:0.8rem; color:var(--text-secondary);">Contract: ${c.id} | Candidate ID: ${c.candidateId} | Duration: ${c.durationMonths || 1} Months</span>
-              </div>
-              <div style="display:flex; gap:0.5rem; align-items:center;">
-                ${autopayStatusHTML}
-                <span class="badge badge-primary" style="font-size:0.8rem; font-weight:700;">Status: ${c.status.toUpperCase()}</span>
-              </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom: 1rem;">
-              ${milestonesHTML}
-            </div>
-
-            <!-- Weekly logs -->
-            <div style="margin-top:1rem; border-top:1px solid var(--border-color); padding-top:0.75rem;">
-              <h5 style="font-size:0.85rem; color:var(--text-primary); margin-bottom:0.5rem;">Weekly Progress Submissions</h5>
-              <div style="display:flex; flex-direction:column; gap:0.25rem;">
-                ${weeklyLogsHTML || '<div style="font-size:0.75rem; color:var(--text-muted);">No weekly logs reported yet by candidate.</div>'}
-              </div>
-            </div>
-
-            <!-- Invoice ledger -->
-            <div style="margin-top:1rem; border-top:1px solid var(--border-color); padding-top:0.75rem;">
-              <h5 style="font-size:0.85rem; color:var(--text-primary); margin-bottom:0.5rem;">Payment Ledger & Invoices Log</h5>
-              <div style="display:flex; flex-direction:column; gap:0.25rem;">
-                ${invoicesLogHTML || '<div style="font-size:0.75rem; color:var(--text-muted);">No installment deductions logged yet.</div>'}
-              </div>
-            </div>
-
-            <!-- Action buttons panel -->
-            <div style="margin-top:1.25rem; display:flex; gap:0.75rem; justify-content:flex-end; border-top:1px solid var(--border-color); padding-top:1rem; flex-wrap:wrap;">
-              ${deleteContractBtn}
-              ${nextInstallmentBtn}
-              ${closeContractBtn}
-            </div>
-          `;
-          listDiv.appendChild(card);
-        });
-      } else if (tab === 'p2pgigs') {
-        renderAdminP2PJobs();
-      } else if (tab === 'manage-candidates') {
-        renderAdminCandidates();
-      } else if (tab === 'manage-recruiters') {
-        renderAdminRecruiters();
-      }
-    }
-
-    // Company review modal controls
-    let selectedCompanyId = null;
-    window.reviewCompany = function(id) {
-      const comp = dbState.company_registrations.find(c => String(c.id) === String(id));
-      if (!comp) return;
-      
-      selectedCompanyId = id;
-      const detailsDiv = document.getElementById('review-company-details');
-      
-      detailsDiv.innerHTML = `
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--primary); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 1: Business Details</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-            <span><strong>Name:</strong> ${comp.business_name}</span>
-            <span><strong>Type:</strong> ${comp.business_type}</span>
-            <span><strong>Nature:</strong> ${comp.nature_of_business}</span>
-            <span><strong>Commencement:</strong> ${comp.commencement_date}</span>
-          </div>
-          <div style="margin-top: 0.5rem; font-size: 0.85rem;">
-            <strong>Description:</strong> ${comp.description}
-          </div>
-        </div>
-
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--secondary); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 2: Owner Details</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-            <span><strong>Owner:</strong> ${comp.owner_name}</span>
-            <span><strong>Father's Name:</strong> ${comp.father_name}</span>
-            <span><strong>DOB:</strong> ${comp.dob}</span>
-            <span><strong>Gender:</strong> ${comp.gender}</span>
-            <span><strong>Nationality:</strong> ${comp.nationality}</span>
-            <span><strong>Occupation:</strong> ${comp.occupation}</span>
-            <span><strong>PAN Card:</strong> ${comp.pan}</span>
-            <span><strong>Aadhaar Card:</strong> ${comp.aadhaar}</span>
-            <span><strong>Mobile:</strong> ${comp.mobile}</span>
-            <span><strong>Email:</strong> ${comp.email}</span>
-          </div>
-        </div>
-
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--success); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 3 & 5: Address Details & Proofs</strong>
-          <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.25rem;">
-            <span><strong>Residential:</strong> ${comp.address_res}</span>
-            <span><strong>Business:</strong> ${comp.address_bus}</span>
-            <span><strong>Geography:</strong> ${comp.city}, ${comp.district}, ${comp.state} - ${comp.pin}</span>
-            <span><strong>Address Proof Type:</strong> ${comp.proof_type || 'Electricity Bill'}</span>
-            <span style="color: var(--success); font-weight: bold;">✔ Mock PDF/Image File Uploaded & Verified</span>
-          </div>
-        </div>
-
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--warning); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 6 & 8: Bank Details & Tax Information</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-            <span><strong>Bank Name:</strong> ${comp.bank_name || 'N/A'}</span>
-            <span><strong>Account:</strong> ${comp.bank_acc || 'N/A'}</span>
-            <span><strong>IFSC Code:</strong> ${comp.bank_ifsc || 'N/A'}</span>
-            <span><strong>GST Registered:</strong> ${comp.tax_gst_registered || 'No'}</span>
-            <span><strong>GST Number:</strong> ${comp.tax_gst_number || 'N/A'}</span>
-          </div>
-        </div>
-
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--primary); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 7: Business Activities</strong>
-          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-            ${comp.activities ? comp.activities.map(act => `<span class="badge badge-secondary">${act}</span>`).join(' ') : 'None'}
-          </div>
-        </div>
-
-        <div style="background-color: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <strong style="color: var(--danger); font-size: 0.85rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Section 9 & 10: Nominee & Signature / Declaration</strong>
-          <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.25rem;">
-            <span><strong>Nominees:</strong> ${comp.nominees && comp.nominees.length > 0 ? comp.nominees.map(n => `${n.name} (${n.designation || 'Partner'})`).join(', ') : 'None'}</span>
-            <span><strong>Declaration Status:</strong> Accepted by applicant</span>
-            <span><strong>Signature Text Name:</strong> ${comp.declaration_signature}</span>
-            <span><strong>Place/Date:</strong> ${comp.declaration_place} / ${comp.declaration_date}</span>
-            <div style="margin-top: 0.5rem;">
-              <strong>Handdrawn Signature Proof:</strong>
-              <div style="border: 1px solid var(--border-color); background: var(--bg-primary); padding: 0.5rem; display: inline-block; font-family: 'Brush Script MT', cursive, sans-serif; font-size: 1.5rem; color: var(--primary);">
-                ${comp.declaration_signature}
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const btnApprove = document.getElementById('btn-approve-company');
-      const btnReject = document.getElementById('btn-reject-company');
-      if (comp.status === 'pending') {
-        btnApprove.style.display = 'inline-flex';
-        btnReject.style.display = 'inline-flex';
-      } else {
-        btnApprove.style.display = 'none';
-        btnReject.style.display = 'none';
-      }
-
-      document.getElementById('review-company-modal').style.display = "flex";
-    }
-
-    window.closeReviewCompanyModal = function() {
-      document.getElementById('review-company-modal').style.display = "none";
-      selectedCompanyId = null;
-    }
-
-    document.getElementById('btn-approve-company').onclick = function() {
-      if (!selectedCompanyId) return;
-      approveCompanyRegistration(selectedCompanyId);
-      closeReviewCompanyModal();
-      
-      showAlert('alert-container', '✅ Business Registration Application approved successfully!', 'success');
-      updateStats();
-      renderTabContent('companies');
-    }
-
-    document.getElementById('btn-reject-company').onclick = function() {
-      if (!selectedCompanyId) return;
-      rejectCompanyRegistration(selectedCompanyId);
-      closeReviewCompanyModal();
-      
-      showAlert('alert-container', '❌ Business Registration Application rejected.', 'success');
-      updateStats();
-      renderTabContent('companies');
     }
 
     // Modal action flags
@@ -1435,22 +474,6 @@
         liveLink.href = sub.submission_url;
       } else {
         liveLink.style.display = "none";
-      }
-
-      const resumeLink = document.getElementById('grade-resume');
-      if (sub.resume_filename) {
-        resumeLink.style.display = "inline-flex";
-        resumeLink.href = sub.resume_data || "#";
-        resumeLink.textContent = `View Resume (${sub.resume_type === 'ATS' ? 'ATS' : 'Design'})`;
-      } else {
-        const cand = dbState.users.find(u => u.id === sub.candidate_id);
-        if (cand && cand.resume_filename) {
-          resumeLink.style.display = "inline-flex";
-          resumeLink.href = cand.resume_data || "#";
-          resumeLink.textContent = `View Resume (${cand.resume_type === 'ATS' ? 'ATS' : 'Design'})`;
-        } else {
-          resumeLink.style.display = "none";
-        }
       }
 
       document.getElementById('grade-modal').style.display = "flex";
@@ -1518,9 +541,6 @@
     }
 
     function viewCandidatePortfolio(candId) {
-      // Log client visit
-      incrementCompanyVisits(candId, "InnovateTech (Recruiter)", "Viewed Portfolio & Credentials");
-
       const cand = dbState.users.find(u => String(u.id) === String(candId));
       if (!cand) return;
       
@@ -1532,27 +552,12 @@
       document.getElementById('port-xp').textContent = cand.xp_points || 0;
       document.getElementById('port-score').textContent = cand.talent_score || 0;
 
-      document.getElementById('port-education').textContent = cand.education || "Not Provided";
-      const phoneEl = document.getElementById('port-phone-link');
-      if (cand.phone) {
-        phoneEl.textContent = cand.phone;
-        phoneEl.href = `tel:${cand.phone}`;
-        phoneEl.style.pointerEvents = "auto";
-      } else {
-        phoneEl.textContent = "Not Provided";
-        phoneEl.removeAttribute('href');
-        phoneEl.style.pointerEvents = "none";
-      }
-
       const linksDiv = document.getElementById('port-links');
       linksDiv.innerHTML = "";
       if (!isAnonymous) {
         if (cand.githubUrl) linksDiv.innerHTML += `<a href="${cand.githubUrl}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">GitHub</a>`;
         if (cand.linkedinUrl) linksDiv.innerHTML += `<a href="${cand.linkedinUrl}" target="_blank" class="badge badge-primary" style="text-decoration: none;">LinkedIn</a>`;
         if (cand.portfolioWebsite) linksDiv.innerHTML += `<a href="${cand.portfolioWebsite}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">Website</a>`;
-        if (cand.resume_filename) {
-          linksDiv.innerHTML += `<a href="${cand.resume_data || '#'}" target="_blank" class="badge" style="background-color: #10b981; color: white; text-decoration: none;">📄 Resume (${cand.resume_type === 'ATS' ? 'ATS' : 'Design'})</a>`;
-        }
       }
 
       const skillsDiv = document.getElementById('port-skills');
@@ -1563,32 +568,6 @@
         });
       } else {
         skillsDiv.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">No skills listed.</span>`;
-      }
-
-      const certsDiv = document.getElementById('port-certificates');
-      certsDiv.innerHTML = "";
-      if (cand.certificates && cand.certificates.length > 0) {
-        cand.certificates.forEach(c => {
-          const pointsInfo = c.correct_count !== undefined ? `${c.correct_count}/${c.total_count || 5} Points` : '';
-          const xpInfo = c.xp_gained !== undefined ? `+${c.xp_gained} XP` : '';
-          certsDiv.innerHTML += `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.8rem; background-color: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.85rem;">
-              <div>
-                <strong style="color: var(--text-primary);">🏅 ${c.title}</strong>
-                <span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 0.1rem;">
-                  Verified by ${c.authority || "Build2Hire"} on ${c.date}
-                  ${xpInfo ? ` • <strong style="color: var(--warning);">${xpInfo}</strong>` : ''}
-                </span>
-              </div>
-              <div style="text-align: right; display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-end;">
-                <span class="badge badge-success" style="font-size: 0.75rem; font-weight: 700;">${c.score}% Pass</span>
-                <button onclick="window.downloadCandidateCertificate('${cand.fullName || cand.full_name || 'Candidate'}', '${c.title}', ${c.score})" class="btn" style="background-color: #10b981; color: white; padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; border: none; cursor: pointer; margin-top: 0.2rem;">Print 📥</button>
-              </div>
-            </div>
-          `;
-        });
-      } else {
-        certsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No verified credentials earned yet.</p>`;
       }
 
       const projectsDiv = document.getElementById('port-projects');
@@ -1610,44 +589,6 @@
         });
       } else {
         projectsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">No projects published yet.</p>`;
-      }
-
-      // Populate Candidate Activity Timeline
-      const activityDiv = document.getElementById('port-activity-log');
-      activityDiv.innerHTML = "";
-      if (cand.activity_log && cand.activity_log.length > 0) {
-        const sortedLog = [...cand.activity_log].reverse();
-        sortedLog.forEach(act => {
-          const formattedTime = new Date(act.timestamp).toLocaleString();
-          let icon = "📝";
-          if (act.type === 'job_search') icon = "🔍";
-          else if (act.type === 'gig_search') icon = "🔎";
-          else if (act.type === 'job_view' || act.type === 'gig_view') icon = "👁️";
-          else if (act.type === 'job_apply' || act.type === 'gig_apply') icon = "✉️";
-          else if (act.type === 'assessment_complete') icon = "⚡";
-          else if (act.type === 'course_enroll') icon = "📖";
-          
-          activityDiv.innerHTML += `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 0.82rem; border-left: 3px solid var(--primary); margin-bottom: 0.25rem;">
-              <div>
-                <span style="color: var(--text-primary); font-weight: 500;">${icon} ${act.details}</span>
-              </div>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">${formattedTime}</span>
-            </div>
-          `;
-        });
-      } else {
-        activityDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No recent activities logged.</p>`;
-      }
-
-      viewedCandidateId = candId;
-      const editBtn = document.getElementById('admin-edit-btn');
-      if (editBtn) {
-        if (user.role === 'admin') {
-          editBtn.style.display = "block";
-        } else {
-          editBtn.style.display = "none";
-        }
       }
 
       document.getElementById('portfolio-modal').style.display = "flex";
@@ -1698,45 +639,6 @@
       const app = dbState.applications.find(a => a.id === appId);
       if (app) {
         app.status = nextStatus;
-        
-        if (nextStatus === 'hired') {
-          // Find the job details
-          const job = dbState.jobs.find(j => j.id === app.job_id);
-          const jobTitle = job ? job.title : app.challenge_title;
-          const jobSalary = job ? job.salary : "$1,000 Flat";
-          
-          // Parse salary value to number
-          let amt = 1000;
-          if (jobSalary) {
-            const matches = jobSalary.match(/\d+[\d,.]*/);
-            if (matches) {
-              amt = parseInt(matches[0].replace(/,/g, ''));
-            }
-          }
-
-          // Create a new contract record
-          const newContract = {
-            id: "cnt_" + Date.now(),
-            candidateId: app.candidate_id,
-            jobId: app.job_id,
-            title: jobTitle,
-            company: job ? job.company : "InnovateTech",
-            salary: jobSalary,
-            amount: amt,
-            status: "active",
-            dateStarted: new Date().toISOString().split('T')[0],
-            dateCompleted: null,
-            milestones: [
-              { id: 1, title: "Part 1: Setup & Initial Design", description: "Design wireframes and set project environment.", weight: 30, status: "in-progress", deliverable: "" },
-              { id: 2, title: "Part 2: UI Implementation", description: "Core UI elements, responsiveness, and state handling.", weight: 40, status: "pending", deliverable: "" },
-              { id: 3, title: "Part 3: Testing & Handover", description: "Final validation, testing specs, and code deployment.", weight: 30, status: "pending", deliverable: "" }
-            ]
-          };
-          
-          if (!dbState.contracts) dbState.contracts = [];
-          dbState.contracts.push(newContract);
-        }
-
         dbSave(dbState);
         
         showAlert('alert-container', `Application status updated to "${nextStatus}".`, 'success');
@@ -1745,740 +647,11 @@
         renderAllTabs();
       }
     }
-    let adminSelectedResumeData = null;
-    let adminSelectedResumeName = "";
-
-     window.downloadCandidateCertificate = function(name, title, score) {
-       downloadCertificateHelper(name, title, score);
-     };
-
-     window.approveMilestone = function(contractId, milestoneId) {
-       dbState = dbGet();
-       const contract = dbState.contracts.find(c => String(c.id) === String(contractId));
-       if (contract) {
-         const milestone = contract.milestones.find(m => m.id === milestoneId);
-         if (milestone) {
-           milestone.status = "approved"; // release payment
-           
-           // Move next milestone to 'in-progress' if any
-           const nextMilestone = contract.milestones.find(m => m.id === milestoneId + 1);
-           if (nextMilestone) {
-             nextMilestone.status = "in-progress";
-           } else {
-             // No more milestones, contract is fully completed!
-             contract.status = "completed";
-             contract.dateCompleted = new Date().toISOString().split('T')[0];
-             
-             // Add rewards/XP to the candidate user
-             const candidateUser = dbState.users.find(u => String(u.id) === String(contract.candidateId));
-             if (candidateUser) {
-               candidateUser.xp_points = (candidateUser.xp_points || 0) + 500; // Bonus for completion
-               candidateUser.portfolio_score = Math.min((candidateUser.portfolio_score || 0) + 15, 100);
-               recalculateScores(candidateUser);
-             }
-           }
-           
-           dbSave(dbState);
-           showAlert('alert-container', 'Milestone payment released and milestone approved successfully!', 'success');
-           triggerConfetti();
-           renderTabContent('contracts');
-         }
-       }
-     };
-
-    window.openAdminEditor = function() {
-      const cand = dbState.users.find(u => String(u.id) === String(viewedCandidateId));
-      if (!cand) return;
-
-      document.getElementById('adm-fullName').value = cand.fullName || cand.full_name || "";
-      document.getElementById('adm-preferredRole').value = cand.preferredRole || "";
-      document.getElementById('adm-phone').value = cand.phone || "";
-      document.getElementById('adm-education').value = cand.education || "";
-      document.getElementById('adm-level').value = cand.level || 1;
-      document.getElementById('adm-xp').value = cand.xp_points || 0;
-      document.getElementById('adm-talentScore').value = cand.talent_score || 0;
-      document.getElementById('adm-bio').value = cand.bio || "";
-      document.getElementById('adm-github').value = cand.githubUrl || "";
-      document.getElementById('adm-linkedin').value = cand.linkedinUrl || "";
-      document.getElementById('adm-website').value = cand.portfolioWebsite || "";
-      document.getElementById('adm-skills').value = (cand.skills || []).join(", ");
-      
-      document.getElementById('adm-resumeType').value = cand.resume_type || "";
-      document.getElementById('adm-resumeFile').value = "";
-      adminSelectedResumeData = cand.resume_data || null;
-      adminSelectedResumeName = cand.resume_filename || "";
-      
-      const statusDiv = document.getElementById('adm-resume-status');
-      if (cand.resume_filename) {
-        statusDiv.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem;">
-            <span style="color: #10b981; font-weight: 600;">✓ Active Resume:</span> 
-            <strong style="color: var(--text-primary);">${cand.resume_filename}</strong>
-            <button type="button" onclick="window.clearAdminResume()" class="btn" style="background-color: var(--danger); color: white; padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; height: auto; border: none; cursor: pointer;">Delete 🗑️</button>
-          </div>
-        `;
-      } else {
-        statusDiv.innerHTML = `<span style="color: var(--text-muted);">No resume active.</span>`;
-      }
-
-      document.getElementById('adm-projectsJson').value = JSON.stringify(cand.projects || [], null, 2);
-      document.getElementById('adm-certsJson').value = JSON.stringify(cand.certificates || [], null, 2);
-
-      document.getElementById('portfolio-modal').style.display = "none";
-      document.getElementById('admin-editor-modal').style.display = "flex";
-    };
-
-    window.closeAdminEditorModal = function() {
-      document.getElementById('admin-editor-modal').style.display = "none";
-      document.getElementById('portfolio-modal').style.display = "flex";
-    };
-
-    window.clearAdminResume = function() {
-      adminSelectedResumeData = null;
-      adminSelectedResumeName = "";
-      document.getElementById('adm-resumeFile').value = "";
-      document.getElementById('adm-resumeType').value = "";
-      document.getElementById('adm-resume-status').innerHTML = `<span style="color: var(--danger); font-weight: 600;">⚠ Pending deletion on save.</span>`;
-    };
-
-    document.getElementById('adm-resumeFile').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          adminSelectedResumeData = evt.target.result;
-          adminSelectedResumeName = file.name;
-          document.getElementById('adm-resume-status').innerHTML = `
-            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem;">
-              <span style="color: #34d399; font-weight: 600;">✓ Ready to Save:</span> 
-              <strong style="color: var(--text-primary);">${file.name}</strong>
-              <button type="button" onclick="window.clearAdminResume()" class="btn" style="background-color: var(--border-color); color: var(--text-primary); padding: 0.15rem 0.4rem; font-size: 0.7rem; border-radius: 4px; line-height: 1; height: auto; border: none; cursor: pointer;">Remove ✕</button>
-            </div>
-          `;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    document.getElementById('admin-edit-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const cand = dbState.users.find(u => String(u.id) === String(viewedCandidateId));
-      if (!cand) return;
-
-      let projectsArray = [];
-      let certsArray = [];
-      try {
-        projectsArray = JSON.parse(document.getElementById('adm-projectsJson').value);
-        if (!Array.isArray(projectsArray)) throw new Error("Projects must be a JSON array.");
-      } catch (err) {
-        alert("Projects JSON format error: " + err.message);
-        return;
-      }
-
-      try {
-        certsArray = JSON.parse(document.getElementById('adm-certsJson').value);
-        if (!Array.isArray(certsArray)) throw new Error("Certificates must be a JSON array.");
-      } catch (err) {
-        alert("Certificates JSON format error: " + err.message);
-        return;
-      }
-
-      cand.fullName = document.getElementById('adm-fullName').value.trim();
-      cand.full_name = cand.fullName;
-      cand.preferredRole = document.getElementById('adm-preferredRole').value.trim();
-      cand.phone = document.getElementById('adm-phone').value.trim();
-      cand.education = document.getElementById('adm-education').value.trim();
-      cand.level = parseInt(document.getElementById('adm-level').value, 10) || 1;
-      cand.xp_points = parseInt(document.getElementById('adm-xp').value, 10) || 0;
-      cand.talent_score = parseInt(document.getElementById('adm-talentScore').value, 10) || 0;
-      cand.bio = document.getElementById('adm-bio').value.trim();
-      cand.githubUrl = document.getElementById('adm-github').value.trim();
-      cand.linkedinUrl = document.getElementById('adm-linkedin').value.trim();
-      cand.portfolioWebsite = document.getElementById('adm-website').value.trim();
-      
-      const skillsStr = document.getElementById('adm-skills').value;
-      cand.skills = skillsStr ? skillsStr.split(',').map(s => s.trim()).filter(s => s !== '') : [];
-
-      cand.resume_type = document.getElementById('adm-resumeType').value || null;
-      cand.resume_data = adminSelectedResumeData;
-      cand.resume_filename = adminSelectedResumeName;
-
-      cand.projects = projectsArray;
-      cand.certificates = certsArray;
-
-      dbSave(dbState);
-      
-      document.getElementById('admin-editor-modal').style.display = "none";
-      showAlert('alert-container', 'Candidate profile updated successfully by Admin.', 'success');
-      triggerConfetti();
-      updateStats();
-      renderAllTabs();
-    });
-
-    window.openCreateJobModal = function() {
-      document.getElementById('create-job-modal').style.display = "flex";
-    };
-
-    window.closeCreateJobModal = function() {
-      document.getElementById('create-job-modal').style.display = "none";
-      document.getElementById('create-job-form').reset();
-    };
-
-    window.deleteJobPost = function(jobId) {
-      if (confirm("Are you sure you want to delete this job post? Candidates will no longer be able to see or apply to it.")) {
-        dbState = dbGet();
-        dbState.jobs = (dbState.jobs || []).filter(j => j.id !== jobId);
-        dbState.applications = (dbState.applications || []).filter(a => a.job_id !== jobId);
-        dbState.submissions = (dbState.submissions || []).filter(s => s.challenge_id !== jobId);
-        dbSave(dbState);
-
-        showAlert('alert-container', 'Job post deleted successfully.', 'success');
-        updateStats();
-        renderAllTabs();
-      }
-    };
-
-    window.directShortlistCandidate = function(candId, jobId) {
-      dbState = dbGet();
-      const cand = dbState.users.find(u => u.id === candId);
-      const job = dbState.jobs.find(j => j.id === jobId);
-      if (!cand || !job) return;
-
-      const newApp = {
-        id: Date.now(),
-        candidate_id: cand.id,
-        candidate_name: cand.fullName,
-        job_id: job.id,
-        challenge_title: `${job.title} (${job.company})`,
-        talent_score: cand.talent_score || 50,
-        status: "shortlisted",
-        cover_letter: "Directly invited & shortlisted by recruiter.",
-        github_url: cand.githubUrl || "",
-        demo_url: cand.portfolioWebsite || "",
-        resume_filename: cand.resume_filename || "",
-        resume_type: cand.resume_type || "",
-        resume_data: cand.resume_data || ""
-      };
-
-      dbState.applications.unshift(newApp);
-
-      const newSub = {
-        id: Date.now(),
-        candidate_id: cand.id,
-        candidate_name: cand.fullName,
-        challenge_id: job.id,
-        challenge_title: `${job.title} (${job.company})`,
-        talent_score: cand.talent_score || 50,
-        current_level: cand.current_level || 'Beginner Builder',
-        status: "shortlisted",
-        description: "Directly invited & shortlisted by recruiter.",
-        github_url: cand.githubUrl || "",
-        submission_url: cand.portfolioWebsite || "",
-        resume_filename: cand.resume_filename || "",
-        resume_type: cand.resume_type || "",
-        resume_data: cand.resume_data || ""
-      };
-
-      dbState.submissions.unshift(newSub);
-      dbSave(dbState);
-
-      showAlert('alert-container', `Candidate ${cand.fullName} has been directly invited & shortlisted!`, 'success');
-      triggerConfetti();
-      updateStats();
-      renderAllTabs();
-    };
-
-    document.getElementById('create-job-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      dbState = dbGet();
-
-      const title = document.getElementById('jobPostTitle').value.trim();
-      const difficulty = document.getElementById('jobPostDifficulty').value;
-      const category = document.getElementById('jobPostCategory').value;
-      const max_xp = parseInt(document.getElementById('jobPostMaxXp').value) || 100;
-      const skillsInput = document.getElementById('jobPostSkills').value;
-      const description = document.getElementById('jobPostDesc').value.trim();
-      const reqsText = document.getElementById('jobPostReqs').value.trim();
-
-      const skills = skillsInput ? skillsInput.split(',').map(s => s.trim()).filter(s => s !== '') : [];
-      const requirements = reqsText ? reqsText.split('\n').map(r => r.trim()).filter(r => r !== '') : [];
-
-      const newJob = {
-        id: Date.now(),
-        title: title,
-        difficulty: difficulty,
-        category: category,
-        max_xp: max_xp,
-        skills: skills,
-        requirements: requirements.join('\n'),
-        description: description,
-        company: user.companyName || "InnovateTech",
-        company_logo: "🏢"
-      };
-
-      if (!dbState.jobs) dbState.jobs = [];
-      dbState.jobs.push(newJob);
-      dbSave(dbState);
-
-      closeCreateJobModal();
-      showAlert('alert-container', `Job "${title}" published successfully! Candidates can now apply.`, 'success');
-      triggerConfetti();
-      updateStats();
-      renderAllTabs();
-    });
-
-    window.renderAdminP2PJobs = function() {
-      const listEl = document.getElementById('admin-p2p-jobs-list');
-      if (!listEl) return;
-
-      listEl.innerHTML = "";
-      const p2pJobs = (dbState.jobs || []).filter(j => j.posted_by);
-
-      if (p2pJobs.length === 0) {
-        listEl.innerHTML = `
-          <div style="text-align: center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
-            <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">👥</span>
-            <p style="font-size: 0.9rem; margin: 0;">No peer-to-peer collaborative jobs have been posted by candidates yet.</p>
-          </div>
-        `;
-        return;
-      }
-
-      p2pJobs.forEach(job => {
-        const apps = (dbState.applications || []).filter(a => a.job_id === job.id);
-        
-        let appsHtml = "";
-        if (apps.length === 0) {
-          appsHtml = `<p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">No applicants yet.</p>`;
-        } else {
-          appsHtml = `
-            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem;">
-              <strong style="font-size: 0.8rem; color: var(--text-secondary);">Applications (${apps.length}):</strong>
-              ${apps.map(app => {
-                let statusBadge = `<span class="badge" style="background-color: var(--bg-tertiary); color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">${app.status}</span>`;
-                let actionBtns = "";
-
-                if (app.status === 'applied') {
-                  actionBtns = `
-                    <button onclick="changeAdminP2PAppStatus(${app.id}, 'hired')" class="btn" style="background-color: var(--success); color: white; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; border:none; cursor:pointer;">Accept ✅</button>
-                    <button onclick="changeAdminP2PAppStatus(${app.id}, 'rejected')" class="btn" style="background-color: var(--danger); color: white; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; border:none; cursor:pointer;">Reject ❌</button>
-                  `;
-                } else if (app.status === 'hired') {
-                  statusBadge = `<span class="badge" style="background-color: var(--success-light); color: var(--success); font-size: 0.72rem; text-transform: uppercase;">Hired 🎉</span>`;
-                } else if (app.status === 'rejected') {
-                  statusBadge = `<span class="badge" style="background-color: var(--danger-light); color: var(--danger); font-size: 0.72rem; text-transform: uppercase;">Rejected</span>`;
-                }
-
-                return `
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: 6px; border: 1px solid var(--border-color);">
-                    <div>
-                      <strong style="font-size: 0.82rem; color: var(--text-primary);">${app.candidate_name}</strong>
-                      <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 0.5rem;">(Talent Score: ${app.talent_score || 50})</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      ${statusBadge}
-                      ${actionBtns}
-                      <button onclick="viewCandidatePortfolio(${app.candidate_id})" class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; cursor:pointer;">Profile 👤</button>
-                    </div>
-                  </div>
-                `;
-              }).join("")}
-            </div>
-          `;
-        }
-
-        const skillBadges = (job.skills || []).map(s => `<span class="badge badge-secondary" style="font-size: 0.72rem;">${s}</span>`).join(" ");
-        const creator = dbState.users.find(u => u.id === job.posted_by) || {};
-
-        listEl.innerHTML += `
-          <div class="card" style="padding: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 0.75rem; background-color: var(--bg-secondary); margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div>
-                <h4 style="font-size: 1.05rem; margin: 0; color: var(--text-primary); font-family: var(--font-display);">${job.title}</h4>
-                <div style="margin-top: 0.25rem;">
-                  <span class="badge badge-primary" style="font-size: 0.72rem;">${job.category}</span>
-                  <span class="badge" style="background-color: var(--warning-light); color: var(--warning); font-size: 0.72rem; font-weight: 700; margin-left: 0.25rem;">💰 ${job.xp} XP Reward</span>
-                  <span style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 0.5rem;">Posted by: <strong>${creator.fullName || creator.full_name || job.company}</strong></span>
-                </div>
-              </div>
-              <button onclick="deleteAdminP2PJob(${job.id})" class="btn" style="background-color: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px; cursor:pointer;">Delete 🗑</button>
-            </div>
-            
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">${job.description}</p>
-            
-            <div>
-              <strong style="font-size: 0.8rem; color: var(--text-muted);">Required Skills:</strong>
-              <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem;">
-                ${skillBadges || '<span style="font-size: 0.75rem; color: var(--text-muted);">None</span>'}
-              </div>
-            </div>
-
-            ${appsHtml}
-          </div>
-        `;
-      });
-    };
-
-    window.deleteAdminP2PJob = function(jobId) {
-      if (!confirm("Are you sure you want to delete this candidate's P2P job post?")) return;
-      dbState.jobs = (dbState.jobs || []).filter(j => j.id !== jobId);
-      dbState.applications = (dbState.applications || []).filter(a => a.job_id !== jobId);
-      dbSave(dbState);
-
-      showAlert('alert-container', 'P2P job post deleted.', 'success');
-      renderAdminP2PJobs();
-    };
-
-    window.handleCloseContract = function(contractId) {
-      if (!confirm("Are you sure you want to close this contract? This will mark the project as completed and archive it.")) return;
-      if (closeContract(contractId)) {
-        showAlert('alert-container', 'Service contract closed successfully!', 'success');
-        updateStats();
-        renderAllTabs();
-      } else {
-        alert("Failed to close contract.");
-      }
-    };
-
-    window.deleteContract = function(contractId) {
-      if (!confirm("Are you sure you want to terminate and delete this contract? This will delete all contract details, milestones, progress updates, and invoice logs permanently.")) return;
-      dbState = dbGet();
-      dbState.contracts = (dbState.contracts || []).filter(c => String(c.id) !== String(contractId));
-      dbSave(dbState);
-      
-      showAlert('alert-container', 'Service contract terminated and deleted successfully.', 'success');
-      
-      updateStats();
-      renderAllTabs();
-    };
-
-    window.changeAdminP2PAppStatus = function(appId, newStatus) {
-      const app = (dbState.applications || []).find(a => a.id === appId);
-      if (app) {
-        app.status = newStatus;
-        dbSave(dbState);
-
-        const sub = (dbState.submissions || []).find(s => s.candidate_id === app.candidate_id && s.challenge_id === app.job_id);
-        if (sub) {
-          sub.status = newStatus;
-          dbSave(dbState);
-        }
-
-        showAlert('alert-container', `P2P Application status updated to "${newStatus}".`, 'success');
-        if (newStatus === 'hired') {
-          triggerConfetti();
-        }
-        renderAdminP2PJobs();
-      }
-    };
-
-    function renderAdminCandidates() {
-      const selectEl = document.getElementById('admin-manage-candidate-select');
-      if (!selectEl) return;
-
-      const candidates = (dbState.users || []).filter(u => u.role === 'candidate');
-      selectEl.innerHTML = "";
-
-      if (candidates.length === 0) {
-        selectEl.innerHTML = `<option value="">No candidates registered</option>`;
-        const iframe = document.getElementById('admin-candidate-portfolio-iframe');
-        if (iframe) iframe.src = "";
-        return;
-      }
-
-      candidates.forEach(cand => {
-        const opt = document.createElement('option');
-        opt.value = cand.id;
-        opt.textContent = `${cand.fullName || 'Unnamed'} (${cand.email})`;
-        selectEl.appendChild(opt);
-      });
-
-      loadAdminCandidatePortfolioIframe();
-    }
-
-    let currentIframePage = 'portfolio.html';
-
-    window.changeAdminIframeTab = function(page, btn) {
-      currentIframePage = page;
-
-      document.querySelectorAll('.active-iframe-tab').forEach(b => {
-        b.classList.remove('active-iframe-tab', 'btn-primary');
-        b.classList.add('btn-secondary');
-      });
-
-      btn.classList.add('active-iframe-tab', 'btn-primary');
-      btn.classList.remove('btn-secondary');
-
-      document.getElementById('admin-candidate-json-editor-container').style.display = 'none';
-      document.getElementById('admin-candidate-iframe-container').style.display = 'block';
-
-      loadAdminCandidatePortfolioIframe();
-    };
-
-    window.loadAdminCandidatePortfolioIframe = function() {
-      const selectEl = document.getElementById('admin-manage-candidate-select');
-      const iframe = document.getElementById('admin-candidate-portfolio-iframe');
-      if (!selectEl || !iframe) return;
-
-      const candidateId = selectEl.value;
-      if (!candidateId) {
-        iframe.src = "";
-        return;
-      }
-
-      if (document.getElementById('admin-candidate-json-editor-container').style.display === 'flex') {
-        const candidateObj = dbState.users.find(u => String(u.id) === String(candidateId));
-        if (candidateObj) {
-          document.getElementById('admin-candidate-json-textarea').value = JSON.stringify(candidateObj, null, 2);
-          validateCandidateJsonInput();
-        }
-      } else {
-        iframe.src = `${currentIframePage}?candidateId=${candidateId}&embed=true&v=1.0.5`;
-      }
-    };
-
-    window.openAdminCandidateJsonEditor = function(btn) {
-      document.querySelectorAll('.active-iframe-tab').forEach(b => {
-        b.classList.remove('active-iframe-tab', 'btn-primary');
-        b.classList.add('btn-secondary');
-      });
-      btn.classList.add('active-iframe-tab', 'btn-primary');
-      btn.classList.remove('btn-secondary');
-
-      document.getElementById('admin-candidate-iframe-container').style.display = 'none';
-      document.getElementById('admin-candidate-json-editor-container').style.display = 'flex';
-
-      const selectEl = document.getElementById('admin-manage-candidate-select');
-      const candidateId = selectEl.value;
-      if (!candidateId) return;
-
-      const candidateObj = dbState.users.find(u => String(u.id) === String(candidateId));
-      if (candidateObj) {
-        document.getElementById('admin-candidate-json-textarea').value = JSON.stringify(candidateObj, null, 2);
-        validateCandidateJsonInput();
-      }
-    };
-
-    window.validateCandidateJsonInput = function() {
-      const txt = document.getElementById('admin-candidate-json-textarea').value;
-      const statusBadge = document.getElementById('json-validation-status');
-      try {
-        JSON.parse(txt);
-        statusBadge.textContent = "Valid JSON";
-        statusBadge.style.backgroundColor = "var(--success-light)";
-        statusBadge.style.color = "var(--success)";
-        statusBadge.style.borderColor = "var(--success)";
-      } catch (err) {
-        statusBadge.textContent = "Invalid Syntax: " + err.message.split('at position')[0];
-        statusBadge.style.backgroundColor = "var(--danger-light)";
-        statusBadge.style.color = "var(--danger)";
-        statusBadge.style.borderColor = "var(--danger)";
-      }
-    };
-
-    window.saveCandidateJsonData = function() {
-      const selectEl = document.getElementById('admin-manage-candidate-select');
-      const candidateId = selectEl.value;
-      if (!candidateId) return;
-
-      const txt = document.getElementById('admin-candidate-json-textarea').value;
-      try {
-        const parsedObj = JSON.parse(txt);
-        parsedObj.id = parseInt(candidateId);
-        parsedObj.role = 'candidate';
-
-        dbState.users = dbState.users.map(u => String(u.id) === String(candidateId) ? parsedObj : u);
-        dbSave(dbState);
-
-        showAlert('alert-container', 'Candidate database record saved successfully.', 'success');
-        updateStats();
-        
-        // Notify parent context of modifications
-        window.postMessage('db_updated', '*');
-      } catch (err) {
-        alert("Cannot save! Please resolve JSON syntax errors first.");
-      }
-    };
-
-    window.insertJsonTemplate = function(type) {
-      const textarea = document.getElementById('admin-candidate-json-textarea');
-      let template = '';
-      if (type === 'project') {
-        template = `,\n  {\n    "id": ${Date.now()},\n    "title": "New Project Portfolio Card",\n    "description": "Short project description",\n    "project_url": "https://example.com",\n    "github_url": "https://github.com",\n    "thumbnail_url": "🚀"\n  }`;
-      } else if (type === 'certificate') {
-        template = `,\n  "Certified Cloud Professional"`;
-      } else if (type === 'gig') {
-        template = `,\n  {\n    "id": ${Date.now()},\n    "title": "Freelance Milestone Gig Contract",\n    "clientName": "Client Enterprise",\n    "budget": 2000,\n    "status": "active",\n    "milestones": [\n      { "title": "Milestone 1", "amount": 1000, "status": "completed" },\n      { "title": "Milestone 2", "amount": 1000, "status": "pending" }\n    ]\n  }`;
-      } else if (type === 'application') {
-        template = `,\n  {\n    "id": ${Date.now()},\n    "jobId": 1,\n    "title": "Senior Frontend Developer",\n    "company": "InnovateTech",\n    "status": "applied",\n    "appliedDate": "${new Date().toISOString().split('T')[0]}"\n  }`;
-      }
-
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const text = textarea.value;
-      textarea.value = text.substring(0, start) + template + text.substring(end);
-      textarea.focus();
-      textarea.selectionStart = start + template.length;
-      textarea.selectionEnd = start + template.length;
-      validateCandidateJsonInput();
-    };
-
-    window.addEventListener('message', (e) => {
-      if (e.data === 'db_updated') {
-        dbState = dbGet();
-        updateStats();
-      }
-    });
-
-    function renderAdminRecruiters() {
-      const listDiv = document.getElementById('recruiters-manage-list');
-      if (!listDiv) return;
-      listDiv.innerHTML = "";
-
-      const recruiters = (dbState.users || []).filter(u => u.role === 'recruiter');
-
-      if (recruiters.length === 0) {
-        listDiv.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No recruiters registered on the platform.</td></tr>`;
-        return;
-      }
-
-      recruiters.forEach(rec => {
-        const tr = document.createElement('tr');
-        tr.className = "leaderboard-tr";
-
-        tr.innerHTML = `
-          <td style="padding: 1rem 0.5rem; font-weight:600; color:var(--text-primary);">${rec.fullName || 'Unnamed'}</td>
-          <td style="padding: 1rem 0.5rem; color:var(--text-secondary); font-size:0.85rem;">${rec.email}</td>
-          <td style="padding: 1rem 0.5rem; color:var(--text-secondary); font-size:0.85rem;">${rec.companyName || 'Not Assigned'}</td>
-          <td style="padding: 1rem 0.5rem; color:var(--text-secondary); font-size:0.85rem;">${rec.jobTitle || 'Not Assigned'}</td>
-          <td style="padding: 1rem 0.5rem; text-align: right;">
-            <button onclick="window.openAdminEditUserModal('${rec.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px; margin-right: 0.5rem; cursor:pointer;">✏️ Edit</button>
-            <button onclick="window.deleteUserByAdmin('${rec.id}')" class="btn btn-danger" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 4px; background-color:var(--danger); border-color:var(--danger); cursor:pointer;">🗑️ Delete</button>
-          </td>
-        `;
-        listDiv.appendChild(tr);
-      });
-    }
-
-    window.openAdminEditUserModal = function(userId) {
-      const userToEdit = dbState.users.find(u => String(u.id) === String(userId));
-      if (!userToEdit) return;
-
-      document.getElementById('admin-edit-user-id').value = userToEdit.id;
-      document.getElementById('admin-edit-user-role').value = userToEdit.role;
-      document.getElementById('admin-edit-user-name').value = userToEdit.fullName || "";
-      document.getElementById('admin-edit-user-email').value = userToEdit.email || "";
-
-      if (userToEdit.role === 'candidate') {
-        document.getElementById('candidate-edit-fields').style.display = 'block';
-        document.getElementById('recruiter-edit-fields').style.display = 'none';
-
-        document.getElementById('admin-edit-user-xp').value = userToEdit.xp_points || 0;
-        document.getElementById('admin-edit-user-score').value = userToEdit.talent_score || 0;
-        document.getElementById('admin-edit-user-phone').value = userToEdit.phone || "";
-        document.getElementById('admin-edit-user-pref-role').value = userToEdit.preferredRole || "";
-        document.getElementById('admin-edit-user-education').value = userToEdit.education || "";
-        document.getElementById('admin-edit-user-skills').value = (userToEdit.skills || []).join(', ');
-        document.getElementById('admin-edit-user-bio').value = userToEdit.bio || "";
-        document.getElementById('admin-edit-user-projects').value = JSON.stringify(userToEdit.projects || [], null, 2);
-        document.getElementById('admin-edit-user-certs').value = JSON.stringify(userToEdit.certificates || [], null, 2);
-      } else if (userToEdit.role === 'recruiter') {
-        document.getElementById('candidate-edit-fields').style.display = 'none';
-        document.getElementById('recruiter-edit-fields').style.display = 'block';
-
-        document.getElementById('admin-edit-user-company').value = userToEdit.companyName || "";
-        document.getElementById('admin-edit-user-title').value = userToEdit.jobTitle || "";
-      }
-
-      document.getElementById('admin-edit-user-modal').style.display = 'flex';
-    };
-
-    window.closeAdminEditUserModal = function() {
-      document.getElementById('admin-edit-user-modal').style.display = 'none';
-    };
-
-    window.saveAdminUserEdit = function(e) {
-      e.preventDefault();
-      const userId = document.getElementById('admin-edit-user-id').value;
-      const role = document.getElementById('admin-edit-user-role').value;
-
-      const userToEdit = dbState.users.find(u => String(u.id) === String(userId));
-      if (!userToEdit) return;
-
-      userToEdit.fullName = document.getElementById('admin-edit-user-name').value;
-      userToEdit.email = document.getElementById('admin-edit-user-email').value;
-
-      if (role === 'candidate') {
-        userToEdit.xp_points = parseInt(document.getElementById('admin-edit-user-xp').value) || 0;
-        userToEdit.talent_score = parseInt(document.getElementById('admin-edit-user-score').value) || 0;
-        userToEdit.assessment_score = userToEdit.talent_score;
-        userToEdit.phone = document.getElementById('admin-edit-user-phone').value;
-        userToEdit.preferredRole = document.getElementById('admin-edit-user-pref-role').value;
-        userToEdit.education = document.getElementById('admin-edit-user-education').value;
-        
-        const skillsRaw = document.getElementById('admin-edit-user-skills').value;
-        userToEdit.skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(s => s) : [];
-        userToEdit.bio = document.getElementById('admin-edit-user-bio').value;
-
-        try {
-          userToEdit.projects = JSON.parse(document.getElementById('admin-edit-user-projects').value || "[]");
-        } catch(err) {
-          alert("Invalid projects JSON format! Please fix the brackets or quotation marks.");
-          return;
-        }
-
-        try {
-          userToEdit.certificates = JSON.parse(document.getElementById('admin-edit-user-certs').value || "[]");
-        } catch(err) {
-          alert("Invalid certificates JSON format! Please check the brackets or quotation marks.");
-          return;
-        }
-      } else if (role === 'recruiter') {
-        userToEdit.companyName = document.getElementById('admin-edit-user-company').value;
-        userToEdit.jobTitle = document.getElementById('admin-edit-user-title').value;
-      }
-
-      dbSave(dbState);
-      window.closeAdminEditUserModal();
-      showAlert('alert-container', 'User profile updated successfully.', 'success');
-      
-      updateStats();
-      if (role === 'candidate') {
-        renderAdminCandidates();
-      } else {
-        renderAdminRecruiters();
-      }
-    };
-
-    window.deleteUserByAdmin = function(userId) {
-      if (!confirm("Are you sure you want to delete this user? This action is permanent and will remove all their associations, data, and access permissions!")) return;
-      
-      const userToDelete = dbState.users.find(u => String(u.id) === String(userId));
-      if (!userToDelete) return;
-
-      dbState.users = dbState.users.filter(u => String(u.id) !== String(userId));
-      dbSave(dbState);
-
-      showAlert('alert-container', 'User deleted successfully.', 'success');
-      updateStats();
-      if (userToDelete.role === 'candidate') {
-        renderAdminCandidates();
-      } else {
-        renderAdminRecruiters();
-      }
-    };
 
     // Load initial states
-    updateStats();
-    renderAllTabs();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialTab = urlParams.get('tab');
-    if (initialTab) {
-      switchTab(initialTab);
+      updateStats();
+      renderAllTabs();
     }
-  }
-</script>
+  </script>
 </body>
 </html>
