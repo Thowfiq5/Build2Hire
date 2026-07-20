@@ -718,6 +718,18 @@
     }
 
     function initFormFields() {
+      const isAdminViewing = user && (user.role === 'admin' || user.role === 'recruiter');
+      if (isAdminViewing) {
+        const editScoresBtn = document.getElementById('admin-edit-scores-btn');
+        if (editScoresBtn) editScoresBtn.style.display = 'inline-block';
+        const issueCertBtn = document.getElementById('admin-issue-cert-btn');
+        if (issueCertBtn) issueCertBtn.style.display = 'inline-block';
+        const schedIntBtn = document.getElementById('admin-schedule-interview-btn');
+        if (schedIntBtn) schedIntBtn.style.display = 'inline-block';
+        const widget = document.getElementById('interviews-widget');
+        if (widget) widget.style.display = 'block';
+      }
+
       updateOnboardingWizard();
       loadProfileForm();
       renderProjects();
@@ -744,6 +756,7 @@
       certs.forEach((c, idx) => {
         const pointsInfo = c.correct_count !== undefined ? `${c.correct_count}/${c.total_count || 5} Points` : '';
         const xpInfo = c.xp_gained !== undefined ? `+${c.xp_gained} XP` : '';
+        const isAdminViewing = user && (user.role === 'admin' || user.role === 'recruiter');
         const row = document.createElement('div');
         row.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);";
         row.innerHTML = `
@@ -757,6 +770,7 @@
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <span class="badge badge-success" style="font-size: 0.85rem; font-weight: 700;">${c.score}% Pass</span>
               <button onclick="window.viewCertificatePopup(${idx})" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; border-radius: 4px;">View</button>
+              ${isAdminViewing ? `<button onclick="revokeCertificateAdmin(${idx})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; border-radius: 4px; background: #ef4444; border-color: #ef4444; color: white;">Revoke</button>` : ''}
             </div>
             ${pointsInfo ? `<span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">${pointsInfo}</span>` : ''}
           </div>
@@ -912,9 +926,14 @@
         card.innerHTML = `
           <div class="flex-between" style="margin-bottom: 0.5rem;">
             <span style="font-size: 1.5rem;">${proj.thumbnail_url || "📁"}</span>
-            <button onclick="deleteProject(${proj.id})" class="btn" style="padding: 0.25rem 0.5rem; border: 1px solid var(--danger); color: var(--danger); background: transparent; font-size: 0.8rem;">
-              Delete
-            </button>
+            <div style="display: flex; gap: 0.25rem;">
+              <button onclick="editProject(${proj.id})" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                ✏️ Edit
+              </button>
+              <button onclick="deleteProject(${proj.id})" class="btn" style="padding: 0.25rem 0.5rem; border: 1px solid var(--danger); color: var(--danger); background: transparent; font-size: 0.8rem;">
+                Delete
+              </button>
+            </div>
           </div>
           <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${proj.title}</h4>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
@@ -1037,14 +1056,18 @@
         myInterviews.forEach(meet => {
           const item = document.createElement('div');
           item.style.cssText = "padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;";
+          const isAdminViewing = user && (user.role === 'admin' || user.role === 'recruiter');
           item.innerHTML = `
             <div>
               <strong style="display:block;">${meet.challenge_title}</strong>
               <span style="font-size:0.75rem; color:var(--primary);">${new Date(meet.scheduled_at).toLocaleString()}</span>
             </div>
-            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: var(--radius-sm);">
-              Join Call 📞
-            </a>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: var(--radius-sm);">
+                Join Call 📞
+              </a>
+              ${isAdminViewing ? `<button onclick="cancelInterviewAdmin(${meet.id})" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; background: #ef4444; color: white; border-color: #ef4444;">Cancel</button>` : ''}
+            </div>
           `;
           container.appendChild(item);
         });
@@ -1118,7 +1141,7 @@
         
         setTimeout(() => {
           if (user.role === 'admin') {
-            window.location.href = "recruiter-dashboard.html?tab=manage-candidates";
+            window.location.href = "admin-dashboard.html?tab=candidates";
           } else {
             window.location.href = "jobs.html";
           }
@@ -1555,6 +1578,6 @@
     initFormFields();
     renderP2PJobs();
     }
-</script>
+  </script>
 </body>
 </html>
