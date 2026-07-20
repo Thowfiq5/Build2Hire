@@ -87,7 +87,9 @@
 
         sessionStorage.setItem('user', JSON.stringify(data.data));
         
-        if (data.data.role === "recruiter") {
+        if (data.data.role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        } else if (data.data.role === "recruiter") {
           window.location.href = "recruiter-dashboard.html";
         } else {
           if (data.data.profileCompleted) {
@@ -111,7 +113,9 @@
         showAlert('alert-container', 'Logged in successfully!', 'success');
         
         setTimeout(() => {
-          if (existingUser.role === "recruiter" || existingUser.role === "admin") {
+          if (existingUser.role === "admin") {
+            window.location.href = "admin-dashboard.html";
+          } else if (existingUser.role === "recruiter") {
             window.location.href = "recruiter-dashboard.html";
           } else {
             if (existingUser.profileCompleted) {
