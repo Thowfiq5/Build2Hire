@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Management System (Candidate & Recruiter CMS) | Build2Hire Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-active { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-blocked { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-approved { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    .admin-stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .admin-stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      background: var(--bg-tertiary);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .admin-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      vertical-align: middle;
+    }
+    .admin-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .action-btn-group {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-xs {
+      padding: 0.25rem 0.55rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active-section {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CMS EDITOR STYLES */
+    .cms-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 120px);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .cms-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .cms-layout-grid {
+      display: grid;
+      grid-template-columns: 250px 380px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+    .cms-left-sidebar {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .cms-section-item {
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .cms-section-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .cms-section-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--primary);
+      font-weight: 700;
+      border-left: 3px solid var(--primary);
+    }
+    .cms-center-form {
+      background: var(--bg-tertiary);
+      border-right: 1px solid var(--border-color);
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .cms-right-preview {
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .preview-header {
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .preview-viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem;
+      transition: width 0.3s ease, margin 0.3s ease;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .preview-viewport.viewport-tablet { width: 768px; }
+    .preview-viewport.viewport-mobile { width: 375px; }
+
+    .switch-toggle {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 18px;
+    }
+    .switch-toggle input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #4b5563; transition: .3s; border-radius: 20px;
+    }
+    .switch-slider:before {
+      position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .switch-slider { background-color: var(--primary); }
+    input:checked + .switch-slider:before { transform: translateX(16px); }
+
+    .cms-form-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- HEADER BANNER -->
+      <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%); border: 1px solid var(--border-color);">
+        <div>
+          <h2 style="font-size: 1.5rem; font-family: var(--font-display); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            ⚙️ Website Management System (CMS)
+          </h2>
+          <p style="color: var(--text-secondary); font-size: 0.88rem;">
+            Complete Webflow/Shopify style CMS Editors for Candidates & Recruiter Portals.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button onclick="openBroadcastModal()" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;">
+            🔔 Broadcast
+          </button>
+          <button onclick="exportSystemReport()" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;">
+            📥 Export Data
+          </button>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- ======================================================== -->
+      <!-- 1. DASHBOARD OVERVIEW -->
+      <!-- ======================================================== -->
+      <div id="tab-overview" class="tab-section active-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">📊 System Overview & Operations</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Candidates</span>
+            <strong id="stat-total-candidates" style="font-size: 1.7rem; color: var(--primary);">0</strong>
+            <span style="font-size: 0.75rem; color: #10b981;">🟢 Managed Builder Sites</span>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Recruiters</span>
+            <strong id="stat-total-recruiters" style="font-size: 1.7rem; color: var(--warning);">0</strong>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">🏢 Managed Portals</span>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Active Companies</span>
+            <strong id="stat-total-companies" style="font-size: 1.7rem; color: #3b82f6;">0</strong>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">💼 Verified Partners</span>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Jobs & Gigs Posted</span>
+            <strong id="stat-total-jobs" style="font-size: 1.7rem; color: #a855f7;">0</strong>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">📑 Active Opportunities</span>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Applications</span>
+            <strong id="stat-total-apps" style="font-size: 1.7rem; color: #ec4899;">0</strong>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">📋 Pipeline Submissions</span>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Platform Volume</span>
+            <strong id="stat-total-revenue" style="font-size: 1.7rem; color: #10b981;">$0</strong>
+            <span style="font-size: 0.75rem; color: #10b981;">💳 Escrow & Services</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem;">
+          <div class="card">
+            <h4 style="font-size: 0.95rem; margin-bottom: 1rem;">⚡ Quick Management Actions</h4>
+            <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+              <button onclick="switchTab('candidates')" class="btn btn-primary" style="font-size: 0.82rem;">🎨 Candidate Website Editor</button>
+              <button onclick="switchTab('recruiters')" class="btn btn-primary" style="font-size: 0.82rem; background: #a855f7; border-color: #a855f7;">🏢 Recruiter Portal Editor</button>
+              <button onclick="openAddCandidateModal()" class="btn btn-secondary" style="font-size: 0.82rem;">➕ Add Candidate</button>
+              <button onclick="openAddRecruiterModal()" class="btn btn-secondary" style="font-size: 0.82rem;">➕ Add Recruiter</button>
+              <button onclick="openPostJobModal()" class="btn btn-secondary" style="font-size: 0.82rem;">📑 Post Job Listing</button>
+            </div>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">🟢 CMS & System Status</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.82rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-secondary);">Candidate CMS:</span>
+                <strong style="color: #10b981;">Active & Synced</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-secondary);">Recruiter CMS:</span>
+                <strong style="color: #10b981;">Active & Synced</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-secondary);">Maintenance Mode:</span>
+                <strong style="color: var(--text-muted);">Disabled</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 2. MANAGE CANDIDATES (FULL CANDIDATE CMS) -->
+      <!-- ======================================================== -->
+      <div id="tab-candidates" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            🎨 Candidate Website Management System
+          </h3>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="btn-cand-cms" onclick="setCandidateMode('cms')" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">🎨 Candidate Editor Mode</button>
+            <button id="btn-cand-table" onclick="setCandidateMode('table')" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">📋 List Table Mode</button>
+            <button onclick="openAddCandidateModal()" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">➕ Add Candidate</button>
+          </div>
+        </div>
+
+        <!-- LIST TABLE MODE -->
+        <div id="cand-view-table" style="display: none;">
+          <div class="card" style="margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center;">
+            <input type="text" id="cand-search" class="form-control" placeholder="Search by name, email, role..." onkeyup="renderCandidatesTable()" style="max-width: 300px;">
+            <select id="cand-filter-status" class="form-control" onchange="renderCandidatesTable()" style="max-width: 180px;">
+              <option value="all">All Statuses</option>
+              <option value="active">Active Only</option>
+              <option value="blocked">Blocked Only</option>
+            </select>
+          </div>
+          <div class="card" style="padding: 0; overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Candidate Name</th>
+                  <th>Email</th>
+                  <th>XP Points</th>
+                  <th>Talent Score</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="candidates-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FULL 3-COLUMN CANDIDATE CMS -->
+        <div id="cand-view-cms" class="cms-container">
+          <div class="cms-toolbar">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Candidate:</label>
+              <select id="cms-candidate-picker" class="form-control" onchange="loadCandidateIntoCMS(this.value)" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; width: 220px;"></select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.35rem; background: var(--bg-secondary); padding: 0.2rem; border-radius: 6px; border: 1px solid var(--border-color);">
+              <button id="vp-btn-desktop" onclick="setCMSViewport('desktop')" class="btn-xs btn-primary">🖥️ Desktop</button>
+              <button id="vp-btn-tablet" onclick="setCMSViewport('tablet')" class="btn-xs btn-secondary">📱 Tablet</button>
+              <button id="vp-btn-mobile" onclick="setCMSViewport('mobile')" class="btn-xs btn-secondary">📱 Mobile</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <button onclick="cmsUndo()" class="btn-xs btn-secondary">↩️ Undo</button>
+              <button onclick="cmsRedo()" class="btn-xs btn-secondary">↪️ Redo</button>
+              <button onclick="cmsSaveDraft()" class="btn-xs btn-secondary">💾 Save Draft</button>
+              <button onclick="cmsPublish()" class="btn-xs btn-primary">🚀 Publish</button>
+              <button onclick="openVersionHistoryModal()" class="btn-xs btn-secondary">🕒 Versions</button>
+            </div>
+          </div>
+
+          <div class="cms-layout-grid">
+            <div class="cms-left-sidebar">
+              <div style="padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border-color);">
+                <input type="text" id="cms-section-search" class="form-control" placeholder="🔍 Search sections..." onkeyup="filterCMSSections(this.value)" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+              </div>
+              <div id="cms-sections-list" style="flex: 1; overflow-y: auto;"></div>
+            </div>
+            <div class="cms-center-form" id="cms-form-panel"></div>
+            <div class="cms-right-preview">
+              <div class="preview-header">
+                <span>🔴 CANDIDATE LIVE PREVIEW: <strong id="preview-cand-name" style="color: var(--primary);">Candidate Site</strong></span>
+                <span id="preview-viewport-label">Desktop Viewport (100%)</span>
+              </div>
+              <div id="cms-live-viewport" class="preview-viewport"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================== -->
+      <!-- 3. MANAGE RECRUITERS (FULL RECRUITER WEBSITE MANAGEMENT SYSTEM) -->
+      <!-- ========================================================== -->
+      <div id="tab-recruiters" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            🏢 Recruiter Website Management System (Recruiter CMS)
+          </h3>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="btn-rec-cms" onclick="setRecruiterMode('cms')" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; background: #a855f7; border-color: #a855f7;">🏢 Recruiter Editor Mode</button>
+            <button id="btn-rec-table" onclick="setRecruiterMode('table')" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">📋 List Table Mode</button>
+            <button onclick="openAddRecruiterModal()" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">➕ Add Recruiter</button>
+          </div>
+        </div>
+
+        <!-- MODE A: RECRUITER LIST TABLE VIEW -->
+        <div id="rec-view-table" style="display: none;">
+          <div class="card" style="margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center;">
+            <input type="text" id="rec-search" class="form-control" placeholder="Search by name, company, email..." onkeyup="renderRecruitersTable()" style="max-width: 300px;">
+            <select id="rec-filter-status" class="form-control" onchange="renderRecruitersTable()" style="max-width: 180px;">
+              <option value="all">All Statuses</option>
+              <option value="active">Active Only</option>
+              <option value="blocked">Blocked Only</option>
+            </select>
+          </div>
+          <div class="card" style="padding: 0; overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Recruiter Name</th>
+                  <th>Email</th>
+                  <th>Company Name</th>
+                  <th>Job Title</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recruiters-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODE B: FULL 3-COLUMN RECRUITER CMS EDITOR -->
+        <div id="rec-view-cms" class="cms-container">
+          <!-- TOP TOOLBAR -->
+          <div class="cms-toolbar">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Recruiter:</label>
+              <select id="rec-cms-picker" class="form-control" onchange="loadRecruiterIntoCMS(this.value)" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; width: 240px;"></select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.35rem; background: var(--bg-secondary); padding: 0.2rem; border-radius: 6px; border: 1px solid var(--border-color);">
+              <button id="rvp-btn-desktop" onclick="setRecruiterViewport('desktop')" class="btn-xs btn-primary">🖥️ Desktop</button>
+              <button id="rvp-btn-tablet" onclick="setRecruiterViewport('tablet')" class="btn-xs btn-secondary">📱 Tablet</button>
+              <button id="rvp-btn-mobile" onclick="setRecruiterViewport('mobile')" class="btn-xs btn-secondary">📱 Mobile</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <button onclick="recCMSUndo()" class="btn-xs btn-secondary">↩️ Undo</button>
+              <button onclick="recCMSRedo()" class="btn-xs btn-secondary">↪️ Redo</button>
+              <button onclick="recCMSSaveDraft()" class="btn-xs btn-secondary">💾 Save Draft</button>
+              <button onclick="recCMSPublish()" class="btn-xs btn-primary" style="background: #a855f7; border-color: #a855f7;">🚀 Publish</button>
+              <button onclick="openRecruiterVersionsModal()" class="btn-xs btn-secondary">🕒 Versions</button>
+              <button onclick="exportSystemReport()" class="btn-xs btn-secondary">📥 Export CSV</button>
+            </div>
+          </div>
+
+          <!-- 3-COLUMN RECRUITER CMS LAYOUT GRID -->
+          <div class="cms-layout-grid">
+            <!-- LEFT SIDEBAR: 22 RECRUITER SECTIONS -->
+            <div class="cms-left-sidebar">
+              <div style="padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border-color);">
+                <input type="text" id="rec-section-search" class="form-control" placeholder="🔍 Search 22 sections..." onkeyup="filterRecruiterCMSSections(this.value)" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+              </div>
+              <div id="rec-sections-list" style="flex: 1; overflow-y: auto;">
+                <!-- 22 Recruiter Sections rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- CENTER PANEL: EDITABLE FORMS -->
+            <div class="cms-center-form" id="rec-form-panel">
+              <!-- Contextual Form Editor renders dynamically -->
+            </div>
+
+            <!-- RIGHT PANEL: LIVE RECRUITER PORTAL PREVIEW -->
+            <div class="cms-right-preview">
+              <div class="preview-header">
+                <span>🏢 RECRUITER PORTAL PREVIEW: <strong id="preview-rec-company" style="color: #a855f7;">InnovateTech</strong></span>
+                <span id="rec-viewport-label">Desktop Viewport (100%)</span>
+              </div>
+              <div id="rec-live-viewport" class="preview-viewport">
+                <!-- Live Recruiter Portal UI renders dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 4. MANAGE COMPANIES -->
+      <!-- ======================================================== -->
+      <div id="tab-companies" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary);">🏢 Company Registrations & Directory</h3>
+          <button onclick="openAddCompanyModal()" class="btn btn-primary" style="font-size: 0.85rem;">➕ Register Company</button>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Company Name</th>
+                <th>Owner / Candidate ID</th>
+                <th>Registration Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="companies-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 5. MANAGE JOBS -->
+      <!-- ======================================================== -->
+      <div id="tab-jobs" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary);">📑 Job Listings Management</h3>
+          <button onclick="openPostJobModal()" class="btn btn-primary" style="font-size: 0.85rem;">➕ Post New Job</button>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Category</th>
+                <th>Salary</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="jobs-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 6. MANAGE APPLICATIONS -->
+      <!-- ======================================================== -->
+      <div id="tab-applications" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">📋 Candidate Applications</h3>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Candidate Name</th>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applied Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="applications-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 7. MANAGE INTERVIEWS -->
+      <!-- ======================================================== -->
+      <div id="tab-interviews" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary);">🤝 Scheduled Interviews</h3>
+          <button onclick="openScheduleInterviewModal()" class="btn btn-primary" style="font-size: 0.85rem;">➕ Schedule Interview</button>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Candidate Name</th>
+                <th>Company</th>
+                <th>Date & Time</th>
+                <th>Meeting Link</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="interviews-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 8. MANAGE ASSESSMENTS -->
+      <!-- ======================================================== -->
+      <div id="tab-assessments" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary);">🎯 Platform Assessments & Challenges</h3>
+          <button onclick="openAddAssessmentModal()" class="btn btn-primary" style="font-size: 0.85rem;">➕ Create Assessment</button>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Assessment Title</th>
+                <th>Category</th>
+                <th>Difficulty</th>
+                <th>Max XP</th>
+                <th>Company Sponsor</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assessments-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 9. MANAGE FREELANCE GIGS -->
+      <!-- ======================================================== -->
+      <div id="tab-gigs" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">⚡ Freelance Gigs & Escrow Contracts</h3>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Contract ID</th>
+                <th>Gig Title</th>
+                <th>Company</th>
+                <th>Candidate ID</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="gigs-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 10. PAYMENTS -->
+      <!-- ======================================================== -->
+      <div id="tab-payments" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">💳 Financial Ledger & Payments</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Total Invoiced Volume</span>
+            <strong id="pay-total-invoiced" style="font-size: 1.6rem; color: #10b981;">$0</strong>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Completed Payouts</span>
+            <strong id="pay-total-completed" style="font-size: 1.6rem; color: #3b82f6;">$0</strong>
+          </div>
+          <div class="admin-stat-card">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Platform Escrow Reserves</span>
+            <strong id="pay-total-escrow" style="font-size: 1.6rem; color: var(--warning);">$0</strong>
+          </div>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Contract / Title</th>
+                <th>Amount</th>
+                <th>Date Paid</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="payments-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 11. REPORTS & ANALYTICS -->
+      <!-- ======================================================== -->
+      <div id="tab-reports" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">📈 Platform Reports & Analytics</h3>
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 1rem;">Platform Growth & Performance Metrics</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">Candidate Conversion Rate</span>
+              <h4 style="font-size: 1.5rem; color: var(--primary); margin-top: 0.25rem;">84.2%</h4>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">Assessment Pass Rate</span>
+              <h4 style="font-size: 1.5rem; color: #10b981; margin-top: 0.25rem;">76.5%</h4>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">Gig Completion Time</span>
+              <h4 style="font-size: 1.5rem; color: var(--warning); margin-top: 0.25rem;">4.2 Days</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 12. NOTIFICATIONS -->
+      <!-- ======================================================== -->
+      <div id="tab-notifications" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-primary);">🔔 System Notifications & Broadcasts</h3>
+          <button onclick="openBroadcastModal()" class="btn btn-primary" style="font-size: 0.85rem;">➕ Send Broadcast</button>
+        </div>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Target Audience</th>
+                <th>Broadcast Message</th>
+                <th>Sent Date</th>
+                <th>Sent By</th>
+              </tr>
+            </thead>
+            <tbody id="notifications-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 13. SETTINGS -->
+      <!-- ======================================================== -->
+      <div id="tab-settings" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">⚙️ System Settings & Control</h3>
+        <div class="card" style="max-width: 600px;">
+          <form id="system-settings-form">
+            <div class="form-group">
+              <label class="form-label">Platform Name</label>
+              <input type="text" id="setting-platform-name" class="form-control" value="Build2Hire Platform">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Maintenance Mode</label>
+              <select id="setting-maint-mode" class="form-control">
+                <option value="disabled">Disabled (Normal Operations)</option>
+                <option value="enabled">Enabled (System Maintenance)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Platform Settings</button>
+          </form>
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+          <h4 style="font-size: 0.95rem; color: var(--danger); margin-bottom: 0.5rem;">⚠️ System Reset</h4>
+          <button onclick="resetDatabaseToFactory()" class="btn" style="border: 1px solid var(--danger); color: var(--danger); background: transparent;">Reset Local Database</button>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 14. ACTIVITY LOGS -->
+      <!-- ======================================================== -->
+      <div id="tab-activity" class="tab-section">
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--text-primary);">📜 Real-Time Activity Logs</h3>
+        <div class="card" style="padding: 0; overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Log ID</th>
+                <th>Action Event</th>
+                <th>Event Details</th>
+                <th>Target Entity</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="activity-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div id="candidate-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('candidate-modal')">✕</button>
+      <h3 id="cand-modal-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Add New Candidate</h3>
+      <form id="cand-form">
+        <input type="hidden" id="cand-form-id">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" required id="cand-form-name" class="form-control" placeholder="Alex Rivera">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" required id="cand-form-email" class="form-control" placeholder="candidate@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">XP Points</label>
+          <input type="number" id="cand-form-xp" class="form-control" value="0">
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label">Talent Score (0 - 100)</label>
+          <input type="number" min="0" max="100" id="cand-form-score" class="form-control" value="0">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Candidate</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="recruiter-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('recruiter-modal')">✕</button>
+      <h3 id="rec-modal-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Add New Recruiter</h3>
+      <form id="rec-form">
+        <input type="hidden" id="rec-form-id">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" required id="rec-form-name" class="form-control" placeholder="Jane Recruiter">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" required id="rec-form-email" class="form-control" placeholder="recruiter@company.com">
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label">Company Name</label>
+          <input type="text" required id="rec-form-company" class="form-control" placeholder="InnovateTech">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Recruiter</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="job-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('job-modal')">✕</button>
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Post Job Listing</h3>
+      <form id="job-form">
+        <div class="form-group">
+          <label class="form-label">Job Title</label>
+          <input type="text" required id="job-form-title" class="form-control" placeholder="Senior React Developer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company Name</label>
+          <input type="text" required id="job-form-company" class="form-control" placeholder="Vercel Inc">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="job-form-category" class="form-control">
+            <option value="Frontend Developer">Frontend Developer</option>
+            <option value="Backend Engineer">Backend Engineer</option>
+            <option value="Database Administrator">Database Administrator</option>
+            <option value="Full Stack Engineer">Full Stack Engineer</option>
+            <option value="Video Editor">Video Editor</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label">Salary / Rate</label>
+          <input type="text" required id="job-form-salary" class="form-control" placeholder="$130k - $160k">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Post Opportunity</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="assessment-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('assessment-modal')">✕</button>
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Create Assessment Challenge</h3>
+      <form id="assessment-form">
+        <div class="form-group">
+          <label class="form-label">Assessment Title</label>
+          <input type="text" required id="ass-form-title" class="form-control" placeholder="Video Editor Dashboard UI">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="ass-form-category" class="form-control">
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Database">Database</option>
+            <option value="Creative">Creative</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label">Difficulty</label>
+          <select id="ass-form-diff" class="form-control">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Assessment</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="broadcast-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('broadcast-modal')">✕</button>
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Send Broadcast Notification</h3>
+      <form id="broadcast-form">
+        <div class="form-group">
+          <label class="form-label">Target Audience</label>
+          <select id="bcast-form-target" class="form-control">
+            <option value="All Users">All Platform Users</option>
+            <option value="Candidates">All Candidates Only</option>
+            <option value="Recruiters">All Recruiters Only</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label">Announcement Message</label>
+          <textarea required id="bcast-form-msg" class="form-control" rows="3" placeholder="Enter announcement text..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Broadcast</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="version-history-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('version-history-modal')">✕</button>
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">🕒 Candidate Site Version History</h3>
+      <div id="versions-list-container" style="max-height: 350px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = withAuth(['admin']);
+    if (auth) {
+      let dbState = dbGet();
+
+      // CANDIDATE CMS STATE
+      let currentCMSCandidateId = null;
+      let currentCMSData = null;
+      let activeCMSSection = 'hero';
+      let cmsHistory = [];
+      let cmsHistoryIndex = -1;
+
+      // RECRUITER CMS STATE
+      let currentRecruiterId = null;
+      let currentRecruiterData = null;
+      let activeRecruiterSection = 'company_profile';
+      let recHistory = [];
+      let recHistoryIndex = -1;
+
+      const CMS_SECTIONS = [
+        { id: 'dashboard', name: '📊 Dashboard', desc: 'Overview stats & level' },
+        { id: 'hero', name: '🚀 Hero Section', desc: 'Headline, subheadline & avatar' },
+        { id: 'profile', name: '👤 Profile & Bio', desc: 'Contact info & socials' },
+        { id: 'skills', name: '⚡ Skills Matrix', desc: 'Skills & proficiencies' },
+        { id: 'portfolio', name: '📁 Portfolio & Projects', desc: 'Verified projects' },
+        { id: 'resume', name: '📄 Resume', desc: 'Summary & PDF document' },
+        { id: 'education', name: '🎓 Education', desc: 'Degrees & institutions' },
+        { id: 'experience', name: '💼 Experience', desc: 'Work history' },
+        { id: 'certifications', name: '🏆 Certifications', desc: 'Badges & scores' },
+        { id: 'roadmap', name: '📚 Learning Roadmap', desc: 'Course progress' },
+        { id: 'assessments', name: '🎯 Assessments', desc: 'Technical submissions' },
+        { id: 'applications', name: '📋 Job Applications', desc: 'Applied opportunities' },
+        { id: 'inbox', name: '💬 Inbox & Messages', desc: 'Recruiter chat' },
+        { id: 'settings', name: '⚙️ Site Settings', desc: 'Section switches' }
+      ];
+
+      const RECRUITER_SECTIONS = [
+        { id: 'info', name: 'ℹ️ Recruiter Info', desc: 'Account credentials & contact' },
+        { id: 'dashboard', name: '📊 Dashboard Overview', desc: 'Pipeline counters & hiring stats' },
+        { id: 'company_profile', name: '🏢 Company Profile', desc: 'Business name, website & description' },
+        { id: 'company_branding', name: '🎨 Company Logo & Cover', desc: 'Logo icon & banner cover image' },
+        { id: 'recruiter_profile', name: '👤 Recruiter Profile', desc: 'Recruiter photo, bio & title' },
+        { id: 'posted_jobs', name: '📑 Posted Jobs', desc: 'Active job listings' },
+        { id: 'job_details', name: '🔍 Job Details', desc: 'Requirements & salary' },
+        { id: 'applications', name: '📋 Applications', desc: 'Candidate submissions' },
+        { id: 'pipeline_candidates', name: '👥 Pipeline Candidates', desc: 'Hiring pipeline' },
+        { id: 'shortlist_pipeline', name: '🎯 Shortlist Pipeline', desc: 'Shortlisted candidates' },
+        { id: 'interviews', name: '🤝 Scheduled Interviews', desc: 'Google Meet calls' },
+        { id: 'manage_jobs', name: '💼 Manage Jobs', desc: 'Job posting & edits' },
+        { id: 'milestone_gigs', name: '⚡ Milestone Gigs', desc: 'Escrow contracts' },
+        { id: 'p2p_gigs', name: '🔄 P2P Gigs', desc: 'Peer contracts' },
+        { id: 'company_regs', name: '🏢 Company Registrations', desc: 'Approvals & status' },
+        { id: 'analytics', name: '📈 Analytics & KPIs', desc: 'Recruitment charts' },
+        { id: 'leaderboard', name: '🏆 Leaderboard', desc: 'Performance ranks' },
+        { id: 'notifications', name: '🔔 Notifications', desc: 'Dispatched alerts' },
+        { id: 'inbox', name: '💬 Messages & Inbox', desc: 'Candidate chat logs' },
+        { id: 'meetings', name: '📅 Meetings', desc: 'Video room invites' },
+        { id: 'settings', name: '⚙️ Portal Settings', desc: 'Visibility & security' },
+        { id: 'activity', name: '📜 Activity Logs', desc: 'Recruiter event logs' }
+      ];
+
+      function initAdminDashboard() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'overview';
+        switchTab(activeTab);
+        renderOverview();
+      }
+
+      function switchTab(tabName) {
+        const sections = document.querySelectorAll('.tab-section');
+        sections.forEach(sec => sec.classList.remove('active-section'));
+
+        const target = document.getElementById(`tab-${tabName}`) || document.getElementById('tab-overview');
+        target.classList.add('active-section');
+
+        const newUrl = window.location.pathname + `?tab=${tabName}`;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+
+        renderSidebar('admin-dashboard.html');
+
+        if (tabName === 'overview') renderOverview();
+        else if (tabName === 'candidates') initCMSCandidateView();
+        else if (tabName === 'recruiters') initCMSRecruiterView();
+        else if (tabName === 'companies') renderCompaniesTable();
+        else if (tabName === 'jobs') renderJobsTable();
+        else if (tabName === 'applications') renderApplicationsTable();
+        else if (tabName === 'interviews') renderInterviewsTable();
+        else if (tabName === 'assessments') renderAssessmentsTable();
+        else if (tabName === 'gigs') renderGigsTable();
+        else if (tabName === 'payments') renderPaymentsTable();
+        else if (tabName === 'notifications') renderNotificationsTable();
+        else if (tabName === 'activity') renderActivityTable();
+      }
+
+      function setCandidateMode(mode) {
+        if (mode === 'cms') {
+          document.getElementById('cand-view-cms').style.display = 'flex';
+          document.getElementById('cand-view-table').style.display = 'none';
+          document.getElementById('btn-cand-cms').className = 'btn btn-primary';
+          document.getElementById('btn-cand-table').className = 'btn btn-secondary';
+        } else {
+          document.getElementById('cand-view-cms').style.display = 'none';
+          document.getElementById('cand-view-table').style.display = 'block';
+          document.getElementById('btn-cand-cms').className = 'btn btn-secondary';
+          document.getElementById('btn-cand-table').className = 'btn btn-primary';
+          renderCandidatesTable();
+        }
+      }
+
+      function setRecruiterMode(mode) {
+        if (mode === 'cms') {
+          document.getElementById('rec-view-cms').style.display = 'flex';
+          document.getElementById('rec-view-table').style.display = 'none';
+          document.getElementById('btn-rec-cms').className = 'btn btn-primary';
+          document.getElementById('btn-rec-table').className = 'btn btn-secondary';
+        } else {
+          document.getElementById('rec-view-cms').style.display = 'none';
+          document.getElementById('rec-view-table').style.display = 'block';
+          document.getElementById('btn-rec-cms').className = 'btn btn-secondary';
+          document.getElementById('btn-rec-table').className = 'btn btn-primary';
+          renderRecruitersTable();
+        }
+      }
+
+      function initCMSCandidateView() {
+        dbState = dbGet();
+        const candidates = dbState.users.filter(u => u.role === 'candidate');
+        const picker = document.getElementById('cms-candidate-picker');
+
+        picker.innerHTML = candidates.map(c => `
+          <option value="${c.id}">${c.fullName || 'Candidate'} (${c.email})</option>
+        `).join('');
+
+        if (candidates.length > 0) {
+          const selectedId = currentCMSCandidateId || candidates[0].id;
+          picker.value = selectedId;
+          loadCandidateIntoCMS(selectedId);
+        }
+        setCandidateMode('cms');
+      }
+
+      function loadCandidateIntoCMS(candidateId) {
+        currentCMSCandidateId = candidateId;
+        const candData = adminGetCandidateFullCMSData(candidateId);
+        if (!candData) return;
+
+        currentCMSData = JSON.parse(JSON.stringify(candData));
+        cmsHistory = [JSON.stringify(currentCMSData)];
+        cmsHistoryIndex = 0;
+
+        renderCMSSectionsList();
+        selectCMSSection(activeCMSSection);
+        updateCMSLivePreview();
+      }
+
+      // RECRUITER CMS INIT
+      function initCMSRecruiterView() {
+        dbState = dbGet();
+        const recruiters = dbState.users.filter(u => u.role === 'recruiter');
+        const picker = document.getElementById('rec-cms-picker');
+
+        picker.innerHTML = recruiters.map(r => `
+          <option value="${r.id}">${r.fullName || 'Recruiter'} (${r.companyName})</option>
+        `).join('');
+
+        if (recruiters.length > 0) {
+          const selectedId = currentRecruiterId || recruiters[0].id;
+          picker.value = selectedId;
+          loadRecruiterIntoCMS(selectedId);
+        }
+        setRecruiterMode('cms');
+      }
+
+      function loadRecruiterIntoCMS(recruiterId) {
+        currentRecruiterId = recruiterId;
+        const recData = adminGetRecruiterFullCMSData(recruiterId);
+        if (!recData) return;
+
+        currentRecruiterData = JSON.parse(JSON.stringify(recData));
+        recHistory = [JSON.stringify(currentRecruiterData)];
+        recHistoryIndex = 0;
+
+        renderRecruiterSectionsList();
+        selectRecruiterSection(activeRecruiterSection);
+        updateRecruiterLivePreview();
+      }
+
+      function renderRecruiterSectionsList(query = '') {
+        const list = document.getElementById('rec-sections-list');
+        const filtered = RECRUITER_SECTIONS.filter(s => s.name.toLowerCase().includes(query.toLowerCase()));
+
+        list.innerHTML = filtered.map(s => {
+          const isEnabled = currentRecruiterData.enabledRecruiterSections ? currentRecruiterData.enabledRecruiterSections[s.id] !== false : true;
+          const isActive = s.id === activeRecruiterSection;
+          return `
+            <div class="cms-section-item ${isActive ? 'active' : ''}" onclick="selectRecruiterSection('${s.id}')">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span>${s.name}</span>
+                <span style="font-size: 0.68rem; color: var(--text-muted);">${s.desc}</span>
+              </div>
+              <label class="switch-toggle" onclick="event.stopPropagation();">
+                <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleRecruiterSectionVisibility('${s.id}', this.checked)">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function filterRecruiterCMSSections(val) {
+        renderRecruiterSectionsList(val);
+      }
+
+      function toggleRecruiterSectionVisibility(secId, isEnabled) {
+        if (!currentRecruiterData.enabledRecruiterSections) currentRecruiterData.enabledRecruiterSections = {};
+        currentRecruiterData.enabledRecruiterSections[secId] = isEnabled;
+        pushRecruiterHistoryState();
+        updateRecruiterLivePreview();
+      }
+
+      function selectRecruiterSection(secId) {
+        activeRecruiterSection = secId;
+        renderRecruiterSectionsList(document.getElementById('rec-section-search').value || '');
+        renderRecruiterSectionForm(secId);
+      }
+
+      function pushRecruiterHistoryState() {
+        const stateStr = JSON.stringify(currentRecruiterData);
+        if (recHistory[recHistoryIndex] !== stateStr) {
+          recHistory = recHistory.slice(0, recHistoryIndex + 1);
+          recHistory.push(stateStr);
+          recHistoryIndex = recHistory.length - 1;
+        }
+      }
+
+      function recCMSUndo() {
+        if (recHistoryIndex > 0) {
+          recHistoryIndex--;
+          currentRecruiterData = JSON.parse(recHistory[recHistoryIndex]);
+          renderRecruiterSectionForm(activeRecruiterSection);
+          updateRecruiterLivePreview();
+          showAlert('alert-container', '↩️ Undone edit.', 'info');
+        }
+      }
+
+      function recCMSRedo() {
+        if (recHistoryIndex < recHistory.length - 1) {
+          recHistoryIndex++;
+          currentRecruiterData = JSON.parse(recHistory[recHistoryIndex]);
+          renderRecruiterSectionForm(activeRecruiterSection);
+          updateRecruiterLivePreview();
+          showAlert('alert-container', '↪️ Redone edit.', 'info');
+        }
+      }
+
+      function setRecruiterViewport(type) {
+        const viewport = document.getElementById('rec-live-viewport');
+        const label = document.getElementById('rec-viewport-label');
+        
+        document.getElementById('rvp-btn-desktop').className = 'btn-xs btn-secondary';
+        document.getElementById('rvp-btn-tablet').className = 'btn-xs btn-secondary';
+        document.getElementById('rvp-btn-mobile').className = 'btn-xs btn-secondary';
+
+        viewport.classList.remove('viewport-tablet', 'viewport-mobile');
+
+        if (type === 'tablet') {
+          viewport.classList.add('viewport-tablet');
+          label.textContent = 'Tablet Viewport (768px)';
+          document.getElementById('rvp-btn-tablet').className = 'btn-xs btn-primary';
+        } else if (type === 'mobile') {
+          viewport.classList.add('viewport-mobile');
+          label.textContent = 'Mobile Viewport (375px)';
+          document.getElementById('rvp-btn-mobile').className = 'btn-xs btn-primary';
+        } else {
+          label.textContent = 'Desktop Viewport (100%)';
+          document.getElementById('rvp-btn-desktop').className = 'btn-xs btn-primary';
+        }
+      }
+
+      // RECRUITER FORM GENERATOR
+      function renderRecruiterSectionForm(secId) {
+        const panel = document.getElementById('rec-form-panel');
+        const secInfo = RECRUITER_SECTIONS.find(s => s.id === secId) || RECRUITER_SECTIONS[0];
+        const isEnabled = currentRecruiterData.enabledRecruiterSections ? currentRecruiterData.enabledRecruiterSections[secId] !== false : true;
+        const r = currentRecruiterData;
+
+        let html = `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+            <div>
+              <h4 style="font-size: 1.05rem; color: var(--text-primary);">${secInfo.name}</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">${secInfo.desc}</p>
+            </div>
+            <span class="admin-badge ${isEnabled ? 'badge-active' : 'badge-blocked'}">${isEnabled ? 'Enabled' : 'Disabled'}</span>
+          </div>
+        `;
+
+        if (secId === 'company_profile') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Business / Company Name</label>
+              <input type="text" class="form-control" value="${r.companyName || ''}" oninput="updateRecDataField('companyName', this.value)">
+
+              <label class="form-label">Industry Category</label>
+              <input type="text" class="form-control" value="${r.companyIndustry || ''}" oninput="updateRecDataField('companyIndustry', this.value)">
+
+              <label class="form-label">Company Description</label>
+              <textarea class="form-control" rows="3" oninput="updateRecDataField('companyDesc', this.value)">${r.companyDesc || ''}</textarea>
+
+              <label class="form-label">Company Website URL</label>
+              <input type="text" class="form-control" value="${r.companyWebsite || ''}" oninput="updateRecDataField('companyWebsite', this.value)">
+
+              <label class="form-label">Contact Email</label>
+              <input type="email" class="form-control" value="${r.companyEmail || ''}" oninput="updateRecDataField('companyEmail', this.value)">
+
+              <label class="form-label">Location / Headquarters</label>
+              <input type="text" class="form-control" value="${r.companyLocation || ''}" oninput="updateRecDataField('companyLocation', this.value)">
+            </div>
+          `;
+        } else if (secId === 'company_branding') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Company Logo Icon / Emoji</label>
+              <input type="text" class="form-control" value="${r.companyLogo || '🏢'}" oninput="updateRecDataField('companyLogo', this.value)">
+
+              <label class="form-label">Company Cover Banner Image URL</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" class="form-control" value="${r.companyCover || ''}" oninput="updateRecDataField('companyCover', this.value)">
+                <button onclick="triggerMockUpload('Company cover image')" class="btn btn-secondary" style="font-size: 0.75rem;">Upload</button>
+              </div>
+            </div>
+          `;
+        } else if (secId === 'recruiter_profile' || secId === 'info') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Recruiter Full Name</label>
+              <input type="text" class="form-control" value="${r.fullName || ''}" oninput="updateRecDataField('fullName', this.value)">
+
+              <label class="form-label">Job Title / Designation</label>
+              <input type="text" class="form-control" value="${r.jobTitle || ''}" oninput="updateRecDataField('jobTitle', this.value)">
+
+              <label class="form-label">Recruiter Email</label>
+              <input type="email" class="form-control" value="${r.email || ''}" oninput="updateRecDataField('email', this.value)">
+
+              <label class="form-label">Recruiter Photo URL</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" class="form-control" value="${r.photoUrl || ''}" oninput="updateRecDataField('photoUrl', this.value)">
+                <button onclick="triggerMockUpload('Recruiter photo')" class="btn btn-secondary" style="font-size: 0.75rem;">Upload</button>
+              </div>
+
+              <label class="form-label">Recruiter Bio</label>
+              <textarea class="form-control" rows="3" oninput="updateRecDataField('bio', this.value)">${r.bio || ''}</textarea>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="cms-form-card">
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Recruiter section options active for <strong>${secInfo.name}</strong>. Toggle section visibility using the switch in the left sidebar or update section parameters below.</p>
+              <label class="form-label">Section Tag / Notes</label>
+              <input type="text" class="form-control" value="Active Recruiter Section" placeholder="Section verified">
+            </div>
+          `;
+        }
+
+        panel.innerHTML = html;
+      }
+
+      function updateRecDataField(field, val) {
+        currentRecruiterData[field] = val;
+        pushRecruiterHistoryState();
+        updateRecruiterLivePreview();
+      }
+
+      // REAL-TIME RECRUITER LIVE PREVIEW RENDERER
+      function updateRecruiterLivePreview() {
+        const viewport = document.getElementById('rec-live-viewport');
+        const r = currentRecruiterData;
+        const sec = r.enabledRecruiterSections || {};
+        const db = dbGet();
+
+        document.getElementById('preview-rec-company').textContent = r.companyName || 'InnovateTech';
+
+        let html = `
+          <div style="font-family: var(--font-sans); color: var(--text-primary); display: flex; flex-direction: column; gap: 1.25rem;">
+        `;
+
+        // COMPANY BRANDING HEADER
+        if (sec.company_branding !== false || sec.company_profile !== false) {
+          html += `
+            <div style="background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(99,102,241,0.15)); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 1rem; align-items: center;">
+              <div style="font-size: 2.2rem; background: var(--bg-tertiary); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color);">${r.companyLogo || '🏢'}</div>
+              <div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 0.2rem;">${r.companyName || 'Company'}</h3>
+                <p style="font-size: 0.8rem; color: #a855f7; font-weight: 600;">📍 ${r.companyLocation || 'Location'} | ${r.companyIndustry || 'Tech'}</p>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">${r.companyDesc || ''}</p>
+              </div>
+            </div>
+          `;
+        }
+
+        // RECRUITER WELCOME CARD
+        if (sec.recruiter_profile !== false || sec.dashboard !== false) {
+          html += `
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <img src="${r.photoUrl}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #a855f7;">
+                <div>
+                  <strong style="font-size: 0.95rem;">${r.fullName || 'Jane Recruiter'}</strong>
+                  <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">${r.jobTitle || 'Hiring Manager'}</span>
+                </div>
+              </div>
+              <span class="admin-badge badge-active">Active Recruiter</span>
+            </div>
+          `;
+        }
+
+        // POSTED JOBS PREVIEW
+        if (sec.posted_jobs !== false) {
+          const jobs = db.jobs || [];
+          html += `
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+              <h4 style="font-size: 0.88rem; margin-bottom: 0.65rem; color: #a855f7;">📑 Active Job Listings</h4>
+              <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                ${jobs.slice(0, 3).map(j => `
+                  <div style="background: var(--bg-tertiary); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <strong style="font-size: 0.82rem;">${j.title}</strong>
+                      <span style="font-size: 0.7rem; color: var(--text-muted); display: block;">${j.category} | ${j.salary}</span>
+                    </div>
+                    <span class="admin-badge badge-approved">${j.type}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        html += `</div>`;
+        viewport.innerHTML = html;
+      }
+
+      function recCMSSaveDraft() {
+        adminSaveRecruiterDraft(currentRecruiterId, currentRecruiterData);
+        showAlert('alert-container', '💾 Recruiter portal draft saved!', 'success');
+      }
+
+      function recCMSPublish() {
+        adminPublishRecruiterWebsite(currentRecruiterId, currentRecruiterData);
+        showAlert('alert-container', '🚀 Recruiter portal updates published live!', 'success');
+      }
+
+      function openRecruiterVersionsModal() {
+        const versions = adminGetRecruiterVersions(currentRecruiterId);
+        const container = document.getElementById('versions-list-container');
+
+        if (versions.length === 0) {
+          container.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 1rem;">No recruiter portal snapshots recorded yet.</p>`;
+        } else {
+          container.innerHTML = versions.map(v => `
+            <div style="background: var(--bg-tertiary); padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+              <div>
+                <strong style="font-size: 0.85rem; color: #a855f7;">${v.versionId}</strong>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">${new Date(v.timestamp).toLocaleString()}</span>
+              </div>
+              <button onclick="restoreRecVersion('${v.versionId}')" class="btn-xs btn-primary">Restore</button>
+            </div>
+          `).join('');
+        }
+
+        openModal('version-history-modal');
+      }
+
+      function restoreRecVersion(versionId) {
+        adminRestoreRecruiterVersion(currentRecruiterId, versionId);
+        showAlert('alert-container', `Restored recruiter snapshot ${versionId}`, 'success');
+        closeModal('version-history-modal');
+        loadRecruiterIntoCMS(currentRecruiterId);
+      }
+
+      // CANDIDATE CMS RENDER & HANDLERS
+      function renderCMSSectionsList(query = '') {
+        const list = document.getElementById('cms-sections-list');
+        const filtered = CMS_SECTIONS.filter(s => s.name.toLowerCase().includes(query.toLowerCase()));
+
+        list.innerHTML = filtered.map(s => {
+          const isEnabled = currentCMSData.enabledSections ? currentCMSData.enabledSections[s.id] !== false : true;
+          const isActive = s.id === activeCMSSection;
+          return `
+            <div class="cms-section-item ${isActive ? 'active' : ''}" onclick="selectCMSSection('${s.id}')">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span>${s.name}</span>
+                <span style="font-size: 0.68rem; color: var(--text-muted);">${s.desc}</span>
+              </div>
+              <label class="switch-toggle" onclick="event.stopPropagation();">
+                <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleCMSSectionVisibility('${s.id}', this.checked)">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function filterCMSSections(val) { renderCMSSectionsList(val); }
+
+      function toggleCMSSectionVisibility(secId, isEnabled) {
+        if (!currentCMSData.enabledSections) currentCMSData.enabledSections = {};
+        currentCMSData.enabledSections[secId] = isEnabled;
+        pushCMSHistoryState();
+        updateCMSLivePreview();
+      }
+
+      function selectCMSSection(secId) {
+        activeCMSSection = secId;
+        renderCMSSectionsList(document.getElementById('cms-section-search').value || '');
+        renderCMSSectionForm(secId);
+      }
+
+      function pushCMSHistoryState() {
+        const stateStr = JSON.stringify(currentCMSData);
+        if (cmsHistory[cmsHistoryIndex] !== stateStr) {
+          cmsHistory = cmsHistory.slice(0, cmsHistoryIndex + 1);
+          cmsHistory.push(stateStr);
+          cmsHistoryIndex = cmsHistory.length - 1;
+        }
+      }
+
+      function cmsUndo() {
+        if (cmsHistoryIndex > 0) {
+          cmsHistoryIndex--;
+          currentCMSData = JSON.parse(cmsHistory[cmsHistoryIndex]);
+          renderCMSSectionForm(activeCMSSection);
+          updateCMSLivePreview();
+        }
+      }
+
+      function cmsRedo() {
+        if (cmsHistoryIndex < cmsHistory.length - 1) {
+          cmsHistoryIndex++;
+          currentCMSData = JSON.parse(cmsHistory[cmsHistoryIndex]);
+          renderCMSSectionForm(activeCMSSection);
+          updateCMSLivePreview();
+        }
+      }
+
+      function setCMSViewport(type) {
+        const viewport = document.getElementById('cms-live-viewport');
+        const label = document.getElementById('preview-viewport-label');
+        
+        document.getElementById('vp-btn-desktop').className = 'btn-xs btn-secondary';
+        document.getElementById('vp-btn-tablet').className = 'btn-xs btn-secondary';
+        document.getElementById('vp-btn-mobile').className = 'btn-xs btn-secondary';
+
+        viewport.classList.remove('viewport-tablet', 'viewport-mobile');
+
+        if (type === 'tablet') {
+          viewport.classList.add('viewport-tablet');
+          label.textContent = 'Tablet Viewport (768px)';
+          document.getElementById('vp-btn-tablet').className = 'btn-xs btn-primary';
+        } else if (type === 'mobile') {
+          viewport.classList.add('viewport-mobile');
+          label.textContent = 'Mobile Viewport (375px)';
+          document.getElementById('vp-btn-mobile').className = 'btn-xs btn-primary';
+        } else {
+          label.textContent = 'Desktop Viewport (100%)';
+          document.getElementById('vp-btn-desktop').className = 'btn-xs btn-primary';
+        }
+      }
+
+      function renderCMSSectionForm(secId) {
+        const panel = document.getElementById('cms-form-panel');
+        const secInfo = CMS_SECTIONS.find(s => s.id === secId) || CMS_SECTIONS[0];
+        const isEnabled = currentCMSData.enabledSections ? currentCMSData.enabledSections[secId] !== false : true;
+
+        let html = `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+            <div>
+              <h4 style="font-size: 1.05rem; color: var(--text-primary);">${secInfo.name}</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">${secInfo.desc}</p>
+            </div>
+            <span class="admin-badge ${isEnabled ? 'badge-active' : 'badge-blocked'}">${isEnabled ? 'Enabled' : 'Disabled'}</span>
+          </div>
+        `;
+
+        if (secId === 'hero') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Hero Headline</label>
+              <textarea class="form-control" rows="2" oninput="updateCMSDataField('heroHeadline', this.value)">${currentCMSData.heroHeadline || ''}</textarea>
+
+              <label class="form-label">Hero Subheadline</label>
+              <textarea class="form-control" rows="3" oninput="updateCMSDataField('heroSubheadline', this.value)">${currentCMSData.heroSubheadline || ''}</textarea>
+
+              <label class="form-label">Avatar Image URL</label>
+              <input type="text" class="form-control" value="${currentCMSData.avatarUrl || ''}" oninput="updateCMSDataField('avatarUrl', this.value)">
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="cms-form-card">
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Section options loaded for <strong>${secInfo.name}</strong>. Toggle section visibility using the switch in the left sidebar or modify parameters below.</p>
+              <label class="form-label">Section Tag</label>
+              <input type="text" class="form-control" value="Active Candidate Section">
+            </div>
+          `;
+        }
+
+        panel.innerHTML = html;
+      }
+
+      function updateCMSDataField(field, val) {
+        currentCMSData[field] = val;
+        pushCMSHistoryState();
+        updateCMSLivePreview();
+      }
+
+      function updateCMSLivePreview() {
+        const viewport = document.getElementById('cms-live-viewport');
+        const c = currentCMSData;
+        const sec = c.enabledSections || {};
+
+        document.getElementById('preview-cand-name').textContent = c.fullName || 'Candidate Site';
+
+        let previewHTML = `
+          <div style="font-family: var(--font-sans); color: var(--text-primary); display: flex; flex-direction: column; gap: 1.25rem;">
+        `;
+
+        if (sec.hero !== false) {
+          previewHTML += `
+            <div style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15)); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 1rem; align-items: center;">
+              <img src="${c.avatarUrl}" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+              <div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.2rem;">${c.fullName || 'Candidate Name'}</h3>
+                <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 0.25rem;">${c.preferredRole || 'Role'}</p>
+                <p style="font-size: 0.78rem; color: var(--text-secondary);">${c.heroSubheadline || ''}</p>
+              </div>
+            </div>
+          `;
+        }
+
+        previewHTML += `</div>`;
+        viewport.innerHTML = previewHTML;
+      }
+
+      function cmsSaveDraft() {
+        adminSaveCandidateDraft(currentCMSCandidateId, currentCMSData);
+        showAlert('alert-container', '💾 Candidate draft saved.', 'success');
+      }
+
+      function cmsPublish() {
+        adminPublishCandidateWebsite(currentCMSCandidateId, currentCMSData);
+        showAlert('alert-container', '🚀 Candidate site published!', 'success');
+      }
+
+      function openVersionHistoryModal() {
+        const versions = adminGetCandidateVersions(currentCMSCandidateId);
+        const container = document.getElementById('versions-list-container');
+
+        if (versions.length === 0) {
+          container.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 1rem;">No published snapshots recorded yet.</p>`;
+        } else {
+          container.innerHTML = versions.map(v => `
+            <div style="background: var(--bg-tertiary); padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+              <div>
+                <strong style="font-size: 0.85rem; color: var(--primary);">${v.versionId}</strong>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">${new Date(v.timestamp).toLocaleString()}</span>
+              </div>
+              <button onclick="restoreVersion('${v.versionId}')" class="btn-xs btn-primary">Restore Version</button>
+            </div>
+          `).join('');
+        }
+
+        openModal('version-history-modal');
+      }
+
+      function restoreVersion(versionId) {
+        adminRestoreCandidateVersion(currentCMSCandidateId, versionId);
+        showAlert('alert-container', `Restored snapshot ${versionId}`, 'success');
+        closeModal('version-history-modal');
+        loadCandidateIntoCMS(currentCMSCandidateId);
+      }
+
+      function openActivityLogModal() {
+        const logs = adminGetActivityLogs();
+        alert("📜 CMS Audit Logs: " + logs.length + " events logged.");
+      }
+
+      function triggerMockUpload(type) {
+        alert(`📁 [Mock File Uploader] Selected replacement ${type}. File updated!`);
+      }
+
+      function renderOverview() {
+        dbState = dbGet();
+        const candidates = dbState.users.filter(u => u.role === 'candidate');
+        const recruiters = dbState.users.filter(u => u.role === 'recruiter');
+        const companies = dbState.company_registrations || [];
+        const jobs = dbState.jobs || [];
+        const apps = dbState.applications || [];
+        const contracts = dbState.contracts || [];
+
+        document.getElementById('stat-total-candidates').textContent = candidates.length;
+        document.getElementById('stat-total-recruiters').textContent = recruiters.length;
+        document.getElementById('stat-total-companies').textContent = Math.max(companies.length, recruiters.length);
+        document.getElementById('stat-total-jobs').textContent = jobs.length;
+        document.getElementById('stat-total-apps').textContent = apps.length;
+
+        let totalRev = contracts.reduce((acc, c) => acc + (Number(c.amount) || 0), 0);
+        document.getElementById('stat-total-revenue').textContent = `$${totalRev.toLocaleString()}`;
+      }
+
+      function renderCandidatesTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('candidates-table-body');
+        const search = (document.getElementById('cand-search').value || '').toLowerCase();
+        let candidates = dbState.users.filter(u => u.role === 'candidate');
+
+        if (search) candidates = candidates.filter(c => (c.fullName || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search));
+
+        tbody.innerHTML = candidates.map(c => `
+          <tr>
+            <td>#${c.id}</td>
+            <td><strong>${c.fullName || 'Candidate'}</strong></td>
+            <td>${c.email}</td>
+            <td>⚡ ${c.xp_points || 0}</td>
+            <td>🏆 ${c.talent_score || 0}%</td>
+            <td><span class="admin-badge badge-active">${c.status || 'active'}</span></td>
+            <td>
+              <div class="action-btn-group">
+                <button onclick="loadCandidateIntoCMS(${c.id}); setCandidateMode('cms');" class="btn-xs btn-primary">🎨 Candidate CMS</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function renderRecruitersTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('recruiters-table-body');
+        const search = (document.getElementById('rec-search').value || '').toLowerCase();
+        let recruiters = dbState.users.filter(u => u.role === 'recruiter');
+
+        if (search) recruiters = recruiters.filter(r => (r.fullName || '').toLowerCase().includes(search) || (r.companyName || '').toLowerCase().includes(search));
+
+        tbody.innerHTML = recruiters.map(r => `
+          <tr>
+            <td>#${r.id}</td>
+            <td><strong>${r.fullName || 'Recruiter'}</strong></td>
+            <td>${r.email}</td>
+            <td>💼 ${r.companyName || 'N/A'}</td>
+            <td>${r.jobTitle || 'Hiring Coordinator'}</td>
+            <td><span class="admin-badge badge-active">${r.status || 'active'}</span></td>
+            <td>
+              <div class="action-btn-group">
+                <button onclick="loadRecruiterIntoCMS(${r.id}); setRecruiterMode('cms');" class="btn-xs btn-primary" style="background:#a855f7; border-color:#a855f7;">🏢 Recruiter CMS</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function renderCompaniesTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('companies-table-body');
+        const companies = dbState.company_registrations || [];
+
+        tbody.innerHTML = companies.map(c => `
+          <tr>
+            <td>#${c.id}</td>
+            <td><strong>${c.business_name || 'Business'}</strong></td>
+            <td>Candidate ID #${c.candidate_id || 'N/A'}</td>
+            <td>${new Date(c.submitted_at || Date.now()).toLocaleDateString()}</td>
+            <td><span class="admin-badge badge-${c.status || 'pending'}">${c.status || 'pending'}</span></td>
+            <td>
+              <div class="action-btn-group">
+                ${c.status === 'pending' ? `<button onclick="approveCompany(${c.id})" class="btn-xs btn-primary">✓ Approve</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function renderJobsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('jobs-table-body');
+        const jobs = dbState.jobs || [];
+
+        tbody.innerHTML = jobs.map(j => `
+          <tr>
+            <td>#${j.id}</td>
+            <td><strong>${j.title}</strong></td>
+            <td>${j.logo || '💼'} ${j.company}</td>
+            <td>${j.category}</td>
+            <td>${j.salary}</td>
+            <td>${j.type}</td>
+            <td><span class="admin-badge badge-active">${j.status || 'active'}</span></td>
+            <td><button onclick="deleteJobPrompt(${j.id}, '${j.title}')" class="btn-xs" style="color:#ef4444;">🗑️</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderApplicationsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('applications-table-body');
+        const apps = dbState.applications || [];
+
+        tbody.innerHTML = apps.map(a => `
+          <tr>
+            <td>#${a.id}</td>
+            <td><strong>${a.candidateName || 'Candidate'}</strong></td>
+            <td>${a.jobTitle || 'Job'}</td>
+            <td>${a.company || 'Company'}</td>
+            <td>${a.appliedDate || 'Recent'}</td>
+            <td><span class="admin-badge badge-active">${a.status || 'Applied'}</span></td>
+            <td><button onclick="changeAppStatusPrompt(${a.id})" class="btn-xs btn-secondary">Status</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderInterviewsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('interviews-table-body');
+        const interviews = dbState.interviews || [];
+
+        tbody.innerHTML = interviews.map(i => `
+          <tr>
+            <td>#${i.id}</td>
+            <td><strong>${i.candidateName}</strong></td>
+            <td>${i.company || 'InnovateTech'}</td>
+            <td>${new Date(i.meetDate).toLocaleString()}</td>
+            <td><a href="${i.meetLink}" target="_blank" style="color:var(--primary);">Join Call ↗</a></td>
+            <td><span class="admin-badge badge-approved">${i.status || 'Scheduled'}</span></td>
+            <td><button onclick="deleteInterviewPrompt(${i.id})" class="btn-xs" style="color:#ef4444;">🗑️</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderAssessmentsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('assessments-table-body');
+        const challenges = dbState.challenges || [];
+
+        tbody.innerHTML = challenges.map(c => `
+          <tr>
+            <td>#${c.id}</td>
+            <td><strong>${c.title}</strong></td>
+            <td>${c.category}</td>
+            <td><span class="admin-badge badge-pending">${c.difficulty}</span></td>
+            <td>⚡ ${c.max_xp} XP</td>
+            <td>${c.company_name}</td>
+            <td><button onclick="deleteAssessmentPrompt(${c.id})" class="btn-xs" style="color:#ef4444;">🗑️</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderGigsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('gigs-table-body');
+        const contracts = dbState.contracts || [];
+
+        tbody.innerHTML = contracts.map(c => `
+          <tr>
+            <td>#${c.id}</td>
+            <td><strong>${c.title}</strong></td>
+            <td>${c.company}</td>
+            <td>Candidate #${c.candidateId}</td>
+            <td>$${c.amount}</td>
+            <td><span class="admin-badge badge-active">${c.status}</span></td>
+            <td><button onclick="alert('Viewing gig milestones')" class="btn-xs btn-secondary">Milestones</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderPaymentsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('payments-table-body');
+        const contracts = dbState.contracts || [];
+
+        let invoices = [];
+        contracts.forEach(c => {
+          if (c.invoices) c.invoices.forEach(inv => invoices.push({ ...inv, contractTitle: c.title }));
+        });
+
+        let totalInvoiced = invoices.reduce((acc, i) => acc + (Number(i.amount) || 0), 0);
+        document.getElementById('pay-total-invoiced').textContent = `$${totalInvoiced.toLocaleString()}`;
+        document.getElementById('pay-total-completed').textContent = `$${totalInvoiced.toLocaleString()}`;
+
+        tbody.innerHTML = invoices.map(i => `
+          <tr>
+            <td><strong>${i.invoiceNo}</strong></td>
+            <td>${i.contractTitle}</td>
+            <td>$${i.amount}</td>
+            <td>${i.paidDate}</td>
+            <td><span class="admin-badge badge-active">Paid</span></td>
+            <td><button onclick="alert('Invoice receipt generated')" class="btn-xs btn-secondary">Receipt</button></td>
+          </tr>
+        `).join('');
+      }
+
+      function renderNotificationsTable() {
+        dbState = dbGet();
+        const tbody = document.getElementById('notifications-table-body');
+        const notifs = dbState.notifications || [];
+
+        tbody.innerHTML = notifs.map(n => `
+          <tr>
+            <td>#${n.id}</td>
+            <td><span class="admin-badge badge-approved">${n.target}</span></td>
+            <td>${n.message}</td>
+            <td>${new Date(n.timestamp).toLocaleString()}</td>
+            <td>${n.sentBy || 'Admin'}</td>
+          </tr>
+        `).join('');
+      }
+
+      function renderActivityTable() {
+        const tbody = document.getElementById('activity-table-body');
+        const logs = adminGetActivityLogs();
+
+        tbody.innerHTML = logs.map(l => `
+          <tr>
+            <td>#${l.id}</td>
+            <td><strong>${l.action}</strong></td>
+            <td>${l.details}</td>
+            <td>${l.target}</td>
+            <td>${new Date(l.timestamp).toLocaleString()}</td>
+          </tr>
+        `).join('');
+      }
+
+      function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+      function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+      function openAddCandidateModal() {
+        document.getElementById('cand-modal-title').textContent = "Add New Candidate";
+        document.getElementById('cand-form').reset();
+        openModal('candidate-modal');
+      }
+
+      function openAddRecruiterModal() {
+        document.getElementById('rec-modal-title').textContent = "Add New Recruiter";
+        document.getElementById('rec-form').reset();
+        openModal('recruiter-modal');
+      }
+
+      document.getElementById('cand-form').onsubmit = function(e) {
+        e.preventDefault();
+        adminAddUser({
+          fullName: document.getElementById('cand-form-name').value,
+          email: document.getElementById('cand-form-email').value,
+          role: 'candidate'
+        });
+        closeModal('candidate-modal');
+        initCMSCandidateView();
+      };
+
+      document.getElementById('rec-form').onsubmit = function(e) {
+        e.preventDefault();
+        adminAddUser({
+          fullName: document.getElementById('rec-form-name').value,
+          email: document.getElementById('rec-form-email').value,
+          companyName: document.getElementById('rec-form-company').value,
+          role: 'recruiter'
+        });
+        closeModal('recruiter-modal');
+        initCMSRecruiterView();
+      };
+
+      function openPostJobModal() { openModal('job-modal'); }
+      function openAddAssessmentModal() { openModal('assessment-modal'); }
+      function openBroadcastModal() { openModal('broadcast-modal'); }
+
+      function exportSystemReport() {
+        const db = dbGet();
+        const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", jsonStr);
+        dlAnchorElem.setAttribute("download", `Build2Hire_System_Export_${Date.now()}.json`);
+        document.body.appendChild(dlAnchorElem);
+        dlAnchorElem.click();
+        dlAnchorElem.remove();
+      }
+
+      function resetDatabaseToFactory() {
+        if (confirm("Reset local database to default seeds?")) {
+          localStorage.removeItem('build2hire_db');
+          localStorage.removeItem('build2hire_db_backup');
+          dbGet();
+          window.location.reload();
+        }
+      }
+
+      document.getElementById('system-settings-form').onsubmit = function(e) {
+        e.preventDefault();
+        showAlert('alert-container', 'Settings saved!', 'success');
+      };
+
+      document.addEventListener('DOMContentLoaded', initAdminDashboard);
+    }
+  </script>
+</body>
+</html>
