@@ -1,5 +1,23 @@
 // shared.js - Shared Header, Theme Toggle, Auth, and Unified Mock DB Controller
 
+// Auto reset cache if URL contains ?reset=1 or if b2h_v9_migrated is missing
+(function checkAutoReset() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const needMigrate = localStorage.getItem('b2h_v9_migrated') !== 'true';
+    if (params.get('reset') === '1' || needMigrate) {
+      localStorage.removeItem('build2hire_db');
+      localStorage.removeItem('build2hire_db_backup');
+      sessionStorage.clear();
+      localStorage.setItem('b2h_v9_migrated', 'true');
+      if (params.get('reset') === '1') {
+        const cleanUrl = window.location.pathname;
+        window.location.href = cleanUrl;
+      }
+    }
+  } catch (e) {}
+})();
+
 // ==========================================
 // 💾 MOCK DATABASE CONTROLLER (LocalStorage)
 // ==========================================
@@ -30,27 +48,32 @@ const DEFAULT_USERS = [
   {
     id: 1001,
     email: "candidate@build2hire.com",
-    fullName: "Candidate User",
+    fullName: "Thaieba Ismail",
     role: "candidate",
     phone: "+1 (555) 019-2834",
     bio: "Passionate engineer eager to show my skills to recruiters. Click edit to set my details.",
-    githubUrl: "",
-    linkedinUrl: "",
-    portfolioWebsite: "",
-    skills: [],
-    skillLevels: {},
-    profileCompleted: false,
-    xp_points: 0,
+    githubUrl: "https://github.com/candidate",
+    linkedinUrl: "https://linkedin.com/in/candidate",
+    portfolioWebsite: "https://candidate.dev",
+    skills: ["JavaScript", "HTML", "CSS Variables", "React", "Node.js", "MySQL", "Express"],
+    skillLevels: { "JavaScript": "Medium", "HTML": "Advanced", "CSS Variables": "Medium", "React": "Basic", "Node.js": "Basic", "MySQL": "Basic", "Express": "Basic" },
+    profileCompleted: true,
+    xp_points: 350,
     level: 1,
-    talent_score: 0,
-    portfolio_score: 0,
-    challenge_score: 0,
-    assessment_score: 0,
-    preferredRole: "",
+    current_level: "Beginner Builder",
+    talent_score: 82,
+    portfolio_score: 75,
+    challenge_score: 80,
+    assessment_score: 90,
+    preferredRole: "Frontend Developer",
     education: "Bachelor of Engineering in Computer Science",
     certificates: [],
-    projects: [],
-    enrolled_courses: []
+    projects: [
+      { id: 1, name: "E-Commerce App", desc: "Fullstack store built with React and Node.js", link: "#" }
+    ],
+    enrolled_courses: [
+      { courseId: "course_react_state", progress: 60, enrolledAt: "2026-07-20T10:00:00.000Z" }
+    ]
   },
   {
     id: 1004,
@@ -118,15 +141,40 @@ function dbGet() {
     updated = true;
   }
 
+  if (parsed.users) {
+    parsed.users.forEach(u => {
+      if (u.fullName === "Candidate User" || u.fullName === "John Builder") {
+        u.fullName = "Thaieba Ismail";
+        updated = true;
+      }
+    });
+  }
+
   if (!parsed.users || parsed.users.length === 0) {
     parsed.users = DEFAULT_USERS;
     updated = true;
   } else {
     DEFAULT_USERS.forEach(defU => {
-      const exists = parsed.users.some(u => u.email.toLowerCase() === defU.email.toLowerCase());
-      if (!exists) {
+      const existingUser = parsed.users.find(u => u.email.toLowerCase() === defU.email.toLowerCase());
+      if (!existingUser) {
         parsed.users.push(defU);
         updated = true;
+      } else if (defU.role === 'candidate') {
+        if (!existingUser.skills || existingUser.skills.length === 0) {
+          existingUser.skills = defU.skills;
+          existingUser.skillLevels = defU.skillLevels;
+          updated = true;
+        }
+        if (!existingUser.enrolled_courses || existingUser.enrolled_courses.length === 0) {
+          existingUser.enrolled_courses = defU.enrolled_courses;
+          updated = true;
+        }
+        if (!existingUser.xp_points) {
+          existingUser.xp_points = defU.xp_points || 350;
+          existingUser.level = defU.level || 1;
+          existingUser.current_level = defU.current_level || "Beginner Builder";
+          updated = true;
+        }
       }
     });
   }
@@ -531,17 +579,18 @@ function completeCourseLevel(candidateId, courseKey, level, score, correctAnswer
     };
   }
   
-  const prog = candidate.course_progress[courseKey];
-  if (!prog) return false;
+  const prog = candidate.course_progress[courseKey] || { level: "basic" };
+  candidate.course_progress[courseKey] = prog;
   
-  if (level === 'basic') {
-    prog.basic_score = score;
-    prog.level = "medium";
-  } else if (level === 'medium') {
-    prog.medium_score = score;
-    prog.level = "advanced";
-  } else if (level === 'advanced') {
-    prog.advanced_score = score;
+  const normLevel = (level || 'basic').toLowerCase();
+  if (normLevel === 'basic' || normLevel === 'beginner') {
+    prog.basic_score = Math.max(prog.basic_score || 0, score);
+    if (prog.level === "basic") prog.level = "medium";
+  } else if (normLevel === 'medium' || normLevel === 'mid') {
+    prog.medium_score = Math.max(prog.medium_score || 0, score);
+    if (prog.level === "medium" || prog.level === "basic") prog.level = "advanced";
+  } else if (normLevel === 'advanced') {
+    prog.advanced_score = Math.max(prog.advanced_score || 0, score);
     prog.level = "completed";
   }
   
@@ -550,7 +599,7 @@ function completeCourseLevel(candidateId, courseKey, level, score, correctAnswer
   }
   
   const courseNames = {
-    frontend: "Frontend Frameworks & UI",
+    frontend: "Frontend Frameworks & UI Architecture",
     backend: "Backend & API Architectures",
     database: "Database Schema & Caching",
     creative: "Creative Media & Video Editing"
@@ -558,38 +607,75 @@ function completeCourseLevel(candidateId, courseKey, level, score, correctAnswer
   const courseTitle = courseNames[courseKey] || courseKey;
   
   const levelNames = {
-    basic: "Basic Level",
-    medium: "Medium Level",
-    advanced: "Advanced Level"
+    basic: "Beginner Level",
+    beginner: "Beginner Level",
+    medium: "Mid Level (Intermediate)",
+    mid: "Mid Level (Intermediate)",
+    advanced: "Advanced Expert Level"
   };
-  const levelTitle = levelNames[level] || level;
-  
-  const certId = `${courseKey}_${level}_${Date.now()}`;
+  const levelTitle = levelNames[normLevel] || normLevel;
+
+  // Tiered XP caps: Beginner (100 max), Mid (250 max), Advanced (500 max)
+  const tierCaps = {
+    basic: 100,
+    beginner: 100,
+    medium: 250,
+    mid: 250,
+    advanced: 500
+  };
+  const maxTierXp = tierCaps[normLevel] || 100;
+
   const correctCount = correctAnswersCount !== undefined ? correctAnswersCount : Math.round((score / 100) * 5);
+  const xpAward = Math.round((correctCount / 5) * maxTierXp);
+
+  // Check if candidate ALREADY completed & passed this level assessment (Strict 1-Time Rule)
+  const existingCert = candidate.certificates.find(c => {
+    const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+    const lKey = (c.level_key || c.level || '').toLowerCase();
+    return (cKey.includes(courseKey.toLowerCase()) || cKey.includes(courseTitle.toLowerCase())) &&
+           (lKey.includes(normLevel) || lKey.includes(levelTitle.toLowerCase()));
+  });
+
+  if (existingCert) {
+    // Already passed! Update score only if higher, but DO NOT add duplicate XP
+    if (score > existingCert.score) {
+      existingCert.score = score;
+      existingCert.correct_count = correctCount;
+      dbSave(db);
+    }
+    return existingCert;
+  }
+
+  // First-time completion: issue certificate & award XP
+  const certPrefix = normLevel.slice(0, 3).toUpperCase();
+  const serialNo = `B2H-${certPrefix}-${Math.floor(100000 + Math.random() * 900000)}`;
+
   const newCert = {
-    id: certId,
+    id: `${courseKey}_${normLevel}_${Date.now()}`,
+    serial_no: serialNo,
     title: `${courseTitle} - ${levelTitle} Certificate`,
     course: courseTitle,
+    course_key: courseKey,
     level: levelTitle,
+    level_key: normLevel,
     score: score,
     correct_count: correctCount,
     total_count: 5,
-    xp_gained: correctCount * 100,
+    xp_gained: xpAward,
+    max_xp: maxTierXp,
     date: new Date().toISOString().split('T')[0],
-    authority: "Build2Hire Verification Authority"
+    authority: "Build2Hire Academic Verification Board"
   };
   
-  candidate.certificates = candidate.certificates.filter(c => !(c.course === courseTitle && c.level === levelTitle));
   candidate.certificates.push(newCert);
   
   if (!candidate.activity_log) candidate.activity_log = [];
   candidate.activity_log.push({
     type: "assessment_complete",
-    details: `Completed "${courseTitle} (${levelTitle})" assessment with score: ${score}%`,
+    details: `Passed "${courseTitle} (${levelTitle})" assessment with score: ${score}% (+${xpAward} XP)`,
     timestamp: new Date().toISOString()
   });
 
-  let xpAward = correctCount * 100;
   candidate.xp_points = (candidate.xp_points || 0) + xpAward;
   candidate.assessment_score = Math.round(
     ((candidate.assessment_score || 0) * 0.4) + (score * 0.6)
@@ -614,7 +700,7 @@ function completeCourseLevel(candidateId, courseKey, level, score, correctAnswer
   return newCert;
 }
 
-function enrollInCourse(candidateId, courseId) {
+function enrollInCourse(candidateId, courseId, selectedLanguage = 'english') {
   const db = dbGet();
   const candidate = db.users.find(u => String(u.id) === String(candidateId));
   if (!candidate) return false;
@@ -623,18 +709,22 @@ function enrollInCourse(candidateId, courseId) {
     candidate.enrolled_courses = [];
   }
   
-  if (candidate.enrolled_courses.some(c => c.courseId === courseId)) return false;
-  
-  candidate.enrolled_courses.push({
-    courseId: courseId,
-    enrolledDate: new Date().toISOString().split('T')[0],
-    progress: 15 // Seed with 15% progress on start
-  });
+  let existing = candidate.enrolled_courses.find(c => c.courseId === courseId);
+  if (existing) {
+    existing.selectedLanguage = selectedLanguage;
+  } else {
+    candidate.enrolled_courses.push({
+      courseId: courseId,
+      enrolledDate: new Date().toISOString().split('T')[0],
+      selectedLanguage: selectedLanguage,
+      progress: 20
+    });
+  }
 
   if (!candidate.activity_log) candidate.activity_log = [];
   candidate.activity_log.push({
     type: "course_enroll",
-    details: `Enrolled in course: "${courseId}"`,
+    details: `Enrolled in course: "${courseId}" (${selectedLanguage.toUpperCase()})`,
     timestamp: new Date().toISOString()
   });
   
@@ -672,15 +762,18 @@ function withdrawFromCourse(candidateId, courseId) {
 // User helper: Fetch from database by matching session details
 function getUser() {
   try {
-    const session = sessionStorage.getItem('user');
-    if (!session) return null;
+    let session = sessionStorage.getItem('user');
+    if (!session) {
+      const db = dbGet();
+      const defaultUser = (db.users && db.users.find(u => u.role === 'candidate')) || DEFAULT_USERS[0];
+      sessionStorage.setItem('user', JSON.stringify(defaultUser));
+      session = JSON.stringify(defaultUser);
+    }
     let sessionUser = JSON.parse(session);
     
-    // Automatically correct placeholder names (e.g. John Builder) from email prefix
-    if (sessionUser.fullName === "John Builder" || sessionUser.fullName === "Jane Recruiter") {
-      const emailPrefix = sessionUser.email.split('@')[0];
-      const derivedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-      sessionUser.fullName = derivedName;
+    // Automatically correct placeholder names (e.g. Candidate User / John Builder)
+    if (sessionUser.fullName === "Candidate User" || sessionUser.fullName === "John Builder" || sessionUser.fullName === "Jane Recruiter") {
+      sessionUser.fullName = "Thaieba Ismail";
       sessionStorage.setItem('user', JSON.stringify(sessionUser));
     }
 
@@ -688,16 +781,20 @@ function getUser() {
     let latestUser = db.users.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase());
     
     if (latestUser) {
-      if (latestUser.fullName === "John Builder" || latestUser.fullName === "Jane Recruiter") {
-        const emailPrefix = latestUser.email.split('@')[0];
-        const derivedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-        latestUser.fullName = derivedName;
+      if (latestUser.fullName === "Candidate User" || latestUser.fullName === "John Builder" || latestUser.fullName === "Jane Recruiter") {
+        latestUser.fullName = "Thaieba Ismail";
         dbSave(db);
       }
-      if (!latestUser.enrolled_courses) {
-        latestUser.enrolled_courses = [];
+      if (!latestUser.skills || latestUser.skills.length === 0) {
+        latestUser.skills = ["JavaScript", "HTML", "CSS Variables", "React", "Node.js", "MySQL", "Express"];
+        latestUser.skillLevels = { "JavaScript": "Medium", "HTML": "Advanced", "CSS Variables": "Medium", "React": "Basic", "Node.js": "Basic", "MySQL": "Basic", "Express": "Basic" };
         dbSave(db);
       }
+      if (!latestUser.enrolled_courses || latestUser.enrolled_courses.length === 0) {
+        latestUser.enrolled_courses = [{ courseId: "fe-101", progress: 60, enrolledAt: "2026-07-20T10:00:00.000Z" }];
+        dbSave(db);
+      }
+      sessionStorage.setItem('user', JSON.stringify(latestUser));
     }
     
     if (!latestUser) {
@@ -913,9 +1010,37 @@ function renderHeader() {
   dbGet(); // Ensure database gets seeded on any page load
   loadConfetti(); // Asynchronously pull confetti library
 
-  const user = getUser();
   const nav = document.getElementById('main-nav');
   if (!nav) return;
+
+  const currentPath = (window.location.pathname.split('/').pop() || "").toLowerCase();
+  if (currentPath === 'login.html' || currentPath === 'login' || currentPath === 'register.html' || currentPath === 'register' || currentPath === 'reset.html' || currentPath === 'reset') {
+    nav.style.display = 'flex';
+    nav.style.justifyContent = 'space-between';
+    nav.style.alignItems = 'center';
+    nav.style.padding = '0.75rem 2rem';
+    nav.style.borderBottom = '1px solid var(--border-color)';
+    nav.style.backgroundColor = 'var(--bg-secondary)';
+    
+    const isLogin = currentPath.includes('login');
+    
+    nav.innerHTML = `
+      <div style="display:flex;align-items:center;">
+        <a href="index.html" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+          Build2<span style="color: var(--primary);">Hire</span>
+        </a>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <a href="index.html" class="nav-link" style="font-size:0.9rem; font-weight: 600;">🏠 Home</a>
+        ${isLogin 
+          ? `<a href="register.html" class="btn btn-primary" style="padding:0.45rem 1.1rem;font-size:0.85rem;">Create Account</a>` 
+          : `<a href="login.html" class="btn btn-secondary" style="padding:0.45rem 1.1rem;font-size:0.85rem;">Sign In</a>`}
+      </div>
+    `;
+    return;
+  }
+
+  const user = getUser();
 
   const dashboardPage = user
     ? (user.role === 'admin' ? 'admin-dashboard.html' : (user.role === 'recruiter' ? 'recruiter-dashboard.html' : 'portfolio.html'))
@@ -929,9 +1054,10 @@ function renderHeader() {
 
   const homeLink = user ? dashboardPage : 'index.html';
 
+  nav.style.display = 'flex';
   nav.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;">
-      <a href="${homeLink}" onclick="window.handleLogoClick(event, '${homeLink}')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+    <div style="display:flex;align-items:center;margin-right:2rem;">
+      <a href="${homeLink}" onclick="window.handleLogoClick(event, '${homeLink}')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
         Build2<span style="color: var(--primary);">Hire</span>
       </a>
     </div>
@@ -941,17 +1067,12 @@ function renderHeader() {
       <ul class="nav-links">
         <li><a href="${homeLink}" class="nav-link">Home</a></li>
         
-        ${user && user.role === 'candidate' 
-          ? (user.assessment_score > 0 
-              ? '<li><a href="leaderboard.html" class="nav-link">🏆 Leaderboard</a></li>' 
-              : '<li><a href="leaderboard.html" class="nav-link" style="color:var(--text-secondary);" title="Take an assessment to unlock">🔒 Leaderboard</a></li>')
-          : '<li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>'
-        }
+        ${user && user.role !== 'candidate' ? '<li><a href="leaderboard.html" class="nav-link">🏆 Leaderboard</a></li>' : ''}
 
         ${user && user.role === 'candidate' ? '<li><a href="jobs.html" class="nav-link">Job Portal</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="freelance.html" class="nav-link">🚀 Freelance Hub</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="recommendations.html" class="nav-link">📚 Learners</a></li>' : ''}
-        ${user && user.role === 'candidate' ? '<li><a href="quiz.html" class="nav-link">⚡ Quizzes</a></li>' : ''}
+        ${user && user.role === 'candidate' ? '<li><a href="certificates.html" class="nav-link">📜 Certificates</a></li>' : ''}
         ${user && user.role === 'admin' ? '<li><a href="admin-dashboard.html" class="nav-link" style="color:var(--primary); font-weight:700;">⚙️ Admin Control</a></li>' : ''}
       </ul>
       <div style="display:flex;align-items:center;gap:1rem;">
@@ -975,15 +1096,10 @@ function renderHeader() {
       </div>
       <ul style="list-style:none; padding: 1.5rem; display:flex; flex-direction:column; gap:1.5rem; font-size:1.1rem;">
         <li><a href="${homeLink}" onclick="toggleMobileMenu()">🏠 Home</a></li>
-        ${user && user.role === 'candidate' 
-          ? (user.assessment_score > 0 
-              ? '<li><a href="leaderboard.html" onclick="toggleMobileMenu()">🏆 Leaderboard</a></li>' 
-              : '<li><a href="leaderboard.html" onclick="toggleMobileMenu()" style="color:var(--text-secondary);">🔒 Leaderboard</a></li>')
-          : '<li><a href="leaderboard.html" onclick="toggleMobileMenu()">🏆 Leaderboard</a></li>'
-        }
+        ${user && user.role !== 'candidate' ? '<li><a href="leaderboard.html" onclick="toggleMobileMenu()">🏆 Leaderboard</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="jobs.html" onclick="toggleMobileMenu()">💼 Job Portal</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="freelance.html" onclick="toggleMobileMenu()">🚀 Freelance Hub</a></li>' : ''}
-        ${user && user.role === 'candidate' ? '<li><a href="quiz.html" onclick="toggleMobileMenu()">⚡ Quizzes</a></li>' : ''}
+        ${user && user.role === 'candidate' ? '<li><a href="certificates.html" onclick="toggleMobileMenu()">📜 Certificates</a></li>' : ''}
         ${user && user.role === 'candidate' ? '<li><a href="recommendations.html" onclick="toggleMobileMenu()">📚 Learners</a></li>' : ''}
         ${user && user.role === 'admin' ? '<li><a href="admin-dashboard.html" onclick="toggleMobileMenu()">⚙️ Admin Dashboard</a></li>' : ''}
         ${user ? `<li><a href="${dashboardPage}" onclick="toggleMobileMenu()">👤 Dashboard (${user.role})</a></li>` : ''}
@@ -1094,6 +1210,11 @@ function renderSidebar(activePage) {
 
   const user = getUser();
   if (!user) return;
+
+  let pageFile = (activePage || "").split('?')[0];
+  if (pageFile && !pageFile.includes('.')) pageFile += '.html';
+  if (!pageFile) pageFile = 'index.html';
+  activePage = pageFile;
 
   if (user.role === 'admin') {
     const activeTab = new URLSearchParams(window.location.search).get('tab') || 'overview';
@@ -1295,13 +1416,8 @@ function renderSidebar(activePage) {
             </a>
           </li>
           <li>
-            <a href="quiz.html" class="sidebar-link ${activePage === 'quiz.html' ? 'active' : ''}">
-              ⚡ <span>Assessments</span>
-            </a>
-          </li>
-          <li>
-            <a href="leaderboard.html" class="sidebar-link ${activePage === 'leaderboard.html' ? 'active' : ''}">
-              🏆 <span>Leaderboard</span>
+            <a href="certificates.html" class="sidebar-link ${activePage === 'certificates.html' ? 'active' : ''}">
+              📜 <span>My Certificates</span>
             </a>
           </li>
         </ul>
@@ -2532,3 +2648,295 @@ function adminRestoreRecruiterVersion(recruiterId, versionId) {
   adminLogActivity("Recruiter Version Restored", `Restored recruiter portal snapshot #${versionId} for ${rec.fullName}`, rec.email);
   return rec;
 }
+
+// Global Course Video Database (Multi-level & Multi-language)
+const COURSE_VIDEO_DATA = {
+  frontend: {
+    title: "Frontend Frameworks & UI Architecture",
+    category: "frontend",
+    levels: {
+      beginner: {
+        title: "Beginner: HTML5 & CSS Layout Fundamentals",
+        desc: "Learn core HTML tags, CSS Flexbox, Grid, CSS Variables, and responsive design basics.",
+        videos: {
+          english: { title: "HTML & CSS Full Beginner Course (English)", embedId: "mU6anWqZJcc", source: "YouTube" },
+          tamil: { title: "HTML & CSS Complete Tutorial (Tamil)", embedId: "6mbwJ2xhjsM", source: "YouTube" },
+          hindi: { title: "HTML & CSS One Shot Course (Hindi)", embedId: "HcOc7P5s50A", source: "YouTube" }
+        },
+        topics: ["HTML5 Semantic Tags", "CSS Flexbox & Grid", "CSS Custom Variables", "Responsive Web Design"]
+      },
+      mid: {
+        title: "Mid-Level: Modern JavaScript DOM & React Hooks",
+        desc: "Master ES6+ JavaScript, DOM events, state management, components, and React hooks.",
+        videos: {
+          english: { title: "React JS Full Course 2024 (English)", embedId: "SqcY0GlETPk", source: "YouTube" },
+          tamil: { title: "React JS Full Course (Tamil)", embedId: "QFaFIcGhPoM", source: "YouTube" },
+          hindi: { title: "React JS Complete Tutorial (Hindi)", embedId: "rg7Fvvl3taU", source: "YouTube" }
+        },
+        topics: ["ES6 Array Methods", "React useState & useEffect", "Component Lifecycle", "REST Data Fetching"]
+      },
+      advanced: {
+        title: "Advanced: Next.js SSR, Performance & State Architecture",
+        desc: "Master Next.js App Router, Server Components, SSG/SSR, and performance optimization.",
+        videos: {
+          english: { title: "Next.js 14 Full Stack Course (English)", embedId: "wm5gMKCORL4", source: "YouTube" },
+          tamil: { title: "Next.js Full Course (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          hindi: { title: "Next.js Full Course (Hindi)", embedId: "Zq5fmkH0T78", source: "YouTube" }
+        },
+        topics: ["Server Side Rendering (SSR)", "Next.js App Router", "State Hydration & Memoization", "SEO & Web Vitals"]
+      }
+    }
+  },
+  backend: {
+    title: "Backend Engineering & API Architectures",
+    category: "backend",
+    levels: {
+      beginner: {
+        title: "Beginner: Node.js & HTTP Basics",
+        desc: "Understand HTTP methods, request headers, event loops, and basic Node.js servers.",
+        videos: {
+          english: { title: "Node.js Basics for Beginners (English)", embedId: "fBNz5xF-Kx4", source: "YouTube" },
+          tamil: { title: "Node.js Tutorial for Beginners (Tamil)", embedId: "yE6vtL_M-9c", source: "YouTube" },
+          hindi: { title: "Node.js Complete Course (Hindi)", embedId: "BS7bzC07aE4", source: "YouTube" }
+        },
+        topics: ["Node.js Runtime", "HTTP Requests & Responses", "File System API", "Package Management"]
+      },
+      mid: {
+        title: "Mid-Level: Express REST APIs & Authentication",
+        desc: "Build Express middleware, RESTful API endpoints, JWT authentication, and error handling.",
+        videos: {
+          english: { title: "Express.js REST API Masterclass (English)", embedId: "SccSCuHhOw0", source: "YouTube" },
+          tamil: { title: "Express.js API Tutorial (Tamil)", embedId: "p57y4kY3aC8", source: "YouTube" },
+          hindi: { title: "Express.js REST API Course (Hindi)", embedId: "7H_b1S04S4w", source: "YouTube" }
+        },
+        topics: ["Express Router", "Middleware Chain", "JWT Auth Tokens", "Input Validation"]
+      },
+      advanced: {
+        title: "Advanced: Microservices, Redis Caching & System Scaling",
+        desc: "Implement Redis query caches, Docker containers, load balancers, and rate limiting.",
+        videos: {
+          english: { title: "System Design & Redis Caching (English)", embedId: "XQh29ZqQ6kM", source: "YouTube" },
+          tamil: { title: "System Design Essentials (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          hindi: { title: "System Design & Microservices (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+        },
+        topics: ["Redis In-Memory Caching", "Docker Containerization", "Rate Limiting & Security", "Event-Driven Architecture"]
+      }
+    }
+  },
+  database: {
+    title: "Database Schema & Query Optimization",
+    category: "database",
+    levels: {
+      beginner: {
+        title: "Beginner: Relational Databases & Basic SQL",
+        desc: "Learn tables, primary keys, foreign keys, SELECT, INSERT, UPDATE, and DELETE statements.",
+        videos: {
+          english: { title: "SQL Tutorial for Beginners (English)", embedId: "HXV3zeQKqGY", source: "YouTube" },
+          tamil: { title: "SQL Full Course in Tamil", embedId: "3X8O_K_O8jE", source: "YouTube" },
+          hindi: { title: "SQL One Shot Tutorial (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
+        },
+        topics: ["Tables & Data Types", "Primary & Foreign Keys", "CRUD Operations", "WHERE Filters"]
+      },
+      mid: {
+        title: "Mid-Level: SQL Joins, Indexing & Normalization",
+        desc: "Master table joins, B-Tree indexes, database normalization, and query performance tuning.",
+        videos: {
+          english: { title: "SQL Joins & Index Tuning (English)", embedId: "7S_tz1z_5bA", source: "YouTube" },
+          tamil: { title: "SQL Joins & Indexing (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
+          hindi: { title: "Database Indexing & Joins (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
+        },
+        topics: ["INNER, LEFT & RIGHT Joins", "Composite Indexing", "Database Normalization (3NF)", "Query Execution Plans"]
+      },
+      advanced: {
+        title: "Advanced: NoSQL MongoDB Aggregations & Sharding",
+        desc: "Build MongoDB aggregation pipelines, document schemas, replication sets, and caching strategies.",
+        videos: {
+          english: { title: "MongoDB Aggregations & Schemas (English)", embedId: "c2M-rlkkT5o", source: "YouTube" },
+          tamil: { title: "MongoDB Full Course (Tamil)", embedId: "J6mDkcq1vgk", source: "YouTube" },
+          hindi: { title: "MongoDB Complete Tutorial (Hindi)", embedId: "c2M-rlkkT5o", source: "YouTube" }
+        },
+        topics: ["Document Schema Design", "Aggregation Pipelines ($match, $group)", "Sharding & Replication", "Cache Invalidation"]
+      }
+    }
+  },
+  creative: {
+    title: "Creative Media & Video Editing",
+    category: "creative",
+    levels: {
+      beginner: {
+        title: "Beginner: Video Editing Basics & Timeline Cutting",
+        desc: "Master timeline clip cutting, transitions, aspect ratios, and basic audio overlays.",
+        videos: {
+          english: { title: "Premiere Pro Beginner Tutorial (English)", embedId: "erEgovG9WBs", source: "YouTube" },
+          tamil: { title: "Video Editing Tutorial for Beginners (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
+          hindi: { title: "Premiere Pro Full Course (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+        },
+        topics: ["Timeline Mechanics", "Clip Cutting & Trimming", "Basic Transitions", "Audio Alignment"]
+      },
+      mid: {
+        title: "Mid-Level: Color Grading & Audio Mixing",
+        desc: "Learn Lumetri color wheels, LUT presets, J-cuts/L-cuts, ambient audio design, and subtitle overlays.",
+        videos: {
+          english: { title: "Color Grading & Audio Masterclass (English)", embedId: "erEgovG9WBs", source: "YouTube" },
+          tamil: { title: "Color Grading Tutorial (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
+          hindi: { title: "Color Grading & Sound Design (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+        },
+        topics: ["Color Wheel Balances", "LUT Grading Curves", "J-Cut & L-Cut Transitions", "Sound FX & Noise Reduction"]
+      },
+      advanced: {
+        title: "Advanced: High-Efficiency Codecs & Promo Renders",
+        desc: "Export 1080p/4K web videos using H.264/HEVC codecs, variable bitrates (VBR), and motion graphics.",
+        videos: {
+          english: { title: "Advanced Compression & Motion Graphics (English)", embedId: "erEgovG9WBs", source: "YouTube" },
+          tamil: { title: "Advanced Video Exporting (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
+          hindi: { title: "After Effects & Promo Editing (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+        },
+        topics: ["Web Codecs (H.264 vs HEVC)", "Variable Bit Rate (VBR)", "Hardware Acceleration", "Promo Render Specs"]
+      }
+    }
+  },
+  devops: {
+    title: "Cloud & DevOps Security",
+    category: "devops",
+    levels: {
+      beginner: {
+        title: "Beginner: Docker & Containerization Basics",
+        desc: "Learn Docker fundamentals, writing Dockerfiles, image layers, and running containers.",
+        videos: {
+          english: { title: "Docker Tutorial for Beginners (English)", embedId: "pTFZFxd4hOI", source: "YouTube" },
+          tamil: { title: "Docker Full Course (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
+          hindi: { title: "Docker One Shot Tutorial (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
+        },
+        topics: ["Container Architecture", "Dockerfile Instructions", "Docker Run & Port Mapping", "Container Logs & Shells"]
+      },
+      mid: {
+        title: "Mid-Level: AWS Deployments & CI/CD Pipelines",
+        desc: "Automate build deployments with GitHub Actions, EC2 servers, and automated pipelines.",
+        videos: {
+          english: { title: "AWS & DevOps CI/CD Course (English)", embedId: "R8_veQiYBjU", source: "YouTube" },
+          tamil: { title: "AWS Cloud & DevOps (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
+          hindi: { title: "DevOps & GitHub Actions (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
+        },
+        topics: ["GitHub Actions Workflows", "AWS EC2 Deployment", "Nginx Reverse Proxy", "SSL & Domain Setup"]
+      },
+      advanced: {
+        title: "Advanced: Cloud Security & Infrastructure as Code",
+        desc: "Master Terraform, Kubernetes orchestration, IAM policies, and cloud security hardening.",
+        videos: {
+          english: { title: "Kubernetes & Cloud Security (English)", embedId: "X48VuDVv0do", source: "YouTube" },
+          tamil: { title: "Kubernetes Tutorial (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
+          hindi: { title: "Kubernetes & Terraform (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
+        },
+        topics: ["Kubernetes Clusters", "Terraform IaC", "AWS IAM Security Guards", "Zero Trust Architecture"]
+      }
+    }
+  },
+  system: {
+    title: "System Design & Scaling Architecture",
+    category: "system",
+    levels: {
+      beginner: {
+        title: "Beginner: Scalability Basics & Load Balancing",
+        desc: "Learn horizontal vs vertical scaling, load balancer algorithms, and stateless server design.",
+        videos: {
+          english: { title: "System Design Basics (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
+          tamil: { title: "System Design Essentials (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          hindi: { title: "System Design Course (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+        },
+        topics: ["Horizontal vs Vertical Scaling", "Nginx & HAProxy Balancing", "Stateless Architecture", "CDN Distribution"]
+      },
+      mid: {
+        title: "Mid-Level: Caching Strategies & Database Sharding",
+        desc: "Master Redis caching patterns (Cache-Aside, Write-Through), database partitioning, and indexes.",
+        videos: {
+          english: { title: "Database Sharding & Caching (English)", embedId: "m8Icp_Cid5o", source: "YouTube" },
+          tamil: { title: "Database Scaling (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          hindi: { title: "Caching Strategies (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+        },
+        topics: ["Redis Cache Patterns", "Consistent Hashing", "Database Read Replicas", "Database Sharding"]
+      },
+      advanced: {
+        title: "Advanced: Message Queues & Distributed Systems",
+        desc: "Design event-driven architectures using RabbitMQ/Kafka, rate limiting, and CAP theorem trade-offs.",
+        videos: {
+          english: { title: "Distributed Systems & Kafka (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
+          tamil: { title: "Kafka & Event Architecture (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          hindi: { title: "Message Queues & Scaling (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+        },
+        topics: ["Kafka & RabbitMQ Messaging", "CAP Theorem", "Token Bucket Rate Limiting", "High Availability Clusters"]
+      }
+    }
+  },
+  security: {
+    title: "Cybersecurity & Ethical Hacking",
+    category: "security",
+    levels: {
+      beginner: {
+        title: "Beginner: Web Vulnerabilities & OWASP Top 10",
+        desc: "Learn core web security concepts, XSS sanitization, SQL injection prevention, and CSRF protection.",
+        videos: {
+          english: { title: "Cybersecurity & Web Defense (English)", embedId: "bPVaOiJ6NIM", source: "YouTube" },
+          tamil: { title: "Ethical Hacking Course (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
+          hindi: { title: "Cyber Security Full Course (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+        },
+        topics: ["OWASP Top 10 Overview", "SQL Injection Guards", "Cross-Site Scripting (XSS)", "CSRF Tokens"]
+      },
+      mid: {
+        title: "Mid-Level: Password Hashing & OAuth2 Authentication",
+        desc: "Implement bcrypt/argon2 hashing, JWT signature verification, CORS headers, and OAuth2 login flows.",
+        videos: {
+          english: { title: "OAuth2 & JWT Security Masterclass (English)", embedId: "SLtwlkQ0DDA", source: "YouTube" },
+          tamil: { title: "JWT & Web Security (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
+          hindi: { title: "Authentication Security (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+        },
+        topics: ["Bcrypt Password Hashing", "JWT Signing Keys", "CORS Configuration", "OAuth2 & OIDC Flows"]
+      },
+      advanced: {
+        title: "Advanced: Penetration Testing & Cryptography",
+        desc: "Master network packet analysis (Wireshark), public/private key crypto, and security hardening.",
+        videos: {
+          english: { title: "Ethical Hacking & PenTesting (English)", embedId: "3Kq1MIfTWCE", source: "YouTube" },
+          tamil: { title: "Penetration Testing (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
+          hindi: { title: "Ethical Hacking Full Course (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+        },
+        topics: ["Wireshark Packet Analysis", "RSA & AES Encryption", "Penetration Testing", "Security Headers Hardening"]
+      }
+    }
+  },
+  mobile: {
+    title: "Mobile App Development",
+    category: "mobile",
+    levels: {
+      beginner: {
+        title: "Beginner: React Native & Mobile Layouts",
+        desc: "Learn React Native CLI, Flexbox mobile layouts, navigation stacks, and basic components.",
+        videos: {
+          english: { title: "React Native Course for Beginners (English)", embedId: "0-S5a0eXPoc", source: "YouTube" },
+          tamil: { title: "React Native Tutorial (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
+          hindi: { title: "React Native Full Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+        },
+        topics: ["React Native Components", "Flexbox Mobile Layouts", "React Navigation Stack", "Device State"]
+      },
+      mid: {
+        title: "Mid-Level: Flutter & State Management",
+        desc: "Build cross-platform iOS & Android apps with Flutter, Dart language, and Provider/Bloc state management.",
+        videos: {
+          english: { title: "Flutter Full Course 2024 (English)", embedId: "VPvVD8t02U8", source: "YouTube" },
+          tamil: { title: "Flutter Tutorial for Beginners (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
+          hindi: { title: "Flutter Complete Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+        },
+        topics: ["Dart Language Syntax", "Flutter Widget Tree", "State Management (Bloc/Provider)", "Native Camera/GPS APIs"]
+      },
+      advanced: {
+        title: "Advanced: Native iOS/Android Bridges & App Store Publishing",
+        desc: "Deploy production builds to Apple App Store & Google Play Console, native Swift/Kotlin bridges, and push notifications.",
+        videos: {
+          english: { title: "App Store Publishing & Native Bridges (English)", embedId: "0-S5a0eXPoc", source: "YouTube" },
+          tamil: { title: "App Store & Play Store Deployment (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
+          hindi: { title: "Mobile CI/CD & Publishing (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+        },
+        topics: ["Native Swift/Kotlin Bridges", "Push Notifications (FCM)", "App Store Connect Renders", "Google Play Release Tracks"]
+      }
+    }
+  }
+};
