@@ -118,6 +118,114 @@
 
       </div>
 
+      <!-- ====== RECRUITER PRIORITY VISIBILITY METER (SPEEDOMETER GAUGE UI 🔥) ====== -->
+      <div id="hiring-boost-card" class="card" style="margin-bottom: 2.5rem; padding: 2rem; border: 1px solid rgba(245, 158, 11, 0.3); background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%); box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 25px rgba(245, 158, 11, 0.15); border-radius: 16px; position: relative; overflow: hidden;">
+        
+        <!-- Glow Overlay -->
+        <div style="position: absolute; top: -60px; left: -60px; width: 180px; height: 180px; background: rgba(245, 158, 11, 0.2); filter: blur(60px); pointer-events: none; border-radius: 50%;"></div>
+        
+        <!-- Top Header Row -->
+        <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.5rem;">
+          <div style="font-size: 2.2rem; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 8px rgba(245,158,11,0.5)); flex-shrink: 0;">
+            🔥
+          </div>
+          <div>
+            <h3 style="font-size: 1.5rem; font-family: var(--font-display); font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              Profile Hiring Boost: <span id="boost-tier-name" style="color: #f59e0b;">High Tier</span> <span style="color: #f97316; font-size: 1.4rem;">⚡</span> <span id="boost-xp-val" style="color: #f97316;">450 XP</span>
+            </h3>
+          </div>
+        </div>
+
+        <!-- 2 Column Grid for Gauge & Info Box -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 1.75rem;">
+          
+          <!-- LEFT: Speedometer Radial Gauge Meter -->
+          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 210px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
+            
+            <!-- SVG Semi-Circle Gauge Arc -->
+            <svg width="240" height="135" viewBox="0 0 240 135" style="overflow: visible;">
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#3b82f6" />
+                  <stop offset="50%" stop-color="#f59e0b" />
+                  <stop offset="100%" stop-color="#ef4444" />
+                </linearGradient>
+                <filter id="needleGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              
+              <!-- Track background arc -->
+              <path d="M 20 120 A 100 100 0 0 1 220 120" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="14" stroke-linecap="round" />
+              
+              <!-- Active colored gradient arc -->
+              <path id="gauge-active-arc" d="M 20 120 A 100 100 0 0 1 220 120" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="85" style="transition: stroke-dashoffset 1s ease;" />
+              
+              <!-- Gauge Tick Labels -->
+              <text x="12" y="132" fill="#64748b" font-size="10" font-weight="700">0</text>
+              <text x="35" y="70" fill="#64748b" font-size="10" font-weight="700">100</text>
+              <text x="80" y="30" fill="#64748b" font-size="10" font-weight="700">200</text>
+              <text x="120" y="18" fill="#64748b" font-size="10" font-weight="700">300</text>
+              <text x="160" y="30" fill="#64748b" font-size="10" font-weight="700">400</text>
+              <text x="200" y="70" fill="#64748b" font-size="10" font-weight="700">500</text>
+              <text x="208" y="132" fill="#64748b" font-size="10" font-weight="700">600+ XP</text>
+              
+              <!-- Needle Indicator -->
+              <g transform="translate(120, 120)">
+                <line id="gauge-needle" x1="0" y1="0" x2="-65" y2="-35" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" filter="url(#needleGlow)" style="transition: transform 1s ease;" />
+                <circle cx="0" cy="0" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="2" />
+              </g>
+            </svg>
+
+            <!-- Center Gauge Stats Overlay -->
+            <div style="text-align: center; margin-top: -38px;">
+              <span id="gauge-tier-label" style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em; display: block;">High Tier</span>
+              <span style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 0.1rem;">Recruiter Priority Discovery Meter</span>
+              <div id="gauge-xp-num" style="font-size: 1.8rem; font-weight: 900; color: #ffffff; font-family: var(--font-display); margin-top: 0.1rem; line-height: 1.1;">450 XP</div>
+              <span id="gauge-status-sub" style="font-size: 0.7rem; color: #38bdf8; font-weight: 600; margin-top: 0.2rem; display: block;">High Tier Boost Active</span>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: 2.5x Recruiter Visibility Badge Box -->
+          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; position: relative;">
+            
+            <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+              <div style="background: rgba(245, 158, 11, 0.12); border: 2px solid #f59e0b; border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);">
+                <div style="text-align: center;">
+                  <span id="badge-mult-num" style="font-size: 0.85rem; font-weight: 900; color: #f59e0b; display: block; line-height: 1;">2.5x</span>
+                  <span style="font-size: 0.45rem; font-weight: 800; color: #f97316; text-transform: uppercase;">BOOST</span>
+                </div>
+              </div>
+              <div>
+                <h4 id="badge-box-title" style="font-size: 1.05rem; font-weight: 800; color: #f59e0b; font-family: var(--font-display); margin: 0 0 0.2rem 0;">
+                  2.5x Recruiter Visibility Boost
+                </h4>
+                <p id="badge-box-desc" style="font-size: 0.82rem; color: #94a3b8; line-height: 1.45; margin: 0;">
+                  Candidates with <strong>400+ XP</strong> get <strong>2.5x more direct profile views</strong> on Job Search.
+                </p>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem;">
+              <span style="color: #64748b; font-weight: 600;">Boosted to Recruiters:</span>
+              <span style="color: #10b981; font-weight: 800; display: flex; align-items: center; gap: 0.3rem;">
+                <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10b981;"></span> Active
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- BOTTOM: Full-Width Glowing Orange Action Button -->
+        <a href="recommendations.html" class="btn" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.9rem 1.5rem; font-size: 1.05rem; font-weight: 800; font-family: var(--font-display); background: linear-gradient(90deg, #f97316 0%, #f59e0b 100%); border: none; color: #000000; border-radius: 12px; box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4); text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; letter-spacing: 0.01em;">
+          Boost Your Hiring Rank <span style="font-size: 1.2rem;">➔</span>
+        </a>
+
+      </div>
+
       <!-- Talent Score Summary Dashboard & Skills Map -->
       <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-bottom: 2rem;">
         <!-- Stats Card -->
@@ -324,12 +432,12 @@
 
               <div class="form-group">
                 <label class="form-label" for="projectLink">Live Website Link (Optional)</label>
-                <input type="url" id="projectLink" class="form-control" placeholder="https://myproject.com">
+                <input type="text" id="projectLink" class="form-control" placeholder="e.g. https://myproject.com or myproject.vercel.app">
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="projectGit">GitHub Source Code Link (Optional)</label>
-                <input type="url" id="projectGit" class="form-control" placeholder="https://github.com/username/project">
+                <input type="text" id="projectGit" class="form-control" placeholder="e.g. https://github.com/username/project">
               </div>
 
               <div class="form-group" style="margin-bottom: 1.5rem;">
@@ -1040,6 +1148,71 @@
       document.getElementById('portfolio-score-val').textContent = `${candidate.portfolio_score || 0}%`;
       document.getElementById('quiz-score-val').textContent = `${candidate.assessment_score || 0}%`;
 
+      // Update Recruiter Priority Visibility Meter (Speedometer Gauge UI)
+      const xpVal = candidate.xp_points || 350;
+      const boostXpEl = document.getElementById('boost-xp-val');
+      if (boostXpEl) boostXpEl.textContent = `${xpVal} XP`;
+
+      const gaugeXpNum = document.getElementById('gauge-xp-num');
+      if (gaugeXpNum) gaugeXpNum.textContent = `${xpVal} XP`;
+
+      const tierEl = document.getElementById('boost-tier-name');
+      const gaugeTierLabel = document.getElementById('gauge-tier-label');
+      const gaugeStatusSub = document.getElementById('gauge-status-sub');
+      const multNum = document.getElementById('badge-mult-num');
+      const boxTitle = document.getElementById('badge-box-title');
+      const boxDesc = document.getElementById('badge-box-desc');
+
+      let multText = "2.5x";
+      let tierText = "High Tier";
+      let statusText = "High Tier Boost Active";
+      let descText = "Candidates with <strong>400+ XP</strong> get <strong>2.5x more direct profile views</strong> on Job Search.";
+
+      if (xpVal >= 2500) {
+        multText = "5.0x";
+        tierText = "Elite Diamond";
+        statusText = "Top Tier Boost Active 🔥";
+        descText = "Candidates with <strong>2500+ XP</strong> get <strong>5.0x maximum recruiter profile views</strong> on Job Search.";
+      } else if (xpVal >= 1000) {
+        multText = "3.5x";
+        tierText = "Gold Priority";
+        statusText = "Gold Priority Boost Active ⚡";
+        descText = "Candidates with <strong>1000+ XP</strong> get <strong>3.5x higher recruiter search visibility</strong>.";
+      } else if (xpVal >= 400) {
+        multText = "2.5x";
+        tierText = "High Tier";
+        statusText = "High Tier Boost Active";
+        descText = "Candidates with <strong>400+ XP</strong> get <strong>2.5x more direct profile views</strong> on Job Search.";
+      } else {
+        multText = "1.5x";
+        tierText = "Rising Builder";
+        statusText = "Starter Boost Active";
+        descText = "Earn 400+ XP to unlock <strong>2.5x Recruiter Visibility Boost</strong> on Job Search.";
+      }
+
+      if (tierEl) tierEl.textContent = tierText;
+      if (gaugeTierLabel) gaugeTierLabel.textContent = tierText;
+      if (gaugeStatusSub) gaugeStatusSub.textContent = statusText;
+      if (multNum) multNum.textContent = multText;
+      if (boxTitle) boxTitle.textContent = `${multText} Recruiter Visibility Boost`;
+      if (boxDesc) boxDesc.innerHTML = descText;
+
+      // Animate Speedometer Gauge SVG Needle & Arc Offset
+      const needle = document.getElementById('gauge-needle');
+      const activeArc = document.getElementById('gauge-active-arc');
+      
+      const clampedXp = Math.min(600, Math.max(0, xpVal));
+      const angle = -90 + (clampedXp / 600) * 180;
+      const strokeDashoffset = Math.round(314 - (clampedXp / 600) * 314);
+
+      if (needle) {
+        needle.style.transformOrigin = "0px 0px";
+        needle.style.transform = `rotate(${angle}deg)`;
+      }
+      if (activeArc) {
+        activeArc.style.strokeDashoffset = strokeDashoffset;
+      }
+
       // Update dynamic radar chart map
       drawRadarChart();
     }
@@ -1214,58 +1387,78 @@
       }
     };
 
-    // Add Project
+    // Add Project Showcase
     document.getElementById('project-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const title = document.getElementById('projectTitle').value;
-      const description = document.getElementById('projectDesc').value;
-      const projectUrl = document.getElementById('projectLink').value;
-      const github_url = document.getElementById('projectGit').value;
-      const thumbnail_url = document.getElementById('projectThumb').value.trim() || "📁";
+      let title = (document.getElementById('projectTitle').value || '').trim();
+      let description = (document.getElementById('projectDesc').value || '').trim();
+      let projectUrl = (document.getElementById('projectLink').value || '').trim();
+      let github_url = (document.getElementById('projectGit').value || '').trim();
+      let thumbnail_url = (document.getElementById('projectThumb').value || '').trim() || "📁";
+
+      if (!title) title = "Web Application Showcase";
+      if (!description) description = "Fullstack interactive application published to Build2Hire portfolio.";
+
+      // Auto-prefix https:// if omitted by user
+      if (projectUrl && !projectUrl.startsWith('http://') && !projectUrl.startsWith('https://')) {
+        projectUrl = 'https://' + projectUrl;
+      }
+      if (github_url && !github_url.startsWith('http://') && !github_url.startsWith('https://')) {
+        github_url = 'https://' + github_url;
+      }
 
       const newProj = {
         id: Date.now(),
-        title,
-        description,
-        project_url,
-        github_url,
-        thumbnail_url
+        title: title,
+        description: description,
+        project_url: projectUrl,
+        github_url: github_url,
+        thumbnail_url: thumbnail_url
       };
 
       const dbState = dbGet();
-      const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
-      if (dbCand) {
-        if (!dbCand.projects) dbCand.projects = [];
-        dbCand.projects.push(newProj);
+      let dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+      if (!dbCand) {
+        dbCand = candidate;
+        dbState.users.push(dbCand);
+      }
 
-        // Award +50 XP
-        dbCand.xp_points = (dbCand.xp_points || 0) + 50;
+      if (!dbCand.projects) dbCand.projects = [];
+      dbCand.projects.push(newProj);
 
-        // Portfolio score increases (+15% per project up to 100%)
-        dbCand.portfolio_score = Math.min(100, dbCand.projects.length * 15 + 40);
+      // Award +50 XP
+      dbCand.xp_points = (dbCand.xp_points || 0) + 50;
 
-        // Check level up
-        const isLvlUp = recalculateScores(dbCand);
+      // Portfolio score increases (+15% per project up to 100%)
+      dbCand.portfolio_score = Math.min(100, dbCand.projects.length * 15 + 40);
 
-        dbSave(dbState);
-        candidate = dbCand;
+      // Check level up
+      const isLvlUp = recalculateScores(dbCand);
 
-        // Reset form fields
-        document.getElementById('projectTitle').value = "";
-        document.getElementById('projectDesc').value = "";
-        document.getElementById('projectLink').value = "";
-        document.getElementById('projectGit').value = "";
-        document.getElementById('projectThumb').value = "";
+      dbSave(dbState);
+      candidate = dbCand;
+      sessionStorage.setItem('user', JSON.stringify(dbCand));
 
-        renderProjects();
-        updateUIStats();
-        triggerConfetti();
+      // Reset form fields
+      document.getElementById('projectTitle').value = "";
+      document.getElementById('projectDesc').value = "";
+      document.getElementById('projectLink').value = "";
+      document.getElementById('projectGit').value = "";
+      document.getElementById('projectThumb').value = "";
 
-        if (isLvlUp) {
-          showLevelUpNotification(dbCand.current_level);
-        } else {
-          showAlert('alert-container', 'Project published successfully! +50 XP earned.', 'success');
-        }
+      renderProjects();
+      updateUIStats();
+      updateOnboardingWizard();
+      triggerConfetti();
+
+      // Scroll to published projects section
+      const projContainer = document.getElementById('projects-list-container');
+      if (projContainer) projContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      if (isLvlUp) {
+        showLevelUpNotification(dbCand.current_level);
+      } else {
+        showAlert('alert-container', '🚀 Project published successfully to your portfolio! (+50 XP earned)', 'success');
       }
     });
 
