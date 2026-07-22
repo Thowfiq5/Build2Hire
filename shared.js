@@ -1026,7 +1026,7 @@ function renderHeader() {
     
     nav.innerHTML = `
       <div style="display:flex;align-items:center;">
-        <a href="index.html" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+        <a href="index.html" onclick="window.handleLogoClick(event, 'index.html')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
           Build2<span style="color: var(--primary);">Hire</span>
         </a>
       </div>
