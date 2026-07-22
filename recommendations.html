@@ -16,112 +16,19 @@
 
     <main class="main-content">
       <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.8rem; font-family: var(--font-display);">AI Career Recommendations</h2>
-        <p style="color: var(--text-secondary);">Our engine maps your showcased skills to industry jobs and offers developmental roadmaps.</p>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Build2Hire Skill Academy & Learning Hub</h2>
+        <p style="color: var(--text-secondary);">Watch video lessons in English, Tamil, or Hindi, complete level-based assessments, earn verified certificates, and level up your developer rank.</p>
       </div>
 
       <div id="alert-container"></div>
-
-      <div id="loading-state" style="text-align: center; padding: 4rem 0; display: none;">
-        <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-secondary);">Running AI Skill Analyzer...</p>
-      </div>
 
       <div id="no-skills-state" class="card" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted);">
         <p>Add some skills to your profile to generate recommendations.</p>
         <a href="portfolio.html" class="btn btn-primary" style="margin-top: 1rem;">Add Skills</a>
       </div>
 
-      <!-- ====== HOW TO LEARN GUIDE ====== -->
-      <div id="how-to-learn-guide" class="card" style="margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(139,92,246,0.07) 100%); border: 1px solid var(--border-glow);">
-        <div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 1.5rem;">
-          <span style="font-size:1.6rem;">🎓</span>
-          <div>
-            <h3 style="font-size:1.15rem; font-family: var(--font-display); margin:0; color: var(--text-primary);">How to Learn & Get Ranked</h3>
-            <p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Follow these 4 steps to upgrade your skills, earn certificates, and appear on the Leaderboard.</p>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-
-          <!-- Step 1 -->
-          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
-            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">1</div>
-            <div style="font-size:1.6rem; margin-bottom:0.6rem;">👤</div>
-            <strong style="font-size:0.9rem; color: var(--primary); display:block; margin-bottom:0.35rem;">1. Complete Your Profile</strong>
-            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Add your skills and set your preferred job role in <strong>My Showcase</strong>. This unlocks your personalised roadmap below.</p>
-            <a href="portfolio.html" style="display:inline-block; margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--primary); text-decoration:none;">→ Go to My Showcase</a>
-          </div>
-
-          <!-- Step 2 -->
-          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
-            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">2</div>
-            <div style="font-size:1.6rem; margin-bottom:0.6rem;">🗺️</div>
-            <strong style="font-size:0.9rem; color: var(--secondary); display:block; margin-bottom:0.35rem;">2. View Your AI Roadmap</strong>
-            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Click <strong>"View Career Roadmap"</strong> on your matched role card below. The AI generates a step-by-step learning path tailored to your current skill level.</p>
-          </div>
-
-          <!-- Step 3 -->
-          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
-            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">3</div>
-            <div style="font-size:1.6rem; margin-bottom:0.6rem;">📚</div>
-            <strong style="font-size:0.9rem; color: var(--warning); display:block; margin-bottom:0.35rem;">3. Study & Upgrade Skills</strong>
-            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Find a skill at <strong>Basic stage</strong> and click <strong>⚡ Upgrade to Medium</strong>. Read the study slides, then click <strong>"Take Quiz ⚡"</strong> to start your assessment.</p>
-          </div>
-
-          <!-- Step 4 -->
-          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1.25rem; border: 1px solid var(--border-color); position: relative; overflow: hidden;">
-            <div style="position:absolute; top:-8px; right:-8px; font-size:3rem; opacity:0.06; font-weight:900; font-family:var(--font-display);">4</div>
-            <div style="font-size:1.6rem; margin-bottom:0.6rem;">🏆</div>
-            <strong style="font-size:0.9rem; color: var(--success); display:block; margin-bottom:0.35rem;">4. Earn Certificate & Rank</strong>
-            <p style="font-size:0.78rem; color:var(--text-secondary); margin:0; line-height:1.5;">Score <strong>50% or above</strong> in any quiz to earn a verified certificate, gain XP, and unlock your rank on the <strong>Leaderboard</strong>.</p>
-            <a href="leaderboard.html" style="display:inline-block; margin-top:0.75rem; font-size:0.75rem; font-weight:700; color:var(--success); text-decoration:none;">→ View Leaderboard</a>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- LEARNING PROGRESS SUMMARY CARD -->
-      <div id="learning-progress-card" class="card" style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid var(--border-color); display: none;">
-        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-          <span style="font-size: 1.4rem;">📈</span>
-          <div>
-            <strong style="font-size: 1rem; color: var(--text-primary); display: block;">Your Learning Progress</strong>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Track your skill stage journey from Basic to Advanced.</p>
-          </div>
-          <div id="learning-overall-pct" style="margin-left: auto; font-size: 1.5rem; font-weight: 800; color: var(--primary); font-family: var(--font-display);">0%</div>
-        </div>
-        <!-- Progress Bar -->
-        <div style="background: var(--bg-tertiary); border-radius: 999px; height: 8px; margin-bottom: 1.5rem; overflow: hidden;">
-          <div id="learning-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--warning), var(--primary), var(--success)); border-radius: 999px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1);"></div>
-        </div>
-        <!-- Stage Counters -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--border-color); text-align: center;">
-            <div id="basic-count" style="font-size: 1.8rem; font-weight: 800; color: var(--text-muted); font-family: var(--font-display);">0</div>
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Basic Skills</span>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Needs upgrading</div>
-          </div>
-          <div style="background: var(--warning-light, rgba(245,158,11,0.1)); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--warning); text-align: center;">
-            <div id="medium-count" style="font-size: 1.8rem; font-weight: 800; color: var(--warning); font-family: var(--font-display);">0</div>
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--warning); text-transform: uppercase;">Medium Skills</span>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Keep learning!</div>
-          </div>
-          <div style="background: var(--success-light); border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--success); text-align: center;">
-            <div id="advanced-count" style="font-size: 1.8rem; font-weight: 800; color: var(--success); font-family: var(--font-display);">0</div>
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--success); text-transform: uppercase;">Advanced Skills</span>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Expert level ✔</div>
-          </div>
-        </div>
-        <!-- CTA if skills at Basic -->
-        <div id="basic-upgrade-cta" style="display: none; margin-top: 1.25rem; padding: 0.85rem 1rem; background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(99,102,241,0.1)); border-radius: var(--radius-sm); border: 1px solid var(--warning); font-size: 0.82rem; color: var(--text-secondary);">
-          ⚡ You have <strong id="basic-cta-count" style="color: var(--warning);">0</strong> skill(s) at Basic level. <strong>Click "View Career Roadmap"</strong> on your matched role below to see the upgrade path, study course slides, and take a quiz to level up!
-        </div>
-      </div>
-
-      <!-- RECOMMENDATION LIST CONTAINER -->
-      <div id="recommendations-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
-        <!-- Dynamic Recommendation Cards -->
-      </div>
+      <!-- AI MATCHING ROLES RECOMMENDATIONS CONTAINER -->
+      <div id="recommendations-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;"></div>
 
       <!-- ====== SKILL ACADEMY & COURSE CENTER ====== -->
       <div class="card" style="margin-bottom: 2.5rem; padding: 2rem; border-top: 4px solid var(--primary);">
@@ -156,12 +63,16 @@
               🔍 Browse All Academy Courses
             </h4>
             <!-- Category filter tabs -->
-            <div id="course-filter-tabs" style="display: flex; gap: 0.35rem;">
+            <div id="course-filter-tabs" style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button onclick="filterAcademyCourses('all')" class="btn btn-secondary active" id="course-tab-all" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">All</button>
               <button onclick="filterAcademyCourses('frontend')" class="btn btn-secondary" id="course-tab-frontend" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Frontend</button>
               <button onclick="filterAcademyCourses('backend')" class="btn btn-secondary" id="course-tab-backend" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Backend</button>
               <button onclick="filterAcademyCourses('database')" class="btn btn-secondary" id="course-tab-database" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Database</button>
               <button onclick="filterAcademyCourses('creative')" class="btn btn-secondary" id="course-tab-creative" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Creative</button>
+              <button onclick="filterAcademyCourses('devops')" class="btn btn-secondary" id="course-tab-devops" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">DevOps</button>
+              <button onclick="filterAcademyCourses('system')" class="btn btn-secondary" id="course-tab-system" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">System Design</button>
+              <button onclick="filterAcademyCourses('security')" class="btn btn-secondary" id="course-tab-security" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Security</button>
+              <button onclick="filterAcademyCourses('mobile')" class="btn btn-secondary" id="course-tab-mobile" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; border-radius: 4px;">Mobile</button>
             </div>
           </div>
           <div id="all-courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
@@ -238,6 +149,100 @@
         </div>
       </div>
 
+      <!-- COURSE LEARNING & VIDEO PORTAL MODAL -->
+      <div id="course-portal-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 1150; justify-content: center; align-items: center; padding: 1rem;">
+        <div class="card" style="width: 100%; max-width: 850px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.6); border: 1px solid var(--border-glow);">
+          
+          <!-- Portal Modal Header -->
+          <div class="flex-between" style="border-bottom: 1px solid var(--border-color); padding: 1.25rem 1.5rem; background-color: var(--bg-tertiary);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span id="portal-course-icon" style="font-size: 2rem;">⚡</span>
+              <div>
+                <span class="badge badge-primary" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Build2Hire Skill Academy</span>
+                <h3 id="portal-course-title" style="font-size: 1.3rem; font-family: var(--font-display); margin-top: 0.15rem; color: var(--text-primary);">Course Title</h3>
+              </div>
+            </div>
+            <button onclick="window.closeCoursePortalModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; padding: 0.25rem;">✕</button>
+          </div>
+
+          <!-- Portal Modal Controls (Level Tabs & Language Selector) -->
+          <div style="padding: 1rem 1.5rem; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            
+            <!-- Difficulty Level Selector Tabs -->
+            <div style="display: flex; gap: 0.4rem; background: var(--bg-tertiary); padding: 0.3rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <button onclick="switchPortalLevel('beginner')" id="portal-tab-beginner" class="btn btn-secondary active" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">🌱 Beginner (100 XP)</button>
+              <button onclick="switchPortalLevel('mid')" id="portal-tab-mid" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">⚡ Mid Level (250 XP)</button>
+              <button onclick="switchPortalLevel('advanced')" id="portal-tab-advanced" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">🔥 Advanced (500 XP)</button>
+            </div>
+
+            <!-- Language Switcher -->
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🌐 Video Language:</span>
+              <div style="display: flex; gap: 0.3rem;">
+                <button onclick="switchPortalLang('english')" id="portal-lang-english" class="btn btn-secondary active" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇬🇧 English</button>
+                <button onclick="switchPortalLang('tamil')" id="portal-lang-tamil" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇮🇳 Tamil (தமிழ்)</button>
+                <button onclick="switchPortalLang('hindi')" id="portal-lang-hindi" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇮🇳 Hindi (हिंदी)</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Portal Modal Body (Video & Topics) -->
+          <div style="padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 1.25rem;">
+            
+            <!-- Video Player Wrapper -->
+            <div style="position: relative; width: 100%; padding-bottom: 52%; background: #000; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.4);">
+              <iframe id="portal-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="" title="Course Video Lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            
+            <!-- Video Watch Verification & Links Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap; gap: 0.5rem; background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <button id="portal-verify-watch-btn" onclick="window.markVideoWatched()" class="btn btn-warning" style="font-size: 0.85rem; padding: 0.5rem 1.25rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: #000; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">
+                🎬 Mark Video Lesson as Watched & Complete
+              </button>
+              <a href="#" id="portal-yt-fallback-btn" onclick="window.markVideoWatched()" target="_blank" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.4rem 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-color);">
+                ▶️ Watch directly on YouTube ↗
+              </a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.25rem; align-items: start;">
+              
+              <!-- Video Details & Description -->
+              <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <h4 id="portal-level-title" style="font-size: 1.1rem; color: var(--primary); font-family: var(--font-display); margin: 0;">Level Title</h4>
+                  <span id="portal-lang-badge" class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">ENGLISH</span>
+                </div>
+                <p id="portal-level-desc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Level description goes here...</p>
+              </div>
+
+              <!-- Key Concepts / Topics Checklist -->
+              <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <strong style="font-size: 0.85rem; color: var(--warning); text-transform: uppercase; display: block; margin-bottom: 0.75rem; letter-spacing: 0.05em;">
+                  📋 Key Concepts to Learn
+                </strong>
+                <ul id="portal-topics-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; color: var(--text-secondary);">
+                  <!-- Dynamic topic list -->
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Portal Modal Footer -->
+          <div style="border-top: 1px solid var(--border-color); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; background-color: var(--bg-tertiary);">
+            <div id="portal-footer-status" style="font-size: 0.8rem; color: var(--warning); font-weight: 600;">
+              🔒 Watch the video lesson above or click "Mark Video Lesson as Watched" to unlock your assessment test.
+            </div>
+            <div id="portal-quiz-btn-container">
+              <!-- Unlocked link or locked button renders here dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- CERTIFICATE UNLOCK MODAL -->
       <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
         <div class="card" style="width: 100%; max-width: 550px; background-color: #1e293b; color: #f8fafc; border: 4px solid #d97706; padding: 2.5rem 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.6); position: relative; overflow: visible;">
@@ -280,7 +285,7 @@
     </main>
   </div>
 
-  <script src="shared.js?v=1.0.5"></script>
+  <script src="shared.js?v=9.9.9"></script>
   <script>
     const auth = withAuth(['candidate', 'admin']);
     const originalGetUser = getUser;
@@ -296,9 +301,14 @@
 
     // Refresh XP Progress layout inside the sidebar
     function refreshSidebarStats() {
-      document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
-      document.getElementById('level-num').textContent = candidate.level || 1;
-      document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+      const lvlName = document.getElementById('level-name');
+      const lvlNum = document.getElementById('level-num');
+      const xpCur = document.getElementById('xp-current');
+      const xpBar = document.getElementById('xp-bar-fill');
+
+      if (lvlName) lvlName.textContent = candidate.current_level || "Beginner Builder";
+      if (lvlNum) lvlNum.textContent = candidate.level || 1;
+      if (xpCur) xpCur.textContent = candidate.xp_points || 0;
 
       let maxLvlXp = 1000;
       let minLvlXp = 0;
@@ -306,10 +316,8 @@
       else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
       else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
 
-      const pct = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
-      setTimeout(() => {
-        document.getElementById('xp-bar-fill').style.width = `${pct}%`;
-      }, 100);
+      const pct = Math.min(100, Math.max(5, (((candidate.xp_points || 0) - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+      if (xpBar) xpBar.style.width = `${pct}%`;
     }
 
     refreshSidebarStats();
@@ -354,19 +362,13 @@
     ];
 
     async function loadRecommendations() {
-      const loading = document.getElementById('loading-state');
       const container = document.getElementById('recommendations-container');
       const emptyState = document.getElementById('no-skills-state');
 
-      loading.style.display = "block";
-      container.style.display = "none";
-      emptyState.style.display = "none";
+      if (container) container.style.display = "none";
+      if (emptyState) emptyState.style.display = "none";
 
-      // Simulate a small delay for premium AI feel
-      setTimeout(() => {
-        loading.style.display = "none";
-        generateMatchingRecommendations();
-      }, 600);
+      generateMatchingRecommendations();
     }
 
     // ==========================================
@@ -392,23 +394,29 @@
       const pct = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
 
       card.style.display = 'block';
-      document.getElementById('basic-count').textContent = basicCount;
-      document.getElementById('medium-count').textContent = mediumCount;
-      document.getElementById('advanced-count').textContent = advancedCount;
-      document.getElementById('learning-overall-pct').textContent = pct + '%';
+      const elBasic = document.getElementById('basic-count');
+      const elMedium = document.getElementById('medium-count');
+      const elAdv = document.getElementById('advanced-count');
+      const elPct = document.getElementById('learning-overall-pct');
+      const elBar = document.getElementById('learning-progress-bar');
 
-      setTimeout(() => {
-        document.getElementById('learning-progress-bar').style.width = pct + '%';
-      }, 200);
+      if (elBasic) elBasic.textContent = basicCount;
+      if (elMedium) elMedium.textContent = mediumCount;
+      if (elAdv) elAdv.textContent = advancedCount;
+      if (elPct) elPct.textContent = pct + '%';
+
+      if (elBar) elBar.style.width = pct + '%';
 
       // Show CTA if user has basic skills to upgrade
       const ctaDiv = document.getElementById('basic-upgrade-cta');
       const ctaCount = document.getElementById('basic-cta-count');
-      if (basicCount > 0) {
-        ctaDiv.style.display = 'block';
-        if (ctaCount) ctaCount.textContent = basicCount;
-      } else {
-        ctaDiv.style.display = 'none';
+      if (ctaDiv) {
+        if (basicCount > 0) {
+          ctaDiv.style.display = 'block';
+          if (ctaCount) ctaCount.textContent = basicCount;
+        } else {
+          ctaDiv.style.display = 'none';
+        }
       }
     }
 
@@ -419,8 +427,8 @@
       const skillsList = candidate.skills || [];
 
       if (skillsList.length === 0) {
-        emptyState.style.display = "block";
-        container.style.display = "none";
+        if (emptyState) emptyState.style.display = "block";
+        if (container) container.style.display = "none";
         return;
       }
 
@@ -451,11 +459,14 @@
       // Sort by match percentage descending
       recs.sort((a, b) => b.matchPercentage - a.matchPercentage);
 
-      renderRecs(recs);
+      if (container) {
+        renderRecs(recs);
+      }
     }
 
     function renderRecs(data) {
       const container = document.getElementById('recommendations-container');
+      if (!container) return;
       container.innerHTML = "";
       container.style.display = "flex";
 
@@ -523,7 +534,8 @@
             <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 520px;">
               💡 <strong>Engine Feedback:</strong> ${rec.reasoning}
             </p>
-            <div style="display: flex; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button onclick="openCoursePortalModal('${rec.key}', 'beginner')" class="btn btn-warning" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; background: var(--warning); border-color: var(--warning); color: #000; font-weight: 700;">🎬 Watch Course Videos</button>
               <button onclick="generateRoadmap('${rec.key}')" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
                 🗺️ View Career Roadmap
               </button>
@@ -725,13 +737,18 @@
         } else if (isCompleted) {
           levelStatus = `<span class="badge badge-success" style="font-size: 0.7rem;">✅ Completed (Score: ${scoreVal}%)</span>`;
           actionBtn = `
-            <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.75rem;">
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-top:0.75rem;">
+              <button onclick="window.openCoursePortalModal('${courseKey}', '${step.level}')" class="btn btn-warning" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos</button>
               <button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', true)" class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px;">Review Slides</button>
               <button onclick="window.viewLevelCertificate('${courseKey}', '${step.level}')" class="btn btn-secondary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700;">🏅 View Certificate</button>
             </div>`;
         } else {
           levelStatus = `<span class="badge badge-warning" style="font-size: 0.7rem;">⚡ In Progress</span>`;
-          actionBtn = `<button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', false)" class="btn btn-primary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; margin-top:0.75rem; background: linear-gradient(135deg, var(--warning) 0%, var(--secondary) 100%); border: none;">📖 Study & Take Quiz</button>`;
+          actionBtn = `
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-top:0.75rem;">
+              <button onclick="window.openCoursePortalModal('${courseKey}', '${step.level}')" class="btn btn-warning" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos & Learn</button>
+              <button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', false)" class="btn btn-primary" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:4px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none;">📖 Read Slides & Quiz</button>
+            </div>`;
         }
 
         node.innerHTML = `
@@ -874,7 +891,9 @@
         </div>
       `;
 
-      document.getElementById('advisor-chat-form').addEventListener('submit', (e) => {
+      const chatForm = document.getElementById('advisor-chat-form');
+      if (chatForm) {
+        chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const input = document.getElementById('advisor-chat-input');
         const query = input.value.trim();
@@ -897,6 +916,7 @@
           appendChatMessage(reply, 'advisor');
         }, 800 + Math.random() * 400);
       });
+      }
     }
 
     function appendChatMessage(text, sender) {
@@ -1043,6 +1063,46 @@
         duration: "5 weeks",
         skills: ["After Effects", "UI Animation"],
         image: "✨"
+      },
+      {
+        id: "course_devops_cloud",
+        title: "Cloud & DevOps Infrastructure",
+        category: "devops",
+        desc: "Learn Docker containerization, AWS cloud deployments, GitHub Actions CI/CD pipelines, and SSL encryption.",
+        level: "Medium",
+        duration: "5 weeks",
+        skills: ["Docker", "AWS", "CI/CD"],
+        image: "☁️"
+      },
+      {
+        id: "course_system_design",
+        title: "System Design & Distributed Scaling",
+        category: "system",
+        desc: "Master load balancing, horizontal scaling, Redis caching, message queues (Kafka), and high availability patterns.",
+        level: "Advanced",
+        duration: "6 weeks",
+        skills: ["System Design", "Redis", "Kafka"],
+        image: "🏗️"
+      },
+      {
+        id: "course_cyber_security",
+        title: "Cybersecurity & Ethical Hacking Guards",
+        category: "security",
+        desc: "Protect applications against OWASP Top 10 vulnerabilities, XSS attacks, SQL injections, and OAuth2 security flaws.",
+        level: "Medium",
+        duration: "5 weeks",
+        skills: ["Cybersecurity", "OWASP", "OAuth2"],
+        image: "🛡️"
+      },
+      {
+        id: "course_mobile_dev",
+        title: "Cross-Platform Mobile App Development",
+        category: "mobile",
+        desc: "Build cross-platform iOS and Android applications with React Native, Flutter state management, and App Store releases.",
+        level: "Medium",
+        duration: "6 weeks",
+        skills: ["React Native", "Flutter", "Mobile"],
+        image: "📱"
       }
     ];
 
@@ -1097,7 +1157,12 @@
         };
       }
 
-      return null;
+      return {
+        type: "recommended",
+        label: "🌟 Recommended Skill Course",
+        priority: 0,
+        reason: `Level up your developer portfolio with ${course.title}`
+      };
     }
 
     function renderAcademy() {
@@ -1112,12 +1177,18 @@
 
       // 1. Render Active Courses
       enrolledGrid.innerHTML = "";
+      let validEnrolledCount = 0;
+
       if (enrolled.length > 0) {
-        enrolledWrapper.style.display = "block";
         enrolled.forEach(ec => {
-          const course = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+          let course = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+          if (!course && ec.courseId === 'course_1') course = ACADEMY_COURSES.find(c => c.id === 'course_react_state');
+          if (!course && ec.courseId === 'course_2') course = ACADEMY_COURSES.find(c => c.id === 'course_nodejs_api');
+          if (!course && ec.courseId === 'course_3') course = ACADEMY_COURSES.find(c => c.id === 'course_sql_tuning');
           if (!course) return;
-          
+
+          validEnrolledCount++;
+
           const adminProgressBtn = isAdminViewing
             ? `<button onclick="handleSetProgressAdmin('${course.id}', 100)" class="btn" style="background:#10b981; border:1px solid #10b981; color:white; padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">💯 Complete</button>`
             : '';
@@ -1142,13 +1213,17 @@
                 </div>
               </div>
               <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap;">
-                <a href="quiz.html?course=${course.category}&level=${course.level.toLowerCase()}" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center; text-decoration: none;">Study Roadmap ➔</a>
+                <button onclick="openCoursePortalModal('${course.category}', 'beginner', '${ec.selectedLanguage || 'english'}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center;">Watch Lessons & Learn 🎬</button>
                 ${adminProgressBtn}
                 <button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>
               </div>
             </div>
           `;
         });
+      }
+
+      if (validEnrolledCount > 0) {
+        enrolledWrapper.style.display = "block";
       } else {
         enrolledWrapper.style.display = "none";
       }
@@ -1171,7 +1246,7 @@
                  <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Enroll & Complete</button>
                  <button onclick="handleEnrollCourseAdmin('${c.id}', false)" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll only</button>
                </div>`
-            : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-outline" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; border-color: var(--warning); color: var(--warning);">Enroll in Course ⚡</button>`;
+            : `<button onclick="handleEnrollAndOpenPortal('${c.id}', '${c.category}')" class="btn btn-primary" style="width: 100%; padding: 0.45rem; font-size: 0.78rem; font-weight: 700;">Enroll & Watch Videos 🎬</button>`;
 
           suggestedGrid.innerHTML += `
             <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--warning); transition: transform 0.2s, box-shadow 0.2s;">
@@ -1213,8 +1288,8 @@
                <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Force Complete</button>
              </div>`
           : (isEnrolled
-            ? `<button class="btn btn-secondary" disabled style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enrolled ✓</button>`
-            : `<button onclick="handleEnrollCourse('${c.id}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll now</button>`);
+            ? `<button onclick="openCoursePortalModal('${c.category}', 'beginner')" class="btn btn-success" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Open Learning Portal 🎬</button>`
+            : `<button onclick="handleEnrollAndOpenPortal('${c.id}', '${c.category}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll & Learn 🎬</button>`);
 
         allGrid.innerHTML += `
           <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;">
@@ -1234,6 +1309,237 @@
           </div>
         `;
       });
+    }
+
+    let activePortalCategory = "frontend";
+    let activePortalLevel = "beginner";
+    let activePortalLang = "english";
+
+    window.openCoursePortalModal = function(courseCategory, initialLevel = "beginner", initialLang = "english") {
+      activePortalCategory = courseCategory || "frontend";
+      activePortalLevel = initialLevel || "beginner";
+      activePortalLang = initialLang || "english";
+
+      document.getElementById('course-portal-modal').style.display = "flex";
+      renderPortalContent();
+    };
+
+    window.closeCoursePortalModal = function() {
+      document.getElementById('course-portal-modal').style.display = "none";
+      const iframe = document.getElementById('portal-video-frame');
+      if (iframe) iframe.src = "";
+    };
+
+    window.switchPortalLevel = function(targetLevel) {
+      const certs = candidate.certificates || [];
+      const courseData = COURSE_VIDEO_DATA[activePortalCategory] || COURSE_VIDEO_DATA['frontend'];
+      
+      const hasPassedBeginner = certs.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('beginner') || lKey.includes('basic'));
+      });
+
+      const hasPassedMid = certs.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('mid') || lKey.includes('medium'));
+      });
+
+      if (targetLevel === 'mid' && !hasPassedBeginner) {
+        showAlert('alert-container', '🔒 Mid Level is locked! Please complete the Beginner video lesson & pass the Beginner assessment first to unlock Mid Level.', 'error');
+        return;
+      }
+
+      if (targetLevel === 'advanced' && !hasPassedMid) {
+        showAlert('alert-container', '🔒 Advanced Level is locked! Please complete the Mid Level video lesson & pass the Mid assessment first to unlock Advanced Level.', 'error');
+        return;
+      }
+
+      activePortalLevel = targetLevel;
+      renderPortalContent();
+    };
+
+    window.switchPortalLang = function(lang) {
+      activePortalLang = lang;
+      renderPortalContent();
+    };
+
+    window.handleEnrollAndOpenPortal = function(courseId, category) {
+      enrollInCourse(candidate.id, courseId);
+      const db = dbGet();
+      candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
+      renderAcademy();
+      openCoursePortalModal(category, 'beginner', 'english');
+    };
+
+    let isVideoWatchedMap = {};
+
+    window.markVideoWatched = function() {
+      const key = `${activePortalCategory}_${activePortalLevel}`;
+      isVideoWatchedMap[key] = true;
+      
+      triggerConfetti();
+      showAlert('alert-container', '🎉 Video lesson completed! Assessment test is now unlocked.', 'success');
+      renderPortalContent();
+    };
+
+    function renderPortalContent() {
+      const courseData = COURSE_VIDEO_DATA[activePortalCategory] || COURSE_VIDEO_DATA['frontend'];
+      const levelData = (courseData.levels && courseData.levels[activePortalLevel]) || courseData.levels['beginner'];
+      const videoInfo = (levelData.videos && levelData.videos[activePortalLang]) || levelData.videos['english'];
+
+      const icons = { frontend: "⚛️", backend: "🟢", database: "🗄️", creative: "🎥" };
+      document.getElementById('portal-course-icon').textContent = icons[activePortalCategory] || "⚡";
+      document.getElementById('portal-course-title').textContent = courseData.title;
+
+      const certs = candidate.certificates || [];
+      const hasPassedBeginner = certs.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('beginner') || lKey.includes('basic'));
+      });
+
+      const hasPassedMid = certs.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('mid') || lKey.includes('medium'));
+      });
+
+      const tabBeginner = document.getElementById('portal-tab-beginner');
+      const tabMid = document.getElementById('portal-tab-mid');
+      const tabAdv = document.getElementById('portal-tab-advanced');
+
+      if (tabBeginner) {
+        tabBeginner.innerHTML = `🌱 Beginner (100 XP)`;
+      }
+
+      if (tabMid) {
+        if (hasPassedBeginner) {
+          tabMid.innerHTML = `⚡ Mid Level (250 XP)`;
+          tabMid.style.opacity = "1";
+        } else {
+          tabMid.innerHTML = `🔒 Mid Level (Pass Beginner First)`;
+          tabMid.style.opacity = "0.65";
+        }
+      }
+
+      if (tabAdv) {
+        if (hasPassedMid) {
+          tabAdv.innerHTML = `🔥 Advanced (500 XP)`;
+          tabAdv.style.opacity = "1";
+        } else {
+          tabAdv.innerHTML = `🔒 Advanced (Pass Mid First)`;
+          tabAdv.style.opacity = "0.65";
+        }
+      }
+
+      ['beginner', 'mid', 'advanced'].forEach(lvl => {
+        const btn = document.getElementById('portal-tab-' + lvl);
+        if (btn) {
+          if (lvl === activePortalLevel) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      ['english', 'tamil', 'hindi'].forEach(l => {
+        const btn = document.getElementById('portal-lang-' + l);
+        if (btn) {
+          if (l === activePortalLang) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      const iframe = document.getElementById('portal-video-frame');
+      if (iframe && videoInfo.embedId) {
+        iframe.src = `https://www.youtube.com/embed/${videoInfo.embedId}?rel=0&autoplay=0`;
+      }
+      
+      const fallbackBtn = document.getElementById('portal-yt-fallback-btn');
+      if (fallbackBtn && videoInfo.embedId) {
+        fallbackBtn.href = `https://www.youtube.com/watch?v=${videoInfo.embedId}`;
+      }
+
+      document.getElementById('portal-level-title').textContent = levelData.title;
+      document.getElementById('portal-level-desc').textContent = levelData.desc;
+      document.getElementById('portal-lang-badge').textContent = activePortalLang.toUpperCase();
+
+      const topicsList = document.getElementById('portal-topics-list');
+      if (topicsList) {
+        topicsList.innerHTML = (levelData.topics || []).map(tp => `<li style="display:flex; align-items:center; gap:0.4rem;"><span style="color:var(--success);">✓</span> ${tp}</li>`).join('');
+      }
+
+      // Check if candidate has ALREADY completed & passed this level assessment
+      const existingCert = certs.find(c => {
+        const cKey = (c.course_key || c.category || '').toLowerCase();
+        const cName = (c.course || c.title || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        
+        const courseMatch = cKey === activePortalCategory.toLowerCase() || cName.includes(activePortalCategory.toLowerCase()) || cName.includes((courseData.title || '').toLowerCase());
+        const levelMatch = lKey.includes(activePortalLevel.toLowerCase()) || (activePortalLevel === 'mid' && lKey.includes('medium'));
+        return courseMatch && levelMatch;
+      });
+
+      const watchKey = `${activePortalCategory}_${activePortalLevel}`;
+      const isWatched = existingCert || !!isVideoWatchedMap[watchKey];
+
+      const verifyBtn = document.getElementById('portal-verify-watch-btn');
+      if (verifyBtn) {
+        if (existingCert) {
+          verifyBtn.innerHTML = `✅ Level Passed & Certified (${existingCert.score}%)`;
+          verifyBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+          verifyBtn.style.color = "#ffffff";
+        } else if (isWatched) {
+          verifyBtn.innerHTML = `✅ Video Lesson Completed & Unlocked!`;
+          verifyBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+          verifyBtn.style.color = "#ffffff";
+        } else {
+          verifyBtn.innerHTML = `🎬 Mark Video Lesson as Watched & Complete`;
+          verifyBtn.style.background = "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)";
+          verifyBtn.style.color = "#000000";
+        }
+      }
+
+      const statusEl = document.getElementById('portal-footer-status');
+      const quizBtnContainer = document.getElementById('portal-quiz-btn-container');
+
+      const xpMap = { beginner: 100, mid: 250, advanced: 500 };
+      const maxXp = xpMap[activePortalLevel] || 100;
+
+      if (existingCert) {
+        if (statusEl) {
+          statusEl.innerHTML = `🏅 You have already completed this level assessment! Score: <strong>${existingCert.score}%</strong>. (Video lessons can be rewatched anytime).`;
+          statusEl.style.color = "var(--success)";
+        }
+        if (quizBtnContainer) {
+          quizBtnContainer.innerHTML = `
+            <a href="certificates.html" class="btn" style="padding: 0.65rem 1.4rem; font-size: 0.88rem; font-weight: 800; text-decoration: none; text-align: center; white-space: nowrap; border: 1px solid var(--success); color: var(--success); background: var(--success-light);">
+              📜 View Level Certificate
+            </a>`;
+        }
+      } else if (isWatched) {
+        if (statusEl) {
+          statusEl.innerHTML = `✅ Video lesson verified. Click below to take your level test!`;
+          statusEl.style.color = "var(--success)";
+        }
+        if (quizBtnContainer) {
+          quizBtnContainer.innerHTML = `
+            <a href="quiz.html?course=${activePortalCategory}&level=${activePortalLevel}&lang=${activePortalLang}" class="btn btn-success" style="padding: 0.65rem 1.5rem; font-size: 0.9rem; font-weight: 800; text-decoration: none; text-align: center; white-space: nowrap; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
+              Take ${activePortalLevel.toUpperCase()} Assessment ⚡ (+${maxXp} XP)
+            </a>`;
+        }
+      } else {
+        if (statusEl) {
+          statusEl.innerHTML = `🔒 Watch the video lesson above or click "Mark Video Lesson as Watched" to unlock your assessment.`;
+          statusEl.style.color = "var(--warning)";
+        }
+        if (quizBtnContainer) {
+          quizBtnContainer.innerHTML = `
+            <button onclick="alert('🔒 Please watch the video lesson above or click \'Mark Video Lesson as Watched\' to unlock the assessment test!')" class="btn btn-secondary" style="padding: 0.6rem 1.4rem; font-size: 0.88rem; font-weight: 700; opacity: 0.7; cursor: not-allowed; border: 1px solid var(--border-color);">
+              🔒 Watch Video to Unlock Assessment
+            </button>`;
+        }
+      }
     }
 
     window.filterAcademyCourses = function(category) {
