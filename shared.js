@@ -1025,10 +1025,14 @@ function renderHeader() {
     const isLogin = currentPath.includes('login');
     
     nav.innerHTML = `
-      <div style="display:flex;align-items:center;">
+      <div style="display:flex;align-items:center;gap:1rem;">
         <a href="index.html" onclick="window.handleLogoClick(event, 'index.html')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
           Build2<span style="color: var(--primary);">Hire</span>
         </a>
+        <div class="theme-switch" style="display:inline-flex; align-items:center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
+          <span id="theme-btn-light" onclick="setTheme('light')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">☀️</span>
+          <span id="theme-btn-dark" onclick="setTheme('dark')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">🌙</span>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:1rem;">
         <a href="index.html" class="nav-link" style="font-size:0.9rem; font-weight: 600;">🏠 Home</a>
@@ -1037,6 +1041,7 @@ function renderHeader() {
           : `<a href="login.html" class="btn btn-secondary" style="padding:0.45rem 1.1rem;font-size:0.85rem;">Sign In</a>`}
       </div>
     `;
+    initTheme();
     return;
   }
 
