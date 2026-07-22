@@ -115,17 +115,10 @@
         const learningCta = document.getElementById('learning-cta-card');
         const lockedState = document.getElementById('locked-state');
 
-        // Check Assessment Gate
-        if (candidate && candidate.role === 'candidate') {
-          const isLearner = (candidate.assessment_score || 0) > 0 || (candidate.certificates && candidate.certificates.length > 0);
-          if (!isLearner) {
-            loadingState.style.display = "none";
-            emptyState.style.display = "none";
-            leaderboardCard.style.display = "none";
-            learningCta.style.display = "none";
-            lockedState.style.display = "flex";
-            return; // Stop loading leaderboard
-          }
+        // Always allow candidates to view leaderboard
+        const isLearner = candidate && candidate.role === 'candidate' && ((candidate.assessment_score || 0) > 0 || (candidate.certificates && candidate.certificates.length > 0));
+        if (!isLearner && candidate && candidate.role === 'candidate') {
+          learningCta.style.display = "block";
         }
 
       try {
@@ -164,11 +157,8 @@
           }
         }
 
-        // Strictly: only candidates who have passed at least one quiz OR hold a certificate
-        const learners = dbState.users.filter(u =>
-          u.role === 'candidate' &&
-          ((u.assessment_score || 0) > 0 || (u.certificates && u.certificates.length > 0))
-        );
+        // Load all registered candidates on leaderboard
+        const learners = dbState.users.filter(u => u.role === 'candidate');
 
         // Sort by talent_score descending, fallback to xp_points
         learners.sort((a, b) => (b.talent_score || b.xp_points || 0) - (a.talent_score || a.xp_points || 0));
