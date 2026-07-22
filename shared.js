@@ -1175,8 +1175,8 @@ window.openAdminLoginModal = function() {
 };
 
 window.submitSecretAdminLogin = function() {
-  const pwd = document.getElementById('admin-secret-pwd').value;
-  if (pwd === 'admin123' || pwd === 'admin') {
+  const pwd = (document.getElementById('admin-secret-pwd').value || '').trim();
+  if (pwd === 'admin123' || pwd === 'admin' || pwd === 'password123') {
     // Perform simulated admin login
     const email = "admin@build2hire.com";
     const db = dbGet();
@@ -1199,12 +1199,13 @@ window.submitSecretAdminLogin = function() {
     sessionStorage.setItem('user', JSON.stringify(adminUser));
     
     // Remove modal
-    document.getElementById('admin-secret-modal').remove();
+    const modal = document.getElementById('admin-secret-modal');
+    if (modal) modal.remove();
     
-    alert("Welcome, Admin! Logging into Build2Hire Management System...");
-    window.location.href = "admin-dashboard.html";
+    alert("🔐 Admin Authentication Verified! Redirecting to Build2Hire Management System...");
+    window.location.href = "admin-dashboard.html?tab=overview";
   } else {
-    alert("Invalid management credentials! Access Denied.");
+    alert("❌ Invalid Admin Management Password! Access Denied.");
   }
 };
 
