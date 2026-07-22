@@ -107,8 +107,13 @@
         const dbState = dbGet();
         let existingUser = dbState.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
+        if (email.toLowerCase().includes('admin') || (existingUser && existingUser.role === 'admin')) {
+          showAlert('alert-container', '🔒 Direct Admin sign-in on this page is disabled. Double-click the Build2Hire header logo on any page to access the Secret Admin Portal.', 'error');
+          return;
+        }
+
         if (!existingUser) {
-          showAlert('alert-container', '⚠️ User not found! Please register / sign up first or use default demo accounts.', 'error');
+          showAlert('alert-container', '⚠️ User not found! Please register / sign up first or use default candidate/recruiter accounts.', 'error');
           return;
         }
 
