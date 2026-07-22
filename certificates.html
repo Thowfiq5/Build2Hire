@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Verified Certificates | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">📜 My Verified Certificates</h2>
+          <p style="color: var(--text-secondary);">View, print, and download your verified course credentials for Beginner, Mid, and Advanced skill tiers.</p>
+        </div>
+        <a href="recommendations.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.5rem 1.25rem; font-size: 0.85rem; font-weight: 700;">
+          🎓 Earn More Certificates
+        </a>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- QUICK STATS ROW -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+        
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Total Credentials</span>
+              <div id="stat-total-certs" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); margin-top: 0.25rem;">0</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--primary-light); padding: 0.4rem; border-radius: var(--radius-sm);">📜</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--warning);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Highest Tier Achieved</span>
+              <div id="stat-top-tier" style="font-size: 1.4rem; font-weight: 800; font-family: var(--font-display); color: var(--warning); margin-top: 0.5rem;">Beginner</div>
+            </div>
+            <span style="font-size: 2rem; background: var(--warning-light); padding: 0.4rem; border-radius: var(--radius-sm);">🏆</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CERTIFICATES GALLERY GRID -->
+      <div id="certificates-gallery-container">
+        <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          🏅 <span>Your Certificate Portfolio</span>
+        </h3>
+        
+        <div id="certs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Certificates will render here dynamically -->
+        </div>
+
+        <div id="empty-certs-state" class="card" style="display: none; text-align: center; padding: 3.5rem 2rem; color: var(--text-muted);">
+          <span style="font-size: 3.5rem; display: block; margin-bottom: 1rem;">🎓</span>
+          <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.5rem; font-family: var(--font-display);">No Certificates Earned Yet</h3>
+          <p style="font-size: 0.88rem; max-width: 480px; margin: 0 auto 1.5rem auto; line-height: 1.5; color: var(--text-secondary);">
+            Watch video lessons in English, Tamil, or Hindi in our Skill Academy, complete level-based assessments, and pass with 50%+ score to earn your verified certificates!
+          </p>
+          <a href="recommendations.html" class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 700;">Explore Skill Academy 🎬</a>
+        </div>
+      </div>
+
+      <!-- PROFESSIONAL CERTIFICATE MODAL -->
+      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1rem; overflow-y: auto;">
+        <div id="printable-certificate-card" class="card" style="width: 100%; max-width: 680px; background: #ffffff; color: #0f172a; border: 8px double #d97706; padding: 2.5rem 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.7); position: relative; overflow: visible;">
+          
+          <!-- Background Watermark Seal -->
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; font-size: 16rem; font-weight: 900; pointer-events: none; user-select: none;">
+            ⚡
+          </div>
+
+          <!-- Top Logo & Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; box-shadow: 0 4px 10px rgba(99,102,241,0.3);">
+                ⚡
+              </div>
+              <div style="text-align: left;">
+                <div style="font-weight: 900; font-size: 1.15rem; color: #0f172a; font-family: var(--font-display); letter-spacing: -0.01em;">BUILD<span style="color: #6366f1;">2</span>HIRE</div>
+                <div style="font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">SKILL ACADEMY & CREDENTIALS</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span id="cert-serial-code" style="font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #b45309; background: #fffbe6; border: 1px solid #fde68a; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block;">
+                B2H-CERT-BEG-894201
+              </span>
+            </div>
+          </div>
+
+          <!-- Seal Medal Decoration -->
+          <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 2rem; background: radial-gradient(circle, #fbbf24 0%, #b45309 100%); border-radius: 50%; width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(180, 83, 9, 0.4); border: 3px solid #ffffff; z-index: 2;">
+            🎖️
+          </div>
+
+          <div style="margin-top: 0.5rem;">
+            <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.2em; color: #b45309; font-weight: 800; display: block; margin-bottom: 0.25rem;">Verified Industry Skill Credential</span>
+            <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 0.35rem 0 0.75rem 0; letter-spacing: 0.04em; text-transform: uppercase;">Certificate of Completion</h2>
+            
+            <p style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 0.85rem; color: #475569; margin-bottom: 0.75rem;">This official credential is proudly presented to</p>
+            
+            <h3 id="cert-candidate-name" style="font-family: 'Alex Brush', cursive; font-size: 2.8rem; color: #1e3a8a; margin: 0.15rem 0; font-weight: 400; line-height: 1;">Candidate Name</h3>
+            <div style="width: 180px; height: 1.5px; background: linear-gradient(90deg, transparent, #b45309, transparent); margin: 0.4rem auto 1rem auto;"></div>
+            
+            <p style="font-size: 0.88rem; color: #334155; max-width: 480px; margin: 0 auto 1.25rem auto; line-height: 1.5;">
+              For demonstrating technical proficiency and passing the assessment for<br>
+              <strong id="cert-course-name" style="color: #0f172a; font-size: 0.95rem;">Frontend Frameworks</strong> with a verified grade of <strong id="cert-score-val" style="color: #b45309;">80%</strong>.
+            </p>
+
+            <!-- Verification Metadata Bar -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem 1rem; display: flex; justify-content: space-around; align-items: center; margin-bottom: 1.5rem; font-size: 0.78rem;">
+              <div>
+                <span style="color: #64748b; font-weight: 600; display: block; font-size: 0.68rem; text-transform: uppercase;">Skill Level</span>
+                <strong id="cert-level-badge" style="color: #4f46e5; font-weight: 700;">BEGINNER</strong>
+              </div>
+              <div style="border-left: 1px solid #e2e8f0; height: 24px;"></div>
+              <div>
+                <span style="color: #64748b; font-weight: 600; display: block; font-size: 0.68rem; text-transform: uppercase;">Issue Date</span>
+                <strong id="cert-date-val" style="color: #0f172a; font-weight: 700;">July 22, 2026</strong>
+              </div>
+            </div>
+
+            <!-- Signatures & QR Code Row -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px dashed #cbd5e1; padding-top: 1.25rem; margin-top: 1rem;">
+              
+              <div style="text-align: center; flex: 1;">
+                <span style="font-family: 'Alex Brush', cursive; font-size: 1.5rem; color: #1e3a8a; display: block; margin-bottom: -0.2rem; line-height: 1;">Build2Hire AI</span>
+                <div style="border-top: 1.5px solid #94a3b8; width: 130px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Academic Board</div>
+              </div>
+
+              <div style="text-align: center; flex: 0.8; display: flex; flex-direction: column; align-items: center;">
+                <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 4px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <path d="M14 14h3v3h-3z"></path>
+                    <path d="M18 18h3v3h-3z"></path>
+                    <path d="M14 18h1v3h-1z"></path>
+                  </svg>
+                </div>
+                <span style="font-size: 0.58rem; color: #94a3b8; margin-top: 0.25rem; font-weight: 600;">VERIFIED CREDENTIAL</span>
+              </div>
+
+              <div style="text-align: center; flex: 1;">
+                <span style="font-family: 'Alex Brush', cursive; font-size: 1.5rem; color: #4f46e5; display: block; margin-bottom: -0.2rem; line-height: 1;">Chief Assessor</span>
+                <div style="border-top: 1.5px solid #94a3b8; width: 130px; margin: 0.25rem auto 0 auto; padding-top: 0.15rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700;">Verification Director</div>
+              </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="no-print" style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+              <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
+              <button onclick="window.printCurrentCertificate()" class="btn" style="background-color: #10b981; border: 1px solid #10b981; color: #ffffff; padding: 0.5rem 1.4rem; font-size: 0.85rem; font-weight: 700;">🖨️ Print / Download PDF</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js?v=1.0.5"></script>
+  <script>
+    const auth = withAuth(['candidate', 'admin']);
+    if (auth) {
+      let { user, db, candidate } = auth;
+
+      function refreshSidebarStats() {
+        if (document.getElementById('level-name')) document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+        if (document.getElementById('level-num')) document.getElementById('level-num').textContent = candidate.level || 1;
+        if (document.getElementById('xp-current')) document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+      }
+      refreshSidebarStats();
+
+      function renderCertificates() {
+        const certs = candidate.certificates || [];
+        const grid = document.getElementById('certs-grid');
+        const emptyState = document.getElementById('empty-certs-state');
+
+        document.getElementById('stat-total-certs').textContent = certs.length;
+
+        let totalXp = 0;
+        let topTier = "Beginner";
+
+        certs.forEach(c => {
+          totalXp += (c.xp_gained || 100);
+          if (c.level && (c.level.toLowerCase().includes('advanced') || c.level_key === 'advanced')) {
+            topTier = "Advanced Expert";
+          } else if (topTier !== "Advanced Expert" && (c.level && (c.level.toLowerCase().includes('mid') || c.level_key === 'mid' || c.level_key === 'medium'))) {
+            topTier = "Mid Level";
+          }
+        });
+
+        document.getElementById('stat-top-tier').textContent = topTier;
+
+        if (certs.length === 0) {
+          grid.style.display = "none";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        grid.style.display = "grid";
+        emptyState.style.display = "none";
+        grid.innerHTML = "";
+
+        certs.forEach(c => {
+          const isAdv = (c.level && c.level.toLowerCase().includes('advanced')) || c.level_key === 'advanced';
+          const isMid = (c.level && (c.level.toLowerCase().includes('mid') || c.level.toLowerCase().includes('medium'))) || c.level_key === 'mid' || c.level_key === 'medium';
+          
+          const medalIcon = isAdv ? "🥇" : (isMid ? "🥈" : "🥉");
+          const borderStyle = isAdv ? "border-left: 5px solid #f59e0b;" : (isMid ? "border-left: 5px solid #6366f1;" : "border-left: 5px solid #10b981;");
+          const badgeClass = isAdv ? "badge-warning" : (isMid ? "badge-primary" : "badge-success");
+          
+          const card = document.createElement('div');
+          card.className = "card";
+          card.style.cssText = `background: var(--bg-tertiary); padding: 1.5rem; border: 1px solid var(--border-color); ${borderStyle} display: flex; flex-direction: column; justify-content: space-between;`;
+
+          card.innerHTML = `
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                <span style="font-size: 2.2rem;">${medalIcon}</span>
+                <span class="badge ${badgeClass}" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">${c.level || 'Verified'}</span>
+              </div>
+              <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem; font-family: var(--font-display);">${c.course || c.title}</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; font-family: monospace;">
+                Serial: <strong style="color: var(--primary);">${c.serial_no || 'B2H-CERT-89210'}</strong>
+              </p>
+              <div style="background: var(--bg-primary); padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 1.25rem;">
+                <div>
+                  <span style="color: var(--text-muted); display: block; font-size: 0.65rem;">SCORE</span>
+                  <strong style="color: var(--success); font-weight: 800;">${c.score || 80}%</strong>
+                </div>
+                <div style="border-left: 1px solid var(--border-color); height: 20px;"></div>
+                <div>
+                  <span style="color: var(--text-muted); display: block; font-size: 0.65rem;">DATE</span>
+                  <strong style="color: var(--text-secondary); font-weight: 700;">${c.date || '2026-07-22'}</strong>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+              <button onclick="window.viewCertificateModal('${c.id}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.45rem; font-size: 0.8rem; font-weight: 700;">🎓 View Credential</button>
+              <button onclick="window.printCertificateModal('${c.id}')" class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 700;">🖨️ Print PDF</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      window.viewCertificateModal = function(certId) {
+        const certs = candidate.certificates || [];
+        const cert = certs.find(c => c.id === certId) || certs[0];
+        if (!cert) return;
+
+        document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate User";
+        document.getElementById('cert-course-name').textContent = cert.course || cert.title;
+        document.getElementById('cert-level-badge').textContent = (cert.level || 'VERIFIED').toUpperCase();
+        document.getElementById('cert-score-val').textContent = `${cert.score || 80}%`;
+        document.getElementById('cert-xp-val').textContent = `+${cert.xp_gained || 100} XP`;
+        document.getElementById('cert-serial-code').textContent = cert.serial_no || 'B2H-CERT-89210';
+        document.getElementById('cert-date-val').textContent = cert.date || new Date().toISOString().split('T')[0];
+
+        document.getElementById('cert-modal').style.display = "flex";
+      };
+
+      window.closeCertModal = function() {
+        document.getElementById('cert-modal').style.display = "none";
+      };
+
+      window.printCurrentCertificate = function() {
+        window.print();
+      };
+
+      window.printCertificateModal = function(certId) {
+        viewCertificateModal(certId);
+        setTimeout(() => {
+          window.print();
+        }, 300);
+      };
+
+      renderCertificates();
+    }
+  </script>
+</body>
+</html>
