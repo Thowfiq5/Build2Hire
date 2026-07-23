@@ -197,8 +197,22 @@
           <div style="padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 1.25rem;">
             
             <!-- Video Player Wrapper -->
-            <div style="position: relative; width: 100%; padding-bottom: 52%; background: #000; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.4);">
-              <iframe id="portal-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="" title="Course Video Lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div style="position: relative; width: 100%; min-height: 260px; padding-bottom: 50%; background: #0f172a; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.4);">
+              <iframe id="portal-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1;" src="" title="Course Video Lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              
+              <!-- Fallback Card Overlay if Embedded Playback Disabled -->
+              <div id="portal-video-fallback-card" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; color: #fff;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #ff0000; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; box-shadow: 0 0 20px rgba(255,0,0,0.5); cursor: pointer;" onclick="window.openYouTubeFallback(event)">
+                  <span style="font-size: 1.8rem; color: #fff; margin-left: 4px;">▶</span>
+                </div>
+                <h3 id="portal-fallback-title" style="font-size: 1.15rem; margin-bottom: 0.35rem; color: #f8fafc;">Lesson Video Tutorial</h3>
+                <p style="font-size: 0.82rem; color: #94a3b8; max-width: 440px; margin-bottom: 1.1rem; line-height: 1.4;">
+                  The video owner requires playback directly on YouTube. Click below to watch in a new tab and unlock your assessment test!
+                </p>
+                <button onclick="window.openYouTubeFallback(event)" class="btn" style="font-size: 0.88rem; padding: 0.6rem 1.4rem; font-weight: 800; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border: none; color: #fff; box-shadow: 0 4px 15px rgba(255,0,0,0.4);">
+                  ▶️ Watch Lesson on YouTube & Unlock Test ↗
+                </button>
+              </div>
             </div>
             
             <!-- Video Watch Verification & Links Bar -->
@@ -206,7 +220,7 @@
               <button id="portal-verify-watch-btn" onclick="window.markVideoWatched()" class="btn btn-warning" style="font-size: 0.85rem; padding: 0.5rem 1.25rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: #000; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">
                 🎬 Mark Video Lesson as Watched & Complete
               </button>
-              <a href="#" id="portal-yt-fallback-btn" onclick="window.markVideoWatched()" target="_blank" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.4rem 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-color);">
+              <a href="#" id="portal-yt-fallback-btn" onclick="window.openYouTubeFallback(event)" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.4rem 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-color); background: #ff0000; color: #ffffff; border-color: #cc0000;">
                 ▶️ Watch directly on YouTube ↗
               </a>
             </div>
@@ -1219,7 +1233,7 @@
                 </div>
               </div>
               <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap;">
-                <button onclick="openCoursePortalModal('${course.category}', 'beginner', '${ec.selectedLanguage || 'english'}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center;">Watch Lessons & Learn 🎬</button>
+                <button onclick="openCoursePortalModal('${course.category}', '${(course.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (course.level || 'beginner').toLowerCase()}', '${ec.selectedLanguage || 'english'}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center;">Watch Lessons & Learn 🎬</button>
                 ${adminProgressBtn}
                 <button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>
               </div>
@@ -1294,7 +1308,7 @@
                <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Force Complete</button>
              </div>`
           : (isEnrolled
-            ? `<button onclick="openCoursePortalModal('${c.category}', 'beginner')" class="btn btn-success" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Open Learning Portal 🎬</button>`
+            ? `<button onclick="openCoursePortalModal('${c.category}', '${(c.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (c.level || 'beginner').toLowerCase()}')" class="btn btn-success" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Open Learning Portal 🎬</button>`
             : `<button onclick="handleEnrollAndOpenPortal('${c.id}', '${c.category}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll & Learn 🎬</button>`);
 
         allGrid.innerHTML += `
@@ -1338,9 +1352,19 @@
 
     window.switchPortalLevel = function(targetLevel) {
       const certs = candidate.certificates || [];
+      const enrolled = candidate.enrolled_courses || [];
       const allCourseData = getCourseVideoDatabase();
       const courseData = allCourseData[activePortalCategory] || allCourseData['frontend'];
       
+      const isEnrolledLevel = enrolled.some(ec => {
+        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+        if (!cObj || cObj.category !== activePortalCategory) return false;
+        const cLvl = (cObj.level || '').toLowerCase();
+        if (targetLevel === 'mid' && (cLvl === 'medium' || cLvl === 'mid' || cLvl === 'advanced')) return true;
+        if (targetLevel === 'advanced' && cLvl === 'advanced') return true;
+        return false;
+      });
+
       const hasPassedBeginner = certs.some(c => {
         const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
         const lKey = (c.level_key || c.level || '').toLowerCase();
@@ -1353,12 +1377,12 @@
         return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('mid') || lKey.includes('medium'));
       });
 
-      if (targetLevel === 'mid' && !hasPassedBeginner) {
+      if (targetLevel === 'mid' && !hasPassedBeginner && !isEnrolledLevel) {
         showAlert('alert-container', '🔒 Mid Level is locked! Please complete the Beginner video lesson & pass the Beginner assessment first to unlock Mid Level.', 'error');
         return;
       }
 
-      if (targetLevel === 'advanced' && !hasPassedMid) {
+      if (targetLevel === 'advanced' && !hasPassedMid && !isEnrolledLevel) {
         showAlert('alert-container', '🔒 Advanced Level is locked! Please complete the Mid Level video lesson & pass the Mid assessment first to unlock Advanced Level.', 'error');
         return;
       }
@@ -1377,7 +1401,10 @@
       const db = dbGet();
       candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
       renderAcademy();
-      openCoursePortalModal(category, 'beginner', 'english');
+
+      const cObj = ACADEMY_COURSES.find(c => c.id === courseId);
+      const targetLvl = cObj ? ((cObj.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (cObj.level || 'beginner').toLowerCase()) : 'beginner';
+      openCoursePortalModal(category, targetLvl, 'english');
     };
 
     let isVideoWatchedMap = {};
@@ -1389,6 +1416,21 @@
       triggerConfetti();
       showAlert('alert-container', '🎉 Video lesson completed! Assessment test is now unlocked.', 'success');
       renderPortalContent();
+    };
+
+    window.openYouTubeFallback = function(e) {
+      if (e) e.preventDefault();
+
+      const allCourseData = getCourseVideoDatabase();
+      const courseData = allCourseData[activePortalCategory] || allCourseData['frontend'];
+      const levelData = (courseData.levels && courseData.levels[activePortalLevel]) || courseData.levels['beginner'];
+      const videoInfo = (levelData.videos && levelData.videos[activePortalLang]) || levelData.videos['english'];
+
+      const rawVideoId = (videoInfo && (videoInfo.embedId || videoInfo.url)) || 'G3e-cpL7ofc';
+      const cleanVideoId = getYouTubeVideoId(rawVideoId);
+
+      window.markVideoWatched();
+      window.open(`https://www.youtube.com/watch?v=${cleanVideoId}`, '_blank');
     };
 
     function renderPortalContent() {
@@ -1422,8 +1464,22 @@
         tabBeginner.innerHTML = `🌱 Beginner (100 XP)`;
       }
 
+      const enrolledCourses = candidate.enrolled_courses || [];
+      const isEnrolledMid = enrolledCourses.some(ec => {
+        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+        if (!cObj || cObj.category !== activePortalCategory) return false;
+        const cLvl = (cObj.level || '').toLowerCase();
+        return cLvl === 'medium' || cLvl === 'mid' || cLvl === 'advanced';
+      });
+
+      const isEnrolledAdv = enrolledCourses.some(ec => {
+        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+        if (!cObj || cObj.category !== activePortalCategory) return false;
+        return (cObj.level || '').toLowerCase() === 'advanced';
+      });
+
       if (tabMid) {
-        if (hasPassedBeginner) {
+        if (hasPassedBeginner || isEnrolledMid) {
           tabMid.innerHTML = `⚡ Mid Level (250 XP)`;
           tabMid.style.opacity = "1";
         } else {
@@ -1433,7 +1489,7 @@
       }
 
       if (tabAdv) {
-        if (hasPassedMid) {
+        if (hasPassedMid || isEnrolledAdv) {
           tabAdv.innerHTML = `🔥 Advanced (500 XP)`;
           tabAdv.style.opacity = "1";
         } else {
@@ -1458,14 +1514,21 @@
         }
       });
 
+      const rawVideoId = (videoInfo && (videoInfo.embedId || videoInfo.url)) || '';
+      const cleanVideoId = getYouTubeVideoId(rawVideoId);
+
       const iframe = document.getElementById('portal-video-frame');
-      if (iframe && videoInfo.embedId) {
-        iframe.src = `https://www.youtube.com/embed/${videoInfo.embedId}?rel=0&autoplay=0`;
+      if (iframe) {
+        iframe.src = `https://www.youtube.com/embed/${cleanVideoId}?rel=0&autoplay=0`;
       }
       
       const fallbackBtn = document.getElementById('portal-yt-fallback-btn');
-      if (fallbackBtn && videoInfo.embedId) {
-        fallbackBtn.href = `https://www.youtube.com/watch?v=${videoInfo.embedId}`;
+      if (fallbackBtn) {
+        fallbackBtn.href = `https://www.youtube.com/watch?v=${cleanVideoId}`;
+      }
+
+      if (document.getElementById('portal-fallback-title')) {
+        document.getElementById('portal-fallback-title').textContent = (videoInfo && videoInfo.title) ? videoInfo.title : "Lesson Video Tutorial";
       }
 
       document.getElementById('portal-level-title').textContent = levelData.title;
