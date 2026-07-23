@@ -229,9 +229,13 @@
               
               <!-- Video Details & Description -->
               <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
                   <h4 id="portal-level-title" style="font-size: 1.1rem; color: var(--primary); font-family: var(--font-display); margin: 0;">Level Title</h4>
-                  <span id="portal-lang-badge" class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">ENGLISH</span>
+                  <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
+                    <span id="portal-difficulty-badge" class="badge badge-warning" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">BEGINNER</span>
+                    <span id="portal-duration-badge" class="badge badge-primary" style="font-size: 0.68rem; font-weight: 600;">4 WEEKS</span>
+                    <span id="portal-lang-badge" class="badge badge-success" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">ENGLISH</span>
+                  </div>
                 </div>
                 <p id="portal-level-desc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Level description goes here...</p>
               </div>
@@ -1533,6 +1537,13 @@
 
       document.getElementById('portal-level-title').textContent = levelData.title;
       document.getElementById('portal-level-desc').textContent = levelData.desc;
+      if (document.getElementById('portal-difficulty-badge')) {
+        document.getElementById('portal-difficulty-badge').textContent = activePortalLevel.toUpperCase();
+      }
+      if (document.getElementById('portal-duration-badge')) {
+        const cMatch = ACADEMY_COURSES.find(c => c.category === activePortalCategory);
+        document.getElementById('portal-duration-badge').textContent = cMatch ? cMatch.duration.toUpperCase() : "4 WEEKS";
+      }
       document.getElementById('portal-lang-badge').textContent = activePortalLang.toUpperCase();
 
       const topicsList = document.getElementById('portal-topics-list');
