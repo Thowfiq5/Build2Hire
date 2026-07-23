@@ -78,10 +78,10 @@ const DEFAULT_USERS = [
   {
     id: 1004,
     email: "recruiter@innovatetech.com",
-    fullName: "Jane Recruiter",
+    fullName: "Sarah Connor (Hiring Manager)",
     role: "recruiter",
     companyName: "InnovateTech",
-    jobTitle: "Hiring Manager"
+    jobTitle: "Senior Hiring Manager"
   },
   {
     id: 1002,
@@ -143,8 +143,11 @@ function dbGet() {
 
   if (parsed.users) {
     parsed.users.forEach(u => {
-      if (u.fullName === "Candidate User" || u.fullName === "John Builder") {
+      if (u.role === 'candidate' && (u.fullName === "Candidate User" || u.fullName === "John Builder")) {
         u.fullName = "Thaieba Ismail";
+        updated = true;
+      } else if (u.role === 'recruiter' && (u.fullName === "Candidate User" || u.fullName === "Thaieba Ismail" || u.fullName === "Jane Recruiter")) {
+        u.fullName = "Sarah Connor (Hiring Manager)";
         updated = true;
       }
     });
@@ -771,8 +774,11 @@ function getUser() {
     }
     let sessionUser = JSON.parse(session);
     
-    // Automatically correct placeholder names (e.g. Candidate User / John Builder)
-    if (sessionUser.fullName === "Candidate User" || sessionUser.fullName === "John Builder" || sessionUser.fullName === "Jane Recruiter") {
+    // Automatically correct placeholder names (role-based)
+    if (sessionUser.role === 'recruiter' && (sessionUser.fullName === "Thaieba Ismail" || sessionUser.fullName === "Candidate User" || sessionUser.fullName === "Jane Recruiter")) {
+      sessionUser.fullName = "Sarah Connor (Hiring Manager)";
+      sessionStorage.setItem('user', JSON.stringify(sessionUser));
+    } else if (sessionUser.role === 'candidate' && (sessionUser.fullName === "Candidate User" || sessionUser.fullName === "John Builder")) {
       sessionUser.fullName = "Thaieba Ismail";
       sessionStorage.setItem('user', JSON.stringify(sessionUser));
     }
@@ -781,7 +787,10 @@ function getUser() {
     let latestUser = db.users.find(u => u.email.toLowerCase() === sessionUser.email.toLowerCase());
     
     if (latestUser) {
-      if (latestUser.fullName === "Candidate User" || latestUser.fullName === "John Builder" || latestUser.fullName === "Jane Recruiter") {
+      if (latestUser.role === 'recruiter' && (latestUser.fullName === "Thaieba Ismail" || latestUser.fullName === "Candidate User" || latestUser.fullName === "Jane Recruiter")) {
+        latestUser.fullName = "Sarah Connor (Hiring Manager)";
+        dbSave(db);
+      } else if (latestUser.role === 'candidate' && (latestUser.fullName === "Candidate User" || latestUser.fullName === "John Builder")) {
         latestUser.fullName = "Thaieba Ismail";
         dbSave(db);
       }
@@ -1271,6 +1280,11 @@ function renderSidebar(activePage) {
             <li>
               <a href="admin-dashboard.html?tab=assessments" class="sidebar-link ${isDashboard && activeTab === 'assessments' ? 'active' : ''}">
                 🎯 <span>Assessments</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=academy" class="sidebar-link ${isDashboard && activeTab === 'academy' ? 'active' : ''}">
+                📚 <span>Video Academy CMS</span>
               </a>
             </li>
             <li>
@@ -2665,8 +2679,8 @@ const COURSE_VIDEO_DATA = {
         title: "Beginner: HTML5 & CSS Layout Fundamentals",
         desc: "Learn core HTML tags, CSS Flexbox, Grid, CSS Variables, and responsive design basics.",
         videos: {
-          english: { title: "HTML & CSS Full Beginner Course (English)", embedId: "mU6anWqZJcc", source: "YouTube" },
-          tamil: { title: "HTML & CSS Complete Tutorial (Tamil)", embedId: "6mbwJ2xhjsM", source: "YouTube" },
+          english: { title: "HTML & CSS Full Beginner Course (English)", embedId: "G3e-cpL7ofc", source: "YouTube" },
+          tamil: { title: "HTML & CSS Complete Tutorial (Tamil)", embedId: "1Z1p9f_76aY", source: "YouTube" },
           hindi: { title: "HTML & CSS One Shot Course (Hindi)", embedId: "HcOc7P5s50A", source: "YouTube" }
         },
         topics: ["HTML5 Semantic Tags", "CSS Flexbox & Grid", "CSS Custom Variables", "Responsive Web Design"]
@@ -2686,7 +2700,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Master Next.js App Router, Server Components, SSG/SSR, and performance optimization.",
         videos: {
           english: { title: "Next.js 14 Full Stack Course (English)", embedId: "wm5gMKCORL4", source: "YouTube" },
-          tamil: { title: "Next.js Full Course (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          tamil: { title: "Next.js Full Course (Tamil)", embedId: "843nec-gW28", source: "YouTube" },
           hindi: { title: "Next.js Full Course (Hindi)", embedId: "Zq5fmkH0T78", source: "YouTube" }
         },
         topics: ["Server Side Rendering (SSR)", "Next.js App Router", "State Hydration & Memoization", "SEO & Web Vitals"]
@@ -2701,7 +2715,7 @@ const COURSE_VIDEO_DATA = {
         title: "Beginner: Node.js & HTTP Basics",
         desc: "Understand HTTP methods, request headers, event loops, and basic Node.js servers.",
         videos: {
-          english: { title: "Node.js Basics for Beginners (English)", embedId: "fBNz5xF-Kx4", source: "YouTube" },
+          english: { title: "Node.js Basics for Beginners (English)", embedId: "Oe421EPjeBE", source: "YouTube" },
           tamil: { title: "Node.js Tutorial for Beginners (Tamil)", embedId: "yE6vtL_M-9c", source: "YouTube" },
           hindi: { title: "Node.js Complete Course (Hindi)", embedId: "BS7bzC07aE4", source: "YouTube" }
         },
@@ -2711,7 +2725,7 @@ const COURSE_VIDEO_DATA = {
         title: "Mid-Level: Express REST APIs & Authentication",
         desc: "Build Express middleware, RESTful API endpoints, JWT authentication, and error handling.",
         videos: {
-          english: { title: "Express.js REST API Masterclass (English)", embedId: "SccSCuHhOw0", source: "YouTube" },
+          english: { title: "Express.js REST API Masterclass (English)", embedId: "l8WPWK9mS5M", source: "YouTube" },
           tamil: { title: "Express.js API Tutorial (Tamil)", embedId: "p57y4kY3aC8", source: "YouTube" },
           hindi: { title: "Express.js REST API Course (Hindi)", embedId: "7H_b1S04S4w", source: "YouTube" }
         },
@@ -2722,7 +2736,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Implement Redis query caches, Docker containers, load balancers, and rate limiting.",
         videos: {
           english: { title: "System Design & Redis Caching (English)", embedId: "XQh29ZqQ6kM", source: "YouTube" },
-          tamil: { title: "System Design Essentials (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          tamil: { title: "Microservices Architecture (Tamil)", embedId: "yE6vtL_M-9c", source: "YouTube" },
           hindi: { title: "System Design & Microservices (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
         },
         topics: ["Redis In-Memory Caching", "Docker Containerization", "Rate Limiting & Security", "Event-Driven Architecture"]
@@ -2759,7 +2773,7 @@ const COURSE_VIDEO_DATA = {
         videos: {
           english: { title: "MongoDB Aggregations & Schemas (English)", embedId: "c2M-rlkkT5o", source: "YouTube" },
           tamil: { title: "MongoDB Full Course (Tamil)", embedId: "J6mDkcq1vgk", source: "YouTube" },
-          hindi: { title: "MongoDB Complete Tutorial (Hindi)", embedId: "c2M-rlkkT5o", source: "YouTube" }
+          hindi: { title: "MongoDB Complete Tutorial (Hindi)", embedId: "rU9ZOBw7624", source: "YouTube" }
         },
         topics: ["Document Schema Design", "Aggregation Pipelines ($match, $group)", "Sharding & Replication", "Cache Invalidation"]
       }
@@ -2790,11 +2804,11 @@ const COURSE_VIDEO_DATA = {
         topics: ["Color Wheel Balances", "LUT Grading Curves", "J-Cut & L-Cut Transitions", "Sound FX & Noise Reduction"]
       },
       advanced: {
-        title: "Advanced: High-Efficiency Codecs & Promo Renders",
+        title: "Advanced: High-Efficiency Codecs & Motion Graphics",
         desc: "Export 1080p/4K web videos using H.264/HEVC codecs, variable bitrates (VBR), and motion graphics.",
         videos: {
-          english: { title: "Advanced Compression & Motion Graphics (English)", embedId: "erEgovG9WBs", source: "YouTube" },
-          tamil: { title: "Advanced Video Exporting (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
+          english: { title: "After Effects & Motion Graphics (English)", embedId: "erEgovG9WBs", source: "YouTube" },
+          tamil: { title: "Advanced Motion Graphics (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
           hindi: { title: "After Effects & Promo Editing (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
         },
         topics: ["Web Codecs (H.264 vs HEVC)", "Variable Bit Rate (VBR)", "Hardware Acceleration", "Promo Render Specs"]
@@ -2846,7 +2860,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Learn horizontal vs vertical scaling, load balancer algorithms, and stateless server design.",
         videos: {
           english: { title: "System Design Basics (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
-          tamil: { title: "System Design Essentials (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          tamil: { title: "System Design Essentials (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
           hindi: { title: "System Design Course (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
         },
         topics: ["Horizontal vs Vertical Scaling", "Nginx & HAProxy Balancing", "Stateless Architecture", "CDN Distribution"]
@@ -2856,7 +2870,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Master Redis caching patterns (Cache-Aside, Write-Through), database partitioning, and indexes.",
         videos: {
           english: { title: "Database Sharding & Caching (English)", embedId: "m8Icp_Cid5o", source: "YouTube" },
-          tamil: { title: "Database Scaling (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          tamil: { title: "Database Scaling (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
           hindi: { title: "Caching Strategies (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
         },
         topics: ["Redis Cache Patterns", "Consistent Hashing", "Database Read Replicas", "Database Sharding"]
@@ -2866,7 +2880,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Design event-driven architectures using RabbitMQ/Kafka, rate limiting, and CAP theorem trade-offs.",
         videos: {
           english: { title: "Distributed Systems & Kafka (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
-          tamil: { title: "Kafka & Event Architecture (Tamil)", embedId: "yfoY53QXEnI", source: "YouTube" },
+          tamil: { title: "Kafka & Event Architecture (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
           hindi: { title: "Message Queues & Scaling (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
         },
         topics: ["Kafka & RabbitMQ Messaging", "CAP Theorem", "Token Bucket Rate Limiting", "High Availability Clusters"]
@@ -2946,3 +2960,42 @@ const COURSE_VIDEO_DATA = {
     }
   }
 };
+
+function getYouTubeVideoId(str) {
+  if (!str) return 'G3e-cpL7ofc';
+  str = String(str).trim();
+  if (str.includes('v=')) {
+    const match = str.match(/v=([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+  }
+  if (str.includes('youtu.be/')) {
+    const match = str.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+  }
+  if (str.includes('embed/')) {
+    const match = str.match(/embed\/([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+  }
+  const match = str.match(/([a-zA-Z0-9_-]{11})/);
+  if (match) return match[1];
+  return str;
+}
+
+function getCourseVideoDatabase() {
+  // Clear all old legacy cache keys from localStorage
+  ['build2hire_course_videos', 'build2hire_course_videos_v2', 'build2hire_course_videos_v3', 'build2hire_course_videos_v4', 'build2hire_course_videos_v5'].forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+  });
+
+  const customDataStr = localStorage.getItem('build2hire_course_videos_v6');
+  if (customDataStr) {
+    try {
+      return JSON.parse(customDataStr);
+    } catch(e) {}
+  }
+  return COURSE_VIDEO_DATA;
+}
+
+function saveCourseVideoDatabase(data) {
+  localStorage.setItem('build2hire_course_videos_v6', JSON.stringify(data));
+}
