@@ -2263,25 +2263,19 @@
         const topicsArr = topicsStr ? topicsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
 
         const vEnTitle = document.getElementById('admin-video-title-en').value.trim();
-        let vEnId = document.getElementById('admin-video-id-en').value.trim();
-        if (vEnId.includes('v=')) vEnId = vEnId.split('v=')[1].split('&')[0];
-        if (vEnId.includes('youtu.be/')) vEnId = vEnId.split('youtu.be/')[1].split('?')[0];
+        const vEnId = getYouTubeVideoId(document.getElementById('admin-video-id-en').value);
 
         const vTaTitle = document.getElementById('admin-video-title-ta').value.trim();
-        let vTaId = document.getElementById('admin-video-id-ta').value.trim();
-        if (vTaId.includes('v=')) vTaId = vTaId.split('v=')[1].split('&')[0];
-        if (vTaId.includes('youtu.be/')) vTaId = vTaId.split('youtu.be/')[1].split('?')[0];
+        const vTaId = getYouTubeVideoId(document.getElementById('admin-video-id-ta').value);
 
         const vHiTitle = document.getElementById('admin-video-title-hi').value.trim();
-        let vHiId = document.getElementById('admin-video-id-hi').value.trim();
-        if (vHiId.includes('v=')) vHiId = vHiId.split('v=')[1].split('&')[0];
-        if (vHiId.includes('youtu.be/')) vHiId = vHiId.split('youtu.be/')[1].split('?')[0];
+        const vHiId = getYouTubeVideoId(document.getElementById('admin-video-id-hi').value);
 
         currentAdminAcademyData[cat].levels[lvl] = {
           title: levelTitle,
           desc: levelDesc,
           videos: {
-            english: { title: vEnTitle || "English Lesson", embedId: vEnId || "mU6anWqZJcc", source: "YouTube" },
+            english: { title: vEnTitle || "English Lesson", embedId: vEnId || "G3e-cpL7ofc", source: "YouTube" },
             tamil: { title: vTaTitle || "Tamil Lesson", embedId: vTaId || "6mbwJ2xhjsM", source: "YouTube" },
             hindi: { title: vHiTitle || "Hindi Lesson", embedId: vHiId || "HcOc7P5s50A", source: "YouTube" }
           },
