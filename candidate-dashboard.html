@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Freelancer Analytics & Reports | Build2Hire</title>
@@ -184,6 +190,15 @@
     function renderDashboard() {
       const db = auth.db;
       
+      const isAdminViewing = user && (user.role === 'admin' || user.role === 'recruiter');
+      if (isAdminViewing) {
+        if (document.getElementById('admin-edit-visits-btn')) document.getElementById('admin-edit-visits-btn').style.display = 'inline-block';
+        if (document.getElementById('admin-edit-earnings-btn')) document.getElementById('admin-edit-earnings-btn').style.display = 'inline-block';
+        if (document.getElementById('admin-add-milestone-btn')) document.getElementById('admin-add-milestone-btn').style.display = 'inline-block';
+        if (document.getElementById('admin-add-contract-btn')) document.getElementById('admin-add-contract-btn').style.display = 'inline-block';
+        if (document.getElementById('admin-add-lead-btn')) document.getElementById('admin-add-lead-btn').style.display = 'inline-block';
+      }
+
       // Load user statistics
       const clientVisits = activeCandidate.client_visits || 0;
       document.getElementById('stat-visits').textContent = clientVisits;
@@ -191,7 +206,11 @@
       const reportData = generateJobReport(activeCandidate.id);
       document.getElementById('stat-active-gigs').textContent = reportData.activeCount;
       document.getElementById('stat-completed-gigs').textContent = reportData.completedCount;
-      document.getElementById('stat-earnings').textContent = `$${reportData.totalEarnings.toLocaleString()}`;
+      if (activeCandidate.custom_earnings !== undefined) {
+        document.getElementById('stat-earnings').textContent = `$${activeCandidate.custom_earnings.toLocaleString()}`;
+      } else {
+        document.getElementById('stat-earnings').textContent = `$${reportData.totalEarnings.toLocaleString()}`;
+      }
 
       // Render Active Milestones
       renderActiveMilestones(db, activeCandidate.id);
