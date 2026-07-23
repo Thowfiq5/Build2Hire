@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Website Management System (Candidate & Recruiter CMS) | Build2Hire Admin</title>
@@ -614,6 +620,103 @@
       </div>
 
       <!-- ======================================================== -->
+      <!-- 8B. ACADEMY & VIDEO COURSE MANAGER (FULL ADMIN CRUD) -->
+      <!-- ======================================================== -->
+      <div id="tab-academy" class="tab-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin: 0; font-family: var(--font-display);">📚 Build2Hire Skill Academy & Video Course CMS</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">Manage and edit YouTube video course lessons (English, Tamil, Hindi), lesson titles, descriptions, and syllabus topics across all 8 course categories.</p>
+          </div>
+          <button onclick="saveAdminAcademyChanges()" class="btn btn-primary" style="font-size: 0.85rem; font-weight: 700; padding: 0.5rem 1.25rem;">💾 Save All Video Course Updates</button>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <label class="form-label" style="font-weight: 700; color: var(--primary);">Select Course Category (8 Categories)</label>
+            <select id="admin-course-cat-select" class="form-control" onchange="loadAdminAcademyEditor()">
+              <option value="frontend">⚛️ Frontend Frameworks & UI Architecture</option>
+              <option value="backend">🟢 Backend Engineering & API Architectures</option>
+              <option value="database">🗄️ Database Schema & Query Optimization</option>
+              <option value="creative">🎥 Creative Media & Video Editing</option>
+              <option value="devops">☁️ Cloud & DevOps Security</option>
+              <option value="system">🏗️ System Design & Scaling</option>
+              <option value="security">🛡️ Cybersecurity & Ethical Hacking</option>
+              <option value="mobile">📱 Mobile App Development</option>
+            </select>
+          </div>
+          <div style="width: 200px;">
+            <label class="form-label" style="font-weight: 700; color: var(--primary);">Select Level Tier</label>
+            <select id="admin-course-lvl-select" class="form-control" onchange="loadAdminAcademyEditor()">
+              <option value="beginner">🟢 Beginner Level</option>
+              <option value="mid">🟡 Mid Level (Intermediate)</option>
+              <option value="advanced">🔴 Advanced Expert Level</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ACADEMY EDITOR FORM CARD -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+            <h4 id="admin-course-editor-title" style="font-size: 1.1rem; color: var(--text-primary); margin: 0;">Course Level Editor</h4>
+            <span class="admin-badge badge-active">🟢 Live Synced with Candidate Academy</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
+            <div>
+              <label class="form-label">Category Title</label>
+              <input type="text" id="admin-course-cat-title" class="form-control" style="margin-bottom: 1rem;">
+
+              <label class="form-label">Level Lesson Title</label>
+              <input type="text" id="admin-course-level-title" class="form-control" style="margin-bottom: 1rem;">
+
+              <label class="form-label">Lesson Description</label>
+              <textarea id="admin-course-level-desc" class="form-control" rows="3" style="margin-bottom: 1rem;"></textarea>
+
+              <label class="form-label">Key Syllabus Topics (Comma Separated)</label>
+              <textarea id="admin-course-topics" class="form-control" rows="2" placeholder="Topic 1, Topic 2, Topic 3"></textarea>
+            </div>
+
+            <!-- LANGUAGE VIDEO URLS -->
+            <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <h5 style="font-size: 0.95rem; margin-bottom: 1rem; color: var(--primary);">🎥 Multi-Language YouTube Video Lessons</h5>
+
+              <!-- ENGLISH VIDEO -->
+              <div style="margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color);">
+                <span class="admin-badge badge-primary" style="margin-bottom: 0.5rem;">🇬🇧 English Video Lesson</span>
+                <label class="form-label" style="font-size: 0.78rem;">Video Lesson Title</label>
+                <input type="text" id="admin-video-title-en" class="form-control" style="margin-bottom: 0.5rem;">
+                <label class="form-label" style="font-size: 0.78rem;">YouTube Link or Embed ID</label>
+                <input type="text" id="admin-video-id-en" class="form-control" placeholder="e.g. mU6anWqZJcc or full URL">
+              </div>
+
+              <!-- TAMIL VIDEO -->
+              <div style="margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color);">
+                <span class="admin-badge badge-warning" style="margin-bottom: 0.5rem;">🇮🇳 Tamil (தமிழ்) Video Lesson</span>
+                <label class="form-label" style="font-size: 0.78rem;">Video Lesson Title (Tamil)</label>
+                <input type="text" id="admin-video-title-ta" class="form-control" style="margin-bottom: 0.5rem;">
+                <label class="form-label" style="font-size: 0.78rem;">YouTube Link or Embed ID</label>
+                <input type="text" id="admin-video-id-ta" class="form-control" placeholder="e.g. 6mbwJ2xhjsM or full URL">
+              </div>
+
+              <!-- HINDI VIDEO -->
+              <div>
+                <span class="admin-badge badge-active" style="margin-bottom: 0.5rem;">🇮🇳 Hindi (हिंदी) Video Lesson</span>
+                <label class="form-label" style="font-size: 0.78rem;">Video Lesson Title (Hindi)</label>
+                <input type="text" id="admin-video-title-hi" class="form-control" style="margin-bottom: 0.5rem;">
+                <label class="form-label" style="font-size: 0.78rem;">YouTube Link or Embed ID</label>
+                <input type="text" id="admin-video-id-hi" class="form-control" placeholder="e.g. HcOc7P5s50A or full URL">
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+            <button onclick="saveAdminAcademyChanges()" class="btn btn-primary" style="font-size: 0.9rem; font-weight: 700; padding: 0.6rem 1.5rem;">💾 Save Video Course Updates</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
       <!-- 9. MANAGE FREELANCE GIGS -->
       <!-- ======================================================== -->
       <div id="tab-gigs" class="tab-section">
@@ -1002,6 +1105,7 @@
         else if (tabName === 'applications') renderApplicationsTable();
         else if (tabName === 'interviews') renderInterviewsTable();
         else if (tabName === 'assessments') renderAssessmentsTable();
+        else if (tabName === 'academy') loadAdminAcademyEditor();
         else if (tabName === 'gigs') renderGigsTable();
         else if (tabName === 'payments') renderPaymentsTable();
         else if (tabName === 'notifications') renderNotificationsTable();
@@ -1496,7 +1600,26 @@
           </div>
         `;
 
-        if (secId === 'hero') {
+        if (secId === 'dashboard') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Candidate XP Points (⚡ Current: ${currentCMSData.xp_points || 0} XP)</label>
+              <input type="number" class="form-control" value="${currentCMSData.xp_points || 0}" onchange="updateCMSDataField('xp_points', parseInt(this.value)||0)">
+
+              <label class="form-label">Overall Talent Score (%)</label>
+              <input type="number" class="form-control" value="${currentCMSData.talent_score || 0}" onchange="updateCMSDataField('talent_score', parseInt(this.value)||0)">
+
+              <label class="form-label">Portfolio Rating (%)</label>
+              <input type="number" class="form-control" value="${currentCMSData.portfolio_score || 0}" onchange="updateCMSDataField('portfolio_score', parseInt(this.value)||0)">
+
+              <label class="form-label">Verified Quiz Rating (%)</label>
+              <input type="number" class="form-control" value="${currentCMSData.assessment_score || 0}" onchange="updateCMSDataField('assessment_score', parseInt(this.value)||0)">
+
+              <label class="form-label">Current Skill Level Title</label>
+              <input type="text" class="form-control" value="${currentCMSData.current_level || 'Beginner Builder'}" onchange="updateCMSDataField('current_level', this.value)">
+            </div>
+          `;
+        } else if (secId === 'hero') {
           html += `
             <div class="cms-form-card">
               <label class="form-label">Hero Headline</label>
@@ -1509,11 +1632,189 @@
               <input type="text" class="form-control" value="${currentCMSData.avatarUrl || ''}" oninput="updateCMSDataField('avatarUrl', this.value)">
             </div>
           `;
+        } else if (secId === 'profile') {
+          html += `
+            <div class="cms-form-card">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" value="${currentCMSData.fullName || ''}" oninput="updateCMSDataField('fullName', this.value)">
+
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" value="${currentCMSData.email || ''}" oninput="updateCMSDataField('email', this.value)">
+
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-control" value="${currentCMSData.phone || ''}" oninput="updateCMSDataField('phone', this.value)">
+
+              <label class="form-label">Preferred Job Role</label>
+              <select class="form-control" onchange="updateCMSDataField('preferredRole', this.value)">
+                <option value="Frontend Developer" ${currentCMSData.preferredRole === 'Frontend Developer' ? 'selected' : ''}>Frontend Developer</option>
+                <option value="Backend Engineer" ${currentCMSData.preferredRole === 'Backend Engineer' ? 'selected' : ''}>Backend Engineer</option>
+                <option value="Database Administrator" ${currentCMSData.preferredRole === 'Database Administrator' ? 'selected' : ''}>Database Administrator</option>
+                <option value="Full Stack Engineer" ${currentCMSData.preferredRole === 'Full Stack Engineer' ? 'selected' : ''}>Full Stack Engineer</option>
+                <option value="Video Editor" ${currentCMSData.preferredRole === 'Video Editor' ? 'selected' : ''}>Video Editor</option>
+                <option value="DevOps Engineer" ${currentCMSData.preferredRole === 'DevOps Engineer' ? 'selected' : ''}>DevOps Engineer</option>
+                <option value="Systems Architect" ${currentCMSData.preferredRole === 'Systems Architect' ? 'selected' : ''}>Systems Architect</option>
+                <option value="Security Specialist" ${currentCMSData.preferredRole === 'Security Specialist' ? 'selected' : ''}>Security Specialist</option>
+                <option value="Mobile Developer" ${currentCMSData.preferredRole === 'Mobile Developer' ? 'selected' : ''}>Mobile Developer</option>
+              </select>
+
+              <label class="form-label">Education / Degree</label>
+              <input type="text" class="form-control" value="${currentCMSData.education || ''}" oninput="updateCMSDataField('education', this.value)">
+
+              <label class="form-label">Professional Bio</label>
+              <textarea class="form-control" rows="3" oninput="updateCMSDataField('bio', this.value)">${currentCMSData.bio || ''}</textarea>
+
+              <label class="form-label">GitHub URL</label>
+              <input type="text" class="form-control" value="${currentCMSData.githubUrl || ''}" oninput="updateCMSDataField('githubUrl', this.value)">
+
+              <label class="form-label">LinkedIn URL</label>
+              <input type="text" class="form-control" value="${currentCMSData.linkedinUrl || ''}" oninput="updateCMSDataField('linkedinUrl', this.value)">
+
+              <label class="form-label">Live Portfolio Website URL</label>
+              <input type="text" class="form-control" value="${currentCMSData.portfolioWebsite || ''}" oninput="updateCMSDataField('portfolioWebsite', this.value)">
+            </div>
+          `;
+        } else if (secId === 'skills') {
+          const skills = currentCMSData.skills || [];
+          const skillLevels = currentCMSData.skillLevels || {};
+
+          html += `
+            <div class="cms-form-card">
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--primary);">⚡ Add New Candidate Skill</h5>
+              <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
+                <input type="text" id="admin-new-skill" class="form-control" placeholder="e.g. Docker, React, Python" style="flex:1;">
+                <select id="admin-new-skill-lvl" class="form-control" style="width: 110px;">
+                  <option value="Basic">Basic</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+                <button type="button" onclick="adminCMSAddSkill()" class="btn btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;">+ Add</button>
+              </div>
+
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-primary);">Tagged Candidate Skills (${skills.length})</h5>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; max-height: 200px; overflow-y: auto;">
+                ${skills.length === 0 ? '<span style="font-size:0.8rem; color:var(--text-muted);">No skills added yet.</span>' : ''}
+                ${skills.map(sk => `
+                  <span class="badge badge-primary" style="font-size: 0.78rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.6rem;">
+                    ${sk} (${skillLevels[sk] || 'Basic'})
+                    <button onclick="adminCMSRemoveSkill('${sk}')" style="background:none; border:none; color:inherit; cursor:pointer; font-weight:bold;">✕</button>
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (secId === 'portfolio') {
+          const projects = currentCMSData.projects || [];
+
+          html += `
+            <div class="cms-form-card">
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--primary);">🚀 Add Showcase Project for Candidate</h5>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <input type="text" id="admin-proj-title" class="form-control" placeholder="Project Title">
+                <textarea id="admin-proj-desc" class="form-control" rows="2" placeholder="Project Description"></textarea>
+                <input type="text" id="admin-proj-link" class="form-control" placeholder="Live Website Link (Optional)">
+                <input type="text" id="admin-proj-git" class="form-control" placeholder="GitHub Repository Link (Optional)">
+                <button type="button" onclick="adminCMSAddProject()" class="btn btn-primary" style="padding: 0.5rem; font-size: 0.82rem; font-weight: 700; margin-top: 0.25rem;">+ Add Showcase Project (+50 XP)</button>
+              </div>
+
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-primary);">Published Projects (${projects.length})</h5>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 260px; overflow-y: auto;">
+                ${projects.length === 0 ? '<span style="font-size:0.8rem; color:var(--text-muted);">No projects showcased yet.</span>' : ''}
+                ${projects.map(p => `
+                  <div style="background: var(--bg-tertiary); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <strong style="font-size: 0.85rem;">${p.thumbnail_url || '📁'} ${p.title}</strong>
+                      <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.15rem 0 0 0;">${p.description ? p.description.slice(0, 70) + '...' : ''}</p>
+                    </div>
+                    <button onclick="adminCMSDeleteProject(${p.id})" class="btn-xs" style="color:#ef4444; border:none; background:transparent; cursor:pointer;">🗑️ Delete</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (secId === 'certifications') {
+          const certs = currentCMSData.certificates || [];
+
+          html += `
+            <div class="cms-form-card">
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--primary);">📜 Issue Verified Credential Manual Certificate</h5>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <select id="admin-cert-course" class="form-control">
+                  <option value="Frontend Frameworks & UI Architecture">Frontend Frameworks & UI Architecture</option>
+                  <option value="Backend Engineering & API Architectures">Backend Engineering & API Architectures</option>
+                  <option value="Database Schema & Query Optimization">Database Schema & Query Optimization</option>
+                  <option value="Creative Media & Video Editing">Creative Media & Video Editing</option>
+                  <option value="Cloud & DevOps Security">Cloud & DevOps Security</option>
+                  <option value="System Design & Scaling">System Design & Scaling</option>
+                  <option value="Cybersecurity & Ethical Hacking">Cybersecurity & Ethical Hacking</option>
+                  <option value="Mobile App Development">Mobile App Development</option>
+                </select>
+                <select id="admin-cert-level" class="form-control">
+                  <option value="Beginner Level">Beginner Level</option>
+                  <option value="Mid Level (Intermediate)">Mid Level (Intermediate)</option>
+                  <option value="Advanced Expert Level">Advanced Expert Level</option>
+                </select>
+                <input type="number" id="admin-cert-score" class="form-control" placeholder="Passing Score % (e.g. 90)" value="85">
+                <button type="button" onclick="adminCMSIssueCert()" class="btn btn-primary" style="padding: 0.5rem; font-size: 0.82rem; font-weight: 700; margin-top: 0.25rem;">📜 Issue Verified Certificate</button>
+              </div>
+
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-primary);">Issued Verified Certificates (${certs.length})</h5>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 240px; overflow-y: auto;">
+                ${certs.length === 0 ? '<span style="font-size:0.8rem; color:var(--text-muted);">No certificates issued yet.</span>' : ''}
+                ${certs.map(c => `
+                  <div style="background: var(--bg-tertiary); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <strong style="font-size: 0.82rem;">📜 ${c.course || c.title} (${c.level || 'Verified'})</strong>
+                      <span style="font-size: 0.7rem; color: var(--primary); display: block; font-family: monospace;">Serial: ${c.serial_no || 'B2H-CERT'} | Score: ${c.score}%</span>
+                    </div>
+                    <button onclick="adminCMSDeleteCert('${c.id}')" class="btn-xs" style="color:#ef4444; border:none; background:transparent; cursor:pointer;">🗑️ Revoke</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (secId === 'roadmap') {
+          const courseCats = [
+            { id: 'frontend', name: '⚛️ Frontend Frameworks' },
+            { id: 'backend', name: '🟢 Backend Engineering' },
+            { id: 'database', name: '🗄️ Database Optimization' },
+            { id: 'creative', name: '🎥 Creative Media' },
+            { id: 'devops', name: '☁️ Cloud & DevOps' },
+            { id: 'system', name: '🏗️ System Design' },
+            { id: 'security', name: '🛡️ Cybersecurity' },
+            { id: 'mobile', name: '📱 Mobile Development' }
+          ];
+
+          const prog = currentCMSData.course_progress || {};
+
+          html += `
+            <div class="cms-form-card">
+              <h5 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--primary);">📚 Academy Course Progress Across 8 Categories</h5>
+              <div style="display: flex; flex-direction: column; gap: 0.6rem; max-height: 320px; overflow-y: auto;">
+                ${courseCats.map(c => {
+                  const p = prog[c.id] || { level: "basic" };
+                  return `
+                    <div style="background: var(--bg-tertiary); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                        <strong style="font-size: 0.85rem;">${c.name}</strong>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Current Tier Level: <strong style="color:var(--primary); text-transform:uppercase;">${p.level || 'basic'}</strong></span>
+                      </div>
+                      <select class="form-control" style="width: 120px; font-size: 0.78rem;" onchange="adminCMSUpdateCourseLevel('${c.id}', this.value)">
+                        <option value="basic" ${p.level === 'basic' ? 'selected' : ''}>Beginner</option>
+                        <option value="medium" ${p.level === 'medium' ? 'selected' : ''}>Mid Level</option>
+                        <option value="advanced" ${p.level === 'advanced' ? 'selected' : ''}>Advanced</option>
+                        <option value="completed" ${p.level === 'completed' ? 'selected' : ''}>Completed</option>
+                      </select>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
         } else {
           html += `
             <div class="cms-form-card">
               <p style="font-size: 0.85rem; color: var(--text-secondary);">Section options loaded for <strong>${secInfo.name}</strong>. Toggle section visibility using the switch in the left sidebar or modify parameters below.</p>
-              <label class="form-label">Section Tag</label>
+              <label class="form-label">Section Status / Tag</label>
               <input type="text" class="form-control" value="Active Candidate Section">
             </div>
           `;
@@ -1525,6 +1826,105 @@
       function updateCMSDataField(field, val) {
         currentCMSData[field] = val;
         pushCMSHistoryState();
+        updateCMSLivePreview();
+      }
+
+      function adminCMSAddSkill() {
+        const val = (document.getElementById('admin-new-skill').value || '').trim();
+        const lvl = document.getElementById('admin-new-skill-lvl').value;
+        if (val) {
+          if (!currentCMSData.skills) currentCMSData.skills = [];
+          if (!currentCMSData.skillLevels) currentCMSData.skillLevels = {};
+          if (!currentCMSData.skills.includes(val)) currentCMSData.skills.push(val);
+          currentCMSData.skillLevels[val] = lvl;
+          pushCMSHistoryState();
+          renderCMSSectionForm('skills');
+          updateCMSLivePreview();
+        }
+      }
+
+      function adminCMSRemoveSkill(sk) {
+        if (currentCMSData.skills) {
+          currentCMSData.skills = currentCMSData.skills.filter(s => s !== sk);
+          if (currentCMSData.skillLevels) delete currentCMSData.skillLevels[sk];
+          pushCMSHistoryState();
+          renderCMSSectionForm('skills');
+          updateCMSLivePreview();
+        }
+      }
+
+      function adminCMSAddProject() {
+        const title = (document.getElementById('admin-proj-title').value || '').trim();
+        const desc = (document.getElementById('admin-proj-desc').value || '').trim();
+        const link = (document.getElementById('admin-proj-link').value || '').trim();
+        const git = (document.getElementById('admin-proj-git').value || '').trim();
+
+        if (title) {
+          if (!currentCMSData.projects) currentCMSData.projects = [];
+          currentCMSData.projects.push({
+            id: Date.now(),
+            title: title,
+            description: desc || "Published showcase project.",
+            project_url: link,
+            github_url: git,
+            thumbnail_url: "🚀"
+          });
+          currentCMSData.xp_points = (currentCMSData.xp_points || 0) + 50;
+          pushCMSHistoryState();
+          renderCMSSectionForm('portfolio');
+          updateCMSLivePreview();
+        }
+      }
+
+      function adminCMSDeleteProject(projId) {
+        if (currentCMSData.projects) {
+          currentCMSData.projects = currentCMSData.projects.filter(p => p.id !== projId);
+          pushCMSHistoryState();
+          renderCMSSectionForm('portfolio');
+          updateCMSLivePreview();
+        }
+      }
+
+      function adminCMSIssueCert() {
+        const course = document.getElementById('admin-cert-course').value;
+        const level = document.getElementById('admin-cert-level').value;
+        const score = parseInt(document.getElementById('admin-cert-score').value) || 85;
+
+        if (!currentCMSData.certificates) currentCMSData.certificates = [];
+        const certPrefix = level.slice(0, 3).toUpperCase();
+        const serialNo = `B2H-${certPrefix}-${Math.floor(100000 + Math.random() * 900000)}`;
+
+        currentCMSData.certificates.push({
+          id: `admin_cert_${Date.now()}`,
+          serial_no: serialNo,
+          title: `${course} - ${level} Certificate`,
+          course: course,
+          level: level,
+          score: score,
+          date: new Date().toISOString().split('T')[0],
+          authority: "Build2Hire Academic Verification Board"
+        });
+
+        pushCMSHistoryState();
+        renderCMSSectionForm('certifications');
+        updateCMSLivePreview();
+      }
+
+      function adminCMSDeleteCert(certId) {
+        if (currentCMSData.certificates) {
+          currentCMSData.certificates = currentCMSData.certificates.filter(c => c.id !== certId);
+          pushCMSHistoryState();
+          renderCMSSectionForm('certifications');
+          updateCMSLivePreview();
+        }
+      }
+
+      function adminCMSUpdateCourseLevel(courseId, lvl) {
+        if (!currentCMSData.course_progress) currentCMSData.course_progress = {};
+        if (!currentCMSData.course_progress[courseId]) currentCMSData.course_progress[courseId] = {};
+        currentCMSData.course_progress[courseId].level = lvl;
+        pushCMSHistoryState();
+        renderCMSSectionForm('roadmap');
         updateCMSLivePreview();
       }
 
@@ -1540,14 +1940,35 @@
         `;
 
         if (sec.hero !== false) {
+          const xp = c.xp_points || 350;
+          let boostMultiplier = "2.5x";
+          let boostTier = "High Tier";
+          if (xp >= 2500) { boostMultiplier = "5.0x"; boostTier = "Elite Diamond"; }
+          else if (xp >= 1000) { boostMultiplier = "3.5x"; boostTier = "Gold Priority"; }
+          else if (xp >= 400) { boostMultiplier = "2.5x"; boostTier = "High Tier"; }
+          else { boostMultiplier = "1.5x"; boostTier = "Rising Builder"; }
+
           previewHTML += `
             <div style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15)); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 1rem; align-items: center;">
-              <img src="${c.avatarUrl}" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
-              <div>
-                <h3 style="font-size: 1.2rem; margin-bottom: 0.2rem;">${c.fullName || 'Candidate Name'}</h3>
+              <img src="${c.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}" style="width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+              <div style="flex: 1;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="font-size: 1.2rem; margin-bottom: 0.2rem;">${c.fullName || 'Candidate Name'}</h3>
+                  <span class="admin-badge badge-warning" style="font-size:0.7rem;">🔥 ${boostMultiplier} Boost (${xp} XP)</span>
+                </div>
                 <p style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 0.25rem;">${c.preferredRole || 'Role'}</p>
-                <p style="font-size: 0.78rem; color: var(--text-secondary);">${c.heroSubheadline || ''}</p>
+                <p style="font-size: 0.78rem; color: var(--text-secondary);">${c.heroSubheadline || c.bio || ''}</p>
               </div>
+            </div>
+
+            <!-- SPEEDOMETER DISCOVERY METER PREVIEW FOR ADMIN -->
+            <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(245, 158, 11, 0.3); padding: 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: #f59e0b; text-transform: uppercase;">Recruiter Priority Discovery Meter</span>
+                <div style="font-size: 1.1rem; font-weight: 800; color: #fff;">${boostTier} (<span style="color:#f97316;">⚡ ${xp} XP</span>)</div>
+                <span style="font-size: 0.73rem; color: #94a3b8;">${boostMultiplier} Recruiter Visibility Multiplier Active</span>
+              </div>
+              <span class="admin-badge badge-active">🟢 Live in Search</span>
             </div>
           `;
         }
@@ -1630,12 +2051,24 @@
 
         if (search) candidates = candidates.filter(c => (c.fullName || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search));
 
-        tbody.innerHTML = candidates.map(c => `
+        tbody.innerHTML = candidates.map(c => {
+          const xp = c.xp_points || 0;
+          let boostText = "1.5x Starter";
+          let badgeClass = "badge-pending";
+          if (xp >= 2500) { boostText = "5.0x Diamond 🔥"; badgeClass = "badge-approved"; }
+          else if (xp >= 1000) { boostText = "3.5x Gold ⚡"; badgeClass = "badge-approved"; }
+          else if (xp >= 400) { boostText = "2.5x High 🔥"; badgeClass = "badge-active"; }
+
+          const certCount = (c.certificates || []).length;
+
+          return `
           <tr>
             <td>#${c.id}</td>
             <td><strong>${c.fullName || 'Candidate'}</strong></td>
             <td>${c.email}</td>
-            <td>⚡ ${c.xp_points || 0}</td>
+            <td><span class="admin-badge ${badgeClass}">${boostText}</span></td>
+            <td>⚡ ${xp} XP</td>
+            <td>📜 ${certCount} Verified Certs</td>
             <td>🏆 ${c.talent_score || 0}%</td>
             <td><span class="admin-badge badge-active">${c.status || 'active'}</span></td>
             <td>
@@ -1644,7 +2077,8 @@
               </div>
             </td>
           </tr>
-        `).join('');
+        `;
+        }).join('');
       }
 
       function renderRecruitersTable() {
@@ -1764,6 +2198,98 @@
             <td><button onclick="deleteAssessmentPrompt(${c.id})" class="btn-xs" style="color:#ef4444;">🗑️</button></td>
           </tr>
         `).join('');
+      }
+
+      let currentAdminAcademyData = null;
+
+      function loadAdminAcademyEditor() {
+        const catSelect = document.getElementById('admin-course-cat-select');
+        const lvlSelect = document.getElementById('admin-course-lvl-select');
+        if (!catSelect || !lvlSelect) return;
+
+        const cat = catSelect.value;
+        const lvl = lvlSelect.value;
+
+        currentAdminAcademyData = getCourseVideoDatabase();
+        const catData = currentAdminAcademyData[cat] || { title: "Category", levels: {} };
+        const lvlData = (catData.levels && catData.levels[lvl]) || { title: "", desc: "", videos: { english: {}, tamil: {}, hindi: {} }, topics: [] };
+
+        const titleElem = document.getElementById('admin-course-editor-title');
+        if (titleElem) titleElem.textContent = `${catData.title || 'Course'} (${lvl.toUpperCase()} Level)`;
+
+        const catTitleInput = document.getElementById('admin-course-cat-title');
+        if (catTitleInput) catTitleInput.value = catData.title || '';
+
+        const levelTitleInput = document.getElementById('admin-course-level-title');
+        if (levelTitleInput) levelTitleInput.value = lvlData.title || '';
+
+        const levelDescInput = document.getElementById('admin-course-level-desc');
+        if (levelDescInput) levelDescInput.value = lvlData.desc || '';
+
+        const topicsInput = document.getElementById('admin-course-topics');
+        if (topicsInput) topicsInput.value = (lvlData.topics || []).join(', ');
+
+        const vids = lvlData.videos || {};
+        const vEn = vids.english || {};
+        const vTa = vids.tamil || {};
+        const vHi = vids.hindi || {};
+
+        document.getElementById('admin-video-title-en').value = vEn.title || '';
+        document.getElementById('admin-video-id-en').value = vEn.embedId || '';
+
+        document.getElementById('admin-video-title-ta').value = vTa.title || '';
+        document.getElementById('admin-video-id-ta').value = vTa.embedId || '';
+
+        document.getElementById('admin-video-title-hi').value = vHi.title || '';
+        document.getElementById('admin-video-id-hi').value = vHi.embedId || '';
+      }
+
+      function saveAdminAcademyChanges() {
+        const cat = document.getElementById('admin-course-cat-select').value;
+        const lvl = document.getElementById('admin-course-lvl-select').value;
+
+        if (!currentAdminAcademyData) currentAdminAcademyData = getCourseVideoDatabase();
+        if (!currentAdminAcademyData[cat]) {
+          currentAdminAcademyData[cat] = { title: "Course Category", category: cat, levels: {} };
+        }
+        if (!currentAdminAcademyData[cat].levels) currentAdminAcademyData[cat].levels = {};
+
+        const catTitle = document.getElementById('admin-course-cat-title').value.trim();
+        if (catTitle) currentAdminAcademyData[cat].title = catTitle;
+
+        const levelTitle = document.getElementById('admin-course-level-title').value.trim();
+        const levelDesc = document.getElementById('admin-course-level-desc').value.trim();
+        const topicsStr = document.getElementById('admin-course-topics').value.trim();
+        const topicsArr = topicsStr ? topicsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+        const vEnTitle = document.getElementById('admin-video-title-en').value.trim();
+        let vEnId = document.getElementById('admin-video-id-en').value.trim();
+        if (vEnId.includes('v=')) vEnId = vEnId.split('v=')[1].split('&')[0];
+        if (vEnId.includes('youtu.be/')) vEnId = vEnId.split('youtu.be/')[1].split('?')[0];
+
+        const vTaTitle = document.getElementById('admin-video-title-ta').value.trim();
+        let vTaId = document.getElementById('admin-video-id-ta').value.trim();
+        if (vTaId.includes('v=')) vTaId = vTaId.split('v=')[1].split('&')[0];
+        if (vTaId.includes('youtu.be/')) vTaId = vTaId.split('youtu.be/')[1].split('?')[0];
+
+        const vHiTitle = document.getElementById('admin-video-title-hi').value.trim();
+        let vHiId = document.getElementById('admin-video-id-hi').value.trim();
+        if (vHiId.includes('v=')) vHiId = vHiId.split('v=')[1].split('&')[0];
+        if (vHiId.includes('youtu.be/')) vHiId = vHiId.split('youtu.be/')[1].split('?')[0];
+
+        currentAdminAcademyData[cat].levels[lvl] = {
+          title: levelTitle,
+          desc: levelDesc,
+          videos: {
+            english: { title: vEnTitle || "English Lesson", embedId: vEnId || "mU6anWqZJcc", source: "YouTube" },
+            tamil: { title: vTaTitle || "Tamil Lesson", embedId: vTaId || "6mbwJ2xhjsM", source: "YouTube" },
+            hindi: { title: vHiTitle || "Hindi Lesson", embedId: vHiId || "HcOc7P5s50A", source: "YouTube" }
+          },
+          topics: topicsArr
+        };
+
+        saveCourseVideoDatabase(currentAdminAcademyData);
+        alert("🎉 Video Course Updates saved successfully! Changes are live on Candidate Skill Academy.");
       }
 
       function renderGigsTable() {
