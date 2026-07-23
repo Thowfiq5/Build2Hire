@@ -264,22 +264,23 @@
 
       window.viewCertificateModal = function(certId) {
         const certs = candidate.certificates || [];
-        const cert = certs.find(c => c.id === certId) || certs[0];
+        const cert = certs.find(c => String(c.id) === String(certId)) || certs[0];
         if (!cert) return;
 
-        document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate User";
-        document.getElementById('cert-course-name').textContent = cert.course || cert.title;
-        document.getElementById('cert-level-badge').textContent = (cert.level || 'VERIFIED').toUpperCase();
-        document.getElementById('cert-score-val').textContent = `${cert.score || 80}%`;
-        document.getElementById('cert-xp-val').textContent = `+${cert.xp_gained || 100} XP`;
-        document.getElementById('cert-serial-code').textContent = cert.serial_no || 'B2H-CERT-89210';
-        document.getElementById('cert-date-val').textContent = cert.date || new Date().toISOString().split('T')[0];
+        if (document.getElementById('cert-candidate-name')) document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Thaieba Ismail";
+        if (document.getElementById('cert-course-name')) document.getElementById('cert-course-name').textContent = cert.course || cert.title;
+        if (document.getElementById('cert-level-badge')) document.getElementById('cert-level-badge').textContent = (cert.level || 'VERIFIED').toUpperCase();
+        if (document.getElementById('cert-score-val')) document.getElementById('cert-score-val').textContent = `${cert.score || 80}%`;
+        if (document.getElementById('cert-serial-code')) document.getElementById('cert-serial-code').textContent = cert.serial_no || 'B2H-CERT-89210';
+        if (document.getElementById('cert-date-val')) document.getElementById('cert-date-val').textContent = cert.date || new Date().toISOString().split('T')[0];
 
-        document.getElementById('cert-modal').style.display = "flex";
+        const modal = document.getElementById('cert-modal');
+        if (modal) modal.style.display = "flex";
       };
 
       window.closeCertModal = function() {
-        document.getElementById('cert-modal').style.display = "none";
+        const modal = document.getElementById('cert-modal');
+        if (modal) modal.style.display = "none";
       };
 
       window.printCurrentCertificate = function() {
@@ -287,7 +288,7 @@
       };
 
       window.printCertificateModal = function(certId) {
-        viewCertificateModal(certId);
+        window.viewCertificateModal(certId);
         setTimeout(() => {
           window.print();
         }, 300);
