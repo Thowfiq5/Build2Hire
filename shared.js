@@ -714,13 +714,18 @@ function enrollInCourse(candidateId, courseId, selectedLanguage = 'english') {
   
   let existing = candidate.enrolled_courses.find(c => c.courseId === courseId);
   if (existing) {
+    if (existing.isCompleted || existing.progress === 100) {
+      alert("🎓 You have already completed this course and earned your certificate! Re-enrollment or retaking completed courses is disabled.");
+      return false;
+    }
     existing.selectedLanguage = selectedLanguage;
   } else {
     candidate.enrolled_courses.push({
       courseId: courseId,
       enrolledDate: new Date().toISOString().split('T')[0],
       selectedLanguage: selectedLanguage,
-      progress: 20
+      progress: 20,
+      isCompleted: false
     });
   }
 
@@ -1433,6 +1438,11 @@ function renderSidebar(activePage) {
           <li>
             <a href="recommendations.html" class="sidebar-link ${activePage === 'recommendations.html' ? 'active' : ''}">
               📚 <span>Learning Roadmaps</span>
+            </a>
+          </li>
+          <li>
+            <a href="quiz.html" class="sidebar-link ${activePage === 'quiz.html' ? 'active' : ''}">
+              📝 <span>Skill Quizzes</span>
             </a>
           </li>
           <li>
@@ -2679,9 +2689,9 @@ const COURSE_VIDEO_DATA = {
         title: "Beginner: HTML5 & CSS Layout Fundamentals",
         desc: "Learn core HTML tags, CSS Flexbox, Grid, CSS Variables, and responsive design basics.",
         videos: {
-          english: { title: "HTML & CSS Full Beginner Course (English)", embedId: "G3e-cpL7ofc", source: "YouTube" },
-          tamil: { title: "HTML & CSS Complete Tutorial (Tamil)", embedId: "1Z1p9f_76aY", source: "YouTube" },
-          hindi: { title: "HTML & CSS One Shot Course (Hindi)", embedId: "HcOc7P5s50A", source: "YouTube" }
+          english: { title: "HTML & CSS Full Beginner Course (English)", embedId: "a_iQb1lnAEQ", source: "YouTube" },
+          tamil: { title: "HTML & CSS Complete Tutorial (Tamil)", embedId: "FYErehuSuuw", source: "YouTube" },
+          hindi: { title: "HTML & CSS One Shot Course (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
         },
         topics: ["HTML5 Semantic Tags", "CSS Flexbox & Grid", "CSS Custom Variables", "Responsive Web Design"]
       },
@@ -2690,8 +2700,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Master ES6+ JavaScript, DOM events, state management, components, and React hooks.",
         videos: {
           english: { title: "React JS Full Course 2024 (English)", embedId: "SqcY0GlETPk", source: "YouTube" },
-          tamil: { title: "React JS Full Course (Tamil)", embedId: "QFaFIcGhPoM", source: "YouTube" },
-          hindi: { title: "React JS Complete Tutorial (Hindi)", embedId: "rg7Fvvl3taU", source: "YouTube" }
+          tamil: { title: "React JS Full Course (Tamil)", embedId: "01bEb7R-F4s", source: "YouTube" },
+          hindi: { title: "React JS Complete Course (Hindi)", embedId: "tiLWCNFzThE", source: "YouTube" }
         },
         topics: ["ES6 Array Methods", "React useState & useEffect", "Component Lifecycle", "REST Data Fetching"]
       },
@@ -2699,9 +2709,9 @@ const COURSE_VIDEO_DATA = {
         title: "Advanced: Next.js SSR, Performance & State Architecture",
         desc: "Master Next.js App Router, Server Components, SSG/SSR, and performance optimization.",
         videos: {
-          english: { title: "Next.js 14 Full Stack Course (English)", embedId: "wm5gMKCORL4", source: "YouTube" },
-          tamil: { title: "Next.js Full Course (Tamil)", embedId: "843nec-gW28", source: "YouTube" },
-          hindi: { title: "Next.js Full Course (Hindi)", embedId: "Zq5fmkH0T78", source: "YouTube" }
+          english: { title: "Next.js 14 Full Stack Course (English)", embedId: "aEFkWxUNAVc", source: "YouTube" },
+          tamil: { title: "Next.js Full Course (Tamil)", embedId: "7dSJubxFWv0", source: "YouTube" },
+          hindi: { title: "Next.js Full Course (Hindi)", embedId: "1I6Ta_cL7p8", source: "YouTube" }
         },
         topics: ["Server Side Rendering (SSR)", "Next.js App Router", "State Hydration & Memoization", "SEO & Web Vitals"]
       }
@@ -2716,8 +2726,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Understand HTTP methods, request headers, event loops, and basic Node.js servers.",
         videos: {
           english: { title: "Node.js Basics for Beginners (English)", embedId: "Oe421EPjeBE", source: "YouTube" },
-          tamil: { title: "Node.js Tutorial for Beginners (Tamil)", embedId: "yE6vtL_M-9c", source: "YouTube" },
-          hindi: { title: "Node.js Complete Course (Hindi)", embedId: "BS7bzC07aE4", source: "YouTube" }
+          tamil: { title: "Node.js Tutorial for Beginners (Tamil)", embedId: "vZY5Ap5Bsp8", source: "YouTube" },
+          hindi: { title: "Node.js Complete Course (Hindi)", embedId: "BLl32FvcdVM", source: "YouTube" }
         },
         topics: ["Node.js Runtime", "HTTP Requests & Responses", "File System API", "Package Management"]
       },
@@ -2726,8 +2736,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Build Express middleware, RESTful API endpoints, JWT authentication, and error handling.",
         videos: {
           english: { title: "Express.js REST API Masterclass (English)", embedId: "l8WPWK9mS5M", source: "YouTube" },
-          tamil: { title: "Express.js API Tutorial (Tamil)", embedId: "p57y4kY3aC8", source: "YouTube" },
-          hindi: { title: "Express.js REST API Course (Hindi)", embedId: "7H_b1S04S4w", source: "YouTube" }
+          tamil: { title: "Express.js API Tutorial (Tamil)", embedId: "SdyzXQoQO18", source: "YouTube" },
+          hindi: { title: "Express.js REST API Course (Hindi)", embedId: "BLl32FvcdVM", source: "YouTube" }
         },
         topics: ["Express Router", "Middleware Chain", "JWT Auth Tokens", "Input Validation"]
       },
@@ -2735,9 +2745,9 @@ const COURSE_VIDEO_DATA = {
         title: "Advanced: Microservices, Redis Caching & System Scaling",
         desc: "Implement Redis query caches, Docker containers, load balancers, and rate limiting.",
         videos: {
-          english: { title: "System Design & Redis Caching (English)", embedId: "XQh29ZqQ6kM", source: "YouTube" },
-          tamil: { title: "Microservices Architecture (Tamil)", embedId: "yE6vtL_M-9c", source: "YouTube" },
-          hindi: { title: "System Design & Microservices (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+          english: { title: "System Design & Redis Caching (English)", embedId: "Hbt56gFj998", source: "YouTube" },
+          tamil: { title: "Microservices Architecture (Tamil)", embedId: "vZY5Ap5Bsp8", source: "YouTube" },
+          hindi: { title: "System Design & Microservices (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
         },
         topics: ["Redis In-Memory Caching", "Docker Containerization", "Rate Limiting & Security", "Event-Driven Architecture"]
       }
@@ -2752,7 +2762,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Learn tables, primary keys, foreign keys, SELECT, INSERT, UPDATE, and DELETE statements.",
         videos: {
           english: { title: "SQL Tutorial for Beginners (English)", embedId: "HXV3zeQKqGY", source: "YouTube" },
-          tamil: { title: "SQL Full Course in Tamil", embedId: "3X8O_K_O8jE", source: "YouTube" },
+          tamil: { title: "SQL Full Course in Tamil", embedId: "QvTo1_-n0UE", source: "YouTube" },
           hindi: { title: "SQL One Shot Tutorial (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
         },
         topics: ["Tables & Data Types", "Primary & Foreign Keys", "CRUD Operations", "WHERE Filters"]
@@ -2762,7 +2772,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Master table joins, B-Tree indexes, database normalization, and query performance tuning.",
         videos: {
           english: { title: "SQL Joins & Index Tuning (English)", embedId: "7S_tz1z_5bA", source: "YouTube" },
-          tamil: { title: "SQL Joins & Indexing (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
+          tamil: { title: "SQL Joins & Indexing (Tamil)", embedId: "tcjcjHX9wcA", source: "YouTube" },
           hindi: { title: "Database Indexing & Joins (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
         },
         topics: ["INNER, LEFT & RIGHT Joins", "Composite Indexing", "Database Normalization (3NF)", "Query Execution Plans"]
@@ -2772,8 +2782,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Build MongoDB aggregation pipelines, document schemas, replication sets, and caching strategies.",
         videos: {
           english: { title: "MongoDB Aggregations & Schemas (English)", embedId: "c2M-rlkkT5o", source: "YouTube" },
-          tamil: { title: "MongoDB Full Course (Tamil)", embedId: "J6mDkcq1vgk", source: "YouTube" },
-          hindi: { title: "MongoDB Complete Tutorial (Hindi)", embedId: "rU9ZOBw7624", source: "YouTube" }
+          tamil: { title: "MongoDB Full Course (Tamil)", embedId: "oY-0v7w-Ac8", source: "YouTube" },
+          hindi: { title: "MongoDB Complete Tutorial (Hindi)", embedId: "hlGoQC332VM", source: "YouTube" }
         },
         topics: ["Document Schema Design", "Aggregation Pipelines ($match, $group)", "Sharding & Replication", "Cache Invalidation"]
       }
@@ -2787,9 +2797,9 @@ const COURSE_VIDEO_DATA = {
         title: "Beginner: Video Editing Basics & Timeline Cutting",
         desc: "Master timeline clip cutting, transitions, aspect ratios, and basic audio overlays.",
         videos: {
-          english: { title: "Premiere Pro Beginner Tutorial (English)", embedId: "erEgovG9WBs", source: "YouTube" },
-          tamil: { title: "Video Editing Tutorial for Beginners (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
-          hindi: { title: "Premiere Pro Full Course (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+          english: { title: "Premiere Pro Full Course (English)", embedId: "xDq3ij-oHJA", source: "YouTube" },
+          tamil: { title: "Video Editing Full Course (Tamil)", embedId: "CWRmhiwYGxg", source: "YouTube" },
+          hindi: { title: "Premiere Pro Full Course (Hindi)", embedId: "D-dDSwuSUvQ", source: "YouTube" }
         },
         topics: ["Timeline Mechanics", "Clip Cutting & Trimming", "Basic Transitions", "Audio Alignment"]
       },
@@ -2797,9 +2807,9 @@ const COURSE_VIDEO_DATA = {
         title: "Mid-Level: Color Grading & Audio Mixing",
         desc: "Learn Lumetri color wheels, LUT presets, J-cuts/L-cuts, ambient audio design, and subtitle overlays.",
         videos: {
-          english: { title: "Color Grading & Audio Masterclass (English)", embedId: "erEgovG9WBs", source: "YouTube" },
-          tamil: { title: "Color Grading Tutorial (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
-          hindi: { title: "Color Grading & Sound Design (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+          english: { title: "Premiere Pro Color Grading (English)", embedId: "1wZym4fQGig", source: "YouTube" },
+          tamil: { title: "Premiere Pro Color Grading (Tamil)", embedId: "s9GAf2u2LXI", source: "YouTube" },
+          hindi: { title: "Color Grading Masterclass (Hindi)", embedId: "GoODO9xWV38", source: "YouTube" }
         },
         topics: ["Color Wheel Balances", "LUT Grading Curves", "J-Cut & L-Cut Transitions", "Sound FX & Noise Reduction"]
       },
@@ -2807,9 +2817,9 @@ const COURSE_VIDEO_DATA = {
         title: "Advanced: High-Efficiency Codecs & Motion Graphics",
         desc: "Export 1080p/4K web videos using H.264/HEVC codecs, variable bitrates (VBR), and motion graphics.",
         videos: {
-          english: { title: "After Effects & Motion Graphics (English)", embedId: "erEgovG9WBs", source: "YouTube" },
-          tamil: { title: "Advanced Motion Graphics (Tamil)", embedId: "Jt_bTzB_q_s", source: "YouTube" },
-          hindi: { title: "After Effects & Promo Editing (Hindi)", embedId: "u71pU4tF-4g", source: "YouTube" }
+          english: { title: "After Effects & Motion Graphics (English)", embedId: "PWvPbGWVRrU", source: "YouTube" },
+          tamil: { title: "After Effects Motion Graphics (Tamil)", embedId: "FmLbOOPKIe0", source: "YouTube" },
+          hindi: { title: "After Effects Full Course (Hindi)", embedId: "Xv8JBXPgeI8", source: "YouTube" }
         },
         topics: ["Web Codecs (H.264 vs HEVC)", "Variable Bit Rate (VBR)", "Hardware Acceleration", "Promo Render Specs"]
       }
@@ -2824,7 +2834,7 @@ const COURSE_VIDEO_DATA = {
         desc: "Learn Docker fundamentals, writing Dockerfiles, image layers, and running containers.",
         videos: {
           english: { title: "Docker Tutorial for Beginners (English)", embedId: "pTFZFxd4hOI", source: "YouTube" },
-          tamil: { title: "Docker Full Course (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
+          tamil: { title: "Docker Full Course (Tamil)", embedId: "99wj94_uyG4", source: "YouTube" },
           hindi: { title: "Docker One Shot Tutorial (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
         },
         topics: ["Container Architecture", "Dockerfile Instructions", "Docker Run & Port Mapping", "Container Logs & Shells"]
@@ -2833,9 +2843,9 @@ const COURSE_VIDEO_DATA = {
         title: "Mid-Level: AWS Deployments & CI/CD Pipelines",
         desc: "Automate build deployments with GitHub Actions, EC2 servers, and automated pipelines.",
         videos: {
-          english: { title: "AWS & DevOps CI/CD Course (English)", embedId: "R8_veQiYBjU", source: "YouTube" },
-          tamil: { title: "AWS Cloud & DevOps (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
-          hindi: { title: "DevOps & GitHub Actions (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
+          english: { title: "AWS & DevOps CI/CD Course (English)", embedId: "pTFZFxd4hOI", source: "YouTube" },
+          tamil: { title: "AWS Cloud & DevOps (Tamil)", embedId: "99wj94_uyG4", source: "YouTube" },
+          hindi: { title: "DevOps & GitHub Actions (Hindi)", embedId: "7fjOw8ApZ1I", source: "YouTube" }
         },
         topics: ["GitHub Actions Workflows", "AWS EC2 Deployment", "Nginx Reverse Proxy", "SSL & Domain Setup"]
       },
@@ -2844,8 +2854,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Master Terraform, Kubernetes orchestration, IAM policies, and cloud security hardening.",
         videos: {
           english: { title: "Kubernetes & Cloud Security (English)", embedId: "X48VuDVv0do", source: "YouTube" },
-          tamil: { title: "Kubernetes Tutorial (Tamil)", embedId: "3c-iBn73dDE", source: "YouTube" },
-          hindi: { title: "Kubernetes & Terraform (Hindi)", embedId: "rr9cI4u1_88", source: "YouTube" }
+          tamil: { title: "Kubernetes Tutorial (Tamil)", embedId: "99wj94_uyG4", source: "YouTube" },
+          hindi: { title: "Kubernetes & Terraform (Hindi)", embedId: "7fjOw8ApZ1I", source: "YouTube" }
         },
         topics: ["Kubernetes Clusters", "Terraform IaC", "AWS IAM Security Guards", "Zero Trust Architecture"]
       }
@@ -2860,8 +2870,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Learn horizontal vs vertical scaling, load balancer algorithms, and stateless server design.",
         videos: {
           english: { title: "System Design Basics (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
-          tamil: { title: "System Design Essentials (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
-          hindi: { title: "System Design Course (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+          tamil: { title: "System Design Basics in Tamil (Karthik's Show)", embedId: "kvEAN1wgwJY", source: "YouTube" },
+          hindi: { title: "System Design Roadmap & HLD Basics (Apna College)", embedId: "CuQmQpvw04I", source: "YouTube" }
         },
         topics: ["Horizontal vs Vertical Scaling", "Nginx & HAProxy Balancing", "Stateless Architecture", "CDN Distribution"]
       },
@@ -2870,8 +2880,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Master Redis caching patterns (Cache-Aside, Write-Through), database partitioning, and indexes.",
         videos: {
           english: { title: "Database Sharding & Caching (English)", embedId: "m8Icp_Cid5o", source: "YouTube" },
-          tamil: { title: "Database Scaling (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
-          hindi: { title: "Caching Strategies (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+          tamil: { title: "HLD & LLD Caching Strategies in Tamil", embedId: "R0xO1-ytchY", source: "YouTube" },
+          hindi: { title: "Caching & Database Sharding in Hindi", embedId: "SGQVY7bi2mY", source: "YouTube" }
         },
         topics: ["Redis Cache Patterns", "Consistent Hashing", "Database Read Replicas", "Database Sharding"]
       },
@@ -2880,8 +2890,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Design event-driven architectures using RabbitMQ/Kafka, rate limiting, and CAP theorem trade-offs.",
         videos: {
           english: { title: "Distributed Systems & Kafka (English)", embedId: "xpDnVSmNFX0", source: "YouTube" },
-          tamil: { title: "Kafka & Event Architecture (Tamil)", embedId: "3X8O_K_O8jE", source: "YouTube" },
-          hindi: { title: "Message Queues & Scaling (Hindi)", embedId: "y10zI64jT2U", source: "YouTube" }
+          tamil: { title: "Distributed Systems & Microservices in Tamil", embedId: "Kboih3tCkbI", source: "YouTube" },
+          hindi: { title: "Distributed Systems & CAP Theorem in Hindi", embedId: "5XmZK5fls5w", source: "YouTube" }
         },
         topics: ["Kafka & RabbitMQ Messaging", "CAP Theorem", "Token Bucket Rate Limiting", "High Availability Clusters"]
       }
@@ -2895,9 +2905,9 @@ const COURSE_VIDEO_DATA = {
         title: "Beginner: Web Vulnerabilities & OWASP Top 10",
         desc: "Learn core web security concepts, XSS sanitization, SQL injection prevention, and CSRF protection.",
         videos: {
-          english: { title: "Cybersecurity & Web Defense (English)", embedId: "bPVaOiJ6NIM", source: "YouTube" },
-          tamil: { title: "Ethical Hacking Course (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
-          hindi: { title: "Cyber Security Full Course (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+          english: { title: "Cybersecurity & Web Defense (English)", embedId: "3Kq1MIfTWCE", source: "YouTube" },
+          tamil: { title: "Ethical Hacking Course (Tamil)", embedId: "vh3WW3d0yxg", source: "YouTube" },
+          hindi: { title: "Cyber Security Full Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
         },
         topics: ["OWASP Top 10 Overview", "SQL Injection Guards", "Cross-Site Scripting (XSS)", "CSRF Tokens"]
       },
@@ -2905,9 +2915,9 @@ const COURSE_VIDEO_DATA = {
         title: "Mid-Level: Password Hashing & OAuth2 Authentication",
         desc: "Implement bcrypt/argon2 hashing, JWT signature verification, CORS headers, and OAuth2 login flows.",
         videos: {
-          english: { title: "OAuth2 & JWT Security Masterclass (English)", embedId: "SLtwlkQ0DDA", source: "YouTube" },
-          tamil: { title: "JWT & Web Security (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
-          hindi: { title: "Authentication Security (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+          english: { title: "OAuth2 & JWT Security Masterclass (English)", embedId: "3Kq1MIfTWCE", source: "YouTube" },
+          tamil: { title: "JWT & Web Security (Tamil)", embedId: "vgGgpCC0VsQ", source: "YouTube" },
+          hindi: { title: "Authentication Security (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
         },
         topics: ["Bcrypt Password Hashing", "JWT Signing Keys", "CORS Configuration", "OAuth2 & OIDC Flows"]
       },
@@ -2916,8 +2926,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Master network packet analysis (Wireshark), public/private key crypto, and security hardening.",
         videos: {
           english: { title: "Ethical Hacking & PenTesting (English)", embedId: "3Kq1MIfTWCE", source: "YouTube" },
-          tamil: { title: "Penetration Testing (Tamil)", embedId: "inWWhr5tnEA", source: "YouTube" },
-          hindi: { title: "Ethical Hacking Full Course (Hindi)", embedId: "1P2M5X1zZ6s", source: "YouTube" }
+          tamil: { title: "Penetration Testing (Tamil)", embedId: "vh3WW3d0yxg", source: "YouTube" },
+          hindi: { title: "Ethical Hacking Full Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
         },
         topics: ["Wireshark Packet Analysis", "RSA & AES Encryption", "Penetration Testing", "Security Headers Hardening"]
       }
@@ -2932,8 +2942,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Learn React Native CLI, Flexbox mobile layouts, navigation stacks, and basic components.",
         videos: {
           english: { title: "React Native Course for Beginners (English)", embedId: "0-S5a0eXPoc", source: "YouTube" },
-          tamil: { title: "React Native Tutorial (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
-          hindi: { title: "React Native Full Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+          tamil: { title: "React Native Tutorial in Tamil (JVL code)", embedId: "UVZ5LGhiBkY", source: "YouTube" },
+          hindi: { title: "React Native Crash Course in Hindi (Geeky Shows)", embedId: "9TFT9-gJvg0", source: "YouTube" }
         },
         topics: ["React Native Components", "Flexbox Mobile Layouts", "React Navigation Stack", "Device State"]
       },
@@ -2942,8 +2952,8 @@ const COURSE_VIDEO_DATA = {
         desc: "Build cross-platform iOS & Android apps with Flutter, Dart language, and Provider/Bloc state management.",
         videos: {
           english: { title: "Flutter Full Course 2024 (English)", embedId: "VPvVD8t02U8", source: "YouTube" },
-          tamil: { title: "Flutter Tutorial for Beginners (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
-          hindi: { title: "Flutter Complete Course (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+          tamil: { title: "Flutter Tutorial for Beginners in Tamil (JVL code)", embedId: "Vp4uaNbtNCg", source: "YouTube" },
+          hindi: { title: "Flutter Complete Course in Hindi (WsCube Tech)", embedId: "1bQwDO88Gyw", source: "YouTube" }
         },
         topics: ["Dart Language Syntax", "Flutter Widget Tree", "State Management (Bloc/Provider)", "Native Camera/GPS APIs"]
       },
@@ -2952,10 +2962,51 @@ const COURSE_VIDEO_DATA = {
         desc: "Deploy production builds to Apple App Store & Google Play Console, native Swift/Kotlin bridges, and push notifications.",
         videos: {
           english: { title: "App Store Publishing & Native Bridges (English)", embedId: "0-S5a0eXPoc", source: "YouTube" },
-          tamil: { title: "App Store & Play Store Deployment (Tamil)", embedId: "3-pE1Y_d0M4", source: "YouTube" },
-          hindi: { title: "Mobile CI/CD & Publishing (Hindi)", embedId: "mXjZQX3UzOs", source: "YouTube" }
+          tamil: { title: "App Store & Play Store Deployment in Tamil", embedId: "UVZ5LGhiBkY", source: "YouTube" },
+          hindi: { title: "App Store & Play Store Deployment in Hindi", embedId: "9TFT9-gJvg0", source: "YouTube" }
         },
-        topics: ["Native Swift/Kotlin Bridges", "Push Notifications (FCM)", "App Store Connect Renders", "Google Play Release Tracks"]
+        topics: ["Native Android/iOS Bridge", "CodePush Over-The-Air Updates", "App Store Connect & Play Console", "Push Notification Architecture"]
+      }
+    }
+  },
+  typescript: {
+    title: "TypeScript Enterprise Applications",
+    category: "typescript",
+    levels: {
+      beginner: {
+        title: "Beginner: TypeScript Basics & Type Annotations",
+        desc: "Learn primitive types, interfaces, type aliases, union types, and TypeScript compiler setup.",
+        videos: {
+          english: { title: "TypeScript Tutorial for Beginners (English)", embedId: "d56mG7DezGs", source: "YouTube" },
+          tamil: { title: "TypeScript Basics Tutorial (Tamil)", embedId: "70KEMxrG8e4", source: "YouTube" },
+          hindi: { title: "TypeScript Tutorial in Hindi (Thapa Technical)", embedId: "Xciunyug99U", source: "YouTube" }
+        },
+        topics: ["Type Annotations & Inferences", "Interfaces vs Type Aliases", "Union & Intersection Types", "tsconfig.json Configuration"]
+      },
+      mid: {
+        title: "Mid-Level: Generics & Type Manipulation",
+        desc: "Master TypeScript generics, utility types (Partial, Pick, Omit), enums, and class modifiers.",
+        videos: {
+          english: { title: "TypeScript Generics, Utility Types & Classes (English)", embedId: "BCg4U1FzODs", source: "YouTube" },
+          tamil: { title: "TypeScript Generics, Enums & Classes (Tamil)", embedId: "70KEMxrG8e4", source: "YouTube" },
+          hindi: { title: "TypeScript Course in 1 Shot (Chai aur Code)", embedId: "kvP6hDXWy88", source: "YouTube" }
+        },
+        topics: [
+          "TypeScript Generics",
+          "Utility Types (Partial, Pick, Omit)",
+          "Enums",
+          "Classes & Access Modifiers"
+        ]
+      },
+      advanced: {
+        title: "Advanced: Conditional Types & Enterprise Architecture",
+        desc: "Build type-safe fullstack apps with conditional types, mapped types, type guards, and AST transformations.",
+        videos: {
+          english: { title: "Enterprise TypeScript Architecture (English)", embedId: "gieEQFIfgYc", source: "YouTube" },
+          tamil: { title: "TypeScript Enterprise Design (Tamil)", embedId: "lK0X4K9ZFus", source: "YouTube" },
+          hindi: { title: "Enterprise TypeScript Masterclass (Hindi)", embedId: "kvP6hDXWy88", source: "YouTube" }
+        },
+        topics: ["Conditional & Mapped Types", "Custom Type Guards", "Template Literal Types", "Monorepo Type Safety"]
       }
     }
   }
@@ -2983,11 +3034,11 @@ function getYouTubeVideoId(str) {
 
 function getCourseVideoDatabase() {
   // Clear all old legacy cache keys from localStorage
-  ['build2hire_course_videos', 'build2hire_course_videos_v2', 'build2hire_course_videos_v3', 'build2hire_course_videos_v4', 'build2hire_course_videos_v5'].forEach(k => {
+  ['build2hire_course_videos', 'build2hire_course_videos_v2', 'build2hire_course_videos_v3', 'build2hire_course_videos_v4', 'build2hire_course_videos_v5', 'build2hire_course_videos_v6', 'build2hire_course_videos_v7', 'build2hire_course_videos_v8', 'build2hire_course_videos_v9', 'build2hire_course_videos_v10', 'build2hire_course_videos_v11', 'build2hire_course_videos_v12', 'build2hire_course_videos_v13', 'build2hire_course_videos_v14', 'build2hire_course_videos_v15', 'build2hire_course_videos_v16', 'build2hire_course_videos_v17', 'build2hire_course_videos_v18', 'build2hire_course_videos_v19'].forEach(k => {
     try { localStorage.removeItem(k); } catch(e) {}
   });
 
-  const customDataStr = localStorage.getItem('build2hire_course_videos_v6');
+  const customDataStr = localStorage.getItem('build2hire_course_videos_v20');
   if (customDataStr) {
     try {
       return JSON.parse(customDataStr);
@@ -2997,5 +3048,5 @@ function getCourseVideoDatabase() {
 }
 
 function saveCourseVideoDatabase(data) {
-  localStorage.setItem('build2hire_course_videos_v6', JSON.stringify(data));
+  localStorage.setItem('build2hire_course_videos_v20', JSON.stringify(data));
 }
