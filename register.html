@@ -69,13 +69,24 @@
 
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            class="form-control"
-            placeholder="Min 6 characters"
-          >
+          <div style="position: relative; width: 100%;">
+            <input
+              id="password"
+              type="password"
+              required
+              class="form-control"
+              placeholder="Min 6 characters"
+              style="padding-right: 2.75rem;"
+            >
+            <button
+              type="button"
+              onclick="togglePasswordVisibility('password', this)"
+              style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: 0.2rem; display: flex; align-items: center; justify-content: center; outline: none; z-index: 10;"
+              title="Show Password"
+            >
+              👁️
+            </button>
+          </div>
         </div>
 
         <!-- Candidate-specific fields -->
