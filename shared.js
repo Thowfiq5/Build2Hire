@@ -1095,6 +1095,106 @@ function renderHeader() {
         ${user && user.role === 'admin' ? '<li><a href="admin-dashboard.html" class="nav-link" style="color:var(--primary); font-weight:700;">⚙️ Admin Control</a></li>' : ''}
       </ul>
       <div style="display:flex;align-items:center;gap:1rem;">
+        ${user && user.role === 'candidate' ? `
+          <div id="cand-notif-wrapper" style="position: relative; display: inline-block;">
+            <button id="cand-notif-bell-btn" onclick="window.toggleCandidateNotificationDropdown(event)" class="theme-toggle" style="position: relative; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); font-size: 1.15rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="View Candidate Notifications">
+              🔔
+              <span id="cand-notif-badge" style="position: absolute; top: -3px; right: -3px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: 800; padding: 2px 5px; border-radius: 10px; min-width: 16px; text-align: center; display: none;">0</span>
+            </button>
+
+            <!-- CANDIDATE NOTIFICATION DROPDOWN MENU -->
+            <div id="cand-notif-dropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 360px; max-height: 480px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 999999; overflow: hidden; flex-direction: column;">
+              <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary);">
+                <div>
+                  <strong style="font-size: 0.92rem; color: var(--text-primary); font-family: var(--font-display);">🔔 Candidate Notifications</strong>
+                  <span id="cand-notif-unread-text" style="font-size: 0.72rem; color: var(--primary); display: block; font-weight: 600;">0 unread</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <button onclick="window.markAllCandidateNotificationsRead()" class="btn-xs btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Mark All Read</button>
+                  <button onclick="window.toggleCandidateNotificationDropdown(event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: 0.1rem 0.35rem; border-radius: 4px; display: flex; align-items: center; justify-content: center;" title="Close Menu">✕</button>
+                </div>
+              </div>
+
+              <!-- NOTIFICATION ITEMS CONTAINER -->
+              <div id="cand-notif-list" style="overflow-y: auto; max-height: 340px; display: flex; flex-direction: column;">
+                <!-- Populated dynamically -->
+              </div>
+
+              <div style="padding: 0.6rem 1rem; border-top: 1px solid var(--border-color); text-align: center; background: var(--bg-tertiary);">
+                <button onclick="window.clearAllCandidateNotifications()" style="font-size: 0.75rem; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600;">🗑️ Clear All Notifications</button>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
+        ${user && user.role === 'recruiter' ? `
+          <div id="rec-notif-wrapper" style="position: relative; display: inline-block;">
+            <button id="rec-notif-bell-btn" onclick="window.toggleRecruiterNotificationDropdown(event)" class="theme-toggle" style="position: relative; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); font-size: 1.15rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="View Recruiter Notifications">
+              🔔
+              <span id="rec-notif-badge" style="position: absolute; top: -3px; right: -3px; background: #a855f7; color: white; font-size: 0.65rem; font-weight: 800; padding: 2px 5px; border-radius: 10px; min-width: 16px; text-align: center; display: none;">0</span>
+            </button>
+
+            <!-- RECRUITER NOTIFICATION DROPDOWN MENU -->
+            <div id="rec-notif-dropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 360px; max-height: 480px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 999999; overflow: hidden; flex-direction: column;">
+              <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary);">
+                <div>
+                  <strong style="font-size: 0.92rem; color: var(--text-primary); font-family: var(--font-display);">🔔 Employer & Recruiter Alerts</strong>
+                  <span id="rec-notif-unread-text" style="font-size: 0.72rem; color: #a855f7; display: block; font-weight: 600;">0 unread</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <button onclick="window.markAllRecruiterNotificationsRead()" class="btn-xs btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Mark All Read</button>
+                  <button onclick="window.toggleRecruiterNotificationDropdown(event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: 0.1rem 0.35rem; border-radius: 4px; display: flex; align-items: center; justify-content: center;" title="Close Menu">✕</button>
+                </div>
+              </div>
+
+              <!-- NOTIFICATION ITEMS CONTAINER -->
+              <div id="rec-notif-list" style="overflow-y: auto; max-height: 340px; display: flex; flex-direction: column;">
+                <!-- Populated dynamically -->
+              </div>
+
+              <div style="padding: 0.6rem 1rem; border-top: 1px solid var(--border-color); text-align: center; background: var(--bg-tertiary);">
+                <button onclick="window.clearAllRecruiterNotifications()" style="font-size: 0.75rem; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600;">🗑️ Clear All Notifications</button>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
+        ${user && user.role === 'admin' ? `
+          <div id="admin-notif-wrapper" style="position: relative; display: inline-block;">
+            <button id="admin-notif-bell-btn" onclick="window.toggleAdminNotificationDropdown(event)" class="theme-toggle" style="position: relative; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); font-size: 1.15rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="View Admin Command Center Notifications">
+              🔔
+              <span id="admin-notif-badge" style="position: absolute; top: -3px; right: -3px; background: var(--primary); color: white; font-size: 0.65rem; font-weight: 800; padding: 2px 5px; border-radius: 10px; min-width: 16px; text-align: center; display: none;">0</span>
+            </button>
+
+            <!-- ADMIN NOTIFICATION DROPDOWN MENU -->
+            <div id="admin-notif-dropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; max-height: 490px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 999999; overflow: hidden; flex-direction: column;">
+              <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <div>
+                    <strong style="font-size: 0.92rem; color: var(--text-primary); font-family: var(--font-display);">⚙️ System Command Center Alerts</strong>
+                    <span id="admin-notif-unread-text" style="font-size: 0.72rem; color: var(--primary); display: block; font-weight: 600;">0 unread</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button onclick="window.markAllAdminNotificationsRead()" class="btn-xs btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Mark All Read</button>
+                    <button onclick="window.toggleAdminNotificationDropdown(event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: 0.1rem 0.35rem; border-radius: 4px; display: flex; align-items: center; justify-content: center;" title="Close Menu">✕</button>
+                  </div>
+                </div>
+                <!-- AUDIENCE FILTER TABS -->
+                <div id="admin-notif-filter-bar" style="display: flex; gap: 0.3rem; align-items: center; padding-top: 0.2rem;"></div>
+              </div>
+
+              <!-- NOTIFICATION ITEMS CONTAINER -->
+              <div id="admin-notif-list" style="overflow-y: auto; max-height: 320px; display: flex; flex-direction: column;">
+                <!-- Populated dynamically -->
+              </div>
+
+              <div style="padding: 0.6rem 1rem; border-top: 1px solid var(--border-color); text-align: center; background: var(--bg-tertiary);">
+                <button onclick="window.clearAllAdminNotifications()" style="font-size: 0.75rem; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600;">🗑️ Clear All Notifications</button>
+              </div>
+            </div>
+          </div>
+        ` : ''}
+
         <div class="theme-switch" style="display: inline-flex; align-items: center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
           <span id="theme-btn-light" onclick="setTheme('light')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">☀️</span>
           <span id="theme-btn-dark" onclick="setTheme('dark')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">🌙</span>
@@ -1138,7 +1238,630 @@ function renderHeader() {
   `;
 
   initTheme();
+  if (user && user.role === 'candidate') {
+    setTimeout(window.renderCandidateNotificationCenter, 50);
+  } else if (user && user.role === 'recruiter') {
+    setTimeout(window.renderRecruiterNotificationCenter, 50);
+  } else if (user && user.role === 'admin') {
+    setTimeout(window.renderAdminNotificationCenter, 50);
+  }
 }
+
+// ==========================================
+// ⚙️ ADMIN COMMAND CENTER NOTIFICATIONS
+// ==========================================
+
+// ==========================================
+// ⚙️ ADMIN COMMAND CENTER NOTIFICATIONS (UNIFIED AUDIENCE CENTER)
+// ==========================================
+
+let currentAdminNotifAudienceFilter = 'all';
+
+window.setAdminNotifFilter = function(filter, e) {
+  if (e) e.stopPropagation();
+  currentAdminNotifAudienceFilter = filter;
+  window.renderAdminNotificationCenter();
+};
+
+window.getAdminNotifications = function(filterAudience = 'all') {
+  const db = dbGet();
+  
+  if (!db.admin_notifications || db.admin_notifications.length === 0) {
+    db.admin_notifications = [
+      {
+        id: "anotif-301",
+        title: "👨‍💻 New Candidate Registered",
+        message: "Thaieba Ismail completed Candidate registration and verified email profile.",
+        category: "candidate_reg",
+        audience: "Candidate",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 10
+      },
+      {
+        id: "anotif-302",
+        title: "🏢 New Recruiter Registered",
+        message: "Sarah Connor registered employer account for InnovateTech Inc.",
+        category: "recruiter_reg",
+        audience: "Recruiter",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 45
+      },
+      {
+        id: "anotif-303",
+        title: "📋 New Job Application Submitted",
+        message: "Application submitted for 'Senior Frontend Engineer' opening at Vercel.",
+        category: "application",
+        audience: "Candidate",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 110
+      },
+      {
+        id: "anotif-304",
+        title: "📅 Interview Scheduled",
+        message: "Recruiter Sarah Connor scheduled an interview with candidate Thaieba Ismail.",
+        category: "interview",
+        audience: "Recruiter",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 240
+      },
+      {
+        id: "anotif-305",
+        title: "📜 Course Completed & Certificate Issued",
+        message: "Learner earned Certificate B2H-CERT-1001 with 90% score on Frontend Architecture.",
+        category: "certificate",
+        audience: "Candidate",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 500
+      },
+      {
+        id: "anotif-306",
+        title: "⚡ System Alert & Escrow Audit",
+        message: "Escrow payment transaction #TX-9001 cleared for $150 platform revenue.",
+        category: "system",
+        audience: "Admin",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 60 * 24
+      }
+    ];
+    dbSave(db);
+  }
+
+  // Aggregate Admin, Candidate, and Recruiter notifications
+  let allNotifs = [];
+
+  (db.admin_notifications || []).forEach(n => {
+    allNotifs.push({ ...n, audience: n.audience || 'Admin' });
+  });
+
+  (db.candidate_notifications || []).forEach(n => {
+    allNotifs.push({ ...n, audience: 'Candidate' });
+  });
+
+  (db.recruiter_notifications || []).forEach(n => {
+    allNotifs.push({ ...n, audience: 'Recruiter' });
+  });
+
+  // Sort descending by timestamp
+  allNotifs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  if (filterAudience === 'candidate') {
+    return allNotifs.filter(n => n.audience === 'Candidate');
+  } else if (filterAudience === 'recruiter') {
+    return allNotifs.filter(n => n.audience === 'Recruiter');
+  } else if (filterAudience === 'admin') {
+    return allNotifs.filter(n => n.audience === 'Admin');
+  }
+
+  return allNotifs;
+};
+
+window.renderAdminNotificationCenter = function() {
+  const notifs = window.getAdminNotifications(currentAdminNotifAudienceFilter);
+  const totalUnreadCount = window.getAdminNotifications('all').filter(n => !n.read).length;
+
+  const badge = document.getElementById('admin-notif-badge');
+  const unreadText = document.getElementById('admin-notif-unread-text');
+  const listElem = document.getElementById('admin-notif-list');
+  const filterBar = document.getElementById('admin-notif-filter-bar');
+
+  if (badge) {
+    if (totalUnreadCount > 0) {
+      badge.textContent = totalUnreadCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (unreadText) {
+    unreadText.textContent = `${totalUnreadCount} unread alert${totalUnreadCount !== 1 ? 's' : ''} across all platform roles`;
+  }
+
+  if (filterBar) {
+    filterBar.innerHTML = `
+      <button onclick="window.setAdminNotifFilter('all', event)" style="font-size:0.68rem; padding:0.2rem 0.55rem; border-radius:12px; border:none; cursor:pointer; background:${currentAdminNotifAudienceFilter === 'all' ? 'var(--primary)' : 'var(--bg-secondary)'}; color:${currentAdminNotifAudienceFilter === 'all' ? '#fff' : 'var(--text-secondary)'}; font-weight:600;">🌐 All</button>
+      <button onclick="window.setAdminNotifFilter('candidate', event)" style="font-size:0.68rem; padding:0.2rem 0.55rem; border-radius:12px; border:none; cursor:pointer; background:${currentAdminNotifAudienceFilter === 'candidate' ? '#10b981' : 'var(--bg-secondary)'}; color:${currentAdminNotifAudienceFilter === 'candidate' ? '#fff' : 'var(--text-secondary)'}; font-weight:600;">👨‍💻 Candidate</button>
+      <button onclick="window.setAdminNotifFilter('recruiter', event)" style="font-size:0.68rem; padding:0.2rem 0.55rem; border-radius:12px; border:none; cursor:pointer; background:${currentAdminNotifAudienceFilter === 'recruiter' ? '#a855f7' : 'var(--bg-secondary)'}; color:${currentAdminNotifAudienceFilter === 'recruiter' ? '#fff' : 'var(--text-secondary)'}; font-weight:600;">🏢 Recruiter</button>
+      <button onclick="window.setAdminNotifFilter('admin', event)" style="font-size:0.68rem; padding:0.2rem 0.55rem; border-radius:12px; border:none; cursor:pointer; background:${currentAdminNotifAudienceFilter === 'admin' ? '#3b82f6' : 'var(--bg-secondary)'}; color:${currentAdminNotifAudienceFilter === 'admin' ? '#fff' : 'var(--text-secondary)'}; font-weight:600;">⚙️ Admin</button>
+    `;
+  }
+
+  if (listElem) {
+    if (notifs.length === 0) {
+      listElem.innerHTML = `<div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">🔔 No notifications found for '${currentAdminNotifAudienceFilter}' role.</div>`;
+    } else {
+      listElem.innerHTML = notifs.map(n => {
+        const timeAgo = window.formatTimeAgo(n.timestamp);
+        const audienceBadge = n.audience === 'Candidate'
+          ? '<span class="admin-badge badge-active" style="font-size:0.62rem; padding:1px 5px;">👨‍💻 Candidate</span>'
+          : (n.audience === 'Recruiter'
+            ? '<span class="admin-badge" style="font-size:0.62rem; padding:1px 5px; background:rgba(168,85,247,0.15); color:#a855f7; border:1px solid rgba(168,85,247,0.3);">🏢 Recruiter</span>'
+            : '<span class="admin-badge badge-approved" style="font-size:0.62rem; padding:1px 5px;">⚙️ Admin</span>');
+
+        return `
+          <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); background: ${n.read ? 'transparent' : 'rgba(99,102,241,0.08)'}; display: flex; gap: 0.75rem; align-items: flex-start; transition: background 0.15s; position: relative;">
+            <div style="font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;">
+              ${n.audience === 'Candidate' ? '👨‍💻' : (n.audience === 'Recruiter' ? '🏢' : '⚙️')}
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+                <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                  <strong style="font-size: 0.82rem; color: var(--text-primary);">${n.title}</strong>
+                  ${audienceBadge}
+                </div>
+                <button onclick="window.dismissAdminNotification('${n.id}', event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.8rem; padding: 0 4px;" title="Dismiss">✕</button>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0 0 0.3rem 0; line-height: 1.35;">${n.message}</p>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">${timeAgo} ${!n.read ? '• <strong style="color:var(--primary);">Unread</strong>' : ''}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+};
+
+window.toggleAdminNotificationDropdown = function(e) {
+  if (e) e.stopPropagation();
+  const dropdown = document.getElementById('admin-notif-dropdown');
+  if (!dropdown) return;
+  const isHidden = dropdown.style.display === 'none' || !dropdown.style.display;
+  dropdown.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) window.renderAdminNotificationCenter();
+};
+
+window.markAllAdminNotificationsRead = function() {
+  const db = dbGet();
+  ['admin_notifications', 'candidate_notifications', 'recruiter_notifications'].forEach(key => {
+    if (db[key]) db[key].forEach(n => n.read = true);
+  });
+  dbSave(db);
+  window.renderAdminNotificationCenter();
+};
+
+window.clearAllAdminNotifications = function() {
+  const db = dbGet();
+  db.admin_notifications = [];
+  db.candidate_notifications = [];
+  db.recruiter_notifications = [];
+  dbSave(db);
+  window.renderAdminNotificationCenter();
+};
+
+window.dismissAdminNotification = function(notifId, e) {
+  if (e) e.stopPropagation();
+  const db = dbGet();
+  ['admin_notifications', 'candidate_notifications', 'recruiter_notifications'].forEach(key => {
+    if (db[key]) db[key] = db[key].filter(n => String(n.id) !== String(notifId));
+  });
+  dbSave(db);
+  window.renderAdminNotificationCenter();
+};
+
+window.addAdminNotification = function(title, message, category = 'system', audience = 'Admin') {
+  const db = dbGet();
+  db.admin_notifications = db.admin_notifications || [];
+
+  const newNotif = {
+    id: `anotif-${Date.now()}`,
+    title: title,
+    message: message,
+    category: category,
+    audience: audience,
+    read: false,
+    timestamp: Date.now()
+  };
+
+  db.admin_notifications.unshift(newNotif);
+  dbSave(db);
+
+  if (typeof playNotificationSound === 'function') playNotificationSound();
+  if (typeof showToastNotification === 'function') showToastNotification(title, message, category);
+  window.renderAdminNotificationCenter();
+};
+
+// ==========================================
+// 🔔 RECRUITER NOTIFICATION CENTER CONTROLLERS
+// ==========================================
+
+window.getRecruiterNotifications = function() {
+  const user = getUser();
+  if (!user) return [];
+  const db = dbGet();
+  
+  if (!db.recruiter_notifications || db.recruiter_notifications.length === 0) {
+    db.recruiter_notifications = [
+      {
+        id: "rnotif-201",
+        userId: user.id || 1004,
+        title: "📋 New Candidate Application Received",
+        message: "Thaieba Ismail applied for your 'Short Marketing Video assembly' requisition at InnovateTech.",
+        category: "applications",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 15
+      },
+      {
+        id: "rnotif-202",
+        userId: user.id || 1004,
+        title: "⚡ Escrow Milestone Delivered",
+        message: "Freelancer delivered Milestone #1 ('Storyboard and Footage Selection') for $1,200 project.",
+        category: "escrow",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 120
+      },
+      {
+        id: "rnotif-203",
+        userId: user.id || 1004,
+        title: "✅ Employer Profile Verified",
+        message: "Your recruiter profile and company InnovateTech have been verified by Admin Command Center.",
+        category: "verification",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 300
+      },
+      {
+        id: "rnotif-204",
+        userId: user.id || 1004,
+        title: "📅 Interview Confirmed",
+        message: "Candidate accepted interview meeting scheduled for July 26, 2026 at 10:00 AM.",
+        category: "interviews",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 60 * 18
+      },
+      {
+        id: "rnotif-205",
+        userId: user.id || 1004,
+        title: "🤖 AI Talent Recommendation",
+        message: "Build2Hire AI identified 3 Diamond-tier Candidates matching your Frontend Engineer vacancy.",
+        category: "ai",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 60 * 36
+      }
+    ];
+    dbSave(db);
+  }
+
+  return db.recruiter_notifications.filter(n => String(n.userId) === String(user.id) || !n.userId);
+};
+
+window.renderRecruiterNotificationCenter = function() {
+  const notifs = window.getRecruiterNotifications();
+  const unreadCount = notifs.filter(n => !n.read).length;
+
+  const badge = document.getElementById('rec-notif-badge');
+  const unreadText = document.getElementById('rec-notif-unread-text');
+  const listElem = document.getElementById('rec-notif-list');
+
+  if (badge) {
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (unreadText) {
+    unreadText.textContent = `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`;
+  }
+
+  if (listElem) {
+    if (notifs.length === 0) {
+      listElem.innerHTML = `<div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">🔔 No notifications at this time.</div>`;
+    } else {
+      listElem.innerHTML = notifs.map(n => {
+        const timeAgo = window.formatTimeAgo(n.timestamp);
+        return `
+          <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); background: ${n.read ? 'transparent' : 'rgba(168,85,247,0.08)'}; display: flex; gap: 0.75rem; align-items: flex-start; transition: background 0.15s; position: relative;">
+            <div style="font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;">
+              ${n.category === 'applications' ? '📋' : (n.category === 'escrow' ? '⚡' : (n.category === 'verification' ? '✅' : (n.category === 'interviews' ? '📅' : '🤖')))}
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+                <strong style="font-size: 0.82rem; color: var(--text-primary);">${n.title}</strong>
+                <button onclick="window.dismissRecruiterNotification('${n.id}', event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.8rem; padding: 0 4px;" title="Dismiss">✕</button>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0 0 0.3rem 0; line-height: 1.35;">${n.message}</p>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">${timeAgo} ${!n.read ? '• <strong style="color:#a855f7;">Unread</strong>' : ''}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+};
+
+window.toggleRecruiterNotificationDropdown = function(e) {
+  if (e) e.stopPropagation();
+  const dropdown = document.getElementById('rec-notif-dropdown');
+  if (!dropdown) return;
+  const isHidden = dropdown.style.display === 'none' || !dropdown.style.display;
+  dropdown.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) window.renderRecruiterNotificationCenter();
+};
+
+window.markAllRecruiterNotificationsRead = function() {
+  const db = dbGet();
+  const user = getUser();
+  if (!user || !db.recruiter_notifications) return;
+
+  db.recruiter_notifications.forEach(n => {
+    if (String(n.userId) === String(user.id) || !n.userId) {
+      n.read = true;
+    }
+  });
+
+  dbSave(db);
+  window.renderRecruiterNotificationCenter();
+};
+
+window.clearAllRecruiterNotifications = function() {
+  const db = dbGet();
+  const user = getUser();
+  if (!user || !db.recruiter_notifications) return;
+
+  db.recruiter_notifications = db.recruiter_notifications.filter(n => String(n.userId) !== String(user.id));
+  dbSave(db);
+  window.renderRecruiterNotificationCenter();
+};
+
+window.dismissRecruiterNotification = function(notifId, e) {
+  if (e) e.stopPropagation();
+  const db = dbGet();
+  if (!db.recruiter_notifications) return;
+
+  db.recruiter_notifications = db.recruiter_notifications.filter(n => String(n.id) !== String(notifId));
+  dbSave(db);
+  window.renderRecruiterNotificationCenter();
+};
+
+window.addRecruiterNotification = function(title, message, category = 'system') {
+  const user = getUser();
+  if (!user) return;
+  const db = dbGet();
+  db.recruiter_notifications = db.recruiter_notifications || [];
+
+  const newNotif = {
+    id: `rnotif-${Date.now()}`,
+    userId: user.id,
+    title: title,
+    message: message,
+    category: category,
+    read: false,
+    timestamp: Date.now()
+  };
+
+  db.recruiter_notifications.unshift(newNotif);
+  dbSave(db);
+
+  if (typeof playNotificationSound === 'function') playNotificationSound();
+  if (typeof showToastNotification === 'function') showToastNotification(title, message, category);
+  window.renderRecruiterNotificationCenter();
+};
+
+// ==========================================
+// 🔔 CANDIDATE NOTIFICATION CENTER CONTROLLERS
+// ==========================================
+
+window.getCandidateNotifications = function() {
+  const user = getUser();
+  if (!user) return [];
+  const db = dbGet();
+  
+  if (!db.candidate_notifications || db.candidate_notifications.length === 0) {
+    db.candidate_notifications = [
+      {
+        id: "cnotif-101",
+        userId: user.id || 1001,
+        title: "🎉 Application Stage Update",
+        message: "Your application for 'Senior Frontend Engineer' at Vercel Inc has been moved to Interview Stage!",
+        category: "applications",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 25
+      },
+      {
+        id: "cnotif-102",
+        userId: user.id || 1001,
+        title: "📜 Verified Certificate Earned",
+        message: "Congratulations! You completed Frontend Architecture and earned Certificate B2H-CERT-1001 with 90% score.",
+        category: "certificates",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 180
+      },
+      {
+        id: "cnotif-103",
+        userId: user.id || 1001,
+        title: "📅 Interview Scheduled",
+        message: "Interview scheduled with Sarah Connor (InnovateTech) for July 26, 2026 at 10:00 AM.",
+        category: "interviews",
+        read: false,
+        timestamp: Date.now() - 1000 * 60 * 360
+      },
+      {
+        id: "cnotif-104",
+        userId: user.id || 1001,
+        title: "⚡ XP Level Up!",
+        message: "You reached Level 2 Skilled Builder with 1,250 cumulative XP Points!",
+        category: "system",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 60 * 24
+      },
+      {
+        id: "cnotif-105",
+        userId: user.id || 1001,
+        title: "🔔 Admin Broadcast Announcement",
+        message: "Welcome to Build2Hire Enterprise Command Center. System maintenance completed successfully.",
+        category: "broadcast",
+        read: true,
+        timestamp: Date.now() - 1000 * 60 * 60 * 48
+      }
+    ];
+    dbSave(db);
+  }
+
+  return db.candidate_notifications.filter(n => String(n.userId) === String(user.id) || !n.userId);
+};
+
+window.renderCandidateNotificationCenter = function() {
+  const notifs = window.getCandidateNotifications();
+  const unreadCount = notifs.filter(n => !n.read).length;
+
+  const badge = document.getElementById('cand-notif-badge');
+  const unreadText = document.getElementById('cand-notif-unread-text');
+  const listElem = document.getElementById('cand-notif-list');
+
+  if (badge) {
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (unreadText) {
+    unreadText.textContent = `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`;
+  }
+
+  if (listElem) {
+    if (notifs.length === 0) {
+      listElem.innerHTML = `<div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">🔔 No notifications at this time.</div>`;
+    } else {
+      listElem.innerHTML = notifs.map(n => {
+        const timeAgo = window.formatTimeAgo(n.timestamp);
+        return `
+          <div style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); background: ${n.read ? 'transparent' : 'rgba(99,102,241,0.06)'}; display: flex; gap: 0.75rem; align-items: flex-start; transition: background 0.15s; position: relative;">
+            <div style="font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;">
+              ${n.category === 'applications' ? '📋' : (n.category === 'certificates' ? '📜' : (n.category === 'interviews' ? '📅' : (n.category === 'system' ? '⚡' : '🔔')))}
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+                <strong style="font-size: 0.82rem; color: var(--text-primary);">${n.title}</strong>
+                <button onclick="window.dismissCandidateNotification('${n.id}', event)" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.8rem; padding: 0 4px;" title="Dismiss">✕</button>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0 0 0.3rem 0; line-height: 1.35;">${n.message}</p>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">${timeAgo} ${!n.read ? '• <strong style="color:var(--primary);">Unread</strong>' : ''}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+};
+
+window.toggleCandidateNotificationDropdown = function(e) {
+  if (e) e.stopPropagation();
+  const dropdown = document.getElementById('cand-notif-dropdown');
+  if (!dropdown) return;
+  const isHidden = dropdown.style.display === 'none' || !dropdown.style.display;
+  dropdown.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) window.renderCandidateNotificationCenter();
+};
+
+window.markAllCandidateNotificationsRead = function() {
+  const db = dbGet();
+  const user = getUser();
+  if (!user || !db.candidate_notifications) return;
+
+  db.candidate_notifications.forEach(n => {
+    if (String(n.userId) === String(user.id) || !n.userId) {
+      n.read = true;
+    }
+  });
+
+  dbSave(db);
+  window.renderCandidateNotificationCenter();
+};
+
+window.clearAllCandidateNotifications = function() {
+  const db = dbGet();
+  const user = getUser();
+  if (!user || !db.candidate_notifications) return;
+
+  db.candidate_notifications = db.candidate_notifications.filter(n => String(n.userId) !== String(user.id));
+  dbSave(db);
+  window.renderCandidateNotificationCenter();
+};
+
+window.dismissCandidateNotification = function(notifId, e) {
+  if (e) e.stopPropagation();
+  const db = dbGet();
+  if (!db.candidate_notifications) return;
+
+  db.candidate_notifications = db.candidate_notifications.filter(n => String(n.id) !== String(notifId));
+  dbSave(db);
+  window.renderCandidateNotificationCenter();
+};
+
+window.addCandidateNotification = function(title, message, category = 'system') {
+  const user = getUser();
+  if (!user) return;
+  const db = dbGet();
+  db.candidate_notifications = db.candidate_notifications || [];
+
+  const newNotif = {
+    id: `cnotif-${Date.now()}`,
+    userId: user.id,
+    title: title,
+    message: message,
+    category: category,
+    read: false,
+    timestamp: Date.now()
+  };
+
+  db.candidate_notifications.unshift(newNotif);
+  dbSave(db);
+
+  if (typeof playNotificationSound === 'function') playNotificationSound();
+  if (typeof showToastNotification === 'function') showToastNotification(title, message, category);
+  window.renderCandidateNotificationCenter();
+};
+
+window.formatTimeAgo = function(timestamp) {
+  if (!timestamp) return 'Recently';
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const mins = Math.floor(diff / (1000 * 60));
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+};
+
+// Close notification dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const wrapper = document.getElementById('cand-notif-wrapper');
+  const dropdown = document.getElementById('cand-notif-dropdown');
+  if (wrapper && dropdown && !wrapper.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+
+  const recWrapper = document.getElementById('rec-notif-wrapper');
+  const recDropdown = document.getElementById('rec-notif-dropdown');
+  if (recWrapper && recDropdown && !recWrapper.contains(e.target)) {
+    recDropdown.style.display = 'none';
+  }
+});
 
 let logoClickTimeout = null;
 window.handleLogoClick = function(event, homeLink) {
@@ -1155,6 +1878,20 @@ window.handleLogoClick = function(event, homeLink) {
   }, 250); // Delay slightly to await double click
 };
 
+window.togglePasswordVisibility = function(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.innerHTML = '🙈';
+    btn.setAttribute('title', 'Hide Password');
+  } else {
+    input.type = 'password';
+    btn.innerHTML = '👁️';
+    btn.setAttribute('title', 'Show Password');
+  }
+};
+
 window.openAdminLoginModal = function() {
   // Check if modal already exists, if not, create it
   let modal = document.getElementById('admin-secret-modal');
@@ -1169,7 +1906,10 @@ window.openAdminLoginModal = function() {
         
         <div style="text-align:left; margin-bottom:1.25rem;">
           <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.5rem; color:var(--text-primary);">Management Password</label>
-          <input type="password" id="admin-secret-pwd" style="width:100%; padding:0.6rem 0.75rem; border-radius:6px; background:var(--bg-tertiary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.9rem;" placeholder="Enter admin password">
+          <div style="position: relative; width: 100%;">
+            <input type="password" id="admin-secret-pwd" style="width:100%; padding:0.6rem 2.75rem 0.6rem 0.75rem; border-radius:6px; background:var(--bg-tertiary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.9rem;" placeholder="Enter admin password">
+            <button type="button" onclick="togglePasswordVisibility('admin-secret-pwd', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0.2rem; outline: none; z-index: 10;" title="Show Password">👁️</button>
+          </div>
         </div>
         
         <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem;">
@@ -1241,85 +1981,85 @@ function renderSidebar(activePage) {
     const isDashboard = activePage === 'admin-dashboard.html';
 
     sidebar.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         <div>
-          <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">
-            Admin Workspace
+          <p style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--primary); padding-left: 0.85rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">
+            🏢 Enterprise ATS & HRMS
           </p>
-          <ul class="sidebar-menu">
+          <ul class="sidebar-menu" style="display: flex; flex-direction: column; gap: 0.15rem;">
             <li>
-              <a href="admin-dashboard.html?tab=overview" class="sidebar-link ${isDashboard && activeTab === 'overview' ? 'active' : ''}">
-                📊 <span>Overview</span>
+              <a href="admin-dashboard.html?tab=overview" onclick="if(window.switchTab){event.preventDefault();switchTab('overview');}" class="sidebar-link ${isDashboard && (activeTab === 'overview' || activeTab === 'dashboard') ? 'active' : ''}">
+                📊 <span>Dashboard</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=candidates" class="sidebar-link ${isDashboard && activeTab === 'candidates' ? 'active' : ''}">
-                👥 <span>Manage Candidates</span>
+              <a href="admin-dashboard.html?tab=candidates" onclick="if(window.switchTab){event.preventDefault();switchTab('candidates');}" class="sidebar-link ${isDashboard && activeTab === 'candidates' ? 'active' : ''}">
+                👨‍💻 <span>Candidate Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=recruiters" class="sidebar-link ${isDashboard && activeTab === 'recruiters' ? 'active' : ''}">
-                💼 <span>Manage Recruiters</span>
+              <a href="admin-dashboard.html?tab=recruiters" onclick="if(window.switchTab){event.preventDefault();switchTab('recruiters');}" class="sidebar-link ${isDashboard && activeTab === 'recruiters' ? 'active' : ''}">
+                🏢 <span>Recruiter Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=companies" class="sidebar-link ${isDashboard && activeTab === 'companies' ? 'active' : ''}">
-                🏢 <span>Manage Companies</span>
+              <a href="admin-dashboard.html?tab=companies" onclick="if(window.switchTab){event.preventDefault();switchTab('companies');}" class="sidebar-link ${isDashboard && activeTab === 'companies' ? 'active' : ''}">
+                🏛️ <span>Company Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=jobs" class="sidebar-link ${isDashboard && activeTab === 'jobs' ? 'active' : ''}">
-                📑 <span>Manage Jobs</span>
+              <a href="admin-dashboard.html?tab=jobs" onclick="if(window.switchTab){event.preventDefault();switchTab('jobs');}" class="sidebar-link ${isDashboard && activeTab === 'jobs' ? 'active' : ''}">
+                💼 <span>Job Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=applications" class="sidebar-link ${isDashboard && activeTab === 'applications' ? 'active' : ''}">
-                📋 <span>Applications</span>
+              <a href="admin-dashboard.html?tab=gigs" onclick="if(window.switchTab){event.preventDefault();switchTab('gigs');}" class="sidebar-link ${isDashboard && activeTab === 'gigs' ? 'active' : ''}">
+                ⚡ <span>Freelance Projects</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=interviews" class="sidebar-link ${isDashboard && activeTab === 'interviews' ? 'active' : ''}">
-                🤝 <span>Interviews</span>
+              <a href="admin-dashboard.html?tab=applications" onclick="if(window.switchTab){event.preventDefault();switchTab('applications');}" class="sidebar-link ${isDashboard && activeTab === 'applications' ? 'active' : ''}">
+                📋 <span>Application Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=assessments" class="sidebar-link ${isDashboard && activeTab === 'assessments' ? 'active' : ''}">
-                🎯 <span>Assessments</span>
+              <a href="admin-dashboard.html?tab=interviews" onclick="if(window.switchTab){event.preventDefault();switchTab('interviews');}" class="sidebar-link ${isDashboard && activeTab === 'interviews' ? 'active' : ''}">
+                📅 <span>Interview Management</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=academy" class="sidebar-link ${isDashboard && activeTab === 'academy' ? 'active' : ''}">
-                📚 <span>Video Academy CMS</span>
+              <a href="admin-dashboard.html?tab=academy" onclick="if(window.switchTab){event.preventDefault();switchTab('academy');}" class="sidebar-link ${isDashboard && activeTab === 'academy' ? 'active' : ''}">
+                📚 <span>Skill Academy</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=gigs" class="sidebar-link ${isDashboard && activeTab === 'gigs' ? 'active' : ''}">
-                ⚡ <span>Freelance Gigs</span>
+              <a href="admin-dashboard.html?tab=quizzes" onclick="if(window.switchTab){event.preventDefault();switchTab('quizzes');}" class="sidebar-link ${isDashboard && activeTab === 'quizzes' ? 'active' : ''}">
+                📜 <span>Quiz & Certificates</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=payments" class="sidebar-link ${isDashboard && activeTab === 'payments' ? 'active' : ''}">
-                💳 <span>Payments</span>
+              <a href="admin-dashboard.html?tab=recommendations" onclick="if(window.switchTab){event.preventDefault();switchTab('recommendations');}" class="sidebar-link ${isDashboard && activeTab === 'recommendations' ? 'active' : ''}">
+                🤖 <span>AI Recommendations</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=reports" class="sidebar-link ${isDashboard && activeTab === 'reports' ? 'active' : ''}">
-                📈 <span>Reports & Analytics</span>
-              </a>
-            </li>
-            <li>
-              <a href="admin-dashboard.html?tab=notifications" class="sidebar-link ${isDashboard && activeTab === 'notifications' ? 'active' : ''}">
+              <a href="admin-dashboard.html?tab=notifications" onclick="if(window.switchTab){event.preventDefault();switchTab('notifications');}" class="sidebar-link ${isDashboard && activeTab === 'notifications' ? 'active' : ''}">
                 🔔 <span>Notifications</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=settings" class="sidebar-link ${isDashboard && activeTab === 'settings' ? 'active' : ''}">
-                ⚙️ <span>Settings</span>
+              <a href="admin-dashboard.html?tab=reports" onclick="if(window.switchTab){event.preventDefault();switchTab('reports');}" class="sidebar-link ${isDashboard && activeTab === 'reports' ? 'active' : ''}">
+                📈 <span>Reports & Analytics</span>
               </a>
             </li>
             <li>
-              <a href="admin-dashboard.html?tab=activity" class="sidebar-link ${isDashboard && activeTab === 'activity' ? 'active' : ''}">
-                📜 <span>Activity Logs</span>
+              <a href="admin-dashboard.html?tab=activity" onclick="if(window.switchTab){event.preventDefault();switchTab('activity');}" class="sidebar-link ${isDashboard && activeTab === 'activity' ? 'active' : ''}">
+                📜 <span>Audit Logs</span>
+              </a>
+            </li>
+            <li>
+              <a href="admin-dashboard.html?tab=settings" onclick="if(window.switchTab){event.preventDefault();switchTab('settings');}" class="sidebar-link ${isDashboard && activeTab === 'settings' ? 'active' : ''}">
+                ⚙️ <span>System Settings</span>
               </a>
             </li>
             <li style="margin-top:0.5rem; border-top:1px solid var(--border-color); padding-top:0.5rem;">
@@ -1480,11 +2220,177 @@ function handleLogout() {
   window.location.href = 'login.html';
 }
 
-// Show alert message
+// ==========================================
+// 🔔 TOP-RIGHT FLOATING TOAST NOTIFICATION ENGINE
+// ==========================================
+
+// Dynamically inject CSS animations for Toast Notifications
+(function injectToastStyles() {
+  if (document.getElementById('b2h-toast-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'b2h-toast-styles';
+  style.textContent = `
+    @keyframes toastSlideInRight {
+      0% { opacity: 0; transform: translateX(120%) scale(0.9); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastFadeOutRight {
+      0% { opacity: 1; transform: translateX(0) scale(1); }
+      100% { opacity: 0; transform: translateX(120%) scale(0.9); }
+    }
+
+    @keyframes toastProgress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+function playNotificationChime() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880.00, ctx.currentTime + 0.12); // A5
+
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.35);
+  } catch (err) {
+    // Audio play blocked by browser autoplay policy until user gesture
+  }
+}
+
+function showToastNotification(message, type = 'info', title = null) {
+  playNotificationChime();
+
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = `
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      pointer-events: none;
+      max-width: 400px;
+      width: calc(100vw - 2.5rem);
+    `;
+    document.body.appendChild(container);
+  }
+
+  const toastId = `toast_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+  const toast = document.createElement('div');
+  toast.id = toastId;
+
+  let icon = '🔔';
+  let borderColor = '#3b82f6';
+  let badgeBg = 'rgba(59, 130, 246, 0.15)';
+  
+  if (type === 'success' || type === 'approved') {
+    icon = '✅';
+    borderColor = '#10b981';
+    badgeBg = 'rgba(16, 185, 129, 0.15)';
+  } else if (type === 'error' || type === 'danger') {
+    icon = '⚠️';
+    borderColor = '#ef4444';
+    badgeBg = 'rgba(239, 68, 68, 0.15)';
+  } else if (type === 'warning') {
+    icon = '⚡';
+    borderColor = '#f59e0b';
+    badgeBg = 'rgba(245, 158, 11, 0.15)';
+  } else if (type === 'cert' || type === 'academy') {
+    icon = '📜';
+    borderColor = '#a855f7';
+    badgeBg = 'rgba(168, 85, 247, 0.15)';
+  }
+
+  toast.style.cssText = `
+    pointer-events: auto;
+    background: var(--bg-secondary, #1e1e2e);
+    color: var(--text-primary, #f8fafc);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+    border-left: 4px solid ${borderColor};
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    backdrop-filter: blur(8px);
+  `;
+
+  const headerTitle = title || (type === 'success' ? 'System Action Success' : (type === 'error' ? 'System Alert' : 'System Notification'));
+
+  toast.innerHTML = `
+    <div style="font-size: 1.1rem; flex-shrink: 0; background: ${badgeBg}; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+      ${icon}
+    </div>
+    <div style="flex: 1; min-width: 0; padding-right: 0.5rem;">
+      <strong style="font-size: 0.85rem; display: block; color: var(--text-primary); margin-bottom: 0.15rem; font-weight: 700;">
+        ${headerTitle}
+      </strong>
+      <p style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8); margin: 0; line-height: 1.4; word-break: break-word;">
+        ${message}
+      </p>
+    </div>
+    <button onclick="dismissToast('${toastId}')" style="background: transparent; border: none; color: var(--text-muted, #64748b); font-size: 1.1rem; cursor: pointer; padding: 0.1rem 0.3rem; border-radius: 4px; line-height: 1; flex-shrink: 0; transition: color 0.2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'" title="Dismiss">
+      ✕
+    </button>
+    <div style="position: absolute; bottom: 0; left: 0; height: 3px; background: ${borderColor}; width: 100%; animation: toastProgress 60s linear forwards;"></div>
+  `;
+
+  container.appendChild(toast);
+
+  // Auto-hide after 60 seconds (1 minute)
+  const timer = setTimeout(() => {
+    dismissToast(toastId);
+  }, 60000);
+
+  toast.dataset.timerId = timer;
+}
+
+function dismissToast(toastId) {
+  const toast = document.getElementById(toastId);
+  if (!toast) return;
+
+  if (toast.dataset.timerId) {
+    clearTimeout(Number(toast.dataset.timerId));
+  }
+
+  toast.style.animation = 'toastFadeOutRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+  setTimeout(() => {
+    toast.remove();
+  }, 350);
+}
+
+// Show alert message (Routes to Top-Right Toast Notification)
 function showAlert(containerId, message, type = 'error') {
+  showToastNotification(message, type);
   const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${type === 'success' ? '✅' : '⚠️'} ${message}</div>`;
+  if (el) el.innerHTML = '';
 }
 
 // ==========================================
@@ -2277,8 +3183,54 @@ function adminDeleteUser(userId) {
   
   const deleted = db.users.splice(idx, 1)[0];
   dbSave(db);
-  adminLogActivity("User Deleted", `Deleted user: ${deleted.fullName} (${deleted.email})`, deleted.email);
+  adminLogActivity("User Hard Deleted", `Permanently deleted user: ${deleted.fullName} (${deleted.email})`, deleted.email);
   return true;
+}
+
+function adminSoftDeleteUser(userId) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  user.soft_deleted = true;
+  user.status = 'archived';
+  dbSave(db);
+  adminLogActivity("User Soft Deleted", `Archived user: ${user.fullName} (${user.email})`, user.email);
+  return user;
+}
+
+function adminRestoreUser(userId) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  user.soft_deleted = false;
+  user.status = 'active';
+  dbSave(db);
+  adminLogActivity("User Restored", `Restored user: ${user.fullName} (${user.email})`, user.email);
+  return user;
+}
+
+function adminToggleVerifyUser(userId) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  user.isVerified = !user.isVerified;
+  dbSave(db);
+  adminLogActivity("User Verification Changed", `${user.isVerified ? 'Verified' : 'Unverified'} user: ${user.fullName}`, user.email);
+  return user;
+}
+
+function adminResetUserPassword(userId, newPassword) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+  
+  user.password = newPassword || "Reset@1234";
+  dbSave(db);
+  adminLogActivity("Password Reset", `Reset password for user: ${user.fullName}`, user.email);
+  return user;
 }
 
 function adminToggleBlockUser(userId) {
@@ -2337,6 +3289,189 @@ function adminDeleteJob(jobId) {
   return true;
 }
 
+function adminSaveCompany(companyData) {
+  const db = dbGet();
+  if (!db.company_registrations) db.company_registrations = [];
+  
+  if (companyData.id) {
+    const comp = db.company_registrations.find(c => String(c.id) === String(companyData.id));
+    if (comp) {
+      Object.assign(comp, companyData);
+      dbSave(db);
+      adminLogActivity("Company Updated", `Updated company: ${comp.business_name}`, comp.business_name);
+      return comp;
+    }
+  }
+  
+  const newComp = {
+    id: Date.now(),
+    business_name: companyData.business_name,
+    logo: companyData.logo || "🏛️",
+    industry: companyData.industry || "Technology",
+    location: companyData.location || "San Francisco, CA",
+    website: companyData.website || "https://company.com",
+    description: companyData.description || "",
+    status: companyData.status || "active",
+    isVerified: companyData.isVerified || false,
+    submitted_at: Date.now()
+  };
+  db.company_registrations.unshift(newComp);
+  dbSave(db);
+  adminLogActivity("Company Created", `Created company: ${newComp.business_name}`, newComp.business_name);
+  return newComp;
+}
+
+function adminApproveCompany(compRef) {
+  const db = dbGet();
+  const comp = db.company_registrations.find(c => String(c.id) === String(compRef));
+  if (!comp) return false;
+  comp.status = 'active';
+  comp.isVerified = true;
+  dbSave(db);
+  adminLogActivity("Company Approved", `Approved company partner: ${comp.business_name}`, comp.business_name);
+  return comp;
+}
+
+function adminRejectCompany(compRef, reason) {
+  const db = dbGet();
+  const comp = db.company_registrations.find(c => String(c.id) === String(compRef));
+  if (!comp) return false;
+  comp.status = 'rejected';
+  comp.rejectionReason = reason || "Incomplete documentation";
+  dbSave(db);
+  adminLogActivity("Company Rejected", `Rejected company: ${comp.business_name}`, comp.business_name);
+  return comp;
+}
+
+function adminToggleVerifyCompany(compRef) {
+  const db = dbGet();
+  const comp = db.company_registrations.find(c => String(c.id) === String(compRef));
+  if (!comp) return false;
+  comp.isVerified = !comp.isVerified;
+  dbSave(db);
+  adminLogActivity("Company Verification Changed", `${comp.isVerified ? 'Verified' : 'Unverified'} company: ${comp.business_name}`, comp.business_name);
+  return comp;
+}
+
+function adminArchiveCompany(compRef) {
+  const db = dbGet();
+  const comp = db.company_registrations.find(c => String(c.id) === String(compRef));
+  if (!comp) return false;
+  comp.archived = true;
+  comp.status = 'archived';
+  dbSave(db);
+  adminLogActivity("Company Archived", `Archived company: ${comp.business_name}`, comp.business_name);
+  return comp;
+}
+
+function adminRestoreCompany(compRef) {
+  const db = dbGet();
+  const comp = db.company_registrations.find(c => String(c.id) === String(compRef));
+  if (!comp) return false;
+  comp.archived = false;
+  comp.status = 'active';
+  dbSave(db);
+  adminLogActivity("Company Restored", `Restored company: ${comp.business_name}`, comp.business_name);
+  return comp;
+}
+
+function adminDeleteCompany(compRef) {
+  const db = dbGet();
+  const idx = db.company_registrations.findIndex(c => String(c.id) === String(compRef));
+  if (idx === -1) return false;
+  const deleted = db.company_registrations.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Company Deleted", `Permanently deleted company: ${deleted.business_name}`, deleted.business_name);
+  return true;
+}
+
+function adminCloseJob(jobId) {
+  return adminUpdateJob(jobId, { status: 'closed' });
+}
+
+function adminReopenJob(jobId) {
+  return adminUpdateJob(jobId, { status: 'active' });
+}
+
+function adminArchiveJob(jobId) {
+  return adminUpdateJob(jobId, { archived: true, status: 'archived' });
+}
+
+function adminRestoreJob(jobId) {
+  return adminUpdateJob(jobId, { archived: false, status: 'active' });
+}
+
+function adminSaveGig(gigData) {
+  const db = dbGet();
+  if (!db.contracts) db.contracts = [];
+  
+  if (gigData.id) {
+    const gig = db.contracts.find(g => String(g.id) === String(gigData.id));
+    if (gig) {
+      Object.assign(gig, gigData);
+      dbSave(db);
+      adminLogActivity("Freelance Project Updated", `Updated gig: ${gig.title}`, gig.company || "Platform");
+      return gig;
+    }
+  }
+  
+  const newGig = {
+    id: `contract_${Date.now()}`,
+    title: gigData.title,
+    company: gigData.company || "Build2Hire Partner",
+    amount: gigData.amount || 1500,
+    status: gigData.status || "Approved",
+    milestone: gigData.milestone || "Phase 1 - Kickoff",
+    date: new Date().toISOString().split('T')[0]
+  };
+  db.contracts.unshift(newGig);
+  dbSave(db);
+  adminLogActivity("Freelance Project Created", `Created gig: ${newGig.title}`, newGig.company);
+  return newGig;
+}
+
+function adminApproveGig(gigId) {
+  const db = dbGet();
+  const gig = db.contracts.find(g => String(g.id) === String(gigId));
+  if (!gig) return false;
+  gig.status = 'Approved';
+  dbSave(db);
+  adminLogActivity("Freelance Project Approved", `Approved gig: ${gig.title}`, gig.company || "Platform");
+  return gig;
+}
+
+function adminArchiveGig(gigId) {
+  const db = dbGet();
+  const gig = db.contracts.find(g => String(g.id) === String(gigId));
+  if (!gig) return false;
+  gig.archived = true;
+  gig.status = 'Archived';
+  dbSave(db);
+  adminLogActivity("Freelance Project Archived", `Archived gig: ${gig.title}`, gig.company || "Platform");
+  return gig;
+}
+
+function adminRestoreGig(gigId) {
+  const db = dbGet();
+  const gig = db.contracts.find(g => String(g.id) === String(gigId));
+  if (!gig) return false;
+  gig.archived = false;
+  gig.status = 'Approved';
+  dbSave(db);
+  adminLogActivity("Freelance Project Restored", `Restored gig: ${gig.title}`, gig.company || "Platform");
+  return gig;
+}
+
+function adminDeleteGig(gigId) {
+  const db = dbGet();
+  const idx = db.contracts.findIndex(g => String(g.id) === String(gigId));
+  if (idx === -1) return false;
+  const deleted = db.contracts.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Freelance Project Deleted", `Deleted gig: ${deleted.title}`, deleted.company || "Platform");
+  return true;
+}
+
 function adminUpdateApplicationStatus(appId, status) {
   const db = dbGet();
   const app = db.applications.find(a => String(a.id) === String(appId));
@@ -2391,6 +3526,68 @@ function adminDeleteInterview(interviewId) {
   return true;
 }
 
+function adminCancelInterview(interviewId) {
+  const db = dbGet();
+  const interview = (db.interviews || []).find(i => String(i.id) === String(interviewId));
+  if (!interview) return false;
+  interview.status = 'Cancelled';
+  dbSave(db);
+  adminLogActivity("Interview Cancelled", `Cancelled interview for ${interview.candidateName}`, interview.candidateName);
+  return interview;
+}
+
+function adminSendInterviewNotification(interviewId) {
+  const db = dbGet();
+  const interview = (db.interviews || []).find(i => String(i.id) === String(interviewId));
+  if (!interview) return false;
+  
+  if (!db.broadcasts) db.broadcasts = [];
+  db.broadcasts.unshift({
+    id: `notif_${Date.now()}`,
+    target: `Candidate #${interview.candidateId || interview.candidateName}`,
+    message: `📅 Interview Reminder: Your meeting with ${interview.company || 'Employer'} is scheduled for ${new Date(interview.meetDate).toLocaleString()}. Video link: ${interview.meetLink}`,
+    date: new Date().toISOString().split('T')[0],
+    sentBy: "Build2Hire Admin Board"
+  });
+  dbSave(db);
+  adminLogActivity("Interview Notification Sent", `Sent notification for interview #${interviewId} to ${interview.candidateName}`, interview.candidateName);
+  return true;
+}
+
+function adminSaveCourseCategory(catData) {
+  const db = dbGet();
+  if (!db.academy_custom_courses) db.academy_custom_courses = {};
+  db.academy_custom_courses[catData.id] = {
+    id: catData.id,
+    title: catData.title,
+    isPublished: catData.isPublished !== false
+  };
+  dbSave(db);
+  adminLogActivity("Academy Course Saved", `Saved course category: ${catData.title}`, catData.title);
+  return true;
+}
+
+function adminDeleteCourseCategory(catId) {
+  const db = dbGet();
+  if (db.academy_custom_courses && db.academy_custom_courses[catId]) {
+    delete db.academy_custom_courses[catId];
+    dbSave(db);
+    adminLogActivity("Academy Course Deleted", `Deleted course category #${catId}`, catId);
+    return true;
+  }
+  return false;
+}
+
+function adminTogglePublishCourse(catId) {
+  const db = dbGet();
+  if (!db.academy_course_pub_states) db.academy_course_pub_states = {};
+  db.academy_course_pub_states[catId] = !(db.academy_course_pub_states[catId] === true);
+  const state = db.academy_course_pub_states[catId];
+  dbSave(db);
+  adminLogActivity("Academy Course Publish Toggled", `Course #${catId} is now ${state ? 'Published' : 'Unpublished'}`, catId);
+  return state;
+}
+
 function adminAddAssessment(assessmentData) {
   const db = dbGet();
   const newAssessment = {
@@ -2424,6 +3621,80 @@ function adminDeleteAssessment(assessmentId) {
   return true;
 }
 
+function adminResetCandidateAttempts(candidateId) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (!cand) return false;
+  cand.quiz_attempts = {};
+  dbSave(db);
+  adminLogActivity("Quiz Retakes Reset", `Reset retake attempt limit for candidate #${candidateId}`, cand.fullName || cand.email);
+  return cand;
+}
+
+function adminGenerateCertificate(certData) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(certData.candidateId));
+  if (!cand) return false;
+
+  if (!cand.certificates) cand.certificates = [];
+  const newCert = {
+    serial_no: certData.serial_no || `B2H-CERT-${Date.now().toString(36).toUpperCase()}`,
+    title: certData.title || "Certified Senior Software Architect",
+    date: certData.date || new Date().toLocaleDateString(),
+    score: Number(certData.score || 95)
+  };
+
+  cand.certificates.unshift(newCert);
+  dbSave(db);
+  adminLogActivity("Certificate Generated", `Generated cert "${newCert.title}" for ${cand.fullName || cand.email}`, newCert.serial_no);
+  return newCert;
+}
+
+function adminRevokeCertificate(candidateId, serialNo) {
+  const db = dbGet();
+  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  if (!cand || !cand.certificates) return false;
+
+  const idx = cand.certificates.findIndex(c => c.serial_no === serialNo);
+  if (idx === -1) return false;
+
+  const revoked = cand.certificates.splice(idx, 1)[0];
+  dbSave(db);
+  adminLogActivity("Certificate Revoked", `Revoked certificate #${serialNo} from ${cand.fullName || cand.email}`, serialNo);
+  return revoked;
+}
+
+function adminSaveAIRules(rules) {
+  const db = dbGet();
+  db.ai_recommendation_rules = {
+    skillWeight: Number(rules.skillWeight || 40),
+    xpWeight: Number(rules.xpWeight || 30),
+    scoreWeight: Number(rules.scoreWeight || 30),
+    autoRecommend: rules.autoRecommend !== false
+  };
+  dbSave(db);
+  adminLogActivity("AI Matching Rules Updated", `Updated AI weights: Skill ${rules.skillWeight}%, XP ${rules.xpWeight}%, Score ${rules.scoreWeight}%`, "AI Engine");
+  return db.ai_recommendation_rules;
+}
+
+function adminSendDirectNotif(userId, message) {
+  const db = dbGet();
+  const user = db.users.find(u => String(u.id) === String(userId));
+  if (!user) return false;
+
+  if (!db.broadcasts) db.broadcasts = [];
+  db.broadcasts.unshift({
+    id: `notif_${Date.now()}`,
+    target: `${user.fullName || user.email} (ID #${user.id})`,
+    message: message,
+    date: new Date().toISOString().split('T')[0],
+    sentBy: "Build2Hire Admin Board"
+  });
+  dbSave(db);
+  adminLogActivity("Direct Notification Sent", `Sent message to ${user.fullName || user.email}`, user.email);
+  return true;
+}
+
 function adminSendBroadcast(target, messageText) {
   const db = dbGet();
   if (!db.notifications) db.notifications = [];
@@ -2440,6 +3711,63 @@ function adminSendBroadcast(target, messageText) {
   dbSave(db);
   adminLogActivity("Broadcast Notification Sent", `Sent notification to ${target}: ${messageText.substring(0, 40)}...`, target);
   return notification;
+}
+
+function adminRestoreDBFromJSON(jsonString) {
+  try {
+    const parsedData = JSON.parse(jsonString);
+    if (!parsedData.users || !Array.isArray(parsedData.users)) {
+      throw new Error("Invalid database JSON structure. Missing users array.");
+    }
+    localStorage.setItem('build2hire_db_backup', localStorage.getItem('build2hire_db') || '');
+    localStorage.setItem('build2hire_db', JSON.stringify(parsedData));
+    adminLogActivity("Database Restored", "Restored system database from JSON backup file", "System Backup");
+    return true;
+  } catch (err) {
+    console.error("Database Restore Error:", err);
+    return false;
+  }
+}
+
+function adminSavePlatformSettings(settings) {
+  const db = dbGet();
+  db.platform_settings = {
+    platformName: settings.platformName || "Build2Hire Platform",
+    domain: settings.domain || "build2hire.com",
+    supportEmail: settings.supportEmail || "support@build2hire.com",
+    maintenanceMode: settings.maintenanceMode === 'enabled'
+  };
+  dbSave(db);
+  adminLogActivity("Platform Settings Saved", `Updated settings: ${settings.platformName}`, "System Governance");
+  return db.platform_settings;
+}
+
+function adminSaveRolePermissions(permissions) {
+  const db = dbGet();
+  db.role_permissions = permissions;
+  dbSave(db);
+  adminLogActivity("Role Permissions Updated", "Updated Candidate, Recruiter, and Admin role privileges", "Security Control");
+  return db.role_permissions;
+}
+
+function adminSaveEmailTemplates(templates) {
+  const db = dbGet();
+  db.email_templates = templates;
+  dbSave(db);
+  adminLogActivity("Email Templates Updated", "Saved Candidate Welcome, Interview Schedule, and Status templates", "Email Dispatcher");
+  return db.email_templates;
+}
+
+function adminSaveSecuritySettings(sec) {
+  const db = dbGet();
+  db.security_settings = {
+    sessionTimeout: Number(sec.sessionTimeout || 30),
+    require2FA: sec.require2FA === true,
+    passwordPolicy: sec.passwordPolicy || "Strong (Min 8 chars, numbers, symbols)"
+  };
+  dbSave(db);
+  adminLogActivity("Security Policies Updated", `Session Timeout ${sec.sessionTimeout}m | 2FA ${sec.require2FA ? 'Enabled' : 'Disabled'}`, "Security Control");
+  return db.security_settings;
 }
 
 // ==========================================
