@@ -1786,6 +1786,68 @@
     let timerInterval = null;
     let lastUnlockedCertData = null;
 
+    function checkIsVideoWatched(courseKey, levelKey) {
+      const certs = candidate.certificates || [];
+      const courseObj = COURSE_QUIZZES[courseKey];
+      const normLvl = (levelKey || 'basic').toLowerCase();
+
+      const existingCert = certs.find(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return (cKey.includes(courseKey.toLowerCase()) || (courseObj && courseObj.basic && cKey.includes((courseObj.basic.title || '').toLowerCase()))) &&
+               (lKey.includes(normLvl) || (normLvl === 'basic' && lKey.includes('beginner')) || (normLvl === 'medium' && lKey.includes('mid')));
+      });
+      if (existingCert) return "certified";
+
+      const videoMap = candidate.completed_video_lessons || {};
+      const key1 = `${courseKey}_${normLvl === 'basic' ? 'beginner' : (normLvl === 'medium' ? 'mid' : normLvl)}`;
+      const key2 = `${courseKey}_${normLvl}`;
+      
+      if (videoMap[key1] || videoMap[key2]) return "watched";
+
+      return "locked";
+    }
+
+    function renderQuizSelectorCards() {
+      const categories = ['frontend', 'backend', 'database', 'creative', 'devops', 'system', 'security', 'mobile'];
+      
+      categories.forEach(cat => {
+        const card = document.getElementById(`quiz-card-${cat}`);
+        if (!card) return;
+
+        const progress = (candidate.course_progress && candidate.course_progress[cat]) || { level: "basic" };
+        let lvl = progress.level || "basic";
+        if (lvl === 'completed') lvl = 'advanced';
+
+        const status = checkIsVideoWatched(cat, lvl);
+        const actionContainer = card.querySelector('div[style*="flex-direction: column"]');
+
+        if (actionContainer) {
+          if (status === 'certified') {
+            actionContainer.innerHTML = `
+              <a href="recommendations.html?watchCourse=${cat}" class="btn btn-warning" style="width: 100%; font-size: 0.8rem; font-weight: 700; text-decoration: none; text-align: center; background: var(--warning); border-color: var(--warning); color: #000;">🎬 Review Video Lessons</a>
+              <a href="certificates.html" class="btn btn-success" style="width: 100%; font-size: 0.8rem; font-weight: 700; text-decoration: none; text-align: center;">🏆 Level Certified & Passed</a>
+            `;
+          } else if (status === 'watched') {
+            actionContainer.innerHTML = `
+              <a href="recommendations.html?watchCourse=${cat}" class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; font-weight: 600; text-decoration: none; text-align: center;">🎬 Re-watch Video Lessons</a>
+              <button onclick="startQuizFromSelector('${cat}')" class="btn btn-primary" style="width: 100%; font-weight: 700;">⚡ Start ${cat.toUpperCase()} Quiz (+100 XP)</button>
+            `;
+          } else {
+            actionContainer.innerHTML = `
+              <a href="recommendations.html?watchCourse=${cat}" class="btn btn-warning" style="width: 100%; font-size: 0.85rem; font-weight: 800; text-decoration: none; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: #000; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">🎬 Watch Video Lessons First</a>
+              <button onclick="handleLockedQuizClick('${cat}')" class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; opacity: 0.65; cursor: pointer;">🔒 Locked: Watch Video First</button>
+            `;
+          }
+        }
+      });
+    }
+
+    window.handleLockedQuizClick = function(courseKey) {
+      alert(`🔒 Video Lesson Prerequisite Required!\n\nYou must watch the video lesson for ${courseKey.toUpperCase()} in Learning Roadmaps first before taking this assessment.\n\nClick '🎬 Watch Video Lessons First' to view the lesson!`);
+      window.location.href = `recommendations.html?watchCourse=${courseKey}`;
+    };
+
     window.startQuizFromSelector = function(courseKey) {
       if (!candidate.course_progress) {
         candidate.course_progress = {
@@ -1804,6 +1866,13 @@
     }
 
     function startQuiz(courseKey, levelKey = 'basic') {
+      const status = checkIsVideoWatched(courseKey, levelKey);
+      if (status === 'locked') {
+        alert(`🔒 Video Lesson Prerequisite Required!\n\nYou must watch the video lesson for ${courseKey.toUpperCase()} in Learning Roadmaps first before taking this assessment.\n\nRedirecting to Learning Roadmaps...`);
+        window.location.href = `recommendations.html?watchCourse=${courseKey}`;
+        return;
+      }
+
       // Enforce Strict 1-Time Assessment Completion Rule
       const certs = candidate.certificates || [];
       const courseObj = COURSE_QUIZZES[courseKey];
@@ -2121,6 +2190,8 @@
     }
 
     function checkAutoStart() {
+      renderQuizSelectorCards();
+
       const course = urlParams.get('course');
       let level = urlParams.get('level');
       if (level === 'mid') level = 'medium';
