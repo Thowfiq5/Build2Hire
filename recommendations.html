@@ -155,113 +155,147 @@
         </div>
       </div>
 
-      <!-- COURSE LEARNING & VIDEO PORTAL MODAL -->
-      <div id="course-portal-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 1150; justify-content: center; align-items: center; padding: 1rem;">
-        <div class="card" style="width: 100%; max-width: 850px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.6); border: 1px solid var(--border-glow);">
+      <!-- DEDICATED LANGUAGE SELECTION PROMPT MODAL -->
+      <div id="language-select-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1rem;">
+        <div class="card" style="width: 100%; max-width: 520px; background: var(--bg-secondary); border: 1px solid var(--border-glow); padding: 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.7); animation: slideUp 0.3s ease;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌐</div>
+          <span class="badge badge-warning" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Language Selection</span>
+          <h3 id="lang-modal-course-title" style="font-size: 1.35rem; color: var(--text-primary); font-family: var(--font-display); margin: 0.5rem 0 0.25rem 0;">Course Name</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;">
+            Select your preferred video learning language. All video tutorials and direct YouTube links will be provided in your chosen language.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <button onclick="window.confirmLanguageSelection('english')" class="btn btn-secondary" style="padding: 0.85rem 1.25rem; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; transition: all 0.2s;">
+              <span>🇬🇧 English</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">English Video Lessons</span>
+            </button>
+            <button onclick="window.confirmLanguageSelection('tamil')" class="btn btn-secondary" style="padding: 0.85rem 1.25rem; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; transition: all 0.2s;">
+              <span>🇮🇳 Tamil (தமிழ்)</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">தமிழ் பாட வீடியோக்கள்</span>
+            </button>
+            <button onclick="window.confirmLanguageSelection('hindi')" class="btn btn-secondary" style="padding: 0.85rem 1.25rem; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; transition: all 0.2s;">
+              <span>🇮🇳 Hindi (हिंदी)</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">हिंदी ट्यूटोरियल वीडियो</span>
+            </button>
+          </div>
+
+          <button onclick="window.closeLanguageSelectModal()" class="btn btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.8rem;">Cancel</button>
+        </div>
+      </div>
+
+      <!-- 🎬 COURSE LEARNING PORTAL MODAL (2-COLUMN CINEMA THEATER LAYOUT) -->
+      <div id="course-portal-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.92); backdrop-filter: blur(12px); z-index: 10000; justify-content: center; align-items: center; padding: 1rem;">
+        <div class="card" style="width: 100%; max-width: 1080px; max-height: 90vh; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 25px 60px rgba(0,0,0,0.7); display: flex; flex-direction: column; overflow: hidden; position: relative;">
           
-          <!-- Portal Modal Header -->
-          <div class="flex-between" style="border-bottom: 1px solid var(--border-color); padding: 1.25rem 1.5rem; background-color: var(--bg-tertiary);">
+          <!-- Header Bar -->
+          <div style="padding: 1rem 1.5rem; background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <span id="portal-course-icon" style="font-size: 2rem;">⚡</span>
+              <span style="font-size: 1.8rem;" id="portal-modal-icon">🎬</span>
               <div>
-                <span class="badge badge-primary" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Build2Hire Skill Academy</span>
-                <h3 id="portal-course-title" style="font-size: 1.3rem; font-family: var(--font-display); margin-top: 0.15rem; color: var(--text-primary);">Course Title</h3>
+                <span class="badge badge-primary" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">BUILD2HIRE SKILL ACADEMY</span>
+                <h3 id="portal-course-title" style="font-size: 1.25rem; font-family: var(--font-display); margin: 0.15rem 0 0 0; color: var(--text-primary);">Course Title</h3>
               </div>
             </div>
-            <button onclick="window.closeCoursePortalModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; padding: 0.25rem;">✕</button>
+            <button onclick="window.closeCoursePortalModal()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 50%; width: 36px; height: 36px; font-size: 1.1rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;">✕</button>
           </div>
 
-          <!-- Portal Modal Controls (Level Tabs & Language Selector) -->
-          <div style="padding: 1rem 1.5rem; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <!-- 2-COLUMN CINEMA THEATER BODY -->
+          <div style="padding: 1.25rem 1.5rem; overflow-y: auto; flex-grow: 1; display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; align-items: start;">
             
-            <!-- Difficulty Level Selector Tabs -->
-            <div style="display: flex; gap: 0.4rem; background: var(--bg-tertiary); padding: 0.3rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-              <button onclick="switchPortalLevel('beginner')" id="portal-tab-beginner" class="btn btn-secondary active" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">🌱 Beginner (100 XP)</button>
-              <button onclick="switchPortalLevel('mid')" id="portal-tab-mid" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">⚡ Mid Level (250 XP)</button>
-              <button onclick="switchPortalLevel('advanced')" id="portal-tab-advanced" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">🔥 Advanced (500 XP)</button>
-            </div>
-
-            <!-- Language Switcher -->
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">🌐 Video Language:</span>
-              <div style="display: flex; gap: 0.3rem;">
-                <button onclick="switchPortalLang('english')" id="portal-lang-english" class="btn btn-secondary active" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇬🇧 English</button>
-                <button onclick="switchPortalLang('tamil')" id="portal-lang-tamil" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇮🇳 Tamil (தமிழ்)</button>
-                <button onclick="switchPortalLang('hindi')" id="portal-lang-hindi" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 4px;">🇮🇳 Hindi (हिंदी)</button>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Portal Modal Body (Video & Topics) -->
-          <div style="padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 1.25rem;">
-            
-            <!-- Video Player Wrapper -->
-            <div style="position: relative; width: 100%; min-height: 260px; padding-bottom: 50%; background: #0f172a; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.4);">
-              <iframe id="portal-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1;" src="" title="Course Video Lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              
-              <!-- Fallback Card Overlay if Embedded Playback Disabled -->
-              <div id="portal-video-fallback-card" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; color: #fff;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background: #ff0000; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; box-shadow: 0 0 20px rgba(255,0,0,0.5); cursor: pointer;" onclick="window.openYouTubeFallback(event)">
-                  <span style="font-size: 1.8rem; color: #fff; margin-left: 4px;">▶</span>
-                </div>
-                <h3 id="portal-fallback-title" style="font-size: 1.15rem; margin-bottom: 0.35rem; color: #f8fafc;">Lesson Video Tutorial</h3>
-                <p style="font-size: 0.82rem; color: #94a3b8; max-width: 440px; margin-bottom: 1.1rem; line-height: 1.4;">
-                  The video owner requires playback directly on YouTube. Click below to watch in a new tab and unlock your assessment test!
-                </p>
-                <button onclick="window.openYouTubeFallback(event)" class="btn" style="font-size: 0.88rem; padding: 0.6rem 1.4rem; font-weight: 800; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border: none; color: #fff; box-shadow: 0 4px 15px rgba(255,0,0,0.4);">
-                  ▶️ Watch Lesson on YouTube & Unlock Test ↗
-                </button>
-              </div>
-            </div>
-            
-            <!-- Video Watch Verification & Links Bar -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap; gap: 0.5rem; background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-              <button id="portal-verify-watch-btn" onclick="window.markVideoWatched()" class="btn btn-warning" style="font-size: 0.85rem; padding: 0.5rem 1.25rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: #000; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">
-                🎬 Mark Video Lesson as Watched & Complete
-              </button>
-              <a href="#" id="portal-yt-fallback-btn" onclick="window.openYouTubeFallback(event)" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.4rem 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-color); background: #ff0000; color: #ffffff; border-color: #cc0000;">
-                ▶️ Watch directly on YouTube ↗
-              </a>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.25rem; align-items: start;">
-              
-              <!-- Video Details & Description -->
-              <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
-                  <h4 id="portal-level-title" style="font-size: 1.1rem; color: var(--primary); font-family: var(--font-display); margin: 0;">Level Title</h4>
-                  <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
-                    <span id="portal-difficulty-badge" class="badge badge-warning" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">BEGINNER</span>
-                    <span id="portal-duration-badge" class="badge badge-primary" style="font-size: 0.68rem; font-weight: 600;">4 WEEKS</span>
-                    <span id="portal-lang-badge" class="badge badge-success" style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">ENGLISH</span>
+            <!-- LEFT COLUMN: CINEMA PLAYER & ACTION TOOLBAR -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <!-- Responsive Video Player -->
+              <div style="position: relative; width: 100%; padding-bottom: 56.25%; background: #0f172a; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <iframe id="portal-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1;" src="" title="Course Video Lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                
+                <!-- Fallback Overlay -->
+                <div id="portal-video-fallback-card" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; color: #fff;">
+                  <div style="width: 56px; height: 56px; border-radius: 50%; background: #ff0000; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; box-shadow: 0 0 20px rgba(255,0,0,0.5); cursor: pointer;" onclick="window.openYouTubeFallback(event)">
+                    <span style="font-size: 1.6rem; color: #fff; margin-left: 3px;">▶</span>
                   </div>
+                  <h3 id="portal-fallback-title" style="font-size: 1.1rem; margin-bottom: 0.35rem; color: #f8fafc;">Lesson Video Tutorial</h3>
+                  <p style="font-size: 0.8rem; color: #94a3b8; max-width: 400px; margin-bottom: 1rem; line-height: 1.4;">
+                    Click below to watch directly on YouTube and unlock your level quiz assessment!
+                  </p>
+                  <button onclick="window.openYouTubeFallback(event)" class="btn" style="font-size: 0.85rem; padding: 0.55rem 1.25rem; font-weight: 800; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border: none; color: #fff;">
+                    ▶️ Watch Lesson on YouTube ↗
+                  </button>
                 </div>
-                <p id="portal-level-desc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Level description goes here...</p>
               </div>
 
-              <!-- Key Concepts / Topics Checklist -->
-              <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                <strong style="font-size: 0.85rem; color: var(--warning); text-transform: uppercase; display: block; margin-bottom: 0.75rem; letter-spacing: 0.05em;">
-                  📋 Key Concepts to Learn
+              <!-- Quick Video Action Bar -->
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap: wrap;">
+                <button id="portal-verify-watch-btn" onclick="window.markVideoWatched()" class="btn btn-warning" style="font-size: 0.85rem; padding: 0.55rem 1.25rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: #000; box-shadow: 0 4px 12px rgba(245,158,11,0.3); flex: 1; justify-content: center;">
+                  🎬 Mark Video Lesson as Watched & Complete
+                </button>
+                <a href="#" id="portal-yt-fallback-btn" onclick="window.openYouTubeFallback(event)" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.5rem 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid #cc0000; background: #ff0000; color: #ffffff; white-space: nowrap;">
+                  ▶️ YouTube ↗
+                </a>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: CONTROL PANEL, TOPICS & ASSESSMENT -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              
+              <!-- 🌐 Language Switcher Pills -->
+              <div style="background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+                <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">
+                  🌐 Video Language
+                </span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.35rem;">
+                  <button onclick="switchPortalLang('english')" id="portal-lang-english" class="btn btn-secondary active" style="padding: 0.4rem 0.5rem; font-size: 0.75rem; border-radius: 6px; text-align: center;">🇬🇧 English</button>
+                  <button onclick="switchPortalLang('tamil')" id="portal-lang-tamil" class="btn btn-secondary" style="padding: 0.4rem 0.5rem; font-size: 0.75rem; border-radius: 6px; text-align: center;">🇮🇳 Tamil</button>
+                  <button onclick="switchPortalLang('hindi')" id="portal-lang-hindi" class="btn btn-secondary" style="padding: 0.4rem 0.5rem; font-size: 0.75rem; border-radius: 6px; text-align: center;">🇮🇳 Hindi</button>
+                </div>
+              </div>
+
+              <!-- 📚 Level Selection Stack -->
+              <div style="background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+                <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">
+                  📚 Select Course Level
+                </span>
+                <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                  <button onclick="switchPortalLevel('beginner')" id="portal-tab-beginner" class="btn btn-secondary active" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; border-radius: 6px; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🌱 Beginner</span> <small style="opacity:0.8;">100 XP</small>
+                  </button>
+                  <button onclick="switchPortalLevel('mid')" id="portal-tab-mid" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; border-radius: 6px; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span>⚡ Intermediate</span> <small style="opacity:0.8;">250 XP</small>
+                  </button>
+                  <button onclick="switchPortalLevel('advanced')" id="portal-tab-advanced" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; border-radius: 6px; text-align: left; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🔥 Advanced</span> <small style="opacity:0.8;">500 XP</small>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 📋 Lesson Topics Checklist -->
+              <div style="background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <h4 id="portal-level-title" style="font-size: 0.95rem; color: var(--primary); font-family: var(--font-display); margin: 0;">Level Title</h4>
+                  <span id="portal-difficulty-badge" class="badge badge-warning" style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">BEGINNER</span>
+                </div>
+                <p id="portal-level-desc" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.6rem;">Level description...</p>
+                
+                <strong style="font-size: 0.72rem; color: var(--warning); text-transform: uppercase; display: block; margin-bottom: 0.35rem; letter-spacing: 0.05em;">
+                  📋 Topics Taught in Video:
                 </strong>
-                <ul id="portal-topics-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; color: var(--text-secondary);">
+                <ul id="portal-topics-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.78rem; color: var(--text-secondary);">
                   <!-- Dynamic topic list -->
                 </ul>
               </div>
 
+              <!-- 📝 Assessment Action Box (Always Visible) -->
+              <div style="background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); border-left: 4px solid var(--warning);">
+                <div id="portal-footer-status" style="font-size: 0.75rem; color: var(--warning); font-weight: 600; margin-bottom: 0.5rem;">
+                  🔒 Watch video or click "Mark Watched" to unlock quiz.
+                </div>
+                <div id="portal-quiz-btn-container" style="width: 100%;">
+                  <!-- Quiz button injected dynamically -->
+                </div>
+              </div>
+
             </div>
 
-          </div>
-
-          <!-- Portal Modal Footer -->
-          <div style="border-top: 1px solid var(--border-color); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; background-color: var(--bg-tertiary);">
-            <div id="portal-footer-status" style="font-size: 0.8rem; color: var(--warning); font-weight: 600;">
-              🔒 Watch the video lesson above or click "Mark Video Lesson as Watched" to unlock your assessment test.
-            </div>
-            <div id="portal-quiz-btn-container">
-              <!-- Unlocked link or locked button renders here dynamically -->
-            </div>
           </div>
 
         </div>
@@ -303,6 +337,37 @@
             <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
               <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📝 INTERACTIVE COURSE QUIZ MODAL -->
+      <div id="course-quiz-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 10005; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 620px; background-color: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--primary); padding: 2rem; border-radius: var(--radius-lg); box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative;">
+          <button onclick="window.closeCourseQuizModal()" style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-size: 2.2rem;">📝</span>
+              <div>
+                <h3 id="quiz-modal-title" style="font-size: 1.3rem; font-family: var(--font-display); color: var(--text-primary); margin: 0;">Skill Quiz Assessment</h3>
+                <p id="quiz-modal-subtitle" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">Answer 5 technical questions correctly to earn your verified certificate!</p>
+              </div>
+            </div>
+            <!-- ⏱️ 60s Question Timer -->
+            <div style="text-align: right; background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 0.4rem 0.85rem; border-radius: 8px; margin-right: 2rem;">
+              <span style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); display: block; font-weight: 700;">Question Time</span>
+              <strong id="quiz-modal-timer" style="font-size: 1.15rem; color: var(--warning); font-family: monospace; font-weight: 800;">⏱️ 60s</strong>
+            </div>
+          </div>
+
+          <div id="quiz-modal-body" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Questions injected dynamically -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="quiz-progress-text" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Question 1 of 3</span>
+            <button id="quiz-submit-btn" onclick="window.handleQuizSubmitAnswer()" class="btn btn-primary" style="padding: 0.55rem 1.35rem; font-size: 0.88rem; font-weight: 700;">Submit Answer ⚡</button>
           </div>
         </div>
       </div>
@@ -498,6 +563,16 @@
         const isHighMatch = rec.matchPercentage >= 70;
         const isMediumMatch = rec.matchPercentage >= 40 && rec.matchPercentage < 70;
 
+        let catKey = rec.key;
+        let cId = `course_${rec.key}`;
+        if (rec.key === 'video') {
+          catKey = 'creative';
+          cId = 'course_creative_grading';
+        } else if (rec.key === 'fullstack') {
+          catKey = 'frontend';
+          cId = 'course_react_state';
+        }
+
         const card = document.createElement('div');
         card.className = "card";
         card.style.cssText = `padding: 2rem; border-left: 5px solid ${isHighMatch ? 'var(--success)' : isMediumMatch ? 'var(--warning)' : 'var(--text-muted)'}; margin-bottom: 0.5rem;`;
@@ -559,11 +634,10 @@
               💡 <strong>Engine Feedback:</strong> ${rec.reasoning}
             </p>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <button onclick="openCoursePortalModal('${rec.key}', 'beginner')" class="btn btn-warning" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; background: var(--warning); border-color: var(--warning); color: #000; font-weight: 700;">🎬 Watch Course Videos</button>
+              <button onclick="promptCourseLanguage('${cId}', '${catKey}')" class="btn btn-warning" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; background: var(--warning); border-color: var(--warning); color: #000; font-weight: 700;">🎬 Watch Course Videos</button>
               <button onclick="generateRoadmap('${rec.key}')" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
                 🗺️ View Career Roadmap
               </button>
-              ${rec.missingSkills.length > 0 ? `<a href="quiz.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Take Quizzes</a>` : ""}
             </div>
           </div>
         `;
@@ -762,7 +836,7 @@
           levelStatus = `<span class="badge badge-success" style="font-size: 0.7rem;">✅ Completed (Score: ${scoreVal}%)</span>`;
           actionBtn = `
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-top:0.75rem;">
-              <button onclick="window.openCoursePortalModal('${courseKey}', '${step.level}')" class="btn btn-warning" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos</button>
+              <button onclick="promptCourseLanguage('course_${courseKey}', '${courseKey}')" class="btn btn-warning" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos</button>
               <button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', true)" class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px;">Review Slides</button>
               <button onclick="window.viewLevelCertificate('${courseKey}', '${step.level}')" class="btn btn-secondary" style="padding:0.35rem 0.75rem; font-size:0.75rem; border-radius:4px; font-weight:700;">🏅 View Certificate</button>
             </div>`;
@@ -770,7 +844,7 @@
           levelStatus = `<span class="badge badge-warning" style="font-size: 0.7rem;">⚡ In Progress</span>`;
           actionBtn = `
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-top:0.75rem;">
-              <button onclick="window.openCoursePortalModal('${courseKey}', '${step.level}')" class="btn btn-warning" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos & Learn</button>
+              <button onclick="promptCourseLanguage('course_${courseKey}', '${courseKey}')" class="btn btn-warning" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:4px; font-weight:700; background:var(--warning); border-color:var(--warning); color:#000;">🎬 Watch Videos & Learn</button>
               <button onclick="window.openStudyModal('${courseKey}', ${idx}, '${step.level}', false)" class="btn btn-primary" style="padding:0.4rem 0.85rem; font-size:0.78rem; border-radius:4px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none;">📖 Read Slides & Quiz</button>
             </div>`;
         }
@@ -1051,7 +1125,7 @@
       {
         id: "course_typescript",
         title: "TypeScript Enterprise Applications",
-        category: "frontend",
+        category: "typescript",
         desc: "Learn advanced typing, generics, conditional utility types, and building robust type-safe web applications.",
         level: "Medium",
         duration: "4 weeks",
@@ -1213,33 +1287,43 @@
 
           validEnrolledCount++;
 
+          const isCompleted = ec.isCompleted || ec.progress === 100;
+
           const adminProgressBtn = isAdminViewing
             ? `<button onclick="handleSetProgressAdmin('${course.id}', 100)" class="btn" style="background:#10b981; border:1px solid #10b981; color:white; padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">💯 Complete</button>`
             : '';
 
+          const statusBadge = isCompleted
+            ? `<span class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">🎓 Completed</span>`
+            : `<span class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Active</span>`;
+
+          const actionBtns = isCompleted
+            ? `<a href="certificates.html" class="btn btn-success" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center; text-decoration: none; font-weight: 700;">📜 View Verified Certificate</a>`
+            : `<button onclick="window.promptCourseLanguage('${course.id}', '${course.category}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center; font-weight: 700;">Watch Lessons & Learn 🎬</button>`;
+
           enrolledGrid.innerHTML += `
-            <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--success);">
+            <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid ${isCompleted ? '#10b981' : 'var(--success)'};">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                   <span style="font-size: 1.8rem;">${course.image}</span>
-                  <span class="badge badge-success" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Active</span>
+                  ${statusBadge}
                 </div>
                 <h5 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">${course.title}</h5>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">${course.desc}</p>
                 <div style="margin-bottom: 1rem;">
                   <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-bottom:0.25rem; font-weight:600;">
                     <span>Course Progress</span>
-                    <span>${ec.progress || 10}%</span>
+                    <span>${isCompleted ? 100 : (ec.progress || 10)}% ${isCompleted ? '(Certified 🎓)' : ''}</span>
                   </div>
                   <div style="background:var(--bg-primary); border-radius:999px; height:6px; overflow:hidden;">
-                    <div style="width:${ec.progress || 10}%; height:100%; background:var(--success); border-radius:999px;"></div>
+                    <div style="width:${isCompleted ? 100 : (ec.progress || 10)}%; height:100%; background:var(--success); border-radius:999px;"></div>
                   </div>
                 </div>
               </div>
               <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap;">
-                <button onclick="openCoursePortalModal('${course.category}', '${(course.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (course.level || 'beginner').toLowerCase()}', '${ec.selectedLanguage || 'english'}')" class="btn btn-primary" style="flex-grow: 1; padding: 0.35rem 0.5rem; font-size: 0.75rem; text-align: center;">Watch Lessons & Learn 🎬</button>
+                ${actionBtns}
                 ${adminProgressBtn}
-                <button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>
+                ${!isCompleted ? `<button onclick="handleWithdrawCourse('${course.id}')" class="btn btn-secondary" style="padding: 0.35rem 0.5rem; font-size: 0.75rem; border-radius: 4px;">✕</button>` : ''}
               </div>
             </div>
           `;
@@ -1290,7 +1374,7 @@
       } else {
         suggestedGrid.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem;">
-            🤖 All suggested courses are currently in progress!
+            🤖 All suggested courses are currently in progress or completed!
           </div>
         `;
       }
@@ -1302,18 +1386,26 @@
         : ACADEMY_COURSES.filter(c => c.category === activeAcademyCategory);
 
       filtered.forEach(c => {
-        const isEnrolled = enrolled.some(ec => ec.courseId === c.id);
-        const actionBtn = isAdminViewing
-          ? `<div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
+        const enrolledMatch = enrolled.find(ec => ec.courseId === c.id);
+        const isEnrolled = !!enrolledMatch;
+        const isCourseDone = enrolledMatch && (enrolledMatch.isCompleted || enrolledMatch.progress === 100);
+
+        let actionBtn = "";
+        if (isAdminViewing) {
+          actionBtn = `<div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
                ${isEnrolled 
                  ? `<button onclick="handleWithdrawCourseAdmin('${c.id}')" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#ef4444; border-color:#ef4444; color:white; font-weight:700;">🗑️ Withdraw Course</button>` 
                  : `<button onclick="handleEnrollCourseAdmin('${c.id}', false)" class="btn btn-secondary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll Candidate</button>`
                }
                <button onclick="handleEnrollCourseAdmin('${c.id}', true)" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem; background:#10b981; border-color:#10b981; color:white; font-weight:700;">⚡ Force Complete</button>
-             </div>`
-          : (isEnrolled
-            ? `<button onclick="openCoursePortalModal('${c.category}', '${(c.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (c.level || 'beginner').toLowerCase()}')" class="btn btn-success" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Open Learning Portal 🎬</button>`
-            : `<button onclick="handleEnrollAndOpenPortal('${c.id}', '${c.category}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.75rem;">Enroll & Learn 🎬</button>`);
+             </div>`;
+        } else if (isCourseDone) {
+          actionBtn = `<button disabled class="btn btn-success" style="width: 100%; padding: 0.45rem; font-size: 0.78rem; opacity: 0.95; cursor: not-allowed; font-weight: 700; background: #10b981; border-color: #10b981; color: white;">✅ Course Completed & Certified</button>`;
+        } else if (isEnrolled) {
+          actionBtn = `<button onclick="window.promptCourseLanguage('${c.id}', '${c.category}')" class="btn btn-success" style="width: 100%; padding: 0.4rem; font-size: 0.78rem; font-weight: 700;">Continue Learning 🎬</button>`;
+        } else {
+          actionBtn = `<button onclick="handleEnrollAndOpenPortal('${c.id}', '${c.category}')" class="btn btn-primary" style="width: 100%; padding: 0.4rem; font-size: 0.78rem; font-weight: 700;">Enroll & Learn 🎬</button>`;
+        }
 
         allGrid.innerHTML += `
           <div class="card" style="background-color: var(--bg-tertiary); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;">
@@ -1335,14 +1427,146 @@
       });
     }
 
+    let pendingPromptCategory = "frontend";
+    let pendingPromptCourseId = null;
+
+    window.promptCourseLanguage = function(courseId, category) {
+      const dbCand = (candidate && candidate.id) ? (dbGet().users.find(u => String(u.id) === String(candidate.id)) || candidate) : candidate;
+      const enrolled = dbCand.enrolled_courses || [];
+      const ecObj = enrolled.find(ec => ec.courseId === courseId);
+
+      if (ecObj && (ecObj.isCompleted || ecObj.progress === 100)) {
+        showAlert('alert-container', '🎓 You have already completed this course and earned your certificate! Multiple enrollments or retaking completed courses is disabled.', 'warning');
+        return;
+      }
+
+      let realCategory = category || "frontend";
+      if (category === 'video') realCategory = 'creative';
+      if (category === 'fullstack') realCategory = 'frontend';
+
+      pendingPromptCategory = realCategory;
+
+      let realCourseId = courseId;
+      if (courseId === 'course_video') realCourseId = 'course_creative_grading';
+      if (courseId === 'course_fullstack') realCourseId = 'course_react_state';
+
+      pendingPromptCourseId = realCourseId;
+
+      const cObj = ACADEMY_COURSES.find(c => c.id === realCourseId) || ACADEMY_COURSES.find(c => c.category === realCategory);
+      const titleEl = document.getElementById('lang-modal-course-title');
+      if (titleEl) {
+        titleEl.textContent = cObj ? cObj.title : "Course Learning Portal";
+      }
+
+      document.getElementById('language-select-modal').style.display = "flex";
+    };
+
+    window.closeLanguageSelectModal = function() {
+      document.getElementById('language-select-modal').style.display = "none";
+    };
+
+    window.confirmLanguageSelection = function(selectedLang) {
+      closeLanguageSelectModal();
+      
+      if (pendingPromptCourseId) {
+        enrollInCourse(candidate.id, pendingPromptCourseId);
+        const db = dbGet();
+        candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
+        
+        if (!candidate.enrolled_courses) candidate.enrolled_courses = [];
+        let ecObj = candidate.enrolled_courses.find(ec => ec.courseId === pendingPromptCourseId);
+        if (ecObj) {
+          ecObj.selectedLanguage = selectedLang;
+        } else {
+          ecObj = { courseId: pendingPromptCourseId, selectedLanguage: selectedLang, enrolledDate: new Date().toISOString(), progress: 10 };
+          candidate.enrolled_courses.push(ecObj);
+        }
+        dbSave(db);
+        auth.candidate = candidate;
+        renderAcademy();
+      }
+
+      // Map exact course level from ACADEMY_COURSES
+      const cObj = ACADEMY_COURSES.find(c => c.id === pendingPromptCourseId);
+      let targetCourseLevel = "beginner";
+      if (cObj && cObj.level) {
+        const lvlStr = String(cObj.level).toLowerCase();
+        if (lvlStr.includes('med') || lvlStr.includes('mid') || lvlStr.includes('inter')) {
+          targetCourseLevel = "mid";
+        } else if (lvlStr.includes('adv')) {
+          targetCourseLevel = "advanced";
+        } else if (lvlStr.includes('beg') || lvlStr.includes('basic')) {
+          targetCourseLevel = "beginner";
+        }
+      }
+
+      openCoursePortalModal(pendingPromptCategory, targetCourseLevel, selectedLang, pendingPromptCourseId);
+      showAlert('alert-container', `🌐 Language set to ${selectedLang.toUpperCase()}. ${targetCourseLevel.toUpperCase()} level active!`, 'success');
+    };
+
     let activePortalCategory = "frontend";
     let activePortalLevel = "beginner";
     let activePortalLang = "english";
+    let activePortalCourseId = null;
 
-    window.openCoursePortalModal = function(courseCategory, initialLevel = "beginner", initialLang = "english") {
+    function checkLevelCertificateEarned(cat, levelKey) {
+      const allCourseData = getCourseVideoDatabase();
+      const courseData = allCourseData[cat] || allCourseData['frontend'];
+      const targetCategory = (cat || '').toLowerCase();
+      const targetTitle = ((courseData && courseData.title) || '').toLowerCase();
+
+      const dbCand = (candidate && candidate.id) ? (dbGet().users.find(u => String(u.id) === String(candidate.id)) || candidate) : candidate;
+      const certList = (candidate.certificates || []).concat(dbCand.certificates || []);
+
+      return certList.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+
+        const isCategoryMatch = cKey.includes(targetCategory) || cKey.includes(targetTitle) || targetTitle.includes(cKey);
+        if (!isCategoryMatch) return false;
+
+        if (levelKey === 'beginner') {
+          return (lKey.includes('beginner') || lKey.includes('basic') || lKey === 'beg') && !lKey.includes('mid') && !lKey.includes('medium') && !lKey.includes('intermediate') && !lKey.includes('advanced');
+        }
+        if (levelKey === 'mid') {
+          return (lKey.includes('mid') || lKey.includes('medium') || lKey.includes('intermediate')) && !lKey.includes('beginner') && !lKey.includes('advanced');
+        }
+        if (levelKey === 'advanced') {
+          return (lKey.includes('advanced') || lKey.includes('adv') || lKey.includes('expert')) && !lKey.includes('beginner') && !lKey.includes('mid');
+        }
+        return false;
+      });
+    }
+
+    window.openCoursePortalModal = function(courseCategory, initialLevel = "beginner", initialLang, courseId) {
       activePortalCategory = courseCategory || "frontend";
-      activePortalLevel = initialLevel || "beginner";
-      activePortalLang = initialLang || "english";
+      if (courseId) activePortalCourseId = courseId;
+
+      const hasPassedBeginner = checkLevelCertificateEarned(activePortalCategory, 'beginner');
+      const hasPassedMid = hasPassedBeginner && checkLevelCertificateEarned(activePortalCategory, 'mid');
+
+      // Strictly enforce initial active level based on earned certificates
+      if (!hasPassedBeginner) {
+        activePortalLevel = "beginner";
+      } else if (hasPassedBeginner && !hasPassedMid) {
+        activePortalLevel = "mid";
+      } else {
+        activePortalLevel = initialLevel || "advanced";
+      }
+
+      const enrolled = candidate.enrolled_courses || [];
+      const ecObj = enrolled.find(ec => {
+        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+        return cObj && cObj.category === activePortalCategory;
+      });
+
+      if (initialLang && (initialLang === 'english' || initialLang === 'tamil' || initialLang === 'hindi')) {
+        activePortalLang = initialLang;
+      } else if (ecObj && ecObj.selectedLanguage) {
+        activePortalLang = ecObj.selectedLanguage;
+      } else {
+        activePortalLang = "english";
+      }
 
       document.getElementById('course-portal-modal').style.display = "flex";
       renderPortalContent();
@@ -1355,39 +1579,16 @@
     };
 
     window.switchPortalLevel = function(targetLevel) {
-      const certs = candidate.certificates || [];
-      const enrolled = candidate.enrolled_courses || [];
-      const allCourseData = getCourseVideoDatabase();
-      const courseData = allCourseData[activePortalCategory] || allCourseData['frontend'];
-      
-      const isEnrolledLevel = enrolled.some(ec => {
-        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
-        if (!cObj || cObj.category !== activePortalCategory) return false;
-        const cLvl = (cObj.level || '').toLowerCase();
-        if (targetLevel === 'mid' && (cLvl === 'medium' || cLvl === 'mid' || cLvl === 'advanced')) return true;
-        if (targetLevel === 'advanced' && cLvl === 'advanced') return true;
-        return false;
-      });
+      const hasPassedBeginner = checkLevelCertificateEarned(activePortalCategory, 'beginner');
+      const hasPassedMid = hasPassedBeginner && checkLevelCertificateEarned(activePortalCategory, 'mid');
 
-      const hasPassedBeginner = certs.some(c => {
-        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
-        const lKey = (c.level_key || c.level || '').toLowerCase();
-        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('beginner') || lKey.includes('basic'));
-      });
-
-      const hasPassedMid = certs.some(c => {
-        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
-        const lKey = (c.level_key || c.level || '').toLowerCase();
-        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('mid') || lKey.includes('medium'));
-      });
-
-      if (targetLevel === 'mid' && !hasPassedBeginner && !isEnrolledLevel) {
-        showAlert('alert-container', '🔒 Mid Level is locked! Please complete the Beginner video lesson & pass the Beginner assessment first to unlock Mid Level.', 'error');
+      if (targetLevel === 'mid' && !hasPassedBeginner) {
+        showAlert('alert-container', '🔒 Intermediate Level is locked! You must attend and pass the Beginner quiz assessment to earn your Beginner Certificate first.', 'error');
         return;
       }
 
-      if (targetLevel === 'advanced' && !hasPassedMid && !isEnrolledLevel) {
-        showAlert('alert-container', '🔒 Advanced Level is locked! Please complete the Mid Level video lesson & pass the Mid assessment first to unlock Advanced Level.', 'error');
+      if (targetLevel === 'advanced' && !hasPassedMid) {
+        showAlert('alert-container', '🔒 Advanced Level is locked! You must attend and pass the Intermediate quiz assessment to earn your Intermediate Certificate first.', 'error');
         return;
       }
 
@@ -1396,19 +1597,32 @@
     };
 
     window.switchPortalLang = function(lang) {
+      if (!lang) return;
       activePortalLang = lang;
+
+      const enrolled = candidate.enrolled_courses || [];
+      const ecObj = enrolled.find(ec => {
+        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+        return cObj && cObj.category === activePortalCategory;
+      });
+
+      if (ecObj) {
+        ecObj.selectedLanguage = lang;
+        const db = dbGet();
+        const candInDb = db.users.find(u => String(u.id) === String(candidate.id));
+        if (candInDb) {
+          if (!candInDb.enrolled_courses) candInDb.enrolled_courses = [];
+          const matchInDb = candInDb.enrolled_courses.find(ec => ec.courseId === ecObj.courseId);
+          if (matchInDb) matchInDb.selectedLanguage = lang;
+          dbSave(db);
+        }
+      }
+
       renderPortalContent();
     };
 
     window.handleEnrollAndOpenPortal = function(courseId, category) {
-      enrollInCourse(candidate.id, courseId);
-      const db = dbGet();
-      candidate = db.users.find(u => String(u.id) === String(candidate.id)) || candidate;
-      renderAcademy();
-
-      const cObj = ACADEMY_COURSES.find(c => c.id === courseId);
-      const targetLvl = cObj ? ((cObj.level || 'beginner').toLowerCase() === 'medium' ? 'mid' : (cObj.level || 'beginner').toLowerCase()) : 'beginner';
-      openCoursePortalModal(category, targetLvl, 'english');
+      window.promptCourseLanguage(courseId, category);
     };
 
     let isVideoWatchedMap = {};
@@ -1416,9 +1630,27 @@
     window.markVideoWatched = function() {
       const key = `${activePortalCategory}_${activePortalLevel}`;
       isVideoWatchedMap[key] = true;
-      
-      triggerConfetti();
-      showAlert('alert-container', '🎉 Video lesson completed! Assessment test is now unlocked.', 'success');
+      isVideoWatchedMap[`creative_${activePortalLevel}`] = true;
+      isVideoWatchedMap[`video_${activePortalLevel}`] = true;
+      isVideoWatchedMap[`frontend_${activePortalLevel}`] = true;
+      isVideoWatchedMap[`fullstack_${activePortalLevel}`] = true;
+
+      const db = dbGet();
+      const candId = (candidate && candidate.id) || (auth && auth.candidate && auth.candidate.id);
+      if (db && candId) {
+        const dbCand = db.users.find(u => String(u.id) === String(candId));
+        if (dbCand) {
+          if (!dbCand.completed_video_lessons) dbCand.completed_video_lessons = {};
+          dbCand.completed_video_lessons[key] = true;
+          dbSave(db);
+          candidate = dbCand;
+          if (auth) auth.candidate = dbCand;
+          sessionStorage.setItem('user', JSON.stringify(dbCand));
+        }
+      }
+
+      try { triggerConfetti(); } catch(e) {}
+      alert('🎉 Video lesson completed! Assessment test is now unlocked.');
       renderPortalContent();
     };
 
@@ -1443,61 +1675,49 @@
       const levelData = (courseData.levels && courseData.levels[activePortalLevel]) || courseData.levels['beginner'];
       const videoInfo = (levelData.videos && levelData.videos[activePortalLang]) || levelData.videos['english'];
 
-      const icons = { frontend: "⚛️", backend: "🟢", database: "🗄️", creative: "🎥" };
-      document.getElementById('portal-course-icon').textContent = icons[activePortalCategory] || "⚡";
-      document.getElementById('portal-course-title').textContent = courseData.title;
+      const activeCourseObj = ACADEMY_COURSES.find(c => c.id === activePortalCourseId);
+      const displayTitle = (activeCourseObj && activeCourseObj.title) ? activeCourseObj.title : courseData.title;
+      const displayIcon = (activeCourseObj && activeCourseObj.image) ? activeCourseObj.image : ({ frontend: "⚛️", backend: "🟢", database: "🗄️", creative: "🎥" }[activePortalCategory] || "⚡");
+
+      const iconEl = document.getElementById('portal-modal-icon') || document.getElementById('portal-course-icon');
+      if (iconEl) iconEl.textContent = displayIcon;
+      if (document.getElementById('portal-course-title')) document.getElementById('portal-course-title').textContent = displayTitle;
 
       const certs = candidate.certificates || [];
-      const hasPassedBeginner = certs.some(c => {
-        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
-        const lKey = (c.level_key || c.level || '').toLowerCase();
-        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('beginner') || lKey.includes('basic'));
-      });
+      const dbCand = (candidate && candidate.id) ? (dbGet().users.find(u => String(u.id) === String(candidate.id)) || candidate) : candidate;
+      const completedMap = dbCand.completed_video_lessons || candidate.completed_video_lessons || isVideoWatchedMap || {};
 
-      const hasPassedMid = certs.some(c => {
-        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
-        const lKey = (c.level_key || c.level || '').toLowerCase();
-        return (cKey.includes(activePortalCategory.toLowerCase()) || cKey.includes((courseData.title || '').toLowerCase())) && (lKey.includes('mid') || lKey.includes('medium'));
-      });
+      const isBegVideoDone = completedMap[`${activePortalCategory}_beginner`] || isVideoWatchedMap[`${activePortalCategory}_beginner`];
+      const isMidVideoDone = completedMap[`${activePortalCategory}_mid`] || isVideoWatchedMap[`${activePortalCategory}_mid`];
+
+      const hasPassedBeginner = checkLevelCertificateEarned(activePortalCategory, 'beginner');
+      const hasPassedMid = hasPassedBeginner && checkLevelCertificateEarned(activePortalCategory, 'mid');
 
       const tabBeginner = document.getElementById('portal-tab-beginner');
       const tabMid = document.getElementById('portal-tab-mid');
       const tabAdv = document.getElementById('portal-tab-advanced');
 
       if (tabBeginner) {
-        tabBeginner.innerHTML = `🌱 Beginner (100 XP)`;
+        tabBeginner.innerHTML = `<span>🌱 Beginner</span> <small style="opacity:0.8;">100 XP</small>`;
+        tabBeginner.style.opacity = "1";
       }
 
-      const enrolledCourses = candidate.enrolled_courses || [];
-      const isEnrolledMid = enrolledCourses.some(ec => {
-        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
-        if (!cObj || cObj.category !== activePortalCategory) return false;
-        const cLvl = (cObj.level || '').toLowerCase();
-        return cLvl === 'medium' || cLvl === 'mid' || cLvl === 'advanced';
-      });
-
-      const isEnrolledAdv = enrolledCourses.some(ec => {
-        const cObj = ACADEMY_COURSES.find(c => c.id === ec.courseId);
-        if (!cObj || cObj.category !== activePortalCategory) return false;
-        return (cObj.level || '').toLowerCase() === 'advanced';
-      });
-
       if (tabMid) {
-        if (hasPassedBeginner || isEnrolledMid) {
-          tabMid.innerHTML = `⚡ Mid Level (250 XP)`;
+        if (hasPassedBeginner) {
+          tabMid.innerHTML = `<span>⚡ Intermediate</span> <small style="opacity:0.8;">250 XP</small>`;
           tabMid.style.opacity = "1";
         } else {
-          tabMid.innerHTML = `🔒 Mid Level (Pass Beginner First)`;
+          tabMid.innerHTML = `<span>🔒 Intermediate</span> <small style="opacity:0.8;">Locked</small>`;
           tabMid.style.opacity = "0.65";
         }
       }
 
       if (tabAdv) {
-        if (hasPassedMid || isEnrolledAdv) {
-          tabAdv.innerHTML = `🔥 Advanced (500 XP)`;
+        if (hasPassedMid) {
+          tabAdv.innerHTML = `<span>🔥 Advanced</span> <small style="opacity:0.8;">500 XP</small>`;
           tabAdv.style.opacity = "1";
         } else {
-          tabAdv.innerHTML = `🔒 Advanced (Pass Mid First)`;
+          tabAdv.innerHTML = `<span>🔒 Advanced</span> <small style="opacity:0.8;">Locked</small>`;
           tabAdv.style.opacity = "0.65";
         }
       }
@@ -1523,7 +1743,7 @@
 
       const iframe = document.getElementById('portal-video-frame');
       if (iframe) {
-        iframe.src = `https://www.youtube.com/embed/${cleanVideoId}?rel=0&autoplay=0`;
+        iframe.src = `https://www.youtube.com/embed/${cleanVideoId}?rel=0&autoplay=0&cc_load_policy=0`;
       }
       
       const fallbackBtn = document.getElementById('portal-yt-fallback-btn');
@@ -1544,7 +1764,9 @@
         const cMatch = ACADEMY_COURSES.find(c => c.category === activePortalCategory);
         document.getElementById('portal-duration-badge').textContent = cMatch ? cMatch.duration.toUpperCase() : "4 WEEKS";
       }
-      document.getElementById('portal-lang-badge').textContent = activePortalLang.toUpperCase();
+      if (document.getElementById('portal-lang-badge')) {
+        document.getElementById('portal-lang-badge').textContent = activePortalLang.toUpperCase();
+      }
 
       const topicsList = document.getElementById('portal-topics-list');
       if (topicsList) {
@@ -1563,7 +1785,11 @@
       });
 
       const watchKey = `${activePortalCategory}_${activePortalLevel}`;
-      const isWatched = existingCert || !!isVideoWatchedMap[watchKey];
+      // Video is ONLY considered watched if existingCert exists or if user explicitly clicked markVideoWatched() in session
+      const isWatched = !!existingCert || 
+                        !!isVideoWatchedMap[watchKey] || 
+                        (activePortalCategory === 'creative' && !!isVideoWatchedMap[`video_${activePortalLevel}`]) || 
+                        (activePortalCategory === 'video' && !!isVideoWatchedMap[`creative_${activePortalLevel}`]);
 
       const verifyBtn = document.getElementById('portal-verify-watch-btn');
       if (verifyBtn) {
@@ -1590,7 +1816,7 @@
 
       if (existingCert) {
         if (statusEl) {
-          statusEl.innerHTML = `🏅 You have already completed this level assessment! Score: <strong>${existingCert.score}%</strong>. (Video lessons can be rewatched anytime).`;
+          statusEl.innerHTML = `🏅 You have already completed this level and earned your verified certificate! Score: <strong>${existingCert.score}%</strong>.`;
           statusEl.style.color = "var(--success)";
         }
         if (quizBtnContainer) {
@@ -1601,28 +1827,650 @@
         }
       } else if (isWatched) {
         if (statusEl) {
-          statusEl.innerHTML = `✅ Video lesson verified. Click below to take your level test!`;
+          statusEl.innerHTML = `🎉 Video lesson completed! Click below to attend your interactive level quiz assessment & earn your certificate!`;
           statusEl.style.color = "var(--success)";
         }
         if (quizBtnContainer) {
           quizBtnContainer.innerHTML = `
-            <a href="quiz.html?course=${activePortalCategory}&level=${activePortalLevel}&lang=${activePortalLang}" class="btn btn-success" style="padding: 0.65rem 1.5rem; font-size: 0.9rem; font-weight: 800; text-decoration: none; text-align: center; white-space: nowrap; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
-              Take ${activePortalLevel.toUpperCase()} Assessment ⚡ (+${maxXp} XP)
-            </a>`;
+            <button onclick="openCourseQuizModal()" class="btn btn-warning" style="padding: 0.65rem 1.4rem; font-size: 0.9rem; font-weight: 800; text-decoration: none; text-align: center; white-space: nowrap; box-shadow: 0 4px 12px rgba(245,158,11,0.3); cursor: pointer; background: var(--warning); border-color: var(--warning); color: #000;">
+              📝 Take ${activePortalLevel.toUpperCase()} Quiz Assessment (+${maxXp} XP)
+            </button>`;
         }
       } else {
         if (statusEl) {
-          statusEl.innerHTML = `🔒 Watch the video lesson above or click "Mark Video Lesson as Watched" to unlock your assessment.`;
+          statusEl.innerHTML = `🔒 Watch the video lesson above or click "Mark Video Lesson as Watched" to complete this level.`;
           statusEl.style.color = "var(--warning)";
         }
         if (quizBtnContainer) {
           quizBtnContainer.innerHTML = `
-            <button onclick="alert('🔒 Please watch the video lesson above or click \'Mark Video Lesson as Watched\' to unlock the assessment test!')" class="btn btn-secondary" style="padding: 0.6rem 1.4rem; font-size: 0.88rem; font-weight: 700; opacity: 0.7; cursor: not-allowed; border: 1px solid var(--border-color);">
-              🔒 Watch Video to Unlock Assessment
+            <button onclick="alert('🔒 Please watch the video lesson above or click \'Mark Video Lesson as Watched\' to complete this level!')" class="btn btn-secondary" style="padding: 0.6rem 1.4rem; font-size: 0.88rem; font-weight: 700; opacity: 0.7; cursor: not-allowed; border: 1px solid var(--border-color);">
+              🔒 Watch Video to Complete Level
             </button>`;
         }
       }
     }
+
+    window.completeLevelAndEarnCert = function(passedScore = 5, totalCount = 5) {
+      const allCourseData = getCourseVideoDatabase();
+      const courseData = allCourseData[activePortalCategory] || allCourseData['frontend'];
+      const levelTitle = activePortalLevel === 'beginner' ? 'Beginner Level' : (activePortalLevel === 'mid' ? 'Medium Level' : 'Advanced Level');
+      const xpAmount = activePortalLevel === 'beginner' ? 100 : (activePortalLevel === 'mid' ? 250 : 500);
+
+      const db = dbGet();
+      const candInDb = db.users.find(u => String(u.id) === String(candidate.id));
+      if (!candInDb) return;
+
+      if (!candInDb.certificates) candInDb.certificates = [];
+
+      const alreadyHas = candInDb.certificates.some(c => {
+        const cKey = (c.course_key || c.category || c.course || '').toLowerCase();
+        const lKey = (c.level_key || c.level || '').toLowerCase();
+        return cKey.includes(activePortalCategory.toLowerCase()) && lKey.includes(activePortalLevel.toLowerCase());
+      });
+
+      if (!alreadyHas) {
+        const scorePct = Math.round((passedScore / totalCount) * 100);
+        const newCert = {
+          id: "cert_" + Date.now(),
+          course: courseData.title || "Course Certificate",
+          category: activePortalCategory,
+          course_key: activePortalCategory,
+          level: levelTitle,
+          level_key: activePortalLevel,
+          score: scorePct,
+          correct_count: passedScore,
+          total_count: totalCount,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          issuer: "Build2Hire Skill Academy",
+          verificationCode: "B2H-" + Math.random().toString(36).substr(2, 6).toUpperCase()
+        };
+        candInDb.certificates.push(newCert);
+        candInDb.xp_points = (candInDb.xp_points || 0) + xpAmount;
+        
+        if (!candInDb.course_progress) candInDb.course_progress = {};
+        if (!candInDb.course_progress[activePortalCategory]) candInDb.course_progress[activePortalCategory] = { level: 'basic' };
+        
+        if (!candInDb.enrolled_courses) candInDb.enrolled_courses = [];
+        let ecObj = candInDb.enrolled_courses.find(ec => {
+          const cMatch = ACADEMY_COURSES.find(c => c.id === ec.courseId);
+          return cMatch && cMatch.category === activePortalCategory;
+        }) || candInDb.enrolled_courses.find(ec => ec.courseId === activePortalCourseId);
+
+        if (activePortalLevel === 'beginner') {
+          candInDb.course_progress[activePortalCategory].level = 'medium';
+          if (ecObj) ecObj.progress = Math.max(ecObj.progress || 0, 40);
+          activePortalLevel = 'mid';
+        } else if (activePortalLevel === 'mid') {
+          candInDb.course_progress[activePortalCategory].level = 'advanced';
+          if (ecObj) ecObj.progress = Math.max(ecObj.progress || 0, 75);
+          activePortalLevel = 'advanced';
+        } else if (activePortalLevel === 'advanced') {
+          candInDb.course_progress[activePortalCategory].level = 'completed';
+          if (ecObj) {
+            ecObj.progress = 100;
+            ecObj.isCompleted = true;
+            ecObj.completedDate = new Date().toISOString();
+          }
+        }
+
+        dbSave(db);
+        candidate = candInDb;
+        auth.candidate = candInDb;
+      }
+
+      triggerConfetti();
+      showAlert('alert-container', `🎉 Congratulations! You completed ${activePortalLevel.toUpperCase()} level and earned your certificate (+${xpAmount} XP)!`, 'success');
+      renderPortalContent();
+      renderAcademy();
+    };
+
+    // ==========================================
+    // 📝 INTERACTIVE COURSE QUIZ ENGINE
+    // ==========================================
+    let currentQuizQuestions = [];
+    let currentQuizIndex = 0;
+    let currentQuizScore = 0;
+    let selectedOptionIndex = null;
+    let quizQuestionTimerInterval = null;
+    let quizQuestionSecondsLeft = 60;
+
+    function startQuestionTimer() {
+      clearInterval(quizQuestionTimerInterval);
+      quizQuestionSecondsLeft = 60;
+
+      const timerEl = document.getElementById('quiz-modal-timer');
+      if (timerEl) {
+        timerEl.textContent = `⏱️ 60s`;
+        timerEl.style.color = "var(--warning)";
+      }
+
+      quizQuestionTimerInterval = setInterval(() => {
+        quizQuestionSecondsLeft--;
+        if (timerEl) {
+          timerEl.textContent = `⏱️ ${quizQuestionSecondsLeft}s`;
+          if (quizQuestionSecondsLeft <= 10) {
+            timerEl.style.color = "#ef4444";
+          } else {
+            timerEl.style.color = "var(--warning)";
+          }
+        }
+
+        if (quizQuestionSecondsLeft <= 0) {
+          clearInterval(quizQuestionTimerInterval);
+          alert('⏰ 60 seconds time limit expired for this question! The question timer will restart.');
+          startQuestionTimer();
+        }
+      }, 1000);
+    }
+
+    const COURSE_QUIZZES = {
+      creative: {
+        beginner: [
+          { q: "Which frame rate is standard for achieving a traditional cinematic film look?", options: ["120 fps", "60 fps", "24 fps", "15 fps"], ans: 2 },
+          { q: "What does timeline clip trimming do in Premiere Pro?", options: ["Deletes audio tracks", "Cuts and adjusts start/end points of video clips", "Adds background music", "Renders MP4 file"], ans: 1 },
+          { q: "What is an Aspect Ratio of 16:9 commonly used for?", options: ["Instagram Reels", "Standard Widescreen HD/4K Displays", "Printed Posters", "Audio Files"], ans: 1 },
+          { q: "What is the keyboard shortcut for the Razor Tool (cutting clips) in Adobe Premiere Pro?", options: ["V", "C", "B", "R"], ans: 1 },
+          { q: "Which audio parameter controls overall playback loudness in video editing?", options: ["Decibels / Volume Gain (dB)", "Color Temperature", "Frame Rate", "Resolution"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is a J-Cut transition in video editing?", options: ["The video ends before the audio", "The audio of the next clip begins before the video cuts to it", "The screen turns green", "The audio volume drops to zero"], ans: 1 },
+          { q: "What is a LUT used for in Color Grading?", options: ["Compressing video size", "Preset color lookup table to quickly apply cinematic tones", "Speeding up video playback", "Exporting audio tracks"], ans: 1 },
+          { q: "Which Lumetri Color tool adjusts shadow vs highlight contrast curves?", options: ["Curves & Color Wheels", "Crop Tool", "Razor Tool", "Speed/Duration"], ans: 0 },
+          { q: "What is an L-Cut transition in video editing?", options: ["Audio from current clip continues playing after video cuts to next clip", "Video turns black and white", "Resolution drops by half", "Speed doubles"], ans: 0 },
+          { q: "Which audio filter reduces background static noise in voiceovers?", options: ["Denoise / Noise Reduction", "Glow Effect", "Sharpen Filter", "Time Remap"], ans: 0 }
+        ],
+        advanced: [
+          { q: "Which video codec is recommended for high-quality web streaming at low file sizes?", options: ["Uncompressed AVI", "H.264 / HEVC", "ProRes 4444", "GIF"], ans: 1 },
+          { q: "What does VBR (Variable Bit Rate) accomplish in video rendering?", options: ["Allocates higher bitrate for high-motion frames and lower bitrate for static frames", "Locks video to 10 fps", "Deletes color channels", "Reduces resolution to 240p"], ans: 0 },
+          { q: "In After Effects, what is Keyframing used for?", options: ["Editing text documents", "Creating smooth animated motion transitions over time", "Recording audio podcasts", "Formatting hard drives"], ans: 1 },
+          { q: "What does Easy Ease (F9) do to keyframe animations in After Effects?", options: ["Smoothes acceleration and deceleration into natural motion curves", "Deletes keyframes", "Locks layers", "Exports GIF"], ans: 0 },
+          { q: "What is Chroma Keying commonly used for in post-production?", options: ["Removing green screen background to composite new backgrounds", "Adjusting audio pitch", "Cropping borders", "Building web pages"], ans: 0 }
+        ]
+      },
+      frontend: {
+        beginner: [
+          { q: "What does HTML5 semantic element <header> represent?", options: ["Footer section", "Introductory content or navigation links", "Database table", "CSS style tag"], ans: 1 },
+          { q: "How do you declare a global CSS variable?", options: ["var primary = #fff;", "--primary-color: #6366f1;", "$primary: #000;", "color: primary;"], ans: 1 },
+          { q: "Which CSS property creates flexbox container layout?", options: ["display: flex;", "position: absolute;", "float: left;", "grid-columns: 1;"], ans: 0 },
+          { q: "Which HTML attribute specifies alternative text for images if they fail to load?", options: ["title", "alt", "src", "href"], ans: 1 },
+          { q: "What is the default layout position of standard HTML block elements?", options: ["position: absolute;", "position: fixed;", "position: static;", "position: relative;"], ans: 2 }
+        ],
+        mid: [
+          { q: "In React, which hook handles component state?", options: ["useEffect", "useState", "useRef", "useContext"], ans: 1 },
+          { q: "What is the purpose of useEffect in React?", options: ["Managing CSS styles", "Handling side effects like data fetching and subscriptions", "Creating database schemas", "Rendering HTML tags"], ans: 1 },
+          { q: "How do you pass data down to child components in React?", options: ["Via Props", "Via LocalStorage", "Via Redux only", "Via HTML comments"], ans: 0 },
+          { q: "What happens when a component's state or props change in React?", options: ["React re-renders the component to reflect new UI data", "Browser closes", "Database clears", "CSS resets"], ans: 0 },
+          { q: "Which JavaScript array method returns a brand new array with transformed elements?", options: ["map()", "push()", "pop()", "join()"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is Server-Side Rendering (SSR) in Next.js?", options: ["HTML generated on the server per request", "Rendering on client browser only", "Storing images in database", "Compiling CSS to JS"], ans: 0 },
+          { q: "Which directory router structure is used in Next.js 13+?", options: ["Pages Router", "App Router (app/ directory)", "Components Router", "Public Router"], ans: 1 },
+          { q: "What is SSG (Static Site Generation)?", options: ["Pre-rendering HTML pages at build time", "Downloading videos from YouTube", "Creating SQL queries", "Updating state dynamically on hover"], ans: 0 },
+          { q: "What is React Server Components (RSC) primary benefit?", options: ["Executes components on server without sending JS bundle size to client", "Speeds up internet connection", "Replaces HTML tags", "Creates CSS animations"], ans: 0 },
+          { q: "Which Next.js component automatically optimizes image delivery and responsive sizing?", options: ["<Image /> (next/image)", "<img />", "<Pic />", "<Media />"], ans: 0 }
+        ]
+      },
+      backend: {
+        beginner: [
+          { q: "Which HTTP status code indicates a successful GET request?", options: ["404 Not Found", "200 OK", "500 Internal Server Error", "301 Redirect"], ans: 1 },
+          { q: "What does REST stand for in API design?", options: ["Representational State Transfer", "Real Electronic System Timing", "Render Every Single Table", "Remote Executive Server System"], ans: 0 },
+          { q: "Which HTTP method is used to create a new resource on server?", options: ["GET", "POST", "DELETE", "OPTIONS"], ans: 1 },
+          { q: "Which HTTP header specifies data format sent in request body?", options: ["Content-Type: application/json", "User-Agent", "Accept-Language", "Cache-Control"], ans: 0 },
+          { q: "Which Express method listens for HTTP connections on a specified port?", options: ["app.listen()", "app.connect()", "app.start()", "app.bind()"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is Express Middleware in Node.js?", options: ["Functions that have access to req, res objects and next()", "HTML template engines", "Database indexes", "CSS stylesheets"], ans: 0 },
+          { q: "Which token format is widely used for stateless API Authentication?", options: ["XML Token", "JWT (JSON Web Token)", "HTML Token", "CSV Token"], ans: 1 },
+          { q: "How do you handle async errors in Express routes?", options: ["try/catch blocks passing error to next(err)", "Ignore error", "Console.log only", "Restart server"], ans: 0 },
+          { q: "What is CORS (Cross-Origin Resource Sharing)?", options: ["Security mechanism allowing restricted browser requests across domains", "File compression format", "Database table key", "CSS preprocessor"], ans: 0 },
+          { q: "Which HTTP status code should be returned when client credentials or token are missing?", options: ["401 Unauthorized", "200 OK", "502 Bad Gateway", "304 Not Modified"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is Redis primarily used for in backend systems?", options: ["In-memory data structure store for ultra-fast caching", "Video rendering", "CSS styling", "Figma wireframing"], ans: 0 },
+          { q: "What is Rate Limiting in API Security?", options: ["Restricting number of API requests a user can make in a given timeframe", "Speeding up internet connection", "Deleting database records", "Formatting JSON responses"], ans: 0 },
+          { q: "What does Docker containerization accomplish?", options: ["Packages application with all dependencies to run consistently anywhere", "Translates Python to JavaScript", "Creates logo graphics", "Sends emails"], ans: 0 },
+          { q: "What is the main role of a Load Balancer (like NGINX)?", options: ["Distributes incoming network traffic across multiple server instances", "Encrypts HTML", "Designs database schemas", "Edits MP4 videos"], ans: 0 },
+          { q: "What is the Event Loop in Node.js responsible for?", options: ["Handling non-blocking asynchronous I/O operations on a single thread", "Compiling C++ code", "Styling CSS buttons", "Downloading images"], ans: 0 }
+        ]
+      },
+      database: {
+        beginner: [
+          { q: "Which SQL command retrieves data from a database table?", options: ["SELECT", "INSERT", "UPDATE", "REMOVE"], ans: 0 },
+          { q: "What is a Primary Key in relational databases?", options: ["A column that uniquely identifies each row in a table", "A password to log in", "The first column in a spreadsheet", "A secondary index"], ans: 0 },
+          { q: "Which clause filters rows matching specific conditions?", options: ["ORDER BY", "GROUP BY", "WHERE", "HAVING"], ans: 2 },
+          { q: "Which SQL statement adds new records to a database table?", options: ["INSERT INTO", "ADD ROW", "APPEND", "CREATE RECORD"], ans: 0 },
+          { q: "What does SQL stand for?", options: ["Structured Query Language", "Simple Quick Logic", "System Query Link", "Serial Quantitative List"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is a Database Index used for?", options: ["Drastically speeds up query search performance", "Encrypts user passwords", "Deletes old records", "Generates PDF reports"], ans: 0 },
+          { q: "Which SQL JOIN returns only rows with matching values in both tables?", options: ["FULL OUTER JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN"], ans: 1 },
+          { q: "What is Foreign Key constraint used for?", options: ["Enforcing referential integrity between two tables", "Creating CSS themes", "Setting server IP address", "Sending HTTP status"], ans: 0 },
+          { q: "Which SQL clause groups rows sharing equal column values for aggregate functions?", options: ["GROUP BY", "ORDER BY", "HAVING", "LIMIT"], ans: 0 },
+          { q: "Which MongoDB command updates existing documents or inserts new if missing?", options: ["updateOne with upsert: true", "findAndRemove", "dropCollection", "createIndex"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is MongoDB $aggregate pipeline used for?", options: ["Multi-stage data transformation, filtering, and grouping", "Editing video clips", "Generating HTML forms", "Creating zip files"], ans: 0 },
+          { q: "What is Database Sharding?", options: ["Horizontal partitioning of data across multiple servers", "Creating backups on USB drive", "Deleting table columns", "Formatting text strings"], ans: 0 },
+          { q: "What is Cache Invalidation strategy?", options: ["Ensuring cached data is updated or cleared when underlying data changes", "Deleting database user accounts", "Restarting MySQL daemon", "Encrypting passwords"], ans: 0 },
+          { q: "What is B-Tree index structure advantage in SQL databases?", options: ["Provides logarithmic O(log N) search and range query lookups", "Compresses video size", "Creates CSS flexbox", "Generates REST APIs"], ans: 0 },
+          { q: "What does ACID stand for in database transaction properties?", options: ["Atomicity, Consistency, Isolation, Durability", "Action, Code, Index, Data", "Access, Control, Interface, Domain", "Algorithm, Class, Instance, Directory"], ans: 0 }
+        ]
+      },
+      typescript: {
+        beginner: [
+          { q: "Which keyword defines a custom type contract for object shapes in TypeScript?", options: ["interface", "struct", "class", "package"], ans: 0 },
+          { q: "What does the 'readonly' modifier do in TypeScript?", options: ["Prevents property modification after initialization", "Hides property from autocomplete", "Deletes property from memory", "Converts string to number"], ans: 0 },
+          { q: "Which compiler flag forces strict type checking in tsconfig.json?", options: ["\"strict\": true", "\"noEmit\": true", "\"target\": \"es5\"", "\"checkJs\": false"], ans: 0 },
+          { q: "What is the type of a variable declared as: const x = 'hello' in TypeScript?", options: ["\"hello\" (Literal Type)", "string", "any", "unknown"], ans: 0 },
+          { q: "Which utility type makes all properties in T optional?", options: ["Partial<T>", "Required<T>", "Readonly<T>", "Pick<T>"], ans: 0 }
+        ],
+        mid: [
+          { q: "What do Generics (<T>) accomplish in TypeScript?", options: ["Creates reusable components that work with multiple data types while maintaining type safety", "Reduces video resolution", "Renders React HTML tags", "Creates SQL tables"], ans: 0 },
+          { q: "Which utility type constructs a type by picking specific properties from T?", options: ["Pick<T, K>", "Omit<T, K>", "Record<K, T>", "Exclude<T, U>"], ans: 0 },
+          { q: "What is a Type Guard in TypeScript?", options: ["Runtime expression that performs type checks to narrow down types in conditional blocks", "Security firewall", "Database key", "CSS animation"], ans: 0 },
+          { q: "Which operator performs non-null assertion in TypeScript?", options: ["!", "?", "??", "&&"], ans: 0 },
+          { q: "What does 'unknown' type force developer to do before operating on a variable?", options: ["Perform explicit type checking or narrowing first", "Delete variable", "Convert to JSON", "Recompile project"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is a Conditional Type in TypeScript?", options: ["Types that select one of two types based on condition (T extends U ? X : Y)", "If/else statement in JavaScript", "Database query", "CSS media query"], ans: 0 },
+          { q: "What does infer keyword do inside conditional type declarations?", options: ["Extracts and introduces a type variable within true branch", "Imports external packages", "Deletes types", "Runs async promises"], ans: 0 },
+          { q: "What is Mapped Type in TypeScript?", options: ["Creates new types by iterating over property keys of an existing type ({ [K in keyof T]: T[K] })", "JavaScript Map() array method", "Google Maps API", "CSS flexbox grid"], ans: 0 },
+          { q: "Which TS utility type removes specific types from a union?", options: ["Exclude<T, U>", "Extract<T, U>", "Omit<T, K>", "Pick<T, K>"], ans: 0 },
+          { q: "What is Template Literal Type in TypeScript?", options: ["Types that use string template literal syntax to build new union types", "HTML script tags", "SQL template literals", "Markdown links"], ans: 0 }
+        ]
+      },
+      python: {
+        beginner: [
+          { q: "Which keyword is used to define a function in Python?", options: ["def", "func", "function", "lambda"], ans: 0 },
+          { q: "What data structure in Python is ordered, mutable, and written with square brackets []?", options: ["List", "Tuple", "Set", "Dictionary"], ans: 0 },
+          { q: "How are code blocks defined in Python?", options: ["Using consistent indentation spaces", "Curly braces {}", "Semicolons ;", "Begin / End keywords"], ans: 0 },
+          { q: "What is pip in the Python ecosystem?", options: ["Package installer for managing PyPI packages", "Python compiler", "Code editor", "Database connector"], ans: 0 },
+          { q: "Which Python built-in function returns the length of a list or string?", options: ["len()", "size()", "count()", "length()"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is List Comprehension in Python?", options: ["Concise syntax to construct lists from existing iterables: [x for x in list]", "Deleting array items", "Sorting a list backwards", "Printing list to console"], ans: 0 },
+          { q: "What do *args and **kwargs allow in Python function signatures?", options: ["Passing variable numbers of positional (*args) and keyword (**kwargs) arguments", "Creating database connections", "Importing external libraries", "Defining global variables"], ans: 0 },
+          { q: "What is a Decorator (@decorator) in Python?", options: ["A function that wraps another function to extend its behavior without modifying it", "CSS styling tool", "HTML tag wrapper", "SQL index"], ans: 0 },
+          { q: "In Pandas, what object represents a 2D labeled tabular data structure with columns?", options: ["DataFrame", "Series", "Array", "Matrix"], ans: 0 },
+          { q: "What is the main purpose of Python's venv / virtualenv?", options: ["Creates isolated Python environments with independent package dependencies", "Speeds up CPU rendering", "Encrypts Python scripts", "Formats code styling"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is Python's GIL (Global Interpreter Lock)?", options: ["A mutex that locks CPython execution to a single CPU thread at a time", "Security firewall", "Database password manager", "Graphics renderer"], ans: 0 },
+          { q: "What is a Generator function (using yield) in Python?", options: ["Function returning lazy iterators that produce values on-demand to save memory", "Function that generates random numbers", "HTML generator", "Compiler tool"], ans: 0 },
+          { q: "In Python OOP, what do magic methods (__init__, __str__, __repr__) do?", options: ["Special dunder methods defining class behavior for built-in operations", "Hidden private functions", "Global scope helpers", "SQL query runners"], ans: 0 },
+          { q: "What is NumPy's Vectorization benefit in data processing?", options: ["Executes array operations in fast C-compiled loops without slow Python for-loops", "Translates Python to JavaScript", "Compresses images", "Creates web forms"], ans: 0 },
+          { q: "What is the difference between asyncio and threading in Python?", options: ["asyncio uses single-threaded cooperative event loops; threading uses OS threads", "No difference", "asyncio runs on GPU", "threading cannot run async code"], ans: 0 }
+        ]
+      },
+      system: {
+        beginner: [
+          { q: "What is the primary difference between Vertical and Horizontal Scaling?", options: ["Vertical adds CPU/RAM to 1 machine; Horizontal adds more server nodes", "Vertical is cheaper", "Horizontal removes servers", "No difference"], ans: 0 },
+          { q: "What is a Load Balancer used for in system architecture?", options: ["Distributes network traffic evenly across multiple server instances", "Encrypts passwords", "Deletes old files", "Styles UI themes"], ans: 0 },
+          { q: "What is Content Delivery Network (CDN) used for?", options: ["Caches static assets geographically closer to users for faster loading", "Sends push notifications", "Edits MP4 video", "Compiles C++ code"], ans: 0 },
+          { q: "What is Stateless Architecture in web servers?", options: ["Servers store no user session state; requests contain all auth details", "Server has no hard drive", "Server runs without internet", "Database has no tables"], ans: 0 },
+          { q: "What is DNS (Domain Name System) responsible for?", options: ["Translates domain names like google.com to IP addresses", "Styles HTML pages", "Renders 3D graphics", "Stores user passwords"], ans: 0 }
+        ],
+        mid: [
+          { q: "What does the CAP Theorem state for distributed systems?", options: ["A system can guarantee at most 2 out of 3: Consistency, Availability, Partition Tolerance", "Computers always crash", "CPUs operate at max clock", "Caching is compulsory"], ans: 0 },
+          { q: "What is Consistent Hashing used for in distributed cache clusters?", options: ["Minimizes key remapping when cache nodes are added or removed", "Encrypts passwords with MD5", "Formats JSON strings", "Sorts SQL tables"], ans: 0 },
+          { q: "What is Database Read Replication (Primary-Replica setup)?", options: ["Primary server handles writes; replicas sync and serve read traffic", "Duplicates server hard drives", "Deletes replica database", "Sends email alerts"], ans: 0 },
+          { q: "What is a Message Queue (RabbitMQ / Kafka) used for?", options: ["Asynchronously decouples microservices and buffers background tasks", "Displays popups", "Styles CSS buttons", "Formats PDF files"], ans: 0 },
+          { q: "What is the difference between Strong and Eventual Consistency?", options: ["Strong guarantees instant read of latest write; Eventual syncs nodes over time", "Strong is for SQL only", "Eventual is faster always", "No difference"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is the Circuit Breaker Pattern in microservice architectures?", options: ["Prevents cascading failures by halting calls to failing downstream services", "Shuts down server power", "Deletes user data", "Resets router IP"], ans: 0 },
+          { q: "How does a Rate Limiter using Token Bucket algorithm work?", options: ["Refills tokens at constant rate; requests consume tokens and drop when bucket is empty", "Deletes old accounts", "Increases CPU speed", "Formats text"], ans: 0 },
+          { q: "What is Database Write-Ahead Logging (WAL)?", options: ["Appends changes to disk log before committing to tables for durability", "Deletes log files", "Sends emails", "Formats HTML tables"], ans: 0 },
+          { q: "What is Two-Phase Commit (2PC) protocol used for?", options: ["Ensures atomic transactions across distributed database nodes", "Encrypts passwords twice", "Loads 2 web pages", "Backs up files"], ans: 0 },
+          { q: "What is Event Sourcing pattern in system design?", options: ["Stores state changes as a sequence of immutable event logs rather than current state snapshots", "Renders HTML canvas", "Creates CSS flexbox", "Generates REST APIs"], ans: 0 }
+        ]
+      },
+      mobile: {
+        beginner: [
+          { q: "What is React Native used for?", options: ["Building native iOS and Android mobile apps using JavaScript and React", "Editing MP4 videos", "Designing logos", "Building MySQL databases"], ans: 0 },
+          { q: "What programming language is used to build Flutter apps?", options: ["Dart", "Swift", "Kotlin", "Python"], ans: 0 },
+          { q: "In React Native, what component replaces standard HTML <div> tag?", options: ["<View>", "<Div>", "<Section>", "<Box>"], ans: 0 },
+          { q: "In React Native, what component replaces standard HTML <p> or <span> tag for rendering text?", options: ["<Text>", "<Paragraph>", "<Label>", "<Span>"], ans: 0 },
+          { q: "What tool / CLI starts an Expo React Native mobile project?", options: ["npx create-expo-app", "npm start react", "flutter init", "swift create"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is the JavaScript Bridge in React Native architecture?", options: ["Asynchronous channel serializing messages between JS thread and Native modules", "Internet router connection", "CSS bridge library", "SQL connector"], ans: 0 },
+          { q: "In Flutter, what is the key difference between StatelessWidget and StatefulWidget?", options: ["Stateless has immutable properties; Stateful holds mutable state and rebuilds UI", "Stateless is for Android only", "Stateful runs faster", "No difference"], ans: 0 },
+          { q: "What component displays efficient long scrollable lists in React Native?", options: ["FlatList", "ScrollView", "ListView", "MapList"], ans: 0 },
+          { q: "What API manages mobile screen navigation in React Native apps?", options: ["React Navigation (NavigationContainer)", "HTML Router", "Express Router", "Window Location"], ans: 0 },
+          { q: "What tool manages native iOS dependencies for Cocoa framework in mobile projects?", options: ["CocoaPods", "npm", "pip", "Gradle"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is React Native JSI (JavaScript Interface) advantage over old Bridge?", options: ["Enables direct synchronous C++ memory calls between JS engine and Native host", "Makes images smaller", "Deletes native code", "Auto-translates Swift"], ans: 0 },
+          { q: "In Flutter, how does BLoC pattern organize app architecture?", options: ["Separates UI presentation from business logic using reactive Streams and Sinks", "Combines UI and DB in 1 file", "Replaces Dart language", "Deletes widgets"], ans: 0 },
+          { q: "How do Native Modules allow React Native apps to access hardware features?", options: ["Exposes custom Swift/Obj-C or Java/Kotlin APIs directly to JavaScript", "Uses web browser APIs", "Downloads plugins from npm", "Renders HTML iframe"], ans: 0 },
+          { q: "What is Push Notification APNs / FCM token registration lifecycle in mobile apps?", options: ["Obtains unique device token from Apple/Google servers and registers it with backend", "Sends emails to users", "Saves token in CSS", "Displays alert box"], ans: 0 },
+          { q: "What does CodePush / OTA (Over-The-Air) update accomplish for mobile apps?", options: ["Deploys JavaScript bundle updates directly to user devices without App Store re-submission", "Deletes app from phone", "Reboots device", "Formats SD card"], ans: 0 }
+        ]
+      },
+      devops: {
+        beginner: [
+          { q: "What is Docker primarily used for?", options: ["Containerizing applications with dependencies to run consistently anywhere", "Editing photos", "Writing blog posts", "Styling CSS"], ans: 0 },
+          { q: "What is a Dockerfile?", options: ["Text script containing instructions to assemble a Docker container image", "Database file", "HTML file", "ZIP archive"], ans: 0 },
+          { q: "What does CI/CD stand for in modern software engineering?", options: ["Continuous Integration & Continuous Deployment", "Computer Interface / Code Design", "Central Index / Core Database", "Create Instance / Close Domain"], ans: 0 },
+          { q: "Which Git command uploads local commits to remote GitHub repository?", options: ["git push", "git pull", "git commit", "git clone"], ans: 0 },
+          { q: "What is YAML format commonly used for in DevOps?", options: ["Configuration format for writing Docker Compose and CI/CD workflows", "Writing blog articles", "Building web pages", "Styling fonts"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is Docker Compose used for?", options: ["Defining and running multi-container Docker applications via YAML config", "Editing audio tracks", "Writing SQL queries", "Compiling Java"], ans: 0 },
+          { q: "What is Kubernetes (K8s)?", options: ["Open-source container orchestration system for automating deployment and scaling", "Programming language", "Database engine", "Web browser"], ans: 0 },
+          { q: "What is Environment Variable (.env) used for in production hosting?", options: ["Storing secret API keys and configuration parameters outside source code", "Styling website colors", "Creating HTML tags", "Formatting text"], ans: 0 },
+          { q: "What is Nginx commonly used for in web hosting?", options: ["Reverse proxy, load balancer, and static asset web server", "Video editor", "Code compiler", "Database designer"], ans: 0 },
+          { q: "What does GitHub Actions workflow (.github/workflows/main.yml) do?", options: ["Automates build, test, and deployment jobs on code push", "Designs logos", "Sends SMS messages", "Formats code fonts"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is Infrastructure as Code (IaC) with Terraform?", options: ["Provisioning and managing cloud resources using declarative configuration files", "Writing code in HTML", "Deleting cloud servers", "Creating PDF reports"], ans: 0 },
+          { q: "What is Blue-Green Deployment strategy?", options: ["Running two identical production environments for zero-downtime updates and instant rollback", "Coloring UI buttons", "Deleting green servers", "Deploying on weekends only"], ans: 0 },
+          { q: "What is a Kubernetes Pod?", options: ["Smallest deployable computing unit in K8s containing one or more containers", "Storage hard drive", "Network cable", "Database table"], ans: 0 },
+          { q: "What is Helm in Kubernetes package management?", options: ["Templating tool for managing and deploying K8s application charts", "Security firewall", "Docker compiler", "Linux shell"], ans: 0 },
+          { q: "What is SSL/TLS Certificate auto-renewal via Certbot Let's Encrypt?", options: ["Automates obtaining and updating HTTPS security certificates for web servers", "Deletes security keys", "Encrypts database tables", "Blocks IP addresses"], ans: 0 }
+        ]
+      },
+      ai: {
+        beginner: [
+          { q: "What does AI stand for?", options: ["Artificial Intelligence", "Automated Interface", "Algorithmic Index", "Applied Integration"], ans: 0 },
+          { q: "What is Machine Learning?", options: ["Field of AI giving systems ability to learn from data without explicit programming", "Building computer hardware", "Designing websites", "Writing HTML"], ans: 0 },
+          { q: "What Python library is standard for array operations in Data Science & Machine Learning?", options: ["NumPy", "Express", "React", "Flask"], ans: 0 },
+          { q: "What does LLM stand for in modern AI technology?", options: ["Large Language Model", "Long Logical Memory", "Linear List Management", "Local Language Module"], ans: 0 },
+          { q: "What is Prompt Engineering?", options: ["Crafting precise input prompts to guide AI models to generate optimal responses", "Building server hardware", "Wiring electronics", "Designing database tables"], ans: 0 }
+        ],
+        mid: [
+          { q: "What is Supervised Learning in Machine Learning?", options: ["Training algorithms on labeled datasets with input-output pairs", "Training with no data", "Manual coding", "Random guessing"], ans: 0 },
+          { q: "What is Overfitting in machine learning models?", options: ["Model learns training noise too closely and performs poorly on unseen test data", "Model is too fast", "Model uses 100% CPU", "Model file is too large"], ans: 0 },
+          { q: "What is a Neural Network Activation Function (like ReLU or Sigmoid)?", options: ["Introduces non-linearity to help network learn complex feature patterns", "Powers on GPU", "Deletes neurons", "Saves model file"], ans: 0 },
+          { q: "What is RAG (Retrieval-Augmented Generation) in LLM applications?", options: ["Enhancing LLM responses by fetching relevant documents from a vector database", "Random AI Generation", "Rapid Array Grouping", "Redundant Querying"], ans: 0 },
+          { q: "What is a Vector Embedding in AI applications?", options: ["Numerical array representation of text capturing semantic meaning in high-dimensional space", "Image file extension", "CSS style tag", "Database table column"], ans: 0 }
+        ],
+        advanced: [
+          { q: "What is the Self-Attention mechanism in Transformer architecture?", options: ["Allows model to dynamically weigh importance of all tokens in a sequence regardless of distance", "Blocks neural network", "Deletes tokens", "Speeds up RAM"], ans: 0 },
+          { q: "What is Fine-Tuning (LoRA / PEFT) for LLMs?", options: ["Adapting pre-trained LLMs to specialized tasks by updating small parameter weights efficiently", "Tuning audio pitch", "Deleting model weights", "Formatting text fonts"], ans: 0 },
+          { q: "What is Vector Database HNSW (Hierarchical Navigable Small World) index?", options: ["Graph-based index algorithm enabling fast approximate nearest neighbor vector similarity search", "SQL database index", "HTML canvas tag", "CSS flexbox grid"], ans: 0 },
+          { q: "What does Temperature parameter control in LLM text generation?", options: ["Controls randomness: 0.0 for deterministic answers, 1.0 for creative variations", "GPU heat output", "Server fan speed", "Response delivery time"], ans: 0 },
+          { q: "What is RLHF (Reinforcement Learning from Human Feedback)?", options: ["Aligning AI model outputs with human intent and safety standards using reward models", "Random training algorithm", "Automated code formatting", "Hardware speed testing"], ans: 0 }
+        ]
+      }
+    };
+
+    window.openCourseQuizModal = function() {
+      const db = dbGet();
+      const candId = (candidate && candidate.id) || (auth && auth.candidate && auth.candidate.id);
+      const dbCand = db ? (db.users.find(u => String(u.id) === String(candId)) || candidate) : candidate;
+      const attemptKey = `${activePortalCategory}_${activePortalLevel}`;
+
+      if (!dbCand.quiz_attempts) dbCand.quiz_attempts = {};
+      const attemptsUsed = dbCand.quiz_attempts[attemptKey] || 0;
+      const isAlreadyPassed = checkLevelCertificateEarned(activePortalCategory, activePortalLevel);
+
+      if (!isAlreadyPassed && attemptsUsed >= 3) {
+        alert(`🚫 Maximum quiz attempts reached (${attemptsUsed}/3). You cannot retake this quiz.`);
+        showAlert('alert-container', `🚫 Maximum quiz attempts reached (${attemptsUsed}/3). You cannot retake this quiz.`, 'error');
+        return;
+      }
+
+      const catData = COURSE_QUIZZES[activePortalCategory] || COURSE_QUIZZES['creative'];
+      const rawQuestions = catData[activePortalLevel] || catData['beginner'];
+
+      // Deep clone and shuffle options for every question dynamically
+      currentQuizQuestions = rawQuestions.map(q => {
+        const correctText = q.options[q.ans];
+        const shuffledOptions = [...q.options];
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        const newAnsIndex = shuffledOptions.indexOf(correctText);
+        return {
+          q: q.q,
+          options: shuffledOptions,
+          ans: newAnsIndex
+        };
+      });
+
+      currentQuizIndex = 0;
+      currentQuizScore = 0;
+      selectedOptionIndex = null;
+
+      const titleMap = {
+        creative: "Video Editing",
+        frontend: "Frontend Architecture",
+        backend: "Backend APIs",
+        database: "Database Systems",
+        typescript: "TypeScript Applications",
+        python: "Python & Data Science",
+        system: "System Design & Scaling",
+        mobile: "Mobile App Development",
+        devops: "DevOps & Cloud Pipelines",
+        ai: "AI & Machine Learning"
+      };
+      const titleStr = titleMap[activePortalCategory] || "Skill";
+
+      const modalEl = document.getElementById('course-quiz-modal');
+      if (modalEl) modalEl.style.display = "flex";
+
+      const titleEl = document.getElementById('quiz-modal-title');
+      if (titleEl) titleEl.textContent = `${titleStr} (${activePortalLevel.toUpperCase()}) Skill Quiz`;
+      const subEl = document.getElementById('quiz-modal-subtitle');
+      if (subEl) subEl.textContent = `Score at least 3 out of ${currentQuizQuestions.length} correct to pass and claim your verified level certificate!`;
+
+      renderQuizQuestion();
+    };
+
+    window.closeCourseQuizModal = function() {
+      clearInterval(quizQuestionTimerInterval);
+      const modalEl = document.getElementById('course-quiz-modal');
+      if (modalEl) modalEl.style.display = "none";
+    };
+
+    let isAnswerSubmitted = false;
+
+    function renderQuizQuestion() {
+      const body = document.getElementById('quiz-modal-body');
+      const submitBtn = document.getElementById('quiz-submit-btn');
+      const progressText = document.getElementById('quiz-progress-text');
+      selectedOptionIndex = null;
+      isAnswerSubmitted = false;
+
+      if (!body || !submitBtn || !progressText) return;
+
+      if (currentQuizIndex >= currentQuizQuestions.length) {
+        clearInterval(quizQuestionTimerInterval);
+        const timerEl = document.getElementById('quiz-modal-timer');
+        if (timerEl) timerEl.textContent = `🏆 DONE`;
+
+        const totalQ = currentQuizQuestions.length;
+        const actualScore = currentQuizScore;
+        const scorePct = Math.round((actualScore / totalQ) * 100);
+        const isPassed = (actualScore >= 3);
+
+        const db = dbGet();
+        const candId = (candidate && candidate.id) || (auth && auth.candidate && auth.candidate.id);
+        const dbCand = db ? (db.users.find(u => String(u.id) === String(candId)) || candidate) : candidate;
+        const attemptKey = `${activePortalCategory}_${activePortalLevel}`;
+
+        if (!dbCand.quiz_attempts) dbCand.quiz_attempts = {};
+        
+        const isAlreadyPassed = checkLevelCertificateEarned(activePortalCategory, activePortalLevel);
+        if (!isAlreadyPassed) {
+          dbCand.quiz_attempts[attemptKey] = (dbCand.quiz_attempts[attemptKey] || 0) + 1;
+          dbSave(db);
+          candidate = dbCand;
+          if (auth) auth.candidate = dbCand;
+        }
+
+        const attemptsUsed = dbCand.quiz_attempts[attemptKey] || 1;
+        const maxAttempts = 3;
+        const hasAttemptsLeft = (attemptsUsed < maxAttempts);
+
+        if (isPassed) {
+          body.innerHTML = `
+            <div style="text-align: center; padding: 1.5rem 0;">
+              <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🏆</div>
+              <h4 style="font-size: 1.4rem; color: var(--success); font-family: var(--font-display);">Quiz Assessment Passed (${actualScore}/${totalQ})!</h4>
+              <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+                Outstanding! You scored <strong>${scorePct}% (${actualScore} out of ${totalQ} correct)</strong> and demonstrated verified technical proficiency for ${activePortalLevel.toUpperCase()} level.
+              </p>
+            </div>
+          `;
+          progressText.textContent = `Passed ${actualScore} of ${totalQ} (${scorePct}%)`;
+          submitBtn.textContent = "🎓 Claim Verified Certificate";
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          submitBtn.style.cursor = "pointer";
+          submitBtn.onclick = function() {
+            closeCourseQuizModal();
+            completeLevelAndEarnCert(actualScore, totalQ);
+          };
+        } else {
+          // FAILED (< 3/5)
+          if (hasAttemptsLeft) {
+            body.innerHTML = `
+              <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">❌</div>
+                <h4 style="font-size: 1.4rem; color: #ef4444; font-family: var(--font-display);">Quiz Assessment Failed (${actualScore}/${totalQ})</h4>
+                <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+                  You scored <strong>${scorePct}% (${actualScore} out of ${totalQ} correct)</strong>. You need at least 3 out of 5 correct (60%) to pass.
+                </p>
+                <div style="font-size: 0.85rem; color: var(--warning); font-weight: 700; margin-top: 1rem; background: rgba(245,158,11,0.12); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--warning);">
+                  ⚠️ Attempt ${attemptsUsed} of ${maxAttempts} used. ${maxAttempts - attemptsUsed} retake attempt(s) remaining.
+                </div>
+              </div>
+            `;
+            progressText.textContent = `Failed ${actualScore} of ${totalQ} (${scorePct}%) - Attempt ${attemptsUsed}/${maxAttempts}`;
+            submitBtn.textContent = `🔄 Re-attempt Quiz (Attempt ${attemptsUsed + 1} of 3)`;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = "1";
+            submitBtn.style.cursor = "pointer";
+            submitBtn.onclick = function() {
+              openCourseQuizModal();
+            };
+          } else {
+            // MAX ATTEMPTS REACHED (3/3)
+            body.innerHTML = `
+              <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🚫</div>
+                <h4 style="font-size: 1.4rem; color: #ef4444; font-family: var(--font-display);">Maximum Quiz Attempts Reached (${attemptsUsed}/${maxAttempts})</h4>
+                <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+                  You scored <strong>${scorePct}% (${actualScore} out of ${totalQ} correct)</strong>. Maximum ${maxAttempts} attempts reached.
+                </p>
+                <div style="font-size: 0.85rem; color: #ef4444; font-weight: 700; margin-top: 1rem; background: rgba(239,68,68,0.12); padding: 0.75rem; border-radius: 8px; border: 1px solid #ef4444;">
+                  🚫 Maximum quiz attempts reached. You cannot retake this quiz.
+                </div>
+              </div>
+            `;
+            progressText.textContent = `Maximum Attempts Reached (${attemptsUsed}/3)`;
+            submitBtn.textContent = "🔒 Retakes Locked (Max Attempts Reached)";
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.6";
+            submitBtn.style.cursor = "not-allowed";
+          }
+        }
+        return;
+      }
+
+      startQuestionTimer();
+
+      const qObj = currentQuizQuestions[currentQuizIndex];
+      progressText.textContent = `Question ${currentQuizIndex + 1} of ${currentQuizQuestions.length}`;
+      submitBtn.textContent = "Submit Answer ⚡";
+      submitBtn.onclick = window.handleQuizSubmitAnswer;
+
+      let optionsHtml = qObj.options.map((opt, idx) => `
+        <label id="opt_label_${idx}" onclick="window.selectQuizOption(${idx})" style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-bottom: 0.65rem; cursor: pointer; transition: all 0.2s ease;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <input type="radio" name="quiz_opt" id="quiz_opt_${idx}" value="${idx}" onchange="selectedOptionIndex=${idx}" style="accent-color: var(--primary); transform: scale(1.2);">
+            <span style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500;">${opt}</span>
+          </div>
+          <span id="opt_badge_${idx}" style="font-size: 0.8rem; font-weight: 700;"></span>
+        </label>
+      `).join('');
+
+      body.innerHTML = `
+        <h4 style="font-size: 1.05rem; font-family: var(--font-sans); color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.4;">
+          ${currentQuizIndex + 1}. ${qObj.q}
+        </h4>
+        <div id="quiz-options-wrapper">${optionsHtml}</div>
+        <div id="quiz-answer-feedback" style="display: none; margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.88rem; font-weight: 600;"></div>
+      `;
+    }
+
+    window.selectQuizOption = function(idx) {
+      if (isAnswerSubmitted) return;
+      selectedOptionIndex = idx;
+      const radioEl = document.getElementById(`quiz_opt_${idx}`);
+      if (radioEl) radioEl.checked = true;
+    };
+
+    window.handleQuizSubmitAnswer = function() {
+      if (isAnswerSubmitted) {
+        currentQuizIndex++;
+        renderQuizQuestion();
+        return;
+      }
+
+      const checkedRadio = document.querySelector('input[name="quiz_opt"]:checked');
+      if (!checkedRadio && selectedOptionIndex === null) {
+        alert('Please select an option before submitting!');
+        return;
+      }
+
+      const userSelection = checkedRadio ? parseInt(checkedRadio.value, 10) : selectedOptionIndex;
+      const qObj = currentQuizQuestions[currentQuizIndex];
+      const isCorrect = (userSelection === qObj.ans);
+
+      clearInterval(quizQuestionTimerInterval);
+      isAnswerSubmitted = true;
+
+      document.querySelectorAll('input[name="quiz_opt"]').forEach(input => input.disabled = true);
+
+      qObj.options.forEach((_, idx) => {
+        const lbl = document.getElementById(`opt_label_${idx}`);
+        const bdg = document.getElementById(`opt_badge_${idx}`);
+        if (!lbl || !bdg) return;
+
+        if (idx === qObj.ans) {
+          lbl.style.border = "2px solid #10b981";
+          lbl.style.background = "rgba(16, 185, 129, 0.12)";
+          bdg.textContent = "✅ Correct Answer";
+          bdg.style.color = "#10b981";
+        } else if (idx === userSelection && !isCorrect) {
+          lbl.style.border = "2px solid #ef4444";
+          lbl.style.background = "rgba(239, 68, 68, 0.12)";
+          bdg.textContent = "❌ Your Answer";
+          bdg.style.color = "#ef4444";
+        }
+      });
+
+      const feedbackBox = document.getElementById('quiz-answer-feedback');
+      if (feedbackBox) {
+        feedbackBox.style.display = "block";
+        if (isCorrect) {
+          currentQuizScore++;
+          feedbackBox.style.background = "rgba(16, 185, 129, 0.15)";
+          feedbackBox.style.border = "1px solid #10b981";
+          feedbackBox.style.color = "#10b981";
+          feedbackBox.innerHTML = `🎉 <strong>Spot on!</strong> That is the correct answer.`;
+        } else {
+          feedbackBox.style.background = "rgba(239, 68, 68, 0.15)";
+          feedbackBox.style.border = "1px solid #ef4444";
+          feedbackBox.style.color = "#ef4444";
+          feedbackBox.innerHTML = `💡 <strong>Incorrect answer.</strong> Correct answer is: <u>"${qObj.options[qObj.ans]}"</u>.`;
+        }
+      }
+
+      const submitBtn = document.getElementById('quiz-submit-btn');
+      if (submitBtn) {
+        if (currentQuizIndex + 1 >= currentQuizQuestions.length) {
+          submitBtn.textContent = "See Final Results 🏆";
+        } else {
+          submitBtn.textContent = "Next Question ➔";
+        }
+      }
+    };
 
     window.filterAcademyCourses = function(category) {
       activeAcademyCategory = category;
@@ -1729,6 +2577,13 @@
     loadRecommendations();
     initAdvisorChat();
     renderAcademy();
+
+    const watchCat = new URLSearchParams(window.location.search).get('watchCourse');
+    if (watchCat) {
+      setTimeout(() => {
+        promptCourseLanguage(`course_${watchCat}`, watchCat);
+      }, 400);
+    }
     }
 </script>
 </body>
