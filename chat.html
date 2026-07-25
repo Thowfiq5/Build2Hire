@@ -413,6 +413,8 @@
   <script src="shared.js?v=1.0.5"></script>
   <script>
     var auth = withAuth(['candidate', 'recruiter', 'admin']);
+    // Ensure we have a stable reference to the original getUser implementation
+    var originalGetUser = window.__origGetUser || getUser;
     if (!window.__origGetUser) {
       window.__origGetUser = getUser;
       getUser = function() {
