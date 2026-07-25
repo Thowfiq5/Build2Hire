@@ -413,14 +413,16 @@
   <script src="shared.js?v=1.0.5"></script>
   <script>
     var auth = withAuth(['candidate', 'recruiter', 'admin']);
-    var originalGetUser = getUser;
-    getUser = function() {
-      var u = originalGetUser();
-      if (u && u.role === 'admin' && auth) {
-        return auth.candidate;
-      }
-      return u;
-    };
+    if (!window.__origGetUser) {
+      window.__origGetUser = getUser;
+      getUser = function() {
+        var u = window.__origGetUser();
+        if (u && u.role === 'admin' && auth) {
+          return auth.candidate;
+        }
+        return u;
+      };
+    }
     var currentConversationId = null;
     var dbState = null;
 
