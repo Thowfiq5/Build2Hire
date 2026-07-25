@@ -16,7 +16,8 @@
 
     <main class="main-content">
       <!-- DYNAMIC PORTAL STATES BASED ON REGISTRATION STATUS -->
-      
+      <div id="alert-container"></div>
+
       <!-- LOCKED STATE (Candidate has not completed basic profile onboarding) -->
       <div id="locked-portal-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
         <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
@@ -685,7 +686,9 @@
       return u;
     };
     if (auth) {
-      const { user, db: dbState, candidate } = auth;
+      var user = auth.user;
+      var dbState = auth.db;
+      var candidate = auth.candidate;
 
       // Refresh XP Progress layout inside the sidebar
       function refreshSidebarStats() {
@@ -771,6 +774,21 @@
             setTimeout(() => toast.remove(), 500);
           }
         }, 6000);
+      }
+
+      const realSessionUser = originalGetUser();
+      const isAdminViewing = realSessionUser && (realSessionUser.role === 'admin' || realSessionUser.role === 'recruiter');
+      if (isAdminViewing) {
+        document.getElementById('admin-freelance-manager-card').style.display = 'block';
+        if (document.getElementById('admin-post-gig-btn')) document.getElementById('admin-post-gig-btn').style.display = 'inline-block';
+        const labelEl = document.getElementById('admin-biz-status-label');
+        if (labelEl) {
+          const st = candidate.companyRegistrationStatus || 'unregistered';
+          labelEl.textContent = st.toUpperCase();
+          if (st === 'approved') labelEl.style.color = 'var(--success)';
+          else if (st === 'pending') labelEl.style.color = 'var(--warning)';
+          else labelEl.style.color = 'var(--danger)';
+        }
       }
 
       // Check profile onboarding status
@@ -1635,7 +1653,5 @@
       }
     }
   </script>
-</body>
-</html>
 </body>
 </html>
