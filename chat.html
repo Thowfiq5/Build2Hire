@@ -491,7 +491,9 @@
       renderChatScreen(selectedConv);
     }
 
-    let currentContactSearchQuery = "";
+    if (typeof currentContactSearchQuery === 'undefined') {
+      var currentContactSearchQuery = "";
+    }
 
     function filterContacts(query) {
       currentContactSearchQuery = (query || "").trim().toLowerCase();
