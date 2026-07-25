@@ -23,11 +23,11 @@
     .agreement-sheet {
       background-color: #ffffff;
       color: #0f172a;
-      border-radius: var(--radius-md);
-      padding: 3rem;
-      box-shadow: var(--card-shadow);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
       border: 1px solid var(--border-color);
-      min-height: 700px;
+      min-height: 720px;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -37,14 +37,14 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 1.5rem;
-      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
     .logo-placeholder-left {
       width: 140px;
       height: 60px;
       border: 2px dashed #94a3b8;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -54,6 +54,11 @@
       text-align: center;
       background-color: #f8fafc;
       overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .logo-placeholder-left:hover {
+      border-color: #6366f1;
+      background-color: #f1f5f9;
     }
     .logo-placeholder-left img {
       max-width: 100%;
@@ -73,20 +78,22 @@
       color: #334155;
     }
     .sheet-content h4 {
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
+      margin-top: 1.35rem;
+      margin-bottom: 0.4rem;
       color: #0f172a;
+      font-size: 0.95rem;
+      font-weight: 700;
     }
     .sheet-content p {
-      margin-bottom: 1rem;
+      margin-bottom: 0.85rem;
     }
     .sheet-footer {
       border-top: 2px solid #e2e8f0;
-      padding-top: 1.5rem;
-      margin-top: 2rem;
+      padding-top: 1.25rem;
+      margin-top: 1.75rem;
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #64748b;
     }
     .split-summary-box {
@@ -97,6 +104,26 @@
       font-size: 0.85rem;
       color: var(--text-primary);
       margin-top: 0.5rem;
+    }
+
+    @media print {
+      header, aside, .navbar, .sidebar, #main-nav, #main-sidebar, .builder-layout > div:first-child, button {
+        display: none !important;
+      }
+      body, .dashboard-layout, main, .main-content, .builder-layout {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        width: 100% !important;
+      }
+      .agreement-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
     }
   </style>
 </head>
@@ -198,7 +225,12 @@
 
         <!-- RIGHT COLUMN: AGREEMENT PREVIEW SHEET -->
         <div>
-          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Live Printable Agreement Sheet Preview</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Live Printable Agreement Sheet Preview</span>
+            <button onclick="window.print()" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+              🖨️ Print / Download PDF
+            </button>
+          </div>
           
           <div class="agreement-sheet" id="agreement-sheet-preview">
             
@@ -221,29 +253,29 @@
             <!-- SHEET CONTENT -->
             <div class="sheet-content">
               <div style="text-align: center; margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1.25rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Independent Contractor Agreement</h3>
-                <span style="font-size: 0.78rem; color: #64748b;">Contract Ref: B2H-MOCK-${Date.now().toString().substring(8)}</span>
+                <h3 style="font-size: 1.25rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; color: #0f172a;">Independent Contractor Agreement</h3>
+                <span style="font-size: 0.78rem; color: #64748b;">Contract Ref: <strong id="sheet-contract-ref" style="color: #4338ca;">B2H-942817-SECURE</strong></span>
               </div>
 
-              <p>This service agreement is entered into dynamically via the Build2Hire Escrow Escrow platform between the following registered parties:</p>
+              <p style="color: #475569; font-size: 0.88rem;">This service agreement is entered into dynamically via the Build2Hire Escrow platform between the following registered parties:</p>
               
-              <div style="background-color: #f1f5f9; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
                 <div>
-                  <strong>CLIENT (Employer):</strong>
-                  <div id="sheet-client-name">InnovateTech (Recruiter)</div>
+                  <strong style="color: #475569; font-size: 0.72rem; text-transform: uppercase; display: block; margin-bottom: 0.25rem; letter-spacing: 0.05em;">CLIENT (Employer)</strong>
+                  <div id="sheet-client-name" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">InnovateTech (Client)</div>
                 </div>
                 <div>
-                  <strong>CONTRACTOR (Freelancer):</strong>
-                  <div id="sheet-candidate-name">Candidate User</div>
+                  <strong style="color: #475569; font-size: 0.72rem; text-transform: uppercase; display: block; margin-bottom: 0.25rem; letter-spacing: 0.05em;">CONTRACTOR (Freelancer)</strong>
+                  <div id="sheet-candidate-name" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">Test 1 (Contractor)</div>
                 </div>
               </div>
 
               <h4>1. Project Title & Scope</h4>
-              <p>The contractor agrees to build and deploy the technical project: <strong id="sheet-project-title">[Project Title]</strong>. Deliverables must match the platform compliance standards.</p>
+              <p>The contractor agrees to build and deploy the technical project: <strong id="sheet-project-title" style="color: #4338ca;">Full Stack Platform Development & Escrow Deployment</strong>. Deliverables must match the platform compliance standards.</p>
 
               <h4>2. Budget & Installment Split</h4>
-              <p>The total budget is set to <strong id="sheet-budget-val">$20,000</strong>. The payment model is split under the following schedule:</p>
-              <div id="sheet-split-details" style="font-weight: 600; padding-left: 1rem; margin-bottom: 1rem; border-left: 3px solid #6366f1;">
+              <p>The total budget is set to <strong id="sheet-budget-val" style="color: #059669; font-size: 1rem;">$20,000</strong>. The payment model is split under the following schedule:</p>
+              <div id="sheet-split-details" style="font-weight: 600; padding: 0.75rem 1rem; margin-bottom: 1rem; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: #334155;">
                 <!-- Schedule breakdown -->
               </div>
 
@@ -255,14 +287,32 @@
 
               <div id="sheet-custom-clauses-wrapper" style="display: none;">
                 <h4>5. Additional Custom Clauses</h4>
-                <p id="sheet-custom-clauses-content" style="white-space: pre-wrap; font-style: italic; font-size: 0.85rem; color: #475569;"></p>
+                <p id="sheet-custom-clauses-content" style="white-space: pre-wrap; font-style: italic; font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0;"></p>
+              </div>
+
+              <!-- SIGNATURES BLOCK -->
+              <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed #cbd5e1; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.8rem; color: #334155;">
+                <div>
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;">AUTHORIZED CLIENT SIGNATURE</div>
+                  <div style="border-bottom: 2px solid #94a3b8; height: 36px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: #4338ca; display: flex; align-items: flex-end; padding-bottom: 0.25rem;" id="sheet-client-sig">
+                    Sarah Connor (Hiring Manager)
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 0.35rem;" id="sheet-client-company-sub">InnovateTech Escrow Account</div>
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;">INDEPENDENT CONTRACTOR SIGNATURE</div>
+                  <div style="border-bottom: 2px solid #94a3b8; height: 36px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: #059669; display: flex; align-items: flex-end; padding-bottom: 0.25rem;" id="sheet-candidate-sig">
+                    Test 1
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 0.35rem;">Verified Platform Contractor</div>
+                </div>
               </div>
             </div>
 
             <!-- FOOTER -->
-            <div class="sheet-footer">
+            <div class="sheet-footer" style="margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b;">
               <span>Build2Hire Escrow Network &bull; SECURE CLOUD TRANSACTION</span>
-              <span>Generated on ${new Date().toLocaleDateString()}</span>
+              <span>Generated on <strong id="sheet-date" style="color: #334155;">Jul 25, 2026</strong></span>
             </div>
 
           </div>
@@ -279,10 +329,11 @@
       return false;
     };
 
-    const auth = withAuth(['recruiter', 'admin']);
-    let dbState = null;
-    let selectedBase64Logo = "";
-    let isCustomCandidate = false;
+    var auth = withAuth(['recruiter', 'admin']);
+    var dbState = null;
+    var selectedBase64Logo = "";
+    var isCustomCandidate = false;
+    var currentContractRef = "";
 
     if (auth) {
       dbState = dbGet();
@@ -290,18 +341,51 @@
     }
 
     function initializeBuilder() {
+      dbState = dbGet();
+      const user = getUser();
+      
+      // Generate dynamic contract ref and date if not already generated
+      if (!currentContractRef) {
+        currentContractRef = "B2H-" + Math.floor(100000 + Math.random() * 900000) + "-SECURE";
+      }
+      if (document.getElementById('sheet-contract-ref')) {
+        document.getElementById('sheet-contract-ref').textContent = currentContractRef;
+      }
+      if (document.getElementById('sheet-date')) {
+        document.getElementById('sheet-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      // Client details
+      const rawFullName = user ? (user.fullName || "Sarah Connor") : "Sarah Connor";
+      const cleanFullName = rawFullName.replace(/\s*\(.*?\)\s*/g, '').trim() || "Sarah Connor";
+      const companyNameStr = user ? (user.companyName || "InnovateTech") : "InnovateTech";
+      
+      if (document.getElementById('sheet-client-name')) {
+        document.getElementById('sheet-client-name').textContent = `${companyNameStr} (${cleanFullName})`;
+      }
+      if (document.getElementById('sheet-client-sig')) {
+        document.getElementById('sheet-client-sig').textContent = cleanFullName;
+      }
+      if (document.getElementById('sheet-client-company-sub')) {
+        document.getElementById('sheet-client-company-sub').textContent = `${companyNameStr} Escrow Account`;
+      }
+
+      // Default project title if empty
+      const titleInput = document.getElementById('project-title');
+      if (titleInput && !titleInput.value) {
+        titleInput.value = "Full Stack Platform Development & Escrow Deployment";
+      }
+
       // Populate candidates
       const select = document.getElementById('select-candidate');
-      const candidates = dbState.users.filter(u => u.role === 'candidate' && u.profileCompleted);
+      const candidates = dbState.users ? dbState.users.filter(u => u.role === 'candidate') : [];
 
       if (candidates.length === 0) {
         select.innerHTML = `<option value="">No registered candidates available</option>`;
       } else {
-        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName} (Score: ${c.talent_score})</option>`).join('');
+        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName || c.email} (Talent Score: ${c.talent_score || 80})</option>`).join('');
       }
 
-      document.getElementById('sheet-client-name').textContent = `${auth.user.companyName || 'InnovateTech'} (Client)`;
-      
       updateAgreementText();
     }
 
@@ -354,26 +438,41 @@
     window.toggleCustomCandidateField = toggleCustomCandidateField;
 
     function updateAgreementText() {
-      let candidateName = "Candidate User";
+      let candidateName = "Test 1";
       if (isCustomCandidate) {
-        candidateName = document.getElementById('input-custom-candidate').value.trim() || "Candidate User";
+        candidateName = document.getElementById('input-custom-candidate').value.trim() || "Test 1";
       } else {
-        const candidateId = document.getElementById('select-candidate').value;
-        const cand = dbState.users.find(u => String(u.id) === String(candidateId));
-        candidateName = cand ? cand.fullName : "Candidate User";
+        const select = document.getElementById('select-candidate');
+        if (select && select.value) {
+          const cand = (dbState.users || []).find(u => String(u.id) === String(select.value));
+          candidateName = cand ? (cand.fullName || cand.email) : "Test 1";
+        }
       }
-      document.getElementById('sheet-candidate-name').textContent = `${candidateName} (Contractor)`;
+      
+      if (document.getElementById('sheet-candidate-name')) {
+        document.getElementById('sheet-candidate-name').textContent = `${candidateName} (Contractor)`;
+      }
+      if (document.getElementById('sheet-candidate-sig')) {
+        document.getElementById('sheet-candidate-sig').textContent = candidateName;
+      }
 
-      const title = document.getElementById('project-title').value.trim() || "[Project Title]";
-      document.getElementById('sheet-project-title').textContent = title;
+      const titleInput = document.getElementById('project-title');
+      const title = (titleInput ? titleInput.value.trim() : "") || "Full Stack Platform Development";
+      if (document.getElementById('sheet-project-title')) {
+        document.getElementById('sheet-project-title').textContent = title;
+      }
 
-      const budget = parseFloat(document.getElementById('total-budget').value) || 0;
-      document.getElementById('sheet-budget-val').textContent = `$${budget.toLocaleString()}`;
+      const budgetInput = document.getElementById('total-budget');
+      const budget = (budgetInput ? parseFloat(budgetInput.value) : 20000) || 20000;
+      if (document.getElementById('sheet-budget-val')) {
+        document.getElementById('sheet-budget-val').textContent = `$${budget.toLocaleString()}`;
+      }
 
-      const months = parseInt(document.getElementById('duration-months').value) || 1;
-      const splitModel = document.getElementById('payment-split').value;
+      const monthsInput = document.getElementById('duration-months');
+      const months = (monthsInput ? parseInt(monthsInput.value) : 5) || 5;
+      const splitSelect = document.getElementById('payment-split');
+      const splitModel = splitSelect ? splitSelect.value : 'monthly';
 
-      // Compute split schedule
       let summaryText = "";
       let sheetScheduleHTML = "";
 
@@ -390,19 +489,25 @@
         sheetScheduleHTML = `Flat release model: 100% payment release of $${budget.toLocaleString()} upon completion of the contract.`;
       }
 
-      document.getElementById('split-summary').textContent = summaryText;
-      document.getElementById('sheet-split-details').innerHTML = sheetScheduleHTML;
+      if (document.getElementById('split-summary')) {
+        document.getElementById('split-summary').textContent = summaryText;
+      }
+      if (document.getElementById('sheet-split-details')) {
+        document.getElementById('sheet-split-details').innerHTML = sheetScheduleHTML;
+      }
 
-      // Custom clauses preview
-      const custom = document.getElementById('custom-clauses').value.trim();
+      const customInput = document.getElementById('custom-clauses');
+      const custom = customInput ? customInput.value.trim() : "";
       const customWrapper = document.getElementById('sheet-custom-clauses-wrapper');
       const customContent = document.getElementById('sheet-custom-clauses-content');
 
-      if (custom) {
-        customWrapper.style.display = 'block';
-        customContent.textContent = custom;
-      } else {
-        customWrapper.style.display = 'none';
+      if (customWrapper && customContent) {
+        if (custom) {
+          customWrapper.style.display = 'block';
+          customContent.textContent = custom;
+        } else {
+          customWrapper.style.display = 'none';
+        }
       }
     }
 
