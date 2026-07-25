@@ -48,7 +48,7 @@ const DEFAULT_USERS = [
   {
     id: 1001,
     email: "candidate@build2hire.com",
-    fullName: "Thaieba Ismail",
+    fullName: "Test 1",
     role: "candidate",
     phone: "+1 (555) 019-2834",
     bio: "Passionate engineer eager to show my skills to recruiters. Click edit to set my details.",
@@ -142,14 +142,97 @@ function dbGet() {
   }
 
   if (parsed.users) {
+    const origCount = parsed.users.length;
+    parsed.users = parsed.users.filter(u => !u.email.toLowerCase().includes('thaieba') && !u.email.toLowerCase().includes('test1@gmail'));
+    if (parsed.users.length !== origCount) updated = true;
+
     parsed.users.forEach(u => {
-      if (u.role === 'candidate' && (u.fullName === "Candidate User" || u.fullName === "John Builder")) {
-        u.fullName = "Thaieba Ismail";
+      if (u.role === 'candidate' && (u.fullName === "Candidate User" || u.fullName === "John Builder" || u.fullName === "Thaieba Ismail")) {
+        u.fullName = "Test 1";
         updated = true;
       } else if (u.role === 'recruiter' && (u.fullName === "Candidate User" || u.fullName === "Thaieba Ismail" || u.fullName === "Jane Recruiter")) {
         u.fullName = "Sarah Connor (Hiring Manager)";
         updated = true;
       }
+
+      if (u.certificates && Array.isArray(u.certificates)) {
+        u.certificates.forEach((c, idx) => {
+          const certTitle = c.title || c.course || c.name || c.course_title || "Verified Platform Certificate";
+          const certSerial = c.serial_no || c.serialNo || c.id || c.serial || `B2H-CERT-MRYYZMKT${idx + 1}`;
+          const certScore = c.score || c.grade || 95;
+          const certDate = c.date || c.issuedAt || c.issued_date || "Jul 24, 2026";
+
+          if (c.title !== certTitle || c.serial_no !== certSerial) updated = true;
+
+          c.title = certTitle;
+          c.name = certTitle;
+          c.course = certTitle;
+          c.serial_no = certSerial;
+          c.serialNo = certSerial;
+          c.score = certScore;
+          c.date = certDate;
+        });
+      }
+    });
+  }
+
+  ['applications', 'interviews', 'contracts', 'conversations', 'admin_notifications', 'candidate_notifications', 'recruiter_notifications', 'broadcasts', 'notifications', 'logs', 'activity_logs'].forEach(key => {
+    if (parsed[key]) {
+      parsed[key].forEach(item => {
+        if (item.candidate_name && /thaieba|john builder|candidate user/i.test(item.candidate_name)) {
+          item.candidate_name = "Test 1";
+          updated = true;
+        }
+        if (item.candidateName && /thaieba|john builder|candidate user/i.test(item.candidateName)) {
+          item.candidateName = "Test 1";
+          updated = true;
+        }
+        if (item.email && /thaieba|test1@gmail/i.test(item.email)) {
+          item.email = "candidate@build2hire.com";
+          updated = true;
+        }
+        if (item.candidateEmail && /thaieba|test1@gmail/i.test(item.candidateEmail)) {
+          item.candidateEmail = "candidate@build2hire.com";
+          updated = true;
+        }
+        if (item.message && /thaieba/i.test(item.message)) {
+          item.message = item.message.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+          updated = true;
+        }
+        if (item.title && /thaieba/i.test(item.title)) {
+          item.title = item.title.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+          updated = true;
+        }
+        if (item.details && /thaieba/i.test(item.details)) {
+          item.details = item.details.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+          updated = true;
+        }
+        if (item.target && /thaieba/i.test(item.target)) {
+          item.target = item.target.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+          updated = true;
+        }
+      });
+    }
+  });
+
+  if (parsed.interviews) {
+    parsed.interviews.forEach(item => {
+      const origCand = item.candidate_name;
+      item.candidate_name = item.candidate_name || item.candidateName || item.candidate || "Test 1";
+      item.candidateName = item.candidate_name;
+      if (/thaieba|john builder|candidate user/i.test(item.candidate_name)) {
+        item.candidate_name = "Test 1";
+        item.candidateName = "Test 1";
+      }
+
+      item.challenge_title = item.challenge_title || item.topic || item.title || item.challengeTitle || "Round 1 Technical Evaluation";
+      item.topic = item.challenge_title;
+
+      item.scheduled_at = item.scheduled_at || item.meetDate || item.date || new Date().toISOString();
+      item.meetDate = item.scheduled_at;
+
+      item.location_url = item.location_url || item.meetLink || item.link || "https://meet.jit.si/build2hire-escrow-session";
+      item.meetLink = item.location_url;
     });
   }
 
@@ -780,11 +863,17 @@ function getUser() {
     let sessionUser = JSON.parse(session);
     
     // Automatically correct placeholder names (role-based)
+    if (sessionUser && sessionUser.email && (sessionUser.email.toLowerCase().includes('thaieba') || sessionUser.email.toLowerCase().includes('test1@gmail'))) {
+      sessionUser.email = "candidate@build2hire.com";
+      sessionStorage.setItem('user', JSON.stringify(sessionUser));
+    }
+
+    // Automatically correct placeholder names (role-based)
     if (sessionUser.role === 'recruiter' && (sessionUser.fullName === "Thaieba Ismail" || sessionUser.fullName === "Candidate User" || sessionUser.fullName === "Jane Recruiter")) {
       sessionUser.fullName = "Sarah Connor (Hiring Manager)";
       sessionStorage.setItem('user', JSON.stringify(sessionUser));
-    } else if (sessionUser.role === 'candidate' && (sessionUser.fullName === "Candidate User" || sessionUser.fullName === "John Builder")) {
-      sessionUser.fullName = "Thaieba Ismail";
+    } else if (sessionUser.role === 'candidate' && (sessionUser.fullName === "Candidate User" || sessionUser.fullName === "John Builder" || sessionUser.fullName === "Thaieba Ismail")) {
+      sessionUser.fullName = "Test 1";
       sessionStorage.setItem('user', JSON.stringify(sessionUser));
     }
 
@@ -795,8 +884,8 @@ function getUser() {
       if (latestUser.role === 'recruiter' && (latestUser.fullName === "Thaieba Ismail" || latestUser.fullName === "Candidate User" || latestUser.fullName === "Jane Recruiter")) {
         latestUser.fullName = "Sarah Connor (Hiring Manager)";
         dbSave(db);
-      } else if (latestUser.role === 'candidate' && (latestUser.fullName === "Candidate User" || latestUser.fullName === "John Builder")) {
-        latestUser.fullName = "Thaieba Ismail";
+      } else if (latestUser.role === 'candidate' && (latestUser.fullName === "Candidate User" || latestUser.fullName === "John Builder" || latestUser.fullName === "Thaieba Ismail")) {
+        latestUser.fullName = "Test 1";
         dbSave(db);
       }
       if (!latestUser.skills || latestUser.skills.length === 0) {
@@ -875,6 +964,9 @@ function withAuth(allowedRoles = ['candidate', 'recruiter', 'admin']) {
     if (typeof renderSidebar === 'function') {
       const sidebar = document.getElementById('main-sidebar');
       if (sidebar) renderSidebar(path);
+    }
+    if (typeof window.initSeamlessNavigation === 'function') {
+      window.initSeamlessNavigation();
     }
   }
   
@@ -1040,7 +1132,7 @@ function renderHeader() {
     
     nav.innerHTML = `
       <div style="display:flex;align-items:center;gap:1rem;">
-        <a href="index.html" onclick="window.handleLogoClick(event, 'index.html')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+        <a href="index.html" onclick="window.handleLogoClick(event, 'index.html')" ondblclick="window.openAdminLoginModal()" title="Build2Hire" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
           Build2<span style="color: var(--primary);">Hire</span>
         </a>
         <div class="theme-switch" style="display:inline-flex; align-items:center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
@@ -1076,7 +1168,7 @@ function renderHeader() {
   nav.style.display = 'flex';
   nav.innerHTML = `
     <div style="display:flex;align-items:center;margin-right:2rem;">
-      <a href="${homeLink}" onclick="window.handleLogoClick(event, '${homeLink}')" ondblclick="window.openAdminLoginModal()" title="Double click for Management Login" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+      <a href="${homeLink}" onclick="window.handleLogoClick(event, '${homeLink}')" ondblclick="window.openAdminLoginModal()" title="Build2Hire" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
         Build2<span style="color: var(--primary);">Hire</span>
       </a>
     </div>
@@ -1271,7 +1363,7 @@ window.getAdminNotifications = function(filterAudience = 'all') {
       {
         id: "anotif-301",
         title: "👨‍💻 New Candidate Registered",
-        message: "Thaieba Ismail completed Candidate registration and verified email profile.",
+        message: "Test 1 completed Candidate registration and verified email profile.",
         category: "candidate_reg",
         audience: "Candidate",
         read: false,
@@ -1298,7 +1390,7 @@ window.getAdminNotifications = function(filterAudience = 'all') {
       {
         id: "anotif-304",
         title: "📅 Interview Scheduled",
-        message: "Recruiter Sarah Connor scheduled an interview with candidate Thaieba Ismail.",
+        message: "Recruiter Sarah Connor scheduled an interview with candidate Test 1.",
         category: "interview",
         audience: "Recruiter",
         read: true,
@@ -1343,6 +1435,15 @@ window.getAdminNotifications = function(filterAudience = 'all') {
 
   // Sort descending by timestamp
   allNotifs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+  allNotifs.forEach(n => {
+    if (n.message && /thaieba/i.test(n.message)) {
+      n.message = n.message.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+    }
+    if (n.title && /thaieba/i.test(n.title)) {
+      n.title = n.title.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+    }
+  });
 
   if (filterAudience === 'candidate') {
     return allNotifs.filter(n => n.audience === 'Candidate');
@@ -1495,7 +1596,7 @@ window.getRecruiterNotifications = function() {
         id: "rnotif-201",
         userId: user.id || 1004,
         title: "📋 New Candidate Application Received",
-        message: "Thaieba Ismail applied for your 'Short Marketing Video assembly' requisition at InnovateTech.",
+        message: "Test 1 applied for your 'Short Marketing Video assembly' requisition at InnovateTech.",
         category: "applications",
         read: false,
         timestamp: Date.now() - 1000 * 60 * 15
@@ -1873,7 +1974,12 @@ window.handleLogoClick = function(event, homeLink) {
   }
   
   logoClickTimeout = setTimeout(() => {
-    window.location.href = homeLink;
+    // If target link is admin dashboard, always prompt for password
+    if (homeLink.includes('admin-dashboard.html')) {
+      window.openAdminLoginModal();
+    } else {
+      window.location.href = homeLink;
+    }
     logoClickTimeout = null;
   }, 250); // Delay slightly to await double click
 };
@@ -1893,45 +1999,57 @@ window.togglePasswordVisibility = function(inputId, btn) {
 };
 
 window.openAdminLoginModal = function() {
-  // Check if modal already exists, if not, create it
+  // Always clear previous session authentication so password MUST be entered every time
+  sessionStorage.removeItem('admin_authenticated');
+
   let modal = document.getElementById('admin-secret-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'admin-secret-modal';
-    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:999999; backdrop-filter:blur(5px);";
-    modal.innerHTML = `
-      <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding:2rem; border-radius:12px; width:100%; max-width:400px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
-        <h3 style="font-family:var(--font-display); color:var(--primary); font-size:1.4rem; margin-bottom:0.5rem; text-align:center;">🔑 Management Sign In</h3>
-        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem; text-align:center;">Enter credential to access Build2Hire administration panel.</p>
-        
-        <div style="text-align:left; margin-bottom:1.25rem;">
-          <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.5rem; color:var(--text-primary);">Management Password</label>
-          <div style="position: relative; width: 100%;">
-            <input type="password" id="admin-secret-pwd" style="width:100%; padding:0.6rem 2.75rem 0.6rem 0.75rem; border-radius:6px; background:var(--bg-tertiary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.9rem;" placeholder="Enter admin password">
-            <button type="button" onclick="togglePasswordVisibility('admin-secret-pwd', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0.2rem; outline: none; z-index: 10;" title="Show Password">👁️</button>
-          </div>
-        </div>
-        
-        <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem;">
-          <button onclick="document.getElementById('admin-secret-modal').remove()" class="btn btn-secondary" style="padding:0.5rem 1rem; border-radius:6px; font-size:0.85rem; cursor:pointer;">Cancel</button>
-          <button onclick="window.submitSecretAdminLogin()" class="btn btn-primary" style="padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">Sign In</button>
+  if (modal) {
+    modal.remove();
+  }
+
+  modal = document.createElement('div');
+  modal.id = 'admin-secret-modal';
+  modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:999999; backdrop-filter:blur(5px);";
+  modal.innerHTML = `
+    <div style="background:var(--bg-secondary); border:1px solid var(--border-color); padding:2rem; border-radius:12px; width:100%; max-width:400px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+      <h3 style="font-family:var(--font-display); color:var(--primary); font-size:1.4rem; margin-bottom:0.5rem; text-align:center;">🔑 Management Sign In</h3>
+      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem; text-align:center;">Enter management password to access Build2Hire administration panel.</p>
+      
+      <div style="text-align:left; margin-bottom:1.25rem;">
+        <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.5rem; color:var(--text-primary);">Management Password</label>
+        <div style="position: relative; width: 100%;">
+          <input type="password" id="admin-secret-pwd" style="width:100%; padding:0.6rem 2.75rem 0.6rem 0.75rem; border-radius:6px; background:var(--bg-tertiary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.9rem;" placeholder="Enter admin password" autocomplete="off">
+          <button type="button" onclick="togglePasswordVisibility('admin-secret-pwd', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0.2rem; outline: none; z-index: 10;" title="Show Password">👁️</button>
         </div>
       </div>
-    `;
-    document.body.appendChild(modal);
-    
-    // Add enter key support
-    document.getElementById('admin-secret-pwd').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') window.submitSecretAdminLogin();
-    });
-  }
-  document.getElementById('admin-secret-pwd').focus();
+      
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem;">
+        <button onclick="document.getElementById('admin-secret-modal').remove()" class="btn btn-secondary" style="padding:0.5rem 1rem; border-radius:6px; font-size:0.85rem; cursor:pointer;">Cancel</button>
+        <button onclick="window.submitSecretAdminLogin()" class="btn btn-primary" style="padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">Sign In</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Add enter key support
+  document.getElementById('admin-secret-pwd').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') window.submitSecretAdminLogin();
+  });
+
+  setTimeout(() => {
+    const input = document.getElementById('admin-secret-pwd');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  }, 100);
 };
 
 window.submitSecretAdminLogin = function() {
-  const pwd = (document.getElementById('admin-secret-pwd').value || '').trim();
+  const input = document.getElementById('admin-secret-pwd');
+  const pwd = (input ? input.value : '').trim();
   if (pwd === 'admin123' || pwd === 'admin' || pwd === 'password123') {
-    // Perform simulated admin login
+    sessionStorage.setItem('admin_authenticated', 'true');
     const email = "admin@build2hire.com";
     const db = dbGet();
     let adminUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
@@ -2216,8 +2334,14 @@ function renderSidebar(activePage) {
 // Logout
 function handleLogout() {
   clearAutoLogoutTimers();
-  sessionStorage.removeItem('user');
-  window.location.href = 'login.html';
+  document.body.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+  document.body.style.opacity = '0';
+  document.body.style.transform = 'scale(0.99)';
+  setTimeout(() => {
+    sessionStorage.removeItem('user');
+    localStorage.removeItem('user');
+    window.location.replace('login.html');
+  }, 120);
 }
 
 // ==========================================
@@ -2415,9 +2539,7 @@ function clearAutoLogoutTimers() {
 
 function doAutoLogout() {
   clearAutoLogoutTimers();
-  sessionStorage.removeItem('user');
-
-  // Show a brief "Session expired" flash before redirect
+  
   const flash = document.createElement('div');
   flash.style.cssText = `
     position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
@@ -2430,8 +2552,14 @@ function doAutoLogout() {
   document.body.appendChild(flash);
 
   setTimeout(() => {
-    window.location.href = 'login.html';
-  }, 1500);
+    document.body.style.transition = 'opacity 0.15s ease';
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+      sessionStorage.removeItem('user');
+      localStorage.removeItem('user');
+      window.location.replace('login.html');
+    }, 120);
+  }, 1200);
 }
 
 function showAutoLogoutWarning() {
@@ -3126,12 +3254,26 @@ function adminGetActivityLogs() {
   const db = dbGet();
   if (!db.activity_logs) {
     db.activity_logs = [
-      { id: 1, action: "User Registration", details: "Candidate User registered", target: "candidate@build2hire.com", timestamp: new Date(Date.now() - 86400000 * 2).toISOString() },
-      { id: 2, action: "Recruiter Registration", details: "Jane Recruiter joined InnovateTech", target: "recruiter@innovatetech.com", timestamp: new Date(Date.now() - 86400000 * 1.5).toISOString() },
+      { id: 1, action: "User Registration", details: "Test 1 registered", target: "candidate@build2hire.com", timestamp: new Date(Date.now() - 86400000 * 2).toISOString() },
+      { id: 2, action: "Recruiter Registration", details: "Sarah Connor joined InnovateTech", target: "recruiter@innovatetech.com", timestamp: new Date(Date.now() - 86400000 * 1.5).toISOString() },
       { id: 3, action: "Job Post", details: "Posted job: Senior Frontend Engineer", target: "Vercel Inc", timestamp: new Date(Date.now() - 86400000).toISOString() }
     ];
     dbSave(db);
   }
+
+  // Ensure all audit log entries sanitize legacy names
+  db.activity_logs.forEach(log => {
+    if (log.details && /thaieba/i.test(log.details)) {
+      log.details = log.details.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+    }
+    if (log.target && /thaieba/i.test(log.target)) {
+      log.target = log.target.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+    }
+    if (log.action && /thaieba/i.test(log.action)) {
+      log.action = log.action.replace(/thaieba\s*ismail/gi, 'Test 1').replace(/thaieba/gi, 'Test 1');
+    }
+  });
+
   return db.activity_logs;
 }
 
@@ -3652,10 +3794,20 @@ function adminGenerateCertificate(certData) {
 
 function adminRevokeCertificate(candidateId, serialNo) {
   const db = dbGet();
-  const cand = db.users.find(u => String(u.id) === String(candidateId));
+  let cand = null;
+  
+  if (candidateId) {
+    cand = db.users.find(u => String(u.id) === String(candidateId));
+  }
+  
+  // Fallback search across all candidates for matching certificate
+  if (!cand || !cand.certificates) {
+    cand = db.users.find(u => u.certificates && u.certificates.some(c => String(c.serial_no) === String(serialNo) || String(c.serialNo) === String(serialNo) || String(c.id) === String(serialNo)));
+  }
+
   if (!cand || !cand.certificates) return false;
 
-  const idx = cand.certificates.findIndex(c => c.serial_no === serialNo);
+  const idx = cand.certificates.findIndex(c => String(c.serial_no) === String(serialNo) || String(c.serialNo) === String(serialNo) || String(c.id) === String(serialNo));
   if (idx === -1) return false;
 
   const revoked = cand.certificates.splice(idx, 1)[0];
@@ -4374,6 +4526,172 @@ function getCourseVideoDatabase() {
   }
   return COURSE_VIDEO_DATA;
 }
+
+// ==========================================
+// 🚀 SEAMLESS WORKSPACE NAVIGATION ENGINE (SPA TRANSITION)
+// ==========================================
+let isSeamlessNavInitialized = false;
+
+window.initSeamlessNavigation = function() {
+  if (isSeamlessNavInitialized) return;
+  isSeamlessNavInitialized = true;
+
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (!link || !link.href) return;
+    
+    if (link.target === '_blank' || link.getAttribute('download') !== null) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    
+    const targetUrl = link.getAttribute('href');
+    if (!targetUrl || targetUrl.startsWith('#') || targetUrl.startsWith('javascript:')) return;
+    
+    const currentPath = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+    const targetPath = targetUrl.split('?')[0].split('/').pop();
+    
+    // Pages eligible for instant smooth SPA content transition
+    const workspacePages = [
+      'recruiter-dashboard.html',
+      'agreement-builder.html',
+      'chat.html',
+      'leaderboard.html',
+      'candidate-dashboard.html',
+      'portfolio.html',
+      'jobs.html',
+      'freelance.html'
+    ];
+    
+    if (workspacePages.includes(targetPath) && document.querySelector('main.main-content')) {
+      if (targetPath === currentPath) return; // Same page
+      e.preventDefault();
+      window.navigateSeamlessly(targetUrl);
+    }
+  });
+
+  window.addEventListener('popstate', function() {
+    window.navigateSeamlessly(window.location.href, true);
+  });
+};
+
+window.navigateSeamlessly = function(targetUrl, isPopState = false) {
+  const mainContent = document.querySelector('main.main-content');
+  if (!mainContent) {
+    window.location.href = targetUrl;
+    return;
+  }
+
+  // Smooth fade-out transition for main content container
+  mainContent.style.transition = 'opacity 0.12s ease, transform 0.12s ease';
+  mainContent.style.opacity = '0.35';
+  mainContent.style.transform = 'translateY(4px)';
+
+  fetch(targetUrl)
+    .then(res => res.text())
+    .then(htmlText => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      const newMain = doc.querySelector('main.main-content');
+
+      if (!newMain) {
+        window.location.href = targetUrl;
+        return;
+      }
+
+      if (!isPopState) {
+        history.pushState(null, doc.title || document.title, targetUrl);
+      }
+      document.title = doc.title || document.title;
+
+      const targetPath = targetUrl.split('?')[0].split('/').pop();
+      
+      // Update sidebar active link highlight instantly
+      const sidebarLinks = document.querySelectorAll('#main-sidebar .sidebar-link');
+      sidebarLinks.forEach(l => {
+        const href = l.getAttribute('href');
+        if (href && href.split('?')[0].split('/').pop() === targetPath) {
+          l.classList.add('active');
+        } else {
+          l.classList.remove('active');
+        }
+      });
+
+      // Update navbar active link highlight
+      const navLinks = document.querySelectorAll('#main-nav .nav-link');
+      navLinks.forEach(l => {
+        const href = l.getAttribute('href');
+        if (href && href.split('?')[0].split('/').pop() === targetPath) {
+          l.classList.add('active');
+        } else {
+          l.classList.remove('active');
+        }
+      });
+
+      // Swap main content seamlessly
+      mainContent.innerHTML = newMain.innerHTML;
+
+      // Extract and swap/inject page modals (.modal-overlay)
+      const docModals = doc.querySelectorAll('.modal-overlay');
+      docModals.forEach(m => {
+        if (m.id) {
+          const existing = document.getElementById(m.id);
+          if (existing) {
+            existing.parentNode.replaceChild(m.cloneNode(true), existing);
+          } else {
+            document.body.appendChild(m.cloneNode(true));
+          }
+        }
+      });
+
+      // Extract and inject inline page styles
+      const styles = doc.querySelectorAll('style');
+      styles.forEach(st => {
+        const newStyle = document.createElement('style');
+        newStyle.textContent = st.textContent;
+        document.head.appendChild(newStyle);
+      });
+
+      // Extract and execute inline page scripts
+      const scripts = doc.querySelectorAll('script');
+      scripts.forEach(s => {
+        if (s.src && s.src.includes('shared.js')) return;
+        const newScript = document.createElement('script');
+        if (s.src) {
+          newScript.src = s.src;
+        } else {
+          // Convert top-level const/let auth declarations to var to prevent SyntaxError on SPA navigation
+          let scriptBody = s.textContent.replace(/^\s*(const|let)\s+(auth|dbState|user|candidate)\s*=/gm, 'var $2 =');
+          newScript.textContent = scriptBody;
+        }
+        document.body.appendChild(newScript);
+      });
+
+      // Re-trigger page initialization hooks if defined
+      setTimeout(() => {
+        if (typeof window.initializeBuilder === 'function' && targetPath === 'agreement-builder.html') {
+          window.initializeBuilder();
+        }
+        if (typeof window.initializeInbox === 'function' && targetPath === 'chat.html') {
+          window.initializeInbox();
+        }
+        if (typeof window.updateStats === 'function' && targetPath === 'recruiter-dashboard.html') {
+          window.updateStats();
+        }
+        if (typeof window.switchTab === 'function' && targetPath === 'recruiter-dashboard.html') {
+          window.switchTab('discover');
+        }
+      }, 30);
+
+      // Smooth fade-in transition
+      setTimeout(() => {
+        mainContent.style.opacity = '1';
+        mainContent.style.transform = 'translateY(0)';
+      }, 50);
+    })
+    .catch(err => {
+      console.error('Seamless navigation fallback:', err);
+      window.location.href = targetUrl;
+    });
+};
 
 function saveCourseVideoDatabase(data) {
   localStorage.setItem('build2hire_course_videos_v20', JSON.stringify(data));
