@@ -843,6 +843,23 @@
       if (!text) return;
 
       const user = getUser();
+      // Ensure we have an active conversation. If not, attempt to pick one or prompt to start a chat.
+      if (!currentConversationId) {
+        dbState = dbGet();
+        let userConvs = [];
+        if (user.role === 'candidate') userConvs = (dbState.conversations || []).filter(c => String(c.candidateId) === String(user.id));
+        else userConvs = (dbState.conversations || []).filter(c => String(c.clientId) === String(user.id));
+
+        if (userConvs.length > 0) {
+          currentConversationId = userConvs[0].id;
+        } else {
+          // No existing conversation — open contact modal so user can start a chat
+          openContactModal();
+          showAlert('alert-container', 'No active conversation. Select a contact to start a new chat.', 'warning');
+          return;
+        }
+      }
+
       const sentMsg = sendMessage(currentConversationId, user.id, text);
       
       if (sentMsg) {
