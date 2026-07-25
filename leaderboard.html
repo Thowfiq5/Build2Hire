@@ -110,7 +110,7 @@
 
   <script src="shared.js"></script>
   <script>
-    const auth = withAuth(['candidate', 'recruiter', 'admin']);
+    var auth = withAuth(['candidate', 'recruiter', 'admin']);
     if (auth) {
       const { user, db, candidate } = auth;
 
