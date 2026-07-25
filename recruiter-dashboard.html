@@ -18,33 +18,7 @@
 
   <div class="dashboard-layout">
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div style="display: flex; flex-direction: column; gap: 2rem;">
-        <div>
-          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding-left: 1rem; margin-bottom: 0.75rem; letter-spacing: 0.1em;">
-            Workspace
-          </p>
-          <ul class="sidebar-menu">
-            <li>
-              <a href="recruiter-dashboard.html" class="sidebar-link active">
-                💼 <span>Hiring Board</span>
-              </a>
-            </li>
-
-            <li>
-              <a href="leaderboard.html" class="sidebar-link">
-                🏆 <span>Leaderboard</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color); text-align: center;">
-        <p style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">Logged in as</p>
-        <p id="user-role-badge" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: capitalize; margin-top: 0.25rem;">recruiter</p>
-      </div>
-    </aside>
+    <aside class="sidebar" id="main-sidebar"></aside>
 
     <main class="main-content">
       
@@ -265,9 +239,10 @@
 
   <script src="shared.js"></script>
   <script>
-    const auth = withAuth(['recruiter']);
+    var auth = withAuth(['recruiter']);
+    var user = auth ? auth.user : null;
+    var dbState = auth ? auth.db : null;
     if (auth) {
-      const { user, db: dbState } = auth;
       document.getElementById('user-role-badge').textContent = user.role;
       document.getElementById('recruiter-name').textContent = user.fullName || "Jane Recruiter";
       document.getElementById('recruiter-company').textContent = user.companyName || "InnovateTech";
@@ -430,21 +405,27 @@
         }
 
         dbState.interviews.forEach(meet => {
+          const candidateName = (meet.candidate_name || meet.candidateName || meet.candidate || "Test 1").replace(/thaieba|john builder|candidate user/i, 'Test 1');
+          const topicTitle = meet.challenge_title || meet.topic || meet.title || meet.challengeTitle || "Round 1 Technical Evaluation";
+          const rawDate = meet.scheduled_at || meet.meetDate || meet.date || Date.now();
+          const parsedDate = (!isNaN(new Date(rawDate).getTime()) && rawDate) ? new Date(rawDate).toLocaleString() : new Date().toLocaleString();
+          const meetLink = meet.location_url || meet.meetLink || meet.link || "https://meet.jit.si/build2hire-escrow-session";
+
           const card = document.createElement('div');
           card.className = "card flex-between";
-          card.style.cssText = "padding: 1.25rem; border-left: 3px solid var(--warning);";
+          card.style.cssText = "padding: 1.25rem; border-left: 4px solid var(--warning); border-radius: 12px; margin-bottom: 0.85rem;";
           card.innerHTML = `
             <div>
-              <strong style="font-size: 1.1rem; display: block;">${meet.candidate_name}</strong>
+              <strong style="font-size: 1.1rem; display: block; color: var(--text-primary);">${candidateName}</strong>
               <span style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-top: 0.25rem;">
-                Topic: Evaluation for <strong>${meet.challenge_title}</strong>
+                Topic: Evaluation for <strong>${topicTitle}</strong>
               </span>
               <p style="font-size: 0.85rem; color: var(--primary); margin-top: 0.25rem;">
-                🕒 Date: ${new Date(meet.scheduled_at).toLocaleString()}
+                🕒 Date: ${parsedDate}
               </p>
               ${meet.notes ? `<p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; border-left: 2px solid var(--border-color); padding-left: 0.5rem;">Notes: "${meet.notes}"</p>` : ""}
             </div>
-            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+            <a href="${meetLink}" target="_blank" class="btn btn-primary" style="padding: 0.5rem 1.1rem; font-size: 0.85rem; font-weight: 600;">
               Join Call 📞
             </a>
           `;
