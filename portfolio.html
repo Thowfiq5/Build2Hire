@@ -96,7 +96,7 @@
       </div>
 
       <!-- PATHFINDER CHOICES (Hidden during onboarding) -->
-      <div id="pathfinder-cards" style="display: none; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
+      <div id="pathfinder-cards" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
         
         <!-- Job Path -->
         <a href="jobs.html" class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1.5rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; border-top: 4px solid var(--primary);">
@@ -137,7 +137,7 @@
           </div>
           <div>
             <h3 style="font-size: 1.5rem; font-family: var(--font-display); font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-              Profile Hiring Boost: <span id="boost-tier-name" style="color: #f59e0b;">High Tier</span> <span style="color: #f97316; font-size: 1.4rem;">⚡</span> <span id="boost-xp-val" style="color: #f97316;">450 XP</span>
+              Profile Hiring Boost: <span id="boost-tier-name" style="color: #f59e0b;">---</span> <span style="color: #f97316; font-size: 1.4rem;">⚡</span> <span id="boost-xp-val" style="color: #f97316;">-- XP</span>
             </h3>
           </div>
         </div>
@@ -186,10 +186,10 @@
 
             <!-- Center Gauge Stats Overlay -->
             <div style="text-align: center; margin-top: -38px;">
-              <span id="gauge-tier-label" style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em; display: block;">High Tier</span>
+              <span id="gauge-tier-label" style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em; display: block;">---</span>
               <span style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 0.1rem;">Recruiter Priority Discovery Meter</span>
-              <div id="gauge-xp-num" style="font-size: 1.8rem; font-weight: 900; color: #ffffff; font-family: var(--font-display); margin-top: 0.1rem; line-height: 1.1;">450 XP</div>
-              <span id="gauge-status-sub" style="font-size: 0.7rem; color: #38bdf8; font-weight: 600; margin-top: 0.2rem; display: block;">High Tier Boost Active</span>
+              <div id="gauge-xp-num" style="font-size: 1.8rem; font-weight: 900; color: #ffffff; font-family: var(--font-display); margin-top: 0.1rem; line-height: 1.1;">-- XP</div>
+              <span id="gauge-status-sub" style="font-size: 0.7rem; color: #38bdf8; font-weight: 600; margin-top: 0.2rem; display: block;">Loading...</span>
             </div>
 
           </div>
@@ -200,16 +200,16 @@
             <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
               <div style="background: rgba(245, 158, 11, 0.12); border: 2px solid #f59e0b; border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);">
                 <div style="text-align: center;">
-                  <span id="badge-mult-num" style="font-size: 0.85rem; font-weight: 900; color: #f59e0b; display: block; line-height: 1;">2.5x</span>
+                  <span id="badge-mult-num" style="font-size: 0.85rem; font-weight: 900; color: #f59e0b; display: block; line-height: 1;">--</span>
                   <span style="font-size: 0.45rem; font-weight: 800; color: #f97316; text-transform: uppercase;">BOOST</span>
                 </div>
               </div>
               <div>
                 <h4 id="badge-box-title" style="font-size: 1.05rem; font-weight: 800; color: #f59e0b; font-family: var(--font-display); margin: 0 0 0.2rem 0;">
-                  2.5x Recruiter Visibility Boost
+                  -- Recruiter Visibility Boost
                 </h4>
                 <p id="badge-box-desc" style="font-size: 0.82rem; color: #94a3b8; line-height: 1.45; margin: 0;">
-                  Candidates with <strong>400+ XP</strong> get <strong>2.5x more direct profile views</strong> on Job Search.
+                  Loading...
                 </p>
               </div>
             </div>
@@ -622,24 +622,92 @@
     }
 
     // ==========================================
-    // 🧭 ONBOARDING WIZARD CONTROLLER
+    // 🔄 IMMEDIATE UI INITIALIZATION (Critical)
     // ==========================================
+    // This runs IMMEDIATELY to update all hardcoded placeholder values with live data
+    // BEFORE the user sees anything, preventing stale values from flashing
+    function initializeUIImmediately() {
+      const xpVal = candidate.xp_points || 350;
+      
+      // Update all XP display elements
+      const boostXpEl = document.getElementById('boost-xp-val');
+      const gaugeXpNum = document.getElementById('gauge-xp-num');
+      if (boostXpEl) boostXpEl.textContent = `${xpVal} XP`;
+      if (gaugeXpNum) gaugeXpNum.textContent = `${xpVal} XP`;
+
+      // Determine tier based on XP
+      let tierText = "Rising Builder";
+      let multText = "1.5x";
+      let statusText = "Starter Boost Active";
+      let descText = "Earn 400+ XP to unlock <strong>2.5x Recruiter Visibility Boost</strong> on Job Search.";
+
+      if (xpVal >= 2500) {
+        multText = "5.0x";
+        tierText = "Elite Diamond";
+        statusText = "Top Tier Boost Active 🔥";
+        descText = "Candidates with <strong>2500+ XP</strong> get <strong>5.0x maximum recruiter profile views</strong> on Job Search.";
+      } else if (xpVal >= 1000) {
+        multText = "3.5x";
+        tierText = "Gold Priority";
+        statusText = "Gold Priority Boost Active ⚡";
+        descText = "Candidates with <strong>1000+ XP</strong> get <strong>3.5x higher recruiter search visibility</strong>.";
+      } else if (xpVal >= 400) {
+        multText = "2.5x";
+        tierText = "High Tier";
+        statusText = "High Tier Boost Active";
+        descText = "Candidates with <strong>400+ XP</strong> get <strong>2.5x more direct profile views</strong> on Job Search.";
+      }
+
+      // Update tier name elements
+      const tierEl = document.getElementById('boost-tier-name');
+      const gaugeTierLabel = document.getElementById('gauge-tier-label');
+      const gaugeStatusSub = document.getElementById('gauge-status-sub');
+      const multNum = document.getElementById('badge-mult-num');
+      const boxTitle = document.getElementById('badge-box-title');
+      const boxDesc = document.getElementById('badge-box-desc');
+
+      if (tierEl) tierEl.textContent = tierText;
+      if (gaugeTierLabel) gaugeTierLabel.textContent = tierText;
+      if (gaugeStatusSub) gaugeStatusSub.textContent = statusText;
+      if (multNum) multNum.textContent = multText;
+      if (boxTitle) boxTitle.textContent = `${multText} Recruiter Visibility Boost`;
+      if (boxDesc) boxDesc.innerHTML = descText;
+
+      // Animate Speedometer Gauge SVG Needle & Arc
+      const needle = document.getElementById('gauge-needle');
+      const activeArc = document.getElementById('gauge-active-arc');
+      const clampedXp = Math.min(600, Math.max(0, xpVal));
+      const angle = -90 + (clampedXp / 600) * 180;
+      const strokeDashoffset = Math.round(314 - (clampedXp / 600) * 314);
+
+      if (needle) {
+        needle.style.transformOrigin = "0px 0px";
+        needle.style.transform = `rotate(${angle}deg)`;
+      }
+      if (activeArc) {
+        activeArc.style.strokeDashoffset = strokeDashoffset;
+      }
+    }
+
+    // Call immediately to prevent stale values from showing
+    initializeUIImmediately();
     function updateOnboardingWizard() {
       const wizard = document.getElementById('onboarding-wizard');
-      if (!wizard) return;
+      const pathfinder = document.getElementById('pathfinder-cards');
+      if (!wizard || !pathfinder) return;
 
       const hasProfile = !!(candidate.profileCompleted && candidate.preferredRole && candidate.fullName);
       const hasSkills  = !!(candidate.skills && candidate.skills.length > 0);
       const allDone    = hasProfile && hasSkills;
 
-      // Hide wizard once fully complete
-      const pathfinder = document.getElementById('pathfinder-cards');
+      // Always show pathfinder cards once profile exists, hide wizard when complete
       if (allDone) {
         wizard.style.display = 'none';
-        if (pathfinder) pathfinder.style.display = 'grid';
+        pathfinder.style.display = 'grid';
         return;
       } else {
-        if (pathfinder) pathfinder.style.display = 'none';
+        // Always show pathfinder cards below wizard (not hide)
+        pathfinder.style.display = 'grid';
       }
 
       wizard.style.display = 'block';
