@@ -63,7 +63,7 @@
         <span style="font-size: 1.8rem; z-index: 1; position: relative;">🤖</span>
         <div style="flex: 1; min-width: 200px; z-index: 1;">
           <strong style="color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 0.2rem;">AI Recommendation Engine Active</strong>
-          <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; display: block;">Showing only <strong id="user-matched-role" style="color: var(--secondary);">[Preferred Role]</strong> positions — <strong id="ai-job-count" style="color: var(--primary);">0</strong> jobs matched to your profile.</span>
+          <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; display: block;">Showing only <strong id="user-matched-role" style="color: var(--secondary);">---</strong> positions — <strong id="ai-job-count" style="color: var(--primary);">--</strong> jobs matched to your profile.</span>
         </div>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; z-index: 1;">
           <a href="recommendations.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 700;">🗺️ View Roadmap</a>
@@ -158,7 +158,24 @@
   </div>
 <script src="shared.js?v=1.0.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
+  <script>    // ==========================================
+    // 🔄 IMMEDIATE UI INITIALIZATION (Critical)
+    // ==========================================
+    // This will be called immediately after auth to update dynamic placeholders
+    // before the user sees anything, preventing stale values from flashing
+    let _delayedInitialize = null;
+    function initializeJobsUIImmediately(candidateData) {
+      if (!candidateData) return;
+      
+      const roleEl = document.getElementById('user-matched-role');
+      const countEl = document.getElementById('ai-job-count');
+      
+      if (roleEl) roleEl.textContent = candidateData.preferredRole || '---';
+      if (countEl) {
+        // We'll update count after db loads, but set placeholder now
+        _delayedInitialize = candidateData;
+      }
+    }
     const auth = withAuth(['candidate', 'admin']);
     const originalGetUser = getUser;
     getUser = function() {
@@ -170,6 +187,9 @@
     };
     if (auth) {
       const { user, db, candidate } = auth;
+
+      // Initialize UI immediately with candidate data
+      initializeJobsUIImmediately(candidate);
 
       // Refresh XP Progress layout inside the sidebar
       function refreshSidebarStats() {
@@ -270,11 +290,19 @@
         document.getElementById('ai-recom-banner').style.display = "flex";
         document.getElementById('jobs-grid').style.display = "grid";
         document.getElementById('ai-bonus-recom-section').style.display = "block";
+        
+        // Update user matched role
         if(document.getElementById('user-matched-role')) document.getElementById('user-matched-role').textContent = candidateRole;
-        // Populate live job count
+        
+        // Populate live job count immediately
         const totalMatched = (db.jobs || []).filter(j => j.category.toLowerCase() === candidateRole.toLowerCase()).length;
         const aiCount = document.getElementById('ai-job-count');
         if (aiCount) aiCount.textContent = totalMatched;
+        
+        // If UI was initialized with placeholder data, trigger AI notification with actual count
+        if (_delayedInitialize && totalMatched > 0) {
+          triggerAINotification(candidateRole, totalMatched);
+        }
       }
 
       // Load all jobs instead of strictly filtering
