@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Showcase Portfolio | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar" style="display: none;"></aside>
+    
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">My Showcase Portfolio</h2>
+          <p style="color: var(--text-secondary);">Don't tell recruiters what you can do. Build it and show them here.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- ONBOARDING PROGRESS WIZARD -->
+      <div id="onboarding-wizard" style="display: none; margin-bottom: 2rem;">
+        <div style="background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.08) 100%); border: 1px solid var(--primary); border-radius: var(--radius-md); padding: 1.75rem; box-shadow: 0 0 20px rgba(99,102,241,0.12);">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <span style="font-size: 1.6rem;">🚀</span>
+            <div>
+              <strong style="color: var(--primary); font-size: 1.05rem; display: block;">Complete Your Onboarding</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Finish all steps below to unlock the Job Portal and your AI Roadmap.</p>
+            </div>
+            <div id="onboarding-pct-badge" style="margin-left: auto; background: var(--primary-light); color: var(--primary); font-weight: 800; font-size: 1.1rem; padding: 0.4rem 1rem; border-radius: 50px; border: 1px solid var(--primary); font-family: var(--font-display);">0%</div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div style="background: var(--bg-tertiary); border-radius: 999px; height: 6px; margin-bottom: 1.5rem; overflow: hidden;">
+            <div id="onboarding-bar" style="height: 100%; width: 25%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1);"></div>
+          </div>
+
+          <!-- Steps Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+
+            <!-- Step 1: Account Created (always done) -->
+            <div class="onboarding-step" id="step-1" style="background: var(--success-light); border: 1px solid var(--success); border-radius: var(--radius-sm); padding: 1rem; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: -6px; right: -6px; font-size: 2.5rem; opacity: 0.07; font-weight: 900;">1</div>
+              <div style="font-size: 1.4rem; margin-bottom: 0.4rem;">✅</div>
+              <strong style="font-size: 0.85rem; color: var(--success); display: block; margin-bottom: 0.2rem;">Account Created</strong>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">You're registered and signed in.</p>
+            </div>
+
+            <!-- Step 2: Complete Profile -->
+            <div class="onboarding-step" id="step-2" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; position: relative; overflow: hidden; transition: all 0.3s ease;">
+              <div style="position: absolute; top: -6px; right: -6px; font-size: 2.5rem; opacity: 0.07; font-weight: 900;">2</div>
+              <div id="step-2-icon" style="font-size: 1.4rem; margin-bottom: 0.4rem;">👤</div>
+              <strong id="step-2-label" style="font-size: 0.85rem; color: var(--warning); display: block; margin-bottom: 0.2rem;">Complete Your Profile</strong>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0 0 0.5rem 0;">Set your name, bio, and preferred job role.</p>
+              <a href="profile.html" style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-decoration: none;">→ Go to Profile</a>
+            </div>
+
+            <!-- Step 3: Add Skills -->
+            <div class="onboarding-step" id="step-3" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; position: relative; overflow: hidden; transition: all 0.3s ease;">
+              <div style="position: absolute; top: -6px; right: -6px; font-size: 2.5rem; opacity: 0.07; font-weight: 900;">3</div>
+              <div id="step-3-icon" style="font-size: 1.4rem; margin-bottom: 0.4rem;">🛠️</div>
+              <strong id="step-3-label" style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.2rem;">Add Your Skills</strong>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0 0 0.5rem 0;">Tag at least one skill to personalise your roadmap.</p>
+              <a href="profile.html" style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-decoration: none;">→ Edit Skills in Profile</a>
+            </div>
+
+            <!-- Step 4: Access Unlocked -->
+            <div class="onboarding-step" id="step-4" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; position: relative; overflow: hidden; transition: all 0.3s ease;">
+              <div style="position: absolute; top: -6px; right: -6px; font-size: 2.5rem; opacity: 0.07; font-weight: 900;">4</div>
+              <div id="step-4-icon" style="font-size: 1.4rem; margin-bottom: 0.4rem;">🔒</div>
+              <strong id="step-4-label" style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.2rem;">Unlock Job Portal</strong>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0 0 0.5rem 0;">Complete steps 2 & 3 to access jobs & AI Roadmap.</p>
+              <span id="step-4-link" style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Complete steps first</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE HIRING BOOST (Hidden initially, shown by JS) -->
+      <div id="profile-hiring-boost" style="display: none; background: #1e293b; color: white; border-radius: 12px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 2.5rem;">
+        <h2 style="color: white; font-family: var(--font-display); font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+          🔥 Profile Hiring Boost: <span style="color: #f59e0b; font-weight: 900;"><span id="hb-multiplier">---</span> ⚡ <span id="hb-xp">--</span> XP</span>
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- Left Card: Speedometer -->
+          <div style="background: #0f172a; padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; align-items: center;">
+            <svg id="gauge-svg" width="200" height="100" viewBox="0 0 200 100" style="overflow: visible;">
+              <!-- Gauge track -->
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <!-- Gauge fill -->
+              <path id="gauge-fill" d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#3b82f6" stroke-width="12" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="0" style="transition: stroke-dashoffset 1s ease-in-out;" />
+              <!-- Gauge stops (0, 100, 200, 300, 400, 500, 600+) -->
+              <text x="20" y="115" font-size="10" fill="#94a3b8" text-anchor="middle">0</text>
+              <text x="50" y="45" font-size="10" fill="#94a3b8" text-anchor="middle">100</text>
+              <text x="100" y="10" font-size="10" fill="#94a3b8" text-anchor="middle">300</text>
+              <text x="150" y="45" font-size="10" fill="#94a3b8" text-anchor="middle">500</text>
+              <text x="180" y="115" font-size="10" fill="#94a3b8" text-anchor="middle">600+</text>
+              <!-- Needle -->
+              <g id="gauge-needle" style="transform-origin: 100px 100px; transform: rotate(0deg); transition: transform 1s ease-in-out;">
+                <circle cx="100" cy="100" r="5" fill="#f59e0b" />
+                <line x1="100" y1="100" x2="50" y2="60" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" />
+              </g>
+            </svg>
+            <div style="text-align: center; margin-top: 15px;">
+              <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Recruiter Priority Discovery Meter</span>
+              <div style="font-size: 1.5rem; font-weight: 900; margin-top: 0.2rem;"><span id="hb-gauge-xp">--</span> XP</div>
+              <div id="hb-tier-label" style="font-size: 0.8rem; color: #3b82f6; font-weight: 600; margin-top: 0.15rem;">Loading...</div>
+            </div>
+          </div>
+          
+          <!-- Right Card: Visibility Boost -->
+          <div style="background: #0f172a; padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <div style="width: 55px; height: 55px; border-radius: 50%; border: 2px solid #f59e0b; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #f59e0b; font-weight: 800; flex-shrink: 0; line-height: 1;">
+                <span id="hb-circle-multiplier" style="font-size: 1.1rem;">--</span>
+                <span style="font-size: 0.55rem; margin-top: 2px;">BOOST</span>
+              </div>
+              <div>
+                <h3 style="color: #f59e0b; margin: 0 0 0.35rem 0; font-size: 1rem;"><span id="hb-title-multiplier">--</span> Recruiter Visibility Boost</h3>
+                <p id="hb-desc-multiplier" style="color: #94a3b8; font-size: 0.85rem; margin: 0; line-height: 1.4;">Loading...</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 1rem; margin-top: 1rem;">
+              <span style="color: #94a3b8; font-size: 0.85rem;">Boosted to Recruiters:</span>
+              <span style="color: #10b981; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 0.3rem;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span> Active</span>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="window.location.href='jobs.html'" style="width: 100%; background: #f59e0b; color: #000; border: none; padding: 1rem; font-weight: 800; font-size: 1.1rem; font-family: var(--font-display); border-radius: 8px; margin-top: 1.5rem; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Boost Your Hiring Rank ➔
+        </button>
+      </div>
+
+      <!-- PATHFINDER CHOICES -->
+      <div id="pathfinder-cards" style="display: none; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
+        
+        <!-- Job Path -->
+        <a href="jobs.html" class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1.5rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; border-top: 4px solid var(--primary);">
+          <span style="font-size: 3rem; margin-bottom: 1rem;">💼</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">Find a Job</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Search for full-time roles matching your skills.</p>
+          <span class="btn btn-primary" style="width: 100%; border-radius: var(--radius-sm); justify-content: center;">Explore Jobs</span>
+        </a>
+
+        <!-- Freelance Path -->
+        <a href="freelance.html" class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1.5rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; border-top: 4px solid var(--secondary);">
+          <span style="font-size: 3rem; margin-bottom: 1rem;">🚀</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">Do Freelancing</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Take on micro-gigs to build your portfolio.</p>
+          <span class="btn" style="width: 100%; justify-content: center; border-radius: var(--radius-sm); background: var(--secondary-light); color: var(--secondary); border: 1px solid var(--secondary);">View Gigs</span>
+        </a>
+
+        <!-- Learn Path -->
+        <a href="recommendations.html" class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1.5rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; border-top: 4px solid var(--success);">
+          <span style="font-size: 3rem; margin-bottom: 1rem;">📚</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">Learn a Course</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Level up your skills and earn verified badges.</p>
+          <span class="btn" style="width: 100%; justify-content: center; border-radius: var(--radius-sm); background: var(--success-light); color: var(--success); border: 1px solid var(--success);">Go to Academy</span>
+        </a>
+
+      </div>
+
+      <!-- Talent Score Summary Dashboard & Skills Map -->
+      <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- Stats Card -->
+        <div class="card skeleton" id="talent-stats-card" style="padding: 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; align-items: center; justify-items: center;">
+          <div style="text-align: center; grid-column: 1 / -1; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; width: 100%;">
+            <span style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em;">Overall Talent Score</span>
+            <div id="talent-score-val" style="font-size: 3.5rem; font-weight: 800; color: var(--primary); font-family: var(--font-display); margin-top: 0.25rem; line-height: 1;">0</div>
+          </div>
+          <div style="text-align: center; width: 100%; border-right: 1px solid var(--border-color);">
+            <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">💼 Portfolio Rating</span>
+            <div id="portfolio-score-val" style="font-size: 1.6rem; font-weight: 700; color: var(--success);">0%</div>
+          </div>
+          <div style="text-align: center; width: 100%;">
+            <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">⚡ Verified Assessments</span>
+            <div id="quiz-score-val" style="font-size: 1.6rem; font-weight: 700; color: var(--warning);">0%</div>
+          </div>
+        </div>
+
+        <!-- Radar Chart Card -->
+        <div class="card skeleton" id="talent-radar-card" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.05em; display: block;">Talent Radar Map</span>
+          <svg id="radar-chart-svg" width="220" height="200" style="overflow: visible;"></svg>
+        </div>
+      </div>
+
+      <div class="grid-2col" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.5rem;">
+        
+        <!-- LEFT COLUMN: PROFILE DETAILS & SKILLS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          <!-- Content moved to Profile Page -->
+        </div>
+
+        <!-- RIGHT COLUMN: PROJECTS & INTERVIEWS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Upcoming Interviews widget -->
+          <div class="card" id="interviews-widget" style="border-left: 4px solid var(--warning); display: none; padding: 1.25rem;">
+            <h3 style="font-size: 1.15rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              🗓️ Upcoming Interviews
+            </h3>
+            <div id="interviews-list-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Dynamic Interviews render here -->
+            </div>
+          </div>
+
+          <!-- Projects moved to Profile Page -->
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    window.initializePortfolioUI = async function() {
+      await new Promise(r => setTimeout(r, 400));
+      const auth = withAuth(['candidate']);
+      if (auth) {
+        const { user, db, candidate } = auth;
+
+    if (!candidate.projects) {
+      candidate.projects = [
+        { id: 1, title: "Next.js E-Commerce Store", description: "Completed storefront with fully responsive design, cart features, and mock checkout. Uses CSS variables for absolute design consistency.", github_url: "https://github.com/johnbuilder/store", project_url: "https://mystore-react.vercel.app", thumbnail_url: "🛒" }
+      ];
+      dbSave(db);
+    }
+
+    function initFormFields() {
+      updateOnboardingWizard();
+      updateHiringBoost();
+      updateUIStats();
+      renderInterviews();
+    }
+
+    // ==========================================
+    // 🚀 ONBOARDING WIZARD CONTROLLER
+    // ==========================================
+    function updateOnboardingWizard() {
+      const wizard = document.getElementById('onboarding-wizard');
+      if (!wizard) return;
+
+      const hasProfile = !!(candidate.profileCompleted && candidate.preferredRole && candidate.fullName);
+      const hasSkills  = !!(candidate.skills && candidate.skills.length > 0);
+      const allDone    = hasProfile && hasSkills;
+
+      // Hide wizard once fully complete
+      const pathfinder = document.getElementById('pathfinder-cards');
+      if (allDone) {
+        wizard.style.display = 'none';
+        if (pathfinder) pathfinder.style.display = 'grid';
+      } else {
+        wizard.style.display = 'block';
+        if (pathfinder) pathfinder.style.display = 'none';
+      }
+
+      // Calculate progress (4 steps, step 1 always done = 25%)
+      let stepsCompleted = 1; // step 1 always done
+      if (hasProfile) stepsCompleted++;
+      if (hasSkills)  stepsCompleted++;
+      if (allDone)    stepsCompleted++;
+      const pct = Math.round((stepsCompleted / 4) * 100);
+
+      const bar = document.getElementById('onboarding-bar');
+      if (bar) bar.style.width = pct + '%';
+      const pctBadge = document.getElementById('onboarding-pct-badge');
+      if (pctBadge) pctBadge.textContent = pct + '%';
+
+      // Step 2 — Profile
+      const s2 = document.getElementById('step-2');
+      const s2icon = document.getElementById('step-2-icon');
+      const s2label = document.getElementById('step-2-label');
+      if (s2 && s2icon && s2label) {
+        if (hasProfile) {
+          s2.style.background = 'var(--success-light)';
+          s2.style.border = '1px solid var(--success)';
+          s2icon.textContent = '✅';
+          s2label.style.color = 'var(--success)';
+          s2label.textContent = 'Profile Complete';
+        } else {
+          s2.style.background = 'var(--warning-light, rgba(245,158,11,0.1))';
+          s2.style.border = '1px solid var(--warning)';
+          s2icon.textContent = '👤';
+          s2label.style.color = 'var(--warning)';
+          s2label.textContent = 'Complete Your Profile';
+        }
+      }
+
+      // Step 3 — Skills
+      const s3 = document.getElementById('step-3');
+      const s3icon = document.getElementById('step-3-icon');
+      const s3label = document.getElementById('step-3-label');
+      if (s3 && s3icon && s3label) {
+        if (hasSkills) {
+          s3.style.background = 'var(--success-light)';
+          s3.style.border = '1px solid var(--success)';
+          s3icon.textContent = '✅';
+          s3label.style.color = 'var(--success)';
+          s3label.textContent = 'Skills Added';
+        } else {
+          const active = hasProfile;
+          s3.style.background = active ? 'var(--warning-light, rgba(245,158,11,0.1))' : 'var(--bg-tertiary)';
+          s3.style.border = active ? '1px solid var(--warning)' : '1px solid var(--border-color)';
+          s3icon.textContent = '🛠️';
+          s3label.style.color = active ? 'var(--warning)' : 'var(--text-muted)';
+          s3label.textContent = 'Add Your Skills';
+        }
+      }
+
+      // Step 4 — Unlock
+      const s4 = document.getElementById('step-4');
+      const s4icon = document.getElementById('step-4-icon');
+      const s4label = document.getElementById('step-4-label');
+      const s4link = document.getElementById('step-4-link');
+      if (s4 && s4icon && s4label && s4link) {
+        if (allDone) {
+          s4.style.background = 'var(--success-light)';
+          s4.style.border = '1px solid var(--success)';
+          s4icon.textContent = '🎉';
+          s4label.style.color = 'var(--success)';
+          s4label.textContent = 'Job Portal Unlocked!';
+          s4link.innerHTML = '<a href="jobs.html" style="color:var(--success);font-size:0.72rem;font-weight:700;text-decoration:none;">→ Go to Job Portal</a>';
+        } else {
+          s4.style.background = 'var(--bg-tertiary)';
+          s4.style.border = '1px solid var(--border-color)';
+          s4icon.textContent = '🔒';
+          s4label.style.color = 'var(--text-muted)';
+          s4label.textContent = 'Unlock Job Portal';
+          s4link.innerHTML = '<span style="color:var(--text-muted);font-size:0.72rem;">Complete steps first</span>';
+        }
+      }
+    }
+
+    // ==========================================
+    // 🔥 HIRING BOOST CONTROLLER
+    // ==========================================
+    function updateHiringBoost() {
+      const boostWidget = document.getElementById('profile-hiring-boost');
+      if (!boostWidget) return;
+      
+      const hasProfile = !!(candidate.profileCompleted && candidate.preferredRole && candidate.fullName);
+      const hasSkills  = !!(candidate.skills && candidate.skills.length > 0);
+      
+      if (hasProfile && hasSkills) {
+        boostWidget.style.display = 'block';
+      } else {
+        boostWidget.style.display = 'none';
+        return; // wait till onboarding is done to show boost
+      }
+      
+      const xp = candidate.xp_points || 0;
+      let boostMultiplier = "1.5x";
+      let boostTier = "Rising Builder";
+      if (xp >= 2500) { boostMultiplier = "5.0x"; boostTier = "Elite Diamond"; }
+      else if (xp >= 1000) { boostMultiplier = "3.5x"; boostTier = "Gold Priority"; }
+      else if (xp >= 400) { boostMultiplier = "2.5x"; boostTier = "High Tier"; }
+      else { boostMultiplier = "1.5x"; boostTier = "Rising Builder"; }
+
+      document.getElementById('hb-multiplier').textContent = boostMultiplier;
+      document.getElementById('hb-circle-multiplier').textContent = boostMultiplier;
+      document.getElementById('hb-title-multiplier').textContent = boostMultiplier;
+      document.getElementById('hb-tier-label').textContent = boostTier;
+      
+      document.getElementById('hb-xp').textContent = xp;
+      document.getElementById('hb-gauge-xp').textContent = xp;
+      
+      document.getElementById('hb-desc-multiplier').textContent = `${boostMultiplier} Recruiter Visibility Multiplier Active.`;
+
+      // Update Gauge SVG
+      const maxVisualXp = 600;
+      const angle = Math.min(180, (xp / maxVisualXp) * 180);
+      const gaugeNeedle = document.getElementById('gauge-needle');
+      const gaugeFill = document.getElementById('gauge-fill');
+      
+      setTimeout(() => {
+        if(gaugeNeedle) gaugeNeedle.style.transform = `rotate(${angle}deg)`;
+        
+        if (gaugeFill) {
+          // Gauge track is circumference of half circle: r=80, C=pi*r = 251.2
+          // stroke-dashoffset = 251.2 - (251.2 * (angle / 180))
+          const dashoffset = 251.2 - (251.2 * (angle / 180));
+          gaugeFill.style.strokeDashoffset = dashoffset;
+        }
+      }, 100);
+    }
+
+    function drawRadarChart() {
+      const svg = document.getElementById('radar-chart-svg');
+      if (!svg) return;
+
+      const d1 = candidate.assessment_score || 30;
+      const d2 = Math.min(100, (candidate.projects ? candidate.projects.length * 20 : 20) + 15);
+      const d3 = candidate.talent_score || 40;
+      const d4 = candidate.portfolio_score || 35;
+      const d5 = candidate.xp_points ? Math.min(100, candidate.xp_points / 25) : 10;
+
+      const scores = [d1, d2, d3, d4, d5];
+      const center = 110;
+      const maxRadius = 65;
+
+      let ringsHTML = "";
+      for (let level = 1; level <= 4; level++) {
+        const r = (maxRadius / 4) * level;
+        const points = [];
+        for (let i = 0; i < 5; i++) {
+          const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+          const x = center + r * Math.cos(angle);
+          const y = center + r * Math.sin(angle);
+          points.push(`${x},${y}`);
+        }
+        ringsHTML += `<polygon points="${points.join(' ')}" fill="none" stroke="var(--border-color)" stroke-width="0.5" />`;
+      }
+
+      const labels = ["Quizzes", "Projects", "Talent Score", "Portfolio", "Experience"];
+      let axesHTML = "";
+      for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const xOuter = center + maxRadius * Math.cos(angle);
+        const yOuter = center + maxRadius * Math.sin(angle);
+        
+        axesHTML += `<line x1="${center}" y1="${center}" x2="${xOuter}" y2="${yOuter}" stroke="var(--border-color)" stroke-width="1" />`;
+        
+        const labelDist = maxRadius + 14;
+        const xLabel = center + labelDist * Math.cos(angle);
+        const yLabel = center + labelDist * Math.sin(angle) + 3;
+        
+        let textAnchor = "middle";
+        if (Math.cos(angle) > 0.1) textAnchor = "start";
+        else if (Math.cos(angle) < -0.1) textAnchor = "end";
+
+        axesHTML += `<text x="${xLabel}" y="${yLabel}" fill="var(--text-secondary)" font-size="8" font-weight="600" text-anchor="${textAnchor}">${labels[i]}</text>`;
+      }
+
+      const dataPoints = [];
+      for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const scorePct = scores[i] / 100;
+        const r = maxRadius * scorePct;
+        const x = center + r * Math.cos(angle);
+        const y = center + r * Math.sin(angle);
+        dataPoints.push(`${x},${y}`);
+      }
+
+      const polygonHTML = `
+        <polygon points="${dataPoints.join(' ')}" fill="rgba(99, 102, 241, 0.25)" stroke="var(--primary)" stroke-width="2" />
+        ${dataPoints.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3.5" fill="var(--primary)" stroke="var(--bg-secondary)" stroke-width="1.5" />`).join('')}
+      `;
+
+      svg.innerHTML = `
+        ${ringsHTML}
+        ${axesHTML}
+        ${polygonHTML}
+      `;
+    }
+
+    function updateUIStats() {
+      // Level calculations
+      document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+      document.getElementById('level-num').textContent = candidate.level || 1;
+      document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+
+      // XP Progress Bar percentage
+      let maxLvlXp = 1000;
+      let minLvlXp = 0;
+      if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+      else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+      else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+      
+      const progressVal = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+      setTimeout(() => {
+        document.getElementById('xp-bar-fill').style.width = `${progressVal}%`;
+      }, 100);
+
+      // Talent Scores Breakdown widget
+      document.getElementById('talent-score-val').textContent = candidate.talent_score || 0;
+      document.getElementById('portfolio-score-val').textContent = `${candidate.portfolio_score || 0}%`;
+      document.getElementById('quiz-score-val').textContent = `${candidate.assessment_score || 0}%`;
+
+      // Update dynamic radar chart map
+      drawRadarChart();
+    }
+
+    function renderInterviews() {
+      const dbState = dbGet();
+      const myInterviews = dbState.interviews.filter(meet => meet.candidate_id === candidate.id);
+      const widget = document.getElementById('interviews-widget');
+      const container = document.getElementById('interviews-list-container');
+
+      if (myInterviews.length > 0) {
+        widget.style.display = "block";
+        container.innerHTML = "";
+        myInterviews.forEach(meet => {
+          const item = document.createElement('div');
+          item.style.cssText = "padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;";
+          item.innerHTML = `
+            <div>
+              <strong style="display:block;">${meet.challenge_title}</strong>
+              <span style="font-size:0.75rem; color:var(--primary);">${new Date(meet.scheduled_at).toLocaleString()}</span>
+            </div>
+            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: var(--radius-sm);">
+              Join Call 📞
+            </a>
+          `;
+          container.appendChild(item);
+        });
+      } else {
+        widget.style.display = "none";
+      }
+    }
+
+
+    initFormFields();
+    
+    const statsCard = document.getElementById('talent-stats-card');
+    if (statsCard) statsCard.classList.remove('skeleton');
+    const radarCard = document.getElementById('talent-radar-card');
+    if (radarCard) radarCard.classList.remove('skeleton');
+    }
+    };
+    window.initializePortfolioUI();
+</script>
+</body>
+</html>
