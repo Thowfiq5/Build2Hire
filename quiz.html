@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Assessments | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Technical Skill Assessments</h2>
+        <p style="color: var(--text-secondary);">Test your developer guidelines knowledge and boost your Quiz Talent score.</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- 1. QUIZ SELECTOR SCREEN -->
+      <div id="quiz-selector-screen">
+        <div id="role-rec-banner" style="display:none; background: linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1)); border:1px solid var(--primary); border-radius:var(--radius-sm); padding:1rem 1.25rem; margin-bottom:1.5rem; align-items:center; gap:0.75rem;">
+          <span style="font-size:1.4rem;">🤖</span>
+          <div style="font-size:0.85rem;">
+            <strong style="color:var(--primary); display:block; margin-bottom:0.15rem;">AI Recommends for Your Role</strong>
+            <span style="color:var(--text-secondary);">Based on your profile role as <strong id="rec-role-label" style="color:var(--secondary);"></strong>, the highlighted quiz below is recommended for you.</span>
+          </div>
+        </div>
+        <div class="grid-3" id="quiz-cards-grid">
+        <div class="card" id="quiz-card-frontend" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">⚛️</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Frontend Frameworks</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers React Hooks lifecycle, responsive grids, custom CSS custom variables, and basic design frameworks.
+            </p>
+          </div>
+          <button onclick="startQuiz('frontend')" class="btn btn-primary" style="width: 100%;">Start Frontend Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-backend" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🟢</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Backend & API Architectures</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Test your knowledge of Node.js event loops, HTTP response statuses, REST APIs, and Express request flows.
+            </p>
+          </div>
+          <button onclick="startQuiz('backend')" class="btn btn-primary" style="width: 100%;">Start Backend Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-database" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🗄️</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Database Schema & Caching</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers SQL indexing, transaction ACID bounds, MongoDB document formats, and caching policies like Redis.
+            </p>
+          </div>
+          <button onclick="startQuiz('database')" class="btn btn-primary" style="width: 100%;">Start Database Quiz</button>
+        </div>
+
+        <div class="card" id="quiz-card-creative" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
+          <div>
+            <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🎥</span>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Creative Media & Video Editing</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin-bottom: 1.5rem;">
+              Covers video compression, audio L/J-cuts, cinema frame rates, and color grading basics.
+            </p>
+          </div>
+          <button onclick="startQuiz('creative')" class="btn btn-primary" style="width: 100%;">Start Creative Quiz</button>
+        </div>
+        </div>
+      </div>
+
+      <!-- 2. QUIZ RUNNING SCREEN (HIDDEN BY DEFAULT) -->
+      <div id="quiz-run-screen" class="card" style="display: none; max-width: 750px; margin: 0 auto; padding: 2.5rem;">
+        <div class="flex-between" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <span id="quiz-badge" class="badge badge-primary">FRONTEND</span>
+            <h3 id="quiz-title" style="margin-top: 0.25rem; font-size: 1.3rem;">Question 1 of 5</h3>
+          </div>
+          <div style="text-align: right;">
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Remaining Time</p>
+            <strong id="quiz-timer" style="font-size: 1.4rem; color: var(--danger); font-family: monospace;">60s</strong>
+          </div>
+        </div>
+
+        <h2 id="quiz-question-text" style="font-size: 1.25rem; margin-bottom: 2rem; line-height: 1.4;">
+          Question goes here?
+        </h2>
+
+        <div id="quiz-options-container" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <!-- Options list buttons -->
+        </div>
+
+        <div class="flex-between" style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">Correct answers earn +100 XP!</span>
+          <button id="quiz-action-btn" class="btn btn-primary" onclick="submitAnswer()" disabled>Confirm Answer</button>
+        </div>
+      </div>
+
+      <!-- 3. QUIZ RESULT SCREEN (HIDDEN BY DEFAULT) -->
+      <div id="quiz-result-screen" class="card" style="display: none; max-width: 550px; margin: 0 auto; text-align: center; padding: 3rem 2rem;">
+        <span id="result-emoji" style="font-size: 4rem;">🎉</span>
+        <h2 id="result-title" style="font-size: 1.8rem; margin-top: 1rem; margin-bottom: 0.5rem;">Quiz Completed!</h2>
+        <p id="result-desc" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 2rem;">
+          You scored 80% (4 out of 5 questions correct).
+        </p>
+
+        <div style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem;">
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Assessment score</span>
+            <div id="result-score" style="font-size: 2rem; font-weight: 800; color: var(--primary); margin-top: 0.25rem;">80%</div>
+          </div>
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">XP Earned</span>
+            <div id="result-xp" style="font-size: 2rem; font-weight: 800; color: var(--success); margin-top: 0.25rem;">+100 XP</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <a href="portfolio.html" class="btn btn-primary">Go to Profile Dashboard</a>
+          <button onclick="resetQuizScreen()" class="btn btn-secondary">Try Another Quiz</button>
+        </div>
+      </div>
+
+      <!-- CERTIFICATE UNLOCK MODAL -->
+      <div id="cert-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1200; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 550px; background-color: #1e293b; color: #f8fafc; border: 4px solid #d97706; padding: 2.5rem 2rem; border-radius: var(--radius-md); text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.6); position: relative; overflow: visible;">
+          
+          <!-- Seal decoration -->
+          <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 3rem; background: #d97706; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4); border: 3px solid #f8fafc;">
+            🎓
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: #fbbf24; font-weight: 700; display: block; margin-bottom: 0.5rem;">Verified Skill Credential</span>
+            <h2 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: #fbbf24; margin-bottom: 1.5rem; letter-spacing: -0.01em;">CERTIFICATE OF COMPLETION</h2>
+            
+            <p style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 1.5rem;">This verified credential is proud to be presented to</p>
+            
+            <h3 id="cert-candidate-name" style="font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; text-decoration: underline; color: #f8fafc;">Candidate Name</h3>
+            
+            <p style="font-size: 0.9rem; color: #cbd5e1; max-width: 420px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
+              For successfully completing all technical assessment modules for <strong id="cert-course-name" style="color: #fbbf24;">Frontend Course</strong> with a verified passing grade.
+            </p>
+
+            <!-- Signature line -->
+            <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem;">
+              <div style="text-align: center;">
+                <span style="font-family: 'Outfit', sans-serif; font-style: italic; font-size: 1.1rem; color: #fbbf24; display: block; margin-bottom: 0.25rem;">Build2Hire AI</span>
+                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Verification Authority</span>
+              </div>
+              <div style="text-align: center;">
+                <strong style="font-size: 1.1rem; display: block; color: #34d399; margin-bottom: 0.25rem;" id="cert-score-val">80%</strong>
+                <span style="font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 600;">Passing Score</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+              <button onclick="window.closeCertModal()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Close</button>
+              <a href="portfolio.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; color: white;">Go to Portfolio 💼</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = withAuth(['candidate']);
+    if (auth) {
+      const { user, db, candidate } = auth;
+
+    // Role-based quiz recommendation highlight
+    (function highlightRoleQuiz() {
+      const role = (candidate.preferredRole || '').toLowerCase();
+      const map = {
+        'frontend developer':    'frontend',
+        'full stack engineer':   'frontend',
+        'backend engineer':      'backend',
+        'database administrator':'database',
+        'video editor':          'creative'
+      };
+      const recKey = map[role];
+      if (!recKey) return;
+
+      const banner = document.getElementById('role-rec-banner');
+      const roleLabel = document.getElementById('rec-role-label');
+      if (banner) { banner.style.display = 'flex'; }
+      if (roleLabel) { roleLabel.textContent = candidate.preferredRole; }
+
+      const card = document.getElementById('quiz-card-' + recKey);
+      if (card) {
+        card.style.border = '2px solid var(--primary)';
+        card.style.boxShadow = '0 0 18px rgba(99,102,241,0.25)';
+        // Add recommended badge
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-primary';
+        badge.style.cssText = 'font-size:0.7rem; margin-bottom:0.5rem; display:inline-block;';
+        badge.textContent = '🤖 AI Recommended for You';
+        card.insertBefore(badge, card.firstChild);
+      }
+    })();
+
+    // Refresh XP Progress layout inside the sidebar
+    function refreshSidebarStats() {
+      document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+      document.getElementById('level-num').textContent = candidate.level || 1;
+      document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+
+      let maxLvlXp = 1000;
+      let minLvlXp = 0;
+      if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+      else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+      else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+
+      const pct = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+      setTimeout(() => {
+        document.getElementById('xp-bar-fill').style.width = `${pct}%`;
+      }, 100);
+    }
+
+    refreshSidebarStats();
+
+    // ==========================================
+    // 📚 QUIZ QUESTIONS DATA
+    // ==========================================
+    const QUIZZES = {
+      frontend: {
+        title: "Frontend Frameworks & UI",
+        badge: "⚛️ FRONTEND",
+        questions: [
+          {
+            text: "What does the 'flex-shrink: 0' CSS rule prevent?",
+            options: [
+              "The flex item from shrinking below its base flex-basis layout width.",
+              "The parent flex container box dimensions from collapsing.",
+              "The list elements inside a flex row from wrapping to the next line.",
+              "The sibling layout items from growing when additional spacer width is available."
+            ],
+            answer: 0
+          },
+          {
+            text: "How do you declare a global CSS custom variable that is shared across the layout?",
+            options: [
+              "body { $primary-glow: #6366f1; }",
+              "var primary-glow = '#6366f1';",
+              ":root { --primary-glow: #6366f1; }",
+              "css-variable { primary-glow: #6366f1; }"
+            ],
+            answer: 2
+          },
+          {
+            text: "In React frameworks, what is the main purpose of the useEffect hook?",
+            options: [
+              "To perform side effects (subscriptions, data fetches, DOM mutations) in functional components.",
+              "To cache complex function outputs between renders to speed up paint layout cycles.",
+              "To store reactive local component values that don't trigger layout updates when modified.",
+              "To manage custom input event validation configurations dynamically."
+            ],
+            answer: 0
+          },
+          {
+            text: "What does 'glassmorphism' design primarily rely on for its premium look?",
+            options: [
+              "High-contrast solid borders and flat shadows.",
+              "Vibrant radial gradients, low opacity background fills, and CSS backdrop blur filters.",
+              "Animated SVG paths and three-dimensional rotation layouts.",
+              "Heavy text-shadow properties and black pixelated backgrounds."
+            ],
+            answer: 1
+          },
+          {
+            text: "Which HTML5 semantic element represents content that is tangentially related to the main page content (like a sidebar)?",
+            options: [
+              "<section>",
+              "<article>",
+              "<aside>",
+              "<nav>"
+            ],
+            answer: 2
+          }
+        ]
+      },
+      backend: {
+        title: "Backend Systems & API",
+        badge: "🟢 BACKEND API",
+        questions: [
+          {
+            text: "Which HTTP status code represents a resource that could not be found on the server?",
+            options: [
+              "403 Forbidden",
+              "404 Not Found",
+              "500 Internal Server Error",
+              "502 Bad Gateway"
+            ],
+            answer: 1
+          },
+          {
+            text: "What is the primary role of the event loop inside the Node.js runtime?",
+            options: [
+              "To route HTTP packets between connected client sockets.",
+              "To execute non-blocking asynchronous event callbacks on a single thread.",
+              "To automatically scale system memory limits based on heap structures.",
+              "To balance traffic loads across multiple processor threads concurrently."
+            ],
+            answer: 1
+          },
+          {
+            text: "What is Express middleware in backend JS designs?",
+            options: [
+              "A background process that replicates relational records across servers.",
+              "Functions that intercept, modify, or terminate HTTP request/response pipelines before endpoint handlers execute.",
+              "Client-side scripts that render HTML widgets asynchronously.",
+              "Caching databases like Redis integrated into application routes."
+            ],
+            answer: 1
+          },
+          {
+            text: "Which response header must a server return to allow cross-origin resource requests?",
+            options: [
+              "Access-Control-Allow-Origin",
+              "Allow-Cross-Domain-Requests",
+              "Request-Origin-Scope-Access",
+              "Credentials-Headers-Mode"
+            ],
+            answer: 0
+          },
+          {
+            text: "What is the main benefit of password hashing algorithms (like bcrypt or argon2)?",
+            options: [
+              "They compress passwords to minimize database space.",
+              "They encrypt passwords so they can be decrypted and emailed back to users.",
+              "They generate one-way cryptographic hashes with work factor salts to prevent cracking.",
+              "They validate the strength of a user's password format automatically."
+            ],
+            answer: 2
+          }
+        ]
+      },
+      database: {
+        title: "Database Admin & Caching",
+        badge: "🗄️ DATABASE DESIGN",
+        questions: [
+          {
+            text: "What is the primary advantage of adding a database Index?",
+            options: [
+              "It accelerates read query matching speeds significantly.",
+              "It optimizes disk space allocations by compressing tables.",
+              "It increases the speed of INSERT and UPDATE transactions.",
+              "It automatically checks password fields for syntax compliance."
+            ],
+            answer: 0
+          },
+          {
+            text: "What do the letters in ACID represent for relational databases?",
+            options: [
+              "Async, Cache, Index, Delivery",
+              "Atomicity, Consistency, Isolation, Durability",
+              "Array, Connection, Integrity, Distribution",
+              "Atomicity, Caching, Indexing, Direct-Access"
+            ],
+            answer: 1
+          },
+          {
+            text: "In non-relational MongoDB schema layouts, which index is ideal for full-text search fields?",
+            options: [
+              "Compound index",
+              "Hashed index",
+              "Text index",
+              "Geospatial 2dsphere index"
+            ],
+            answer: 2
+          },
+          {
+            text: "What does database normalization aim to minimize?",
+            options: [
+              "Redundant duplicate data and design anomalies.",
+              "Read speeds for complex JOIN queries.",
+              "Disk write IOPS bounds.",
+              "Primary Key index spaces."
+            ],
+            answer: 0
+          },
+          {
+            text: "What is the primary usage of Redis in backend enterprise designs?",
+            options: [
+              "An in-memory key-value cache to store session tokens and transient SQL queries.",
+              "A heavy relational storage database engine supporting transactional tables.",
+              "An asset content delivery network hosting images.",
+              "An index logger parsing application crash errors."
+            ],
+            answer: 0
+          }
+        ]
+      },
+      creative: {
+        title: "Creative Media & Video Editing",
+        badge: "🎥 CREATIVE MEDIA",
+        questions: [
+          {
+            text: "Which video export codec delivers the best quality-to-filesize compression ratio for web distribution?",
+            options: [
+              "Apple ProRes 4444",
+              "H.264 codec in MP4 container",
+              "AVI uncompressed raw frames",
+              "WMV rendering format"
+            ],
+            answer: 1
+          },
+          {
+            text: "In audio design, what does 'L-cut' mean?",
+            options: [
+              "The video cuts to scene B, but the audio from scene A continues playing.",
+              "The audio cuts to scene B, but the video from scene A continues.",
+              "A low-frequency audio cut-off threshold.",
+              "A volume fade out linear transition."
+            ],
+            answer: 0
+          },
+          {
+            text: "What frame rate is standard for cinema film style playback?",
+            options: [
+              "60 frames per second (fps)",
+              "30 frames per second (fps)",
+              "24 frames per second (fps)",
+              "120 frames per second (fps)"
+            ],
+            answer: 2
+          }
+        ]
+      }
+    };
+
+    // ==========================================
+    // 📚 SKILL LEVEL-UP QUIZZES DATA
+    // ==========================================
+    const SKILL_QUIZZES = {
+      "React": {
+        title: "React Framework Upgrade Assessment",
+        questions: [
+          {
+            text: "Which hook should you use to cache the result of an expensive calculation between renders?",
+            options: ["useEffect", "useMemo", "useCallback", "useRef"],
+            answer: 1
+          },
+          {
+            text: "What happens when a component's state variables change in React?",
+            options: ["The component page reloads completely.", "The virtual DOM is refreshed and the component re-renders.", "The server is sent an API request automatically.", "The styling layout stylesheet is re-imported."],
+            answer: 1
+          }
+        ]
+      },
+      "CSS Variables": {
+        title: "CSS Variables Advanced Assessment",
+        questions: [
+          {
+            text: "How do you define a fallback color in case the custom variable '--main-accent' is not set?",
+            options: ["color: var(--main-accent, #6366f1);", "color: fallback(--main-accent, #6366f1);", "color: css-variable(--main-accent) || #6366f1;", "color: val(--main-accent, #6366f1);"],
+            answer: 0
+          },
+          {
+            text: "Which selector allows custom variables to be inherited globally by all elements?",
+            options: ["* selector", "body selector", ":root pseudo-class selector", "html selector"],
+            answer: 2
+          }
+        ]
+      },
+      "JavaScript": {
+        title: "Core JavaScript Logic Assessment",
+        questions: [
+          {
+            text: "Which array method returns a brand new array populated with the results of calling a function on every element?",
+            options: ["forEach()", "filter()", "map()", "find()"],
+            answer: 2
+          },
+          {
+            text: "What does an asynchronous function return by default in JavaScript?",
+            options: ["An undefined object", "A Promise object", "A JSON string", "A callback reference"],
+            answer: 1
+          }
+        ]
+      },
+      "Node.js": {
+        title: "NodeJS Server Routing Assessment",
+        questions: [
+          {
+            text: "Which Express method starts a server and binds it to a specified port?",
+            options: ["app.listen()", "app.start()", "app.connect()", "app.bind()"],
+            answer: 0
+          },
+          {
+            text: "What is the role of the next() function in Express routing handlers?",
+            options: ["To terminate the current HTTP response pipeline.", "To execute the next middleware or request handler in the stack.", "To redirect the client to the next routing page.", "To retry the database connection block."],
+            answer: 1
+          }
+        ]
+      },
+      "Redis": {
+        title: "Redis Server Caching Assessment",
+        questions: [
+          {
+            text: "What does TTL stand for when managing cache keys in Redis?",
+            options: ["Time-To-Live expiration timestamp", "Transaction-Type-Limit", "Total-Transfer-Latency", "Token-Target-Limit"],
+            answer: 0
+          },
+          {
+            text: "How does Redis achieve its extremely fast query response speeds?",
+            options: ["By sharding relational rows across disks.", "By storing and serving all data from system random-access memory (RAM).", "By optimizing deep relational index joins.", "By using multi-threaded write clusters."],
+            answer: 1
+          }
+        ]
+      },
+      "MySQL": {
+        title: "MySQL Indexes & Joins Assessment",
+        questions: [
+          {
+            text: "Which index type is automatically created when defining a Primary Key column in MySQL?",
+            options: ["Full-Text Index", "Clustered Unique Index", "Composite Index", "Spatial Index"],
+            answer: 1
+          },
+          {
+            text: "Which join retrieves all rows from the left table and matched rows from the right table?",
+            options: ["INNER JOIN", "RIGHT JOIN", "LEFT JOIN", "FULL OUTER JOIN"],
+            answer: 2
+          }
+        ]
+      },
+      "MongoDB": {
+        title: "MongoDB Document Schema Assessment",
+        questions: [
+          {
+            text: "Which MongoDB aggregation stage is used to filter documents based on query criteria?",
+            options: ["$group", "$match", "$sort", "$project"],
+            answer: 1
+          },
+          {
+            text: "What format does MongoDB use to store document collections internally?",
+            options: ["Plain CSV formatting", "BSON (Binary JSON) serialization format", "Strict XML schemas", "YAML structures"],
+            answer: 1
+          }
+        ]
+      },
+      "Premiere Pro": {
+        title: "Premiere Pro Video Editing Assessment",
+        questions: [
+          {
+            text: "Which codec is standard for exporting high-definition web-optimized video files?",
+            options: ["H.264 in MP4 container", "Apple ProRes 422", "MPEG-2 formatting", "AV1 raw compression"],
+            answer: 0
+          },
+          {
+            text: "What does the timeline J-cut represent in video editing pacing?",
+            options: ["The audio of the next scene starts playing before the video cuts to it.", "The video cuts to the next scene before the audio starts.", "A sudden jump cut transition between consecutive scenes.", "A cross-dissolve gradient video transition."],
+            answer: 0
+          }
+        ]
+      }
+    };
+
+    // Parse query params
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // ==========================================
+    // ⚙️ QUIZ EXECUTION ENGINE STATE
+    // ==========================================
+    let currentQuizData = null;
+    let currentQuizKey = "";
+    let questionIndex = 0;
+    let selectedOptionIndex = null;
+    let correctAnswersCount = 0;
+    let quizTimer = 60; // 60 seconds
+    let timerInterval = null;
+
+    function startQuiz(categoryKey) {
+      currentQuizKey = categoryKey;
+      
+      const skillParam = urlParams.get('skill');
+      const targetLvl = urlParams.get('targetLevel') || "Medium";
+
+      if (skillParam && SKILL_QUIZZES[skillParam]) {
+        currentQuizData = {
+          title: SKILL_QUIZZES[skillParam].title,
+          badge: `⚡ ${skillParam.toUpperCase()} ${targetLvl.toUpperCase()}`,
+          questions: SKILL_QUIZZES[skillParam].questions
+        };
+      } else {
+        currentQuizData = QUIZZES[categoryKey];
+      }
+      
+      questionIndex = 0;
+      correctAnswersCount = 0;
+      selectedOptionIndex = null;
+      quizTimer = 60;
+
+      // Swap Screens
+      document.getElementById('quiz-selector-screen').style.display = "none";
+      document.getElementById('quiz-run-screen').style.display = "block";
+      document.getElementById('quiz-result-screen').style.display = "none";
+
+      document.getElementById('quiz-badge').textContent = currentQuizData.badge;
+      
+      // Start Timer
+      document.getElementById('quiz-timer').textContent = `${quizTimer}s`;
+      timerInterval = setInterval(() => {
+        quizTimer--;
+        document.getElementById('quiz-timer').textContent = `${quizTimer}s`;
+        if (quizTimer <= 10) {
+          document.getElementById('quiz-timer').style.color = "var(--danger)";
+        } else {
+          document.getElementById('quiz-timer').style.color = "var(--primary)";
+        }
+
+        if (quizTimer <= 0) {
+          clearInterval(timerInterval);
+          finishQuiz();
+        }
+      }, 1000);
+
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      selectedOptionIndex = null;
+      document.getElementById('quiz-action-btn').disabled = true;
+      document.getElementById('quiz-action-btn').textContent = "Confirm Answer";
+
+      const currentQuestion = currentQuizData.questions[questionIndex];
+      document.getElementById('quiz-title').textContent = `Question ${questionIndex + 1} of ${currentQuizData.questions.length}`;
+      document.getElementById('quiz-question-text').textContent = currentQuestion.text;
+
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = "";
+
+      currentQuestion.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "quiz-option";
+        btn.innerHTML = `<span style="font-weight:700; color:var(--primary); margin-right:0.5rem;">${String.fromCharCode(65 + idx)})</span> ${opt}`;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(idx) {
+      selectedOptionIndex = idx;
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach((btn, i) => {
+        if (i === idx) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      document.getElementById('quiz-action-btn').disabled = false;
+    }
+
+    function submitAnswer() {
+      const currentQuestion = currentQuizData.questions[questionIndex];
+      const options = document.querySelectorAll('.quiz-option');
+      
+      // Remove option click interactions during evaluation
+      options.forEach(btn => btn.onclick = null);
+
+      if (selectedOptionIndex === currentQuestion.answer) {
+        correctAnswersCount++;
+        options[selectedOptionIndex].classList.remove('selected');
+        options[selectedOptionIndex].classList.add('correct');
+      } else {
+        options[selectedOptionIndex].classList.remove('selected');
+        options[selectedOptionIndex].classList.add('incorrect');
+        // highlight correct one
+        options[currentQuestion.answer].classList.add('correct');
+      }
+
+      document.getElementById('quiz-action-btn').disabled = false;
+      document.getElementById('quiz-action-btn').textContent = questionIndex + 1 < currentQuizData.questions.length ? "Next Question" : "View Results";
+      document.getElementById('quiz-action-btn').onclick = nextQuestion;
+    }
+
+    function nextQuestion() {
+      questionIndex++;
+      if (questionIndex < currentQuizData.questions.length) {
+        loadQuestion();
+        document.getElementById('quiz-action-btn').onclick = submitAnswer;
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      clearInterval(timerInterval);
+
+      // Calculations
+      const scorePct = Math.round((correctAnswersCount / currentQuizData.questions.length) * 100);
+      const xpReward = scorePct * 2; // e.g. 100% score = 200 XP, 80% score = 160 XP
+
+      // Update Database Candidate Data
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      if (dbCand) {
+        // Average the score with existing assessment score
+        dbCand.assessment_score = dbCand.assessment_score 
+          ? Math.round((dbCand.assessment_score + scorePct) / 2) 
+          : scorePct;
+
+        // Add XP points
+        dbCand.xp_points = (dbCand.xp_points || 0) + xpReward;
+
+        // Skill upgrade check
+        const skillParam = urlParams.get('skill');
+        const targetLvl = urlParams.get('targetLevel') || "Medium";
+        let skillUpgradedText = "";
+
+        if (scorePct >= 50 && skillParam) {
+          if (!dbCand.skills) dbCand.skills = [];
+          if (!dbCand.skills.includes(skillParam)) {
+            dbCand.skills.push(skillParam);
+          }
+          if (!dbCand.skillLevels) dbCand.skillLevels = {};
+          dbCand.skillLevels[skillParam] = targetLvl;
+          skillUpgradedText = ` Congratulations! Your skill "${skillParam}" has been successfully upgraded to ${targetLvl} Level!`;
+        }
+
+        // Recalculate talent score & check level-up
+        const isLvlUp = recalculateScores(dbCand);
+
+        // Certificate unlock check
+        let unlockedCert = false;
+        if (scorePct >= 50) {
+          if (!dbCand.certificates) dbCand.certificates = [];
+          const certTitle = skillParam ? `${skillParam} (${targetLvl} Level) Certificate` : `${currentQuizData.title} Certificate`;
+          const alreadyHas = dbCand.certificates.some(c => c.title === certTitle);
+
+          if (!alreadyHas) {
+            dbCand.certificates.push({
+              id: Date.now(),
+              title: certTitle,
+              score: scorePct,
+              date: new Date().toISOString().split('T')[0]
+            });
+            unlockedCert = true;
+          }
+        }
+
+        dbSave(dbState);
+        candidate = dbCand;
+
+        // Update local session
+        sessionStorage.setItem('user', JSON.stringify(dbCand));
+
+        // Display results
+        document.getElementById('result-score').textContent = `${scorePct}%`;
+        document.getElementById('result-xp').textContent = `+${xpReward} XP`;
+        document.getElementById('result-desc').textContent = `You answered ${correctAnswersCount} out of ${currentQuizData.questions.length} questions correctly. Your Talent Quiz rating is now updated.${skillUpgradedText}`;
+
+        if (scorePct >= 80) {
+          document.getElementById('result-emoji').textContent = "🏆";
+          document.getElementById('result-title').textContent = "Excellent Job!";
+        } else if (scorePct >= 50) {
+          document.getElementById('result-emoji').textContent = "👍";
+          document.getElementById('result-title').textContent = "Quiz Completed";
+        } else {
+          document.getElementById('result-emoji').textContent = "📝";
+          document.getElementById('result-title').textContent = "Keep Practicing!";
+        }
+
+        // Trigger screens
+        document.getElementById('quiz-run-screen').style.display = "none";
+        document.getElementById('quiz-result-screen').style.display = "block";
+        
+        triggerConfetti();
+        refreshSidebarStats();
+
+        // Launch certificate modal if unlocked
+        if (unlockedCert) {
+          setTimeout(() => {
+            document.getElementById('cert-candidate-name').textContent = candidate.fullName || "Candidate";
+            document.getElementById('cert-course-name').textContent = skillParam ? `${skillParam} (${targetLvl} Level)` : currentQuizData.title;
+            document.getElementById('cert-score-val').textContent = `${scorePct}%`;
+            document.getElementById('cert-modal').style.display = "flex";
+          }, 1200);
+        }
+
+        if (isLvlUp) {
+          showLevelUpNotification(dbCand.current_level);
+        }
+      }
+    }
+
+    window.closeCertModal = function() {
+      document.getElementById('cert-modal').style.display = "none";
+    }
+
+    function resetQuizScreen() {
+      document.getElementById('quiz-selector-screen').style.display = "grid";
+      document.getElementById('quiz-run-screen').style.display = "none";
+      document.getElementById('quiz-result-screen').style.display = "none";
+      document.getElementById('quiz-action-btn').onclick = submitAnswer;
+    }
+
+    function showLevelUpNotification(lvlName) {
+      const container = document.createElement('div');
+      container.className = "level-up-toast";
+      container.innerHTML = `
+        <span style="font-size: 2rem;">🏆</span>
+        <div>
+          <strong style="display:block;font-size:1.1rem;">Level Up!</strong>
+          <span style="font-size:0.9rem;">You are now an <strong>${lvlName}</strong>!</span>
+        </div>
+      `;
+      document.body.appendChild(container);
+      
+      // Confetti burst
+      let duration = 3 * 1000;
+      let end = Date.now() + duration;
+
+      (function frame() {
+        window.confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+        window.confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
+
+      setTimeout(() => {
+        container.remove();
+      }, 4500);
+    }
+
+    // Auto-start if query parameters are present
+    window.addEventListener('DOMContentLoaded', () => {
+      const cat = urlParams.get('category');
+      if (cat && QUIZZES[cat.toLowerCase()]) {
+        startQuiz(cat.toLowerCase());
+      }
+    });
+    }
+</script>
+</body>
+</html>
