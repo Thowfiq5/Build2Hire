@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content" style="min-height: 100vh;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-family: var(--font-display); font-size: 2.8rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+          About Build2Hire
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          Bridging the gap between talent and opportunity. We don't just look at resumes—we look at what you can build.
+        </p>
+      </div>
+
+      <!-- Our Story / Mission -->
+      <div class="card" style="padding: 2.5rem; margin-bottom: 3rem; border-left: 4px solid var(--primary);">
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-primary);">📖 Our Story & Mission</h2>
+        <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7;">
+          The traditional hiring process is broken. Resumes only tell half the story, and learners often find themselves stuck in "tutorial hell" without real-world experience. Build2Hire was created to solve this exact problem. Our mission is to bridge the gap between learning, building a tangible portfolio, and getting hired. We empower developers and creatives by providing a platform where their skills and real work do the talking, ensuring a fair, skill-based hiring process.
+        </p>
+      </div>
+
+      <!-- What We Offer -->
+      <div style="margin-bottom: 3rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center; color: var(--text-primary);">✨ What We Offer</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <div class="card" style="padding: 2rem; text-align: center; border-top: 3px solid var(--secondary);">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎓</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.75rem;">Learning Academy</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+              Level up with our curated skill courses, tackle hands-on challenges, and earn verified industry credentials to prove your expertise.
+            </p>
+          </div>
+          <div class="card" style="padding: 2rem; text-align: center; border-top: 3px solid var(--success);">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💼</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.75rem;">Portfolio Building</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+              Showcase your talent through real-world freelance gigs, peer-to-peer projects, and an interactive digital portfolio that wows recruiters.
+            </p>
+          </div>
+          <div class="card" style="padding: 2rem; text-align: center; border-top: 3px solid var(--primary);">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚀</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.75rem;">AI Job Portal</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+              Let our AI Recommendation Engine match you with the perfect full-time roles and opportunities based on your verified skills and portfolio strength.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Our Vision -->
+      <div class="card" style="padding: 2.5rem; margin-bottom: 3rem; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.05)); border: 1px solid var(--border-color); border-right: 4px solid var(--secondary);">
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-primary);">🔭 Our Vision</h2>
+        <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7;">
+          We envision a hiring ecosystem where skills speak louder than degrees. Our long-term goal is to help continuous learners become truly job-ready by focusing on real project experience, not just theory. We aim to be the ultimate launchpad where talent is discovered purely on merit and capability.
+        </p>
+      </div>
+
+      <!-- Why Choose Build2Hire -->
+      <div style="margin-bottom: 3.5rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center;">⚡ Why Choose Build2Hire?</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+          <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 1.8rem;">🏅</div>
+            <div>
+              <strong style="color: var(--text-primary); display: block; font-size: 1.05rem;">Verified Certificates</strong>
+              <span style="color: var(--text-secondary); font-size: 0.85rem;">Backed by technical assessments</span>
+            </div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 1.8rem;">🤖</div>
+            <div>
+              <strong style="color: var(--text-primary); display: block; font-size: 1.05rem;">AI-Powered Matches</strong>
+              <span style="color: var(--text-secondary); font-size: 0.85rem;">Smart job & skill recommendations</span>
+            </div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 1.8rem;">🌍</div>
+            <div>
+              <strong style="color: var(--text-primary); display: block; font-size: 1.05rem;">Multilingual Support</strong>
+              <span style="color: var(--text-secondary); font-size: 0.85rem;">Learn and build in your language</span>
+            </div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 1.8rem;">🤝</div>
+            <div>
+              <strong style="color: var(--text-primary); display: block; font-size: 1.05rem;">Direct Connections</strong>
+              <span style="color: var(--text-secondary); font-size: 0.85rem;">Engage directly with top recruiters</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team & Contact -->
+      <div class="card" style="padding: 2.5rem; margin-bottom: 3rem; text-align: center; border: 1px solid var(--border-color);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👋</div>
+        <h2 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--text-primary);">Meet the Team</h2>
+        
+        <div style="display: flex; flex-direction: column; align-items: center; margin: 2rem 0;">
+          <img src="assets/team-member.jpg" alt="Team Member" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light); box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 1rem; max-width: 100%;">
+          <h3 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.25rem;">THOWFIQ AHAMED</h3>
+          <span style="color: var(--primary); font-size: 0.9rem; font-weight: 600; display: block;">Founder & Developer</span>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 1rem; max-width: 500px; margin: 0 auto 1.5rem auto; line-height: 1.6;">
+          Build2Hire is built by a passionate team of developers, designers, and educators who believe in a merit-first world. Got a question, partnership idea, or just want to say hi?
+        </p>
+        <button class="btn btn-secondary" onclick="alert('Contact form coming soon!')" style="padding: 0.6rem 1.5rem;">Contact Us</button>
+      </div>
+
+      <div class="card" style="padding: 3rem; text-align: center; background: linear-gradient(to right, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); border: 1px solid var(--border-color);">
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-primary);">Ready to showcase your skills?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Join thousands of other candidates who are landing their dream jobs through proof of work.</p>
+        <a href="portfolio.html" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem; border-radius: var(--radius-sm);">Go to Your Portfolio</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js?v=1.0.6"></script>
+  <script>
+    const auth = withAuth(['candidate', 'recruiter', 'admin']);
+    
+    // Quick active state logic for the newly created page
+    document.addEventListener("DOMContentLoaded", () => {
+      const activeLink = document.querySelector('a[href="about.html"]');
+      if (activeLink) activeLink.classList.add('active');
+    });
+  </script>
+</body>
+</html>
