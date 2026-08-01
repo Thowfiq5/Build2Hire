@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">My Profile</h2>
+          <p style="color: var(--text-secondary);">Manage your personal details, skills, and projects.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <div class="grid-2col" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.5rem;">
+        
+        <!-- LEFT COLUMN: PROFILE DETAILS & SKILLS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <div class="card" id="profile-view-section" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              <h3 style="font-size: 1.2rem; margin: 0;">👤 Profile Summary</h3>
+              <button type="button" class="btn btn-secondary" onclick="toggleProfileEdit()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Edit Profile</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div><strong>Name:</strong> <span id="view-fullName" style="color: var(--text-secondary);"></span></div>
+              <div><strong>Role:</strong> <span id="view-role" style="color: var(--text-secondary);"></span></div>
+              <div><strong>Phone:</strong> <span id="view-phone" style="color: var(--text-secondary);"></span></div>
+              <div><strong>Bio:</strong> <p id="view-bio" style="color: var(--text-secondary); margin-top: 0.25rem; font-size: 0.9rem; line-height: 1.4;"></p></div>
+              
+              <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;" id="view-links">
+                <!-- Links inserted here dynamically -->
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+              <h4 style="font-size: 1rem; margin-bottom: 0.75rem;">My Skills</h4>
+              <div id="skills-view-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 40px; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <!-- Dynamic Skill badges -->
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="profile-edit-section">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+              <span>👤 Profile Setup</span>
+              <button type="button" class="btn btn-secondary" onclick="toggleProfileEdit()" style="display: none; padding: 0.25rem 0.5rem; font-size: 0.75rem;" id="cancel-profile-edit-btn">Cancel</button>
+            </h3>
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label" for="fullName">Full Name</label>
+                <input type="text" required id="fullName" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input type="tel" id="phone" class="form-control" placeholder="+1 (555) 000-0000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="preferredRole">Preferred Job Role</label>
+                <select id="preferredRole" class="form-control" style="background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; width: 100%;">
+                  <option value="Frontend Developer">Frontend Developer</option>
+                  <option value="Backend Engineer">Backend Engineer</option>
+                  <option value="Database Administrator">Database Administrator</option>
+                  <option value="Full Stack Engineer">Full Stack Engineer</option>
+                  <option value="Video Editor">Video Editor</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="bio">Professional Bio</label>
+                <textarea id="bio" class="form-control" rows="4" style="resize: vertical;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="githubUrl">GitHub URL</label>
+                <input type="url" id="githubUrl" class="form-control" placeholder="https://github.com/username">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="linkedinUrl">LinkedIn URL</label>
+                <input type="url" id="linkedinUrl" class="form-control" placeholder="https://linkedin.com/in/username">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" for="portfolioWebsite">Live Portfolio Website</label>
+                <input type="url" id="portfolioWebsite" class="form-control" placeholder="https://mywebsite.com">
+              </div>
+
+              <!-- Skills Section -->
+              <div id="skills-section" class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label">My Skills Tagging</label>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                  <input type="text" id="newSkill" class="form-control" placeholder="e.g. Next.js" style="flex-grow: 1; min-width: 150px;">
+                  <select id="newSkillLevel" class="form-control" style="width: auto; background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; min-width: 120px;">
+                    <option value="Basic">Basic</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                  <button type="button" onclick="addSkillTag()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Add</button>
+                </div>
+
+                <div id="skills-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 40px; padding: 0.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                  <!-- Dynamic Skill badges -->
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Save Profile Details</button>
+            </form>
+          </div>
+
+          <!-- RIGHT COLUMN: PROJECTS & INTERVIEWS -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Upcoming Interviews widget -->
+          <div class="card" id="interviews-widget" style="border-left: 4px solid var(--warning); display: none; padding: 1.25rem;">
+            <h3 style="font-size: 1.15rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              🗓️ Upcoming Interviews
+            </h3>
+            <div id="interviews-list-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Dynamic Interviews render here -->
+            </div>
+          </div>
+
+          <div class="card" id="project-edit-section">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+              <span>🚀 Showcase a New Project</span>
+              <button type="button" class="btn btn-secondary" onclick="toggleProjectEdit()" style="display: none; padding: 0.25rem 0.5rem; font-size: 0.75rem;" id="cancel-project-edit-btn">Cancel</button>
+            </h3>
+            <form id="project-form">
+              <div class="form-group">
+                <label class="form-label" for="projectTitle">Project Title</label>
+                <input type="text" required id="projectTitle" class="form-control" placeholder="e.g. Next.js E-Commerce Store">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectDesc">Project Description</label>
+                <textarea required id="projectDesc" class="form-control" rows="3" placeholder="Explain what technologies you used, the core features you built, and what problem it solves..." style="resize: vertical;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectLink">Live Website Link (Optional)</label>
+                <input type="url" id="projectLink" class="form-control" placeholder="https://myproject.com">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectGit">GitHub Source Code Link (Optional)</label>
+                <input type="url" id="projectGit" class="form-control" placeholder="https://github.com/username/project">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label" for="projectThumb">Thumbnail Emoji or Icon (Optional)</label>
+                <input type="text" id="projectThumb" class="form-control" placeholder="e.g. 🛒, 🎨, 🌐 (default is 📁)">
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Project Showcase</button>
+            </form>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.2rem; margin: 0;">Published Projects (<span id="project-count">0</span>)</h3>
+            <button type="button" class="btn btn-secondary" onclick="toggleProjectEdit()" id="add-project-btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: none;">+ Add Project</button>
+          </div>
+          <div>
+            <div id="projects-list-container">
+              <!-- Dynamic Project cards -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <!-- P2P JOBS & COLLABORATION BOARD -->
+      <div class="card" style="margin-top: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; margin: 0;">🤝 Peer-to-Peer (P2P) Jobs & Collaboration Board</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">Collaborate with other developers, post freelance gigs, and team up for projects.</p>
+          </div>
+          <button class="btn btn-primary" onclick="alert('Post a P2P Gig functionality coming soon!')" style="padding: 0.45rem 1rem; font-size: 0.85rem;">+ Post a Request</button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Collaboration Card 1 -->
+          <div style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; transition: transform 0.2s;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span class="badge badge-warning" style="font-size: 0.7rem;">Looking for Co-Founder</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">2h ago</span>
+            </div>
+            <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">SaaS Startup MVP (Next.js)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">I have the UI designs ready in Figma. Looking for a full-stack developer to help build the MVP. Equity + Rev share offered.</p>
+            <div style="display: flex; gap: 0.35rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">Next.js</span>
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">Firebase</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #fff; font-weight: bold;">AJ</div>
+                <span style="font-size: 0.8rem; font-weight: 600;">Alex J.</span>
+              </div>
+              <button class="btn btn-secondary" onclick="alert('Message feature coming soon!')" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">Message</button>
+            </div>
+          </div>
+          
+          <!-- Collaboration Card 2 -->
+          <div style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; transition: transform 0.2s;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span class="badge badge-success" style="font-size: 0.7rem;">Paid Gig - $500</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">1d ago</span>
+            </div>
+            <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Fix Node.js API Performance</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">Need an experienced backend dev to optimize some slow endpoints and fix memory leaks on our staging server.</p>
+            <div style="display: flex; gap: 0.35rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">Node.js</span>
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">MongoDB</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #fff; font-weight: bold;">MK</div>
+                <span style="font-size: 0.8rem; font-weight: 600;">Maria K.</span>
+              </div>
+              <button class="btn btn-secondary" onclick="alert('Apply feature coming soon!')" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">Apply Now</button>
+            </div>
+          </div>
+          
+          <!-- Collaboration Card 3 -->
+          <div style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; transition: transform 0.2s;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span class="badge badge-primary" style="font-size: 0.7rem;">Hackathon Team</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">3d ago</span>
+            </div>
+            <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Join us for Global AI Hackathon</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 1rem;">We have 2 backend devs. We need a frontend wizard (React/Tailwind) to help us build the UI for our AI summarization tool.</p>
+            <div style="display: flex; gap: 0.35rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">React</span>
+              <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(99,102,241,0.1); color: var(--primary); border-radius: 4px;">Tailwind</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #fff; font-weight: bold;">T3</div>
+                <span style="font-size: 0.8rem; font-weight: 600;">Team Alpha</span>
+              </div>
+              <button class="btn btn-secondary" onclick="alert('Join Team feature coming soon!')" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;">Join Team</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = withAuth(['candidate']);
+    if (auth) {
+      let { user, db, candidate } = auth;
+
+    if (!candidate.projects) {
+      candidate.projects = [
+        { id: 1, title: "Next.js E-Commerce Store", description: "Completed storefront with fully responsive design, cart features, and mock checkout. Uses CSS variables for absolute design consistency.", github_url: "https://github.com/johnbuilder/store", project_url: "https://mystore-react.vercel.app", thumbnail_url: "🛒" }
+      ];
+      dbSave(db);
+    }
+
+    // ==========================================
+    // 🧭 ONBOARDING WIZARD CONTROLLER
+    // ==========================================
+    function updateOnboardingWizard() {
+      const wizard = document.getElementById('onboarding-wizard');
+      if (!wizard) return;
+
+      const hasProfile = !!(candidate.profileCompleted && candidate.preferredRole && candidate.fullName);
+      const hasSkills  = !!(candidate.skills && candidate.skills.length > 0);
+      const allDone    = hasProfile && hasSkills;
+
+      // Hide wizard once fully complete
+      const pathfinder = document.getElementById('pathfinder-cards');
+      if (allDone) {
+        wizard.style.display = 'none';
+        if (pathfinder) pathfinder.style.display = 'grid';
+        return;
+      } else {
+        if (pathfinder) pathfinder.style.display = 'none';
+      }
+
+      wizard.style.display = 'block';
+
+      // Calculate progress (4 steps, step 1 always done = 25%)
+      let stepsCompleted = 1; // step 1 always done
+      if (hasProfile) stepsCompleted++;
+      if (hasSkills)  stepsCompleted++;
+      if (allDone)    stepsCompleted++;
+      const pct = Math.round((stepsCompleted / 4) * 100);
+
+      document.getElementById('onboarding-bar').style.width = pct + '%';
+      document.getElementById('onboarding-pct-badge').textContent = pct + '%';
+
+      // Step 2 — Profile
+      const s2 = document.getElementById('step-2');
+      const s2icon = document.getElementById('step-2-icon');
+      const s2label = document.getElementById('step-2-label');
+      if (hasProfile) {
+        s2.style.background = 'var(--success-light)';
+        s2.style.border = '1px solid var(--success)';
+        s2icon.textContent = '✅';
+        s2label.style.color = 'var(--success)';
+        s2label.textContent = 'Profile Complete';
+      } else {
+        s2.style.background = 'var(--warning-light, rgba(245,158,11,0.1))';
+        s2.style.border = '1px solid var(--warning)';
+        s2icon.textContent = '👤';
+        s2label.style.color = 'var(--warning)';
+        s2label.textContent = 'Complete Your Profile';
+      }
+
+      // Step 3 — Skills
+      const s3 = document.getElementById('step-3');
+      const s3icon = document.getElementById('step-3-icon');
+      const s3label = document.getElementById('step-3-label');
+      if (hasSkills) {
+        s3.style.background = 'var(--success-light)';
+        s3.style.border = '1px solid var(--success)';
+        s3icon.textContent = '✅';
+        s3label.style.color = 'var(--success)';
+        s3label.textContent = 'Skills Added';
+      } else {
+        const active = hasProfile;
+        s3.style.background = active ? 'var(--warning-light, rgba(245,158,11,0.1))' : 'var(--bg-tertiary)';
+        s3.style.border = active ? '1px solid var(--warning)' : '1px solid var(--border-color)';
+        s3icon.textContent = '🛠️';
+        s3label.style.color = active ? 'var(--warning)' : 'var(--text-muted)';
+        s3label.textContent = 'Add Your Skills';
+      }
+
+      // Step 4 — Unlock
+      const s4 = document.getElementById('step-4');
+      const s4icon = document.getElementById('step-4-icon');
+      const s4label = document.getElementById('step-4-label');
+      const s4link = document.getElementById('step-4-link');
+      if (allDone) {
+        s4.style.background = 'var(--success-light)';
+        s4.style.border = '1px solid var(--success)';
+        s4icon.textContent = '🎉';
+        s4label.style.color = 'var(--success)';
+        s4label.textContent = 'Job Portal Unlocked!';
+        s4link.innerHTML = '<a href="jobs.html" style="color:var(--success);font-size:0.72rem;font-weight:700;text-decoration:none;">→ Go to Job Portal</a>';
+      } else {
+        s4.style.background = 'var(--bg-tertiary)';
+        s4.style.border = '1px solid var(--border-color)';
+        s4icon.textContent = '🔒';
+        s4label.style.color = 'var(--text-muted)';
+        s4label.textContent = 'Unlock Job Portal';
+        s4link.innerHTML = '<span style="color:var(--text-muted);font-size:0.72rem;">Complete steps first</span>';
+      }
+    }
+
+    function loadProfileForm() {
+      document.getElementById('fullName').value = candidate.fullName || "";
+      document.getElementById('phone').value = candidate.phone || "";
+      
+      const roleSel = document.getElementById('preferredRole');
+      if (candidate.preferredRole) {
+        for (let i = 0; i < roleSel.options.length; i++) {
+          if (roleSel.options[i].value === candidate.preferredRole) {
+            roleSel.selectedIndex = i;
+            break;
+          }
+        }
+      }
+      
+      document.getElementById('bio').value = candidate.bio || "";
+      document.getElementById('githubUrl').value = candidate.githubUrl || "";
+      document.getElementById('linkedinUrl').value = candidate.linkedinUrl || "";
+      document.getElementById('portfolioWebsite').value = candidate.portfolioWebsite || "";
+      
+      renderSkills();
+      populateProfileView();
+      toggleViewStates();
+    }
+
+    function populateProfileView() {
+      document.getElementById('view-fullName').textContent = candidate.fullName || "Not provided";
+      document.getElementById('view-role').textContent = candidate.preferredRole || "Not provided";
+      document.getElementById('view-phone').textContent = candidate.phone || "Not provided";
+      document.getElementById('view-bio').textContent = candidate.bio || "No professional bio added.";
+      
+      const linksContainer = document.getElementById('view-links');
+      linksContainer.innerHTML = "";
+      if (candidate.githubUrl) {
+        linksContainer.innerHTML += `<a href="${candidate.githubUrl}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">GitHub</a>`;
+      }
+      if (candidate.linkedinUrl) {
+        linksContainer.innerHTML += `<a href="${candidate.linkedinUrl}" target="_blank" class="badge badge-primary" style="text-decoration: none;">LinkedIn</a>`;
+      }
+      if (candidate.portfolioWebsite) {
+        linksContainer.innerHTML += `<a href="${candidate.portfolioWebsite}" target="_blank" class="badge badge-secondary" style="text-decoration: none;">Portfolio</a>`;
+      }
+    }
+
+    function toggleViewStates() {
+      const isComplete = candidate.profileCompleted;
+      const profileView = document.getElementById('profile-view-section');
+      const profileEdit = document.getElementById('profile-edit-section');
+      const projectEdit = document.getElementById('project-edit-section');
+      const addProjectBtn = document.getElementById('add-project-btn');
+      const cancelProfileBtn = document.getElementById('cancel-profile-edit-btn');
+      const cancelProjectBtn = document.getElementById('cancel-project-edit-btn');
+
+      if (isComplete) {
+        profileView.style.display = 'block';
+        profileEdit.style.display = 'none';
+        projectEdit.style.display = 'none';
+        addProjectBtn.style.display = 'inline-block';
+        cancelProfileBtn.style.display = 'inline-block';
+        cancelProjectBtn.style.display = 'inline-block';
+      } else {
+        profileView.style.display = 'none';
+        profileEdit.style.display = 'block';
+        projectEdit.style.display = 'block';
+        addProjectBtn.style.display = 'none';
+        cancelProfileBtn.style.display = 'none';
+        cancelProjectBtn.style.display = 'none';
+      }
+    }
+
+    function toggleProfileEdit() {
+      const profileView = document.getElementById('profile-view-section');
+      const profileEdit = document.getElementById('profile-edit-section');
+      if (profileEdit.style.display === 'none') {
+        profileEdit.style.display = 'block';
+        profileView.style.display = 'none';
+      } else {
+        profileEdit.style.display = 'none';
+        profileView.style.display = 'block';
+      }
+    }
+
+    function toggleProjectEdit() {
+      const projectEdit = document.getElementById('project-edit-section');
+      if (projectEdit.style.display === 'none') {
+        projectEdit.style.display = 'block';
+      } else {
+        projectEdit.style.display = 'none';
+      }
+    }
+
+    function initFormFields() {
+      updateOnboardingWizard();
+      loadProfileForm();
+      renderProjects();
+      updateUIStats();
+      renderInterviews();
+    }
+
+    function renderSkills() {
+      const container = document.getElementById('skills-container');
+      const viewContainer = document.getElementById('skills-view-container');
+      container.innerHTML = "";
+      viewContainer.innerHTML = "";
+      
+      if (!candidate.skills || candidate.skills.length === 0) {
+        viewContainer.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">No skills added yet.</span>`;
+        return;
+      }
+
+      if (!candidate.skillLevels) {
+        candidate.skillLevels = {};
+      }
+
+      candidate.skills.forEach(sk => {
+        const lvl = candidate.skillLevels[sk] || "Basic";
+        const badge = document.createElement('span');
+        badge.className = "badge";
+        
+        // Color code based on skill level: Basic (muted/border), Medium (warning/yellow), Advanced (success/green)
+        let badgeStyle = "";
+        if (lvl === "Basic") {
+          badgeStyle = "background-color: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem;";
+        } else if (lvl === "Medium") {
+          badgeStyle = "background-color: var(--warning-light); color: var(--warning); border: 1px solid var(--warning); font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem;";
+        } else {
+          badgeStyle = "background-color: var(--success-light); color: var(--success); border: 1px solid var(--success); font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem;";
+        }
+        
+        badge.style.cssText = badgeStyle;
+        badge.innerHTML = `
+          ${sk} <span style="font-size:0.7rem; font-weight:700; opacity:0.85; margin-left:0.15rem;">(${lvl})</span>
+          <button type="button" onclick="removeSkillTag('${sk}')" style="background: none; border: none; cursor: pointer; color: inherit; font-weight: bold; margin-left: 0.25rem;">✕</button>
+        `;
+        container.appendChild(badge);
+      });
+    }
+
+    function addSkillTag() {
+      const input = document.getElementById('newSkill');
+      const lvlSelect = document.getElementById('newSkillLevel');
+      const val = input.value.trim();
+      const levelVal = lvlSelect ? lvlSelect.value : "Basic";
+      
+      if (val) {
+        if (!candidate.skills) candidate.skills = [];
+        if (!candidate.skillLevels) candidate.skillLevels = {};
+        
+        if (!candidate.skills.includes(val)) {
+          candidate.skills.push(val);
+        }
+        candidate.skillLevels[val] = levelVal;
+        
+        input.value = "";
+        
+        // Save to Mock DB
+        const dbState = dbGet();
+        const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+        if (dbCand) {
+          dbCand.skills = candidate.skills;
+          dbCand.skillLevels = candidate.skillLevels;
+          dbSave(dbState);
+        }
+
+        renderSkills();
+        updateOnboardingWizard();
+      }
+    }
+
+    function removeSkillTag(sk) {
+      candidate.skills = candidate.skills.filter(s => s !== sk);
+      if (candidate.skillLevels) {
+        delete candidate.skillLevels[sk];
+      }
+      renderHeader();
+      renderSidebar('portfolio.html');
+      
+      // Save to Mock DB
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      if (dbCand) {
+        dbCand.skills = candidate.skills;
+        dbCand.skillLevels = candidate.skillLevels;
+        dbSave(dbState);
+      }
+      
+      renderSkills();
+      updateOnboardingWizard();
+    }
+
+    function renderProjects() {
+      const container = document.getElementById('projects-list-container');
+      document.getElementById('project-count').textContent = candidate.projects.length;
+      container.innerHTML = "";
+
+      if (candidate.projects.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+            <p style="font-size: 0.9rem;">No projects showcased. Add one above to boost your Portfolio score!</p>
+          </div>
+        `;
+        return;
+      }
+
+      candidate.projects.forEach(proj => {
+        const card = document.createElement('div');
+        card.className = "card";
+        card.style.cssText = "padding: 1.25rem; margin-bottom: 1rem;";
+        card.innerHTML = `
+          <div class="flex-between" style="margin-bottom: 0.5rem;">
+            <span style="font-size: 1.5rem;">${proj.thumbnail_url || "📁"}</span>
+            <button onclick="deleteProject(${proj.id})" class="btn" style="padding: 0.25rem 0.5rem; border: 1px solid var(--danger); color: var(--danger); background: transparent; font-size: 0.8rem;">
+              Delete
+            </button>
+          </div>
+          <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${proj.title}</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
+            ${proj.description}
+          </p>
+          <div style="display: flex; gap: 0.5rem;">
+            ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Code Source</a>` : ""}
+            ${proj.project_url ? `<a href="${proj.project_url}" target="_blank" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Live Site</a>` : ""}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function drawRadarChart() {
+      const svg = document.getElementById('radar-chart-svg');
+      if (!svg) return;
+
+      const d1 = candidate.assessment_score || 30;
+      const d2 = Math.min(100, (candidate.projects ? candidate.projects.length * 20 : 20) + 15);
+      const d3 = candidate.talent_score || 40;
+      const d4 = candidate.portfolio_score || 35;
+      const d5 = candidate.xp_points ? Math.min(100, candidate.xp_points / 25) : 10;
+
+      const scores = [d1, d2, d3, d4, d5];
+      const center = 110;
+      const maxRadius = 65;
+
+      let ringsHTML = "";
+      for (let level = 1; level <= 4; level++) {
+        const r = (maxRadius / 4) * level;
+        const points = [];
+        for (let i = 0; i < 5; i++) {
+          const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+          const x = center + r * Math.cos(angle);
+          const y = center + r * Math.sin(angle);
+          points.push(`${x},${y}`);
+        }
+        ringsHTML += `<polygon points="${points.join(' ')}" fill="none" stroke="var(--border-color)" stroke-width="0.5" />`;
+      }
+
+      const labels = ["Quizzes", "Projects", "Talent Score", "Portfolio", "Experience"];
+      let axesHTML = "";
+      for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const xOuter = center + maxRadius * Math.cos(angle);
+        const yOuter = center + maxRadius * Math.sin(angle);
+        
+        axesHTML += `<line x1="${center}" y1="${center}" x2="${xOuter}" y2="${yOuter}" stroke="var(--border-color)" stroke-width="1" />`;
+        
+        const labelDist = maxRadius + 14;
+        const xLabel = center + labelDist * Math.cos(angle);
+        const yLabel = center + labelDist * Math.sin(angle) + 3;
+        
+        let textAnchor = "middle";
+        if (Math.cos(angle) > 0.1) textAnchor = "start";
+        else if (Math.cos(angle) < -0.1) textAnchor = "end";
+
+        axesHTML += `<text x="${xLabel}" y="${yLabel}" fill="var(--text-secondary)" font-size="8" font-weight="600" text-anchor="${textAnchor}">${labels[i]}</text>`;
+      }
+
+      const dataPoints = [];
+      for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const scorePct = scores[i] / 100;
+        const r = maxRadius * scorePct;
+        const x = center + r * Math.cos(angle);
+        const y = center + r * Math.sin(angle);
+        dataPoints.push(`${x},${y}`);
+      }
+
+      const polygonHTML = `
+        <polygon points="${dataPoints.join(' ')}" fill="rgba(99, 102, 241, 0.25)" stroke="var(--primary)" stroke-width="2" />
+        ${dataPoints.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3.5" fill="var(--primary)" stroke="var(--bg-secondary)" stroke-width="1.5" />`).join('')}
+      `;
+
+      svg.innerHTML = `
+        ${ringsHTML}
+        ${axesHTML}
+        ${polygonHTML}
+      `;
+    }
+
+    function updateUIStats() {
+      // Level calculations
+      const levelName = document.getElementById('level-name');
+      if (levelName) levelName.textContent = candidate.current_level || "Beginner Builder";
+      const levelNum = document.getElementById('level-num');
+      if (levelNum) levelNum.textContent = candidate.level || 1;
+      const xpCurrent = document.getElementById('xp-current');
+      if (xpCurrent) xpCurrent.textContent = candidate.xp_points || 0;
+
+      // XP Progress Bar percentage
+      let maxLvlXp = 1000;
+      let minLvlXp = 0;
+      if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+      else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+      else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+      
+      const progressVal = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+      setTimeout(() => {
+        const xpBar = document.getElementById('xp-bar-fill');
+        if (xpBar) xpBar.style.width = `${progressVal}%`;
+      }, 100);
+
+      // Talent Scores Breakdown widget
+      const talentScore = document.getElementById('talent-score-val');
+      if (talentScore) talentScore.textContent = candidate.talent_score || 0;
+      const portScore = document.getElementById('portfolio-score-val');
+      if (portScore) portScore.textContent = `${candidate.portfolio_score || 0}%`;
+      const quizScore = document.getElementById('quiz-score-val');
+      if (quizScore) quizScore.textContent = `${candidate.assessment_score || 0}%`;
+
+      // Update dynamic radar chart map
+      drawRadarChart();
+    }
+
+    function renderInterviews() {
+      const dbState = dbGet();
+      const myInterviews = dbState.interviews.filter(meet => meet.candidate_id === candidate.id);
+      const widget = document.getElementById('interviews-widget');
+      const container = document.getElementById('interviews-list-container');
+
+      if (myInterviews.length > 0) {
+        widget.style.display = "block";
+        container.innerHTML = "";
+        myInterviews.forEach(meet => {
+          const item = document.createElement('div');
+          item.style.cssText = "padding: 0.75rem; background-color: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;";
+          item.innerHTML = `
+            <div>
+              <strong style="display:block;">${meet.challenge_title}</strong>
+              <span style="font-size:0.75rem; color:var(--primary);">${new Date(meet.scheduled_at).toLocaleString()}</span>
+            </div>
+            <a href="${meet.location_url}" target="_blank" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: var(--radius-sm);">
+              Join Call 📞
+            </a>
+          `;
+          container.appendChild(item);
+        });
+      } else {
+        widget.style.display = "none";
+      }
+    }
+
+    // Save Profile Details
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      try {
+        const dbState = dbGet();
+        const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+
+        if (dbCand) {
+          dbCand.fullName = document.getElementById('fullName').value;
+          dbCand.phone = document.getElementById('phone').value;
+          dbCand.preferredRole = document.getElementById('preferredRole').value;
+          dbCand.bio = document.getElementById('bio').value;
+          dbCand.githubUrl = document.getElementById('githubUrl').value;
+          dbCand.linkedinUrl = document.getElementById('linkedinUrl').value;
+          dbCand.portfolioWebsite = document.getElementById('portfolioWebsite').value;
+          dbCand.profileCompleted = true;
+
+          // Merge any skills that might only be in the current `candidate` memory object
+          if (candidate && candidate.skills) {
+            dbCand.skills = candidate.skills;
+            dbCand.skillLevels = candidate.skillLevels;
+          }
+
+          dbSave(dbState);
+          candidate = dbCand;
+
+          // Update current user session
+          sessionStorage.setItem('user', JSON.stringify(dbCand));
+
+          showAlert('alert-container', 'Profile updated successfully! Redirecting...', 'success');
+          renderHeader();
+          populateProfileView();
+          toggleViewStates();
+          updateUIStats();
+          updateOnboardingWizard();
+          triggerConfetti();
+          
+          setTimeout(() => {
+            window.location.href = "jobs.html";
+          }, 1500);
+        } else {
+          showAlert('alert-container', 'Failed to save profile: User not found in database.', 'danger');
+        }
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        showAlert('alert-container', 'An error occurred while saving your profile: ' + error.message, 'danger');
+      }
+    });
+
+    // Add Project
+    document.getElementById('project-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('projectTitle').value;
+      const description = document.getElementById('projectDesc').value;
+      const projectUrl = document.getElementById('projectLink').value;
+      const github_url = document.getElementById('projectGit').value;
+      const thumbnail_url = document.getElementById('projectThumb').value.trim() || "📁";
+
+      const newProj = {
+        id: Date.now(),
+        title,
+        description,
+        project_url,
+        github_url,
+        thumbnail_url
+      };
+
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      if (dbCand) {
+        if (!dbCand.projects) dbCand.projects = [];
+        dbCand.projects.push(newProj);
+
+        // Award +50 XP
+        dbCand.xp_points = (dbCand.xp_points || 0) + 50;
+
+        // Portfolio score increases (+15% per project up to 100%)
+        dbCand.portfolio_score = Math.min(100, dbCand.projects.length * 15 + 40);
+
+        // Check level up
+        const isLvlUp = recalculateScores(dbCand);
+
+        dbSave(dbState);
+        candidate = dbCand;
+
+        // Reset form fields
+        document.getElementById('projectTitle').value = "";
+        document.getElementById('projectDesc').value = "";
+        document.getElementById('projectLink').value = "";
+        document.getElementById('projectGit').value = "";
+        document.getElementById('projectThumb').value = "";
+
+        renderProjects();
+        updateUIStats();
+        triggerConfetti();
+
+        if (isLvlUp) {
+          showLevelUpNotification(dbCand.current_level);
+        } else {
+          showAlert('alert-container', 'Project published successfully! +50 XP earned.', 'success');
+        }
+      }
+    });
+
+    function deleteProject(id) {
+      if (!confirm("Are you sure you want to delete this project?")) return;
+      
+      const dbState = dbGet();
+      const dbCand = dbState.users.find(u => String(u.id) === String(user.id));
+      if (dbCand) {
+        dbCand.projects = dbCand.projects.filter(p => p.id !== id);
+        dbCand.portfolio_score = Math.min(100, Math.max(10, dbCand.projects.length * 15 + 40));
+        recalculateScores(dbCand);
+        dbSave(dbState);
+        candidate = dbCand;
+
+        renderProjects();
+        updateUIStats();
+        showAlert('alert-container', 'Project removed successfully.', 'success');
+      }
+    }
+
+    function showLevelUpNotification(lvlName) {
+      const container = document.createElement('div');
+      container.className = "level-up-toast";
+      container.innerHTML = `
+        <span style="font-size: 2rem;">🏆</span>
+        <div>
+          <strong style="display:block;font-size:1.1rem;">Level Up!</strong>
+          <span style="font-size:0.9rem;">You are now an <strong>${lvlName}</strong>!</span>
+        </div>
+      `;
+      document.body.appendChild(container);
+      
+      // Play confetti bursts
+      let duration = 3 * 1000;
+      let end = Date.now() + duration;
+
+      (function frame() {
+        window.confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+        window.confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
+
+      setTimeout(() => {
+        container.remove();
+      }, 4500);
+    }
+
+    initFormFields();
+    }
+</script>
+</body>
+</html>
