@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Portal | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <!-- LOCKED PROFILE STATE -->
+      <div id="locked-portal-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Job Portal Locked</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          To access the job listings, you must first complete your candidate profile onboarding. Our AI engine uses your preferred job role to match you with relevant roles.
+        </p>
+        <a href="portfolio.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; width: 100%;">
+          👤 Complete My Profile & Onboard
+        </a>
+      </div>
+
+      <!-- Admin Applications Manager -->
+      <div id="admin-applications-card" style="display: none; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem; font-weight:700;">⚙️ Admin Applications Manager</h3>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Directly modify application status or withdraw applications for this candidate.</p>
+        
+        <div id="admin-applications-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- Dynamically populated list -->
+        </div>
+      </div>
+
+      <!-- Top banner -->
+      <div id="portal-top-banner" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Explore Opportunities</h2>
+          <p style="color: var(--text-secondary);">Apply to roles directly using your verified Talent Score credentials.</p>
+        </div>
+        
+        <!-- Search and toggles -->
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="job-search" class="form-control" placeholder="Search title, skills..." oninput="window.filterJobs()" style="width: 200px; font-size: 0.85rem;">
+        </div>
+      </div>
+
+      <!-- AI RECOMMENDATION BANNER (Persistent) -->
+      <div id="ai-recom-banner" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%); border: 1px solid var(--primary); padding: 1.25rem 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 0 20px rgba(99,102,241,0.18); flex-wrap: wrap; position: relative; overflow: hidden;">
+        <!-- Animated pulse ring -->
+        <div style="position: absolute; top: 50%; left: 1.25rem; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; background: rgba(99,102,241,0.15); animation: aiPulse 2.5s ease-in-out infinite;"></div>
+        <span style="font-size: 1.8rem; z-index: 1; position: relative;">🤖</span>
+        <div style="flex: 1; min-width: 200px; z-index: 1;">
+          <strong style="color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 0.2rem;">AI Recommendation Engine Active</strong>
+          <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; display: block;">Showing only <strong id="user-matched-role" style="color: var(--secondary);"><span style="display:inline-block; width:10px; height:10px; border:2px solid var(--border-color); border-top:2px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; vertical-align:middle; margin-bottom:2px;"></span></strong> positions — <strong id="ai-job-count" style="color: var(--primary);"><span style="display:inline-block; width:10px; height:10px; border:2px solid var(--border-color); border-top:2px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; vertical-align:middle; margin-bottom:2px;"></span></strong> jobs matched to your profile.</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; z-index: 1;">
+          <a href="recommendations.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 700;">🗺️ View Roadmap</a>
+        </div>
+      </div>
+      <style>
+        @keyframes aiPulse {
+          0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+          50% { transform: translateY(-50%) scale(1.8); opacity: 0; }
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes skeletonPulse {
+          0% { opacity: 0.6; }
+          50% { opacity: 0.3; }
+          100% { opacity: 0.6; }
+        }
+        .skeleton-card {
+          animation: skeletonPulse 1.5s ease-in-out infinite;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+      </style>
+
+      <div id="alert-container"></div>
+
+      <!-- Jobs Grid -->
+      <div id="jobs-grid" class="grid-2col" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <!-- Dynamic job cards -->
+        <div class="skeleton-card" style="height: 250px;">
+          <div style="width: 60%; height: 24px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+          <div style="width: 40%; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+          <div style="flex: 1;"></div>
+          <div style="width: 100%; height: 36px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+        </div>
+        <div class="skeleton-card" style="height: 250px;">
+          <div style="width: 60%; height: 24px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+          <div style="width: 40%; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+          <div style="flex: 1;"></div>
+          <div style="width: 100%; height: 36px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+        </div>
+      </div>
+
+      <!-- AI Recommendations Grid (Outside Core Role) -->
+      <div id="ai-bonus-recom-section" style="display: none; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+        <h3 style="font-family: var(--font-display); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.4rem;">
+          🤖 AI is also recommending you these jobs
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">Expand your skills and unlock new opportunities in the <a href="recommendations.html" style="color: var(--primary); font-weight: 600;">Learners</a> section to apply for these!</p>
+        <div id="ai-bonus-jobs-grid" class="grid-2col" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; opacity: 0.85;">
+          <div class="skeleton-card" style="height: 250px;">
+            <div style="width: 60%; height: 24px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <div style="width: 40%; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+            <div style="flex: 1;"></div>
+            <div style="width: 100%; height: 36px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+          </div>
+          <div class="skeleton-card" style="height: 250px;">
+            <div style="width: 60%; height: 24px; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <div style="width: 40%; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+            <div style="flex: 1;"></div>
+            <div style="width: 100%; height: 36px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+  <!-- APPLICATION FORM MODAL -->
+  <div id="apply-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeApplyModal()">✕</button>
+      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 0.5rem;">Apply for Position</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Role: <strong id="modal-job-title" style="color: var(--primary);"></strong> at <span id="modal-job-company" style="font-weight: 700;"></span>
+      </p>
+
+      <form id="apply-form">
+        <div class="form-group">
+          <label class="form-label" for="coverLetter">Why are you a good fit? (Brief Cover Letter)</label>
+          <textarea required id="coverLetter" class="form-control" rows="3" placeholder="Tell the recruiter about your technical background and experience..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="githubUrl">GitHub Repository Link</label>
+          <input type="url" id="githubUrl" class="form-control" placeholder="https://github.com/username/repo">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label" for="demoUrl">Live Demo URL (Optional)</label>
+          <input type="url" id="demoUrl" class="form-control" placeholder="https://demo-app.vercel.app">
+        </div>
+
+        <!-- Resume Attachment inside Job Application -->
+        <div class="form-group" style="margin-bottom: 1.5rem; background-color: rgba(255,255,255,0.02); padding: 1rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+          <label class="form-label" style="font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            📄 Resume Attachment <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Required - ATS or Design format)</span>
+          </label>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;" for="applyResumeType">Resume Format Type</label>
+              <select id="applyResumeType" class="form-control" style="background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem; width: 100%;">
+                <option value="">-- Choose Format --</option>
+                <option value="ATS">ATS Format (Simple text layout)</option>
+                <option value="Design">With Design Format (Visual template layout)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.75rem;" for="applyResumeFile">Upload New File</label>
+              <input type="file" id="applyResumeFile" class="form-control" accept=".pdf,.docx,.png,.jpg,.jpeg,.doc" style="padding: 0.25rem 0.5rem;">
+            </div>
+          </div>
+
+          <div id="apply-resume-status" style="font-size: 0.8rem; padding-top: 0.4rem; border-top: 1px dashed rgba(255,255,255,0.08); margin-top: 0.4rem;">
+            <span style="color: var(--text-muted);">No resume attached yet.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <button type="button" onclick="closeApplyModal()" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<script src="shared.js?v=1.0.5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    (function() {
+    // ==========================================
+    // 🔄 IMMEDIATE UI INITIALIZATION (Critical)
+    // ==========================================
+    // This will be called immediately after auth to update dynamic placeholders
+    // before the user sees anything, preventing stale values from flashing
+    window.initializeJobsUI = async function() {
+      try {
+        if (!auth) return; const localAuth = auth;
+        if (!localAuth) return;
+        
+        await new Promise(r => setTimeout(r, 400));
+        
+        const user = localAuth.user;
+        const dbState = dbGet();
+        const candidate = localAuth.candidate;
+        const candidateRole = candidate ? (candidate.preferredRole || "") : "";
+
+        const roleEl = document.getElementById('user-matched-role');
+        if (roleEl) roleEl.textContent = candidateRole || '---';
+
+        if (!candidate || !candidate.profileCompleted || !candidateRole) {
+          if (document.getElementById('locked-portal-state')) document.getElementById('locked-portal-state').style.display = "block";
+          if (document.getElementById('portal-top-banner')) document.getElementById('portal-top-banner').style.display = "none";
+          if (document.getElementById('ai-recom-banner')) document.getElementById('ai-recom-banner').style.display = "none";
+          if (document.getElementById('jobs-grid')) document.getElementById('jobs-grid').style.display = "none";
+          if (document.getElementById('ai-bonus-recom-section')) document.getElementById('ai-bonus-recom-section').style.display = "none";
+        } else {
+          if (document.getElementById('locked-portal-state')) document.getElementById('locked-portal-state').style.display = "none";
+          if (document.getElementById('portal-top-banner')) document.getElementById('portal-top-banner').style.display = "flex";
+          if (document.getElementById('ai-recom-banner')) document.getElementById('ai-recom-banner').style.display = "flex";
+          if (document.getElementById('jobs-grid')) document.getElementById('jobs-grid').style.display = "grid";
+
+          const jobsList = (dbState && dbState.jobs) || [];
+          const totalMatched = jobsList.filter(j => j.category && j.category.toLowerCase() === candidateRole.toLowerCase()).length;
+          const aiCount = document.getElementById('ai-job-count');
+          if (aiCount) aiCount.textContent = totalMatched;
+
+          if (typeof window.filterJobs === 'function') window.filterJobs();
+        }
+      } catch (err) {
+        console.error("Error in initializeJobsUI:", err);
+      }
+    };
+
+    const auth = withAuth(['candidate', 'admin']);
+    function getEffectiveUser() {
+      const u = (typeof getUser === 'function') ? getUser() : null;
+      if (u && u.role === 'admin' && auth && auth.candidate) {
+        return auth.candidate;
+      }
+      return u;
+    }
+    if (auth) {
+      const { user, db, candidate } = auth;
+
+      // Refresh XP Progress layout inside the sidebar
+      function refreshSidebarStats() {
+        try {
+          if (!candidate) return;
+          if(document.getElementById('level-name')) document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+          if(document.getElementById('level-num')) document.getElementById('level-num').textContent = candidate.level || 1;
+          if(document.getElementById('xp-current')) document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+
+          let maxLvlXp = 1000;
+          let minLvlXp = 0;
+          if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+          else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+          else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+
+          const xpPoints = candidate.xp_points || 0;
+          const pct = Math.min(100, Math.max(5, ((xpPoints - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+          setTimeout(() => {
+            const fillEl = document.getElementById('xp-bar-fill');
+            if (fillEl) fillEl.style.width = `${pct}%`;
+          }, 100);
+        } catch (err) {
+          console.error("Error in refreshSidebarStats:", err);
+        }
+      }
+      
+      refreshSidebarStats();
+
+      // Log job searches
+      const searchInput = document.getElementById('job-search');
+      if (searchInput) {
+        searchInput.addEventListener('change', (e) => {
+          const q = e.target.value.trim();
+          if (q) {
+            logUserActivity(user.id, "job_search", `Searched for jobs with query: "${q}"`);
+          }
+        });
+      }
+
+      const candidateRole = candidate.preferredRole || "";
+
+      // Load all jobs instead of strictly filtering
+      let allJobs = db.jobs || [];
+      let currentJobType = "Full-time";
+
+      // RENDER JOBS
+      function createJobCard(job, canApply) {
+        try {
+          const apps = db.applications || [];
+          const hasApplied = apps.some(app => app.candidate_id === candidate.id && app.job_id === job.id);
+          const isMyOwnJob = job.posted_by && String(job.posted_by) === String(candidate.id);
+          const div = document.createElement('div');
+          div.className = "card";
+          div.style.cssText = "display: flex; flex-direction: column; justify-content: space-between; padding: 1.5rem; gap: 1.25rem;";
+          
+          const skills = job.skills || [];
+          const skillsBadges = skills.map(s => `<span class="badge badge-secondary" style="font-size: 0.75rem;">${s}</span>`).join(" ");
+
+          let applyBtnHtml = "";
+          if (isMyOwnJob) {
+            applyBtnHtml = `
+              <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;" disabled>
+                Your Own Job Post 👤
+              </button>
+            `;
+          } else if (canApply) {
+            applyBtnHtml = `
+              <button onclick="window.openApplyModal(${job.id})" class="btn ${hasApplied ? 'btn-secondary' : 'btn-primary'}" style="width: 100%; justify-content: center; font-size: 0.85rem;" ${hasApplied ? 'disabled' : ''}>
+                ${hasApplied ? 'Applied ✅' : 'Apply Now 🚀'}
+              </button>
+            `;
+          } else {
+            applyBtnHtml = `
+              <a href="recommendations.html" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;">Upgrade Skills to Apply</a>
+            `;
+          }
+
+          const p2pBadge = job.posted_by ? `<span class="badge" style="background-color: var(--warning-light); color: var(--warning); margin-left: 0.5rem; font-size: 0.75rem;">👥 Peer Post</span>` : '';
+          
+          const title = job.title || "Untitled Job";
+          const company = job.company || "Unknown Company";
+          const location = job.location || "Unknown Location";
+          const desc = job.description || "No description provided.";
+
+          div.innerHTML = `
+            <div>
+              <div class="flex-between" style="align-items: flex-start;">
+                <div>
+                  <span style="font-size: 2.2rem; display: block; margin-bottom: 0.5rem;">${job.logo || "💼"}</span>
+                  <h3 style="font-size: 1.2rem; font-family: var(--font-sans); font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; flex-wrap: wrap;">
+                    ${title} ${p2pBadge}
+                  </h3>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary);">by <strong>${company}</strong></span>
+                </div>
+                <div style="text-align: right; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end;">
+                  <span class="badge badge-primary">${location}</span>
+                  <span style="font-size: 0.85rem; font-weight: 600; color: var(--success);">${job.xp ? job.xp + ' XP' : (job.salary || 'Unpaid')}</span>
+                </div>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">
+                ${desc}
+              </p>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+              <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                ${skillsBadges}
+              </div>
+              ${applyBtnHtml}
+            </div>
+          `;
+          return div;
+        } catch (err) {
+          console.error("Error creating job card:", err, job);
+          const errorDiv = document.createElement('div');
+          errorDiv.className = "card";
+          errorDiv.innerHTML = `<p style="color:var(--danger);">Error rendering job card.</p>`;
+          return errorDiv;
+        }
+      }
+
+      function renderJobs(list) {
+        try {
+          const grid = document.getElementById('jobs-grid');
+          if (!grid) return;
+          grid.innerHTML = "";
+
+          if (!list || list.length === 0) {
+            grid.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);"><p>No jobs found for this category right now.</p></div>`;
+          } else {
+            list.forEach(job => {
+              const card = createJobCard(job, true);
+              grid.appendChild(card);
+            });
+          }
+
+          // Hide the AI bonus section since we are now showing all jobs in the main grid
+          if (document.getElementById('ai-bonus-recom-section')) {
+            document.getElementById('ai-bonus-recom-section').style.display = "none";
+          }
+        } catch (err) {
+          console.error("Error in renderJobs:", err);
+        }
+      }
+
+      // FILTER JOBS
+      window.filterJobs = function() {
+        try {
+          const searchInput = document.getElementById('job-search');
+          const search = searchInput ? searchInput.value.toLowerCase().trim() : "";
+          
+          // Filter strictly by the current active category (matching candidate role) and the selected type (Job vs Freelance)
+          let filtered = allJobs.filter(job => job.type === currentJobType || job.type === 'P2P Gig');
+
+          if (search) {
+            filtered = filtered.filter(job => {
+              const titleMatch = job.title && job.title.toLowerCase().includes(search);
+              const companyMatch = job.company && job.company.toLowerCase().includes(search);
+              const skillsMatch = job.skills && Array.isArray(job.skills) && job.skills.some(s => s.toLowerCase().includes(search));
+              return titleMatch || companyMatch || skillsMatch;
+            });
+          }
+          renderJobs(filtered);
+        } catch (err) {
+          console.error("Error in filterJobs:", err);
+        }
+      }
+
+      // APPLICATION MODAL ACTIONS
+      let selectedJobId = null;
+      let applyResumeData = null;
+      let applyResumeName = "";
+
+      window.openApplyModal = function(jobId) {
+        const job = allJobs.find(j => j.id === jobId);
+        if (!job) return;
+
+        logUserActivity(user.id, "job_view", `Viewed details for job: "${job.title}" at ${job.company}`);
+
+        selectedJobId = jobId;
+        document.getElementById('modal-job-title').textContent = job.title;
+        document.getElementById('modal-job-company').textContent = job.company;
+
+        const statusDiv = document.getElementById('apply-resume-status');
+        if (candidate.resume_filename) {
+          statusDiv.innerHTML = `
+            <span style="color: #10b981; font-weight: 600;">✓ Auto-filled from Profile:</span> 
+            <strong style="color: var(--text-primary);">${candidate.resume_filename}</strong> 
+            <span class="badge badge-primary" style="font-size: 0.65rem;">${candidate.resume_type === 'ATS' ? 'ATS Format' : 'With Design'}</span>
+          `;
+          document.getElementById('applyResumeType').value = candidate.resume_type || "";
+          applyResumeName = candidate.resume_filename;
+          applyResumeData = candidate.resume_data;
+        } else {
+          statusDiv.innerHTML = `<span style="color: var(--danger); font-weight: 600;">⚠ No profile resume found. Please select format and upload your file.</span>`;
+          document.getElementById('applyResumeType').value = "";
+          applyResumeName = "";
+          applyResumeData = null;
+        }
+
+        document.getElementById('apply-modal').style.display = "flex";
+      }
+
+      window.closeApplyModal = function() {
+        document.getElementById('apply-modal').style.display = "none";
+        document.getElementById('apply-form').reset();
+        selectedJobId = null;
+        applyResumeData = null;
+        applyResumeName = "";
+      }
+
+      document.getElementById('applyResumeFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            applyResumeData = evt.target.result;
+            applyResumeName = file.name;
+            document.getElementById('apply-resume-status').innerHTML = `
+              <span style="color: #34d399; font-weight: 600;">✓ Ready to Upload:</span> 
+              <strong style="color: var(--text-primary);">${file.name}</strong>
+            `;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      document.getElementById('apply-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!selectedJobId) return;
+
+        const job = allJobs.find(j => j.id === selectedJobId);
+        if (!job) return;
+
+        const resumeType = document.getElementById('applyResumeType').value;
+        const hasExisting = !!candidate.resume_filename;
+
+        if (!hasExisting && !applyResumeData) {
+          alert("Please upload your resume in either ATS or Design format to apply for this job!");
+          return;
+        }
+
+        if (applyResumeData && (applyResumeName !== candidate.resume_filename) && !resumeType) {
+          alert("Please select the resume format type (ATS or Design) for your uploaded file!");
+          return;
+        }
+
+        const coverLetter = document.getElementById('coverLetter').value;
+        const githubUrl = document.getElementById('githubUrl').value;
+        const demoUrl = document.getElementById('demoUrl').value;
+
+        // Add application to Mock DB applications array
+        const dbState = dbGet();
+        const newApp = {
+          id: Date.now(),
+          candidate_id: candidate.id,
+          candidate_name: candidate.fullName,
+          job_id: selectedJobId,
+          challenge_title: `${job.title} (${job.company})`, // recruiter dashboard compatibility
+          talent_score: candidate.talent_score || 50,
+          status: "applied",
+          cover_letter: coverLetter,
+          github_url: githubUrl,
+          demo_url: demoUrl,
+          resume_filename: applyResumeName,
+          resume_type: resumeType || candidate.resume_type,
+          resume_data: applyResumeData
+        };
+
+        dbState.applications.unshift(newApp);
+
+        // Create a submission record so recruiters can review this custom application
+        const newSub = {
+          id: Date.now(),
+          candidate_id: candidate.id,
+          candidate_name: candidate.fullName,
+          challenge_id: selectedJobId,
+          challenge_title: `${job.title} (${job.company})`,
+          talent_score: candidate.talent_score || 50,
+          current_level: candidate.current_level || 'Beginner Builder',
+          status: "pending",
+          description: coverLetter,
+          github_url: githubUrl,
+          submission_url: demoUrl,
+          resume_filename: applyResumeName,
+          resume_type: resumeType || candidate.resume_type,
+          resume_data: applyResumeData
+        };
+        
+        if (!candidate.activity_log) candidate.activity_log = [];
+        candidate.activity_log.push({
+          type: "job_apply",
+          details: `Applied to job: "${job.title}" at ${job.company}`,
+          timestamp: new Date().toISOString()
+        });
+
+        const dbCand = dbState.users.find(u => String(u.id) === String(candidate.id));
+        if (dbCand) {
+          dbCand.activity_log = candidate.activity_log;
+        }
+
+        const sessionUser = getUser();
+        if (sessionUser && String(sessionUser.id) === String(candidate.id)) {
+          sessionUser.activity_log = candidate.activity_log;
+          sessionStorage.setItem('user', JSON.stringify(sessionUser));
+        }
+
+        dbState.submissions.unshift(newSub);
+        dbSave(dbState);
+
+        closeApplyModal();
+
+        // Refresh list to show disabled "Applied ✅" state
+        const refreshedDb = dbGet();
+        db.applications = refreshedDb.applications; // Sync active applications collection
+        allJobs = refreshedDb.jobs || [];
+        window.filterJobs();
+
+        // Trigger alerts and celebration
+        showAlert('alert-container', `Your application for ${job.title} at ${job.company} was submitted! Recruiter alerted.`, 'success');
+        
+        // Trigger Confetti
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      });
+      // Load initial jobs via initializeJobsUI
+      try {
+        window.initializeJobsUI();
+        if (candidate && candidate.profileCompleted && candidateRole) {
+          const initialMatchCount = (db.jobs || []).filter(j => j.category && j.category.toLowerCase() === candidateRole.toLowerCase() && j.type === 'Full-time').length;
+          if (typeof triggerAINotification === 'function') {
+            triggerAINotification(candidateRole, initialMatchCount);
+          } else {
+            console.warn("triggerAINotification is not defined");
+          }
+        }
+      } catch (err) {
+        console.error("Error during initial job loading:", err);
+      }
+
+      // Admin Applications Manager Logic
+      const isAdminViewing = (() => {
+        try {
+          const ru = JSON.parse(sessionStorage.getItem('user'));
+          return ru && ru.role === 'admin';
+        } catch { return false; }
+      })();
+
+      if (isAdminViewing) {
+        document.getElementById('admin-applications-card').style.display = 'block';
+        renderAdminApplications();
+      }
+
+      function renderAdminApplications() {
+        const container = document.getElementById('admin-applications-container');
+        const dbState = dbGet();
+        const apps = dbState.applications.filter(app => String(app.candidate_id) === String(candidate.id));
+
+        if (apps.length === 0) {
+          container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding:1rem;">This candidate has not applied for any jobs yet.</div>`;
+        } else {
+          container.innerHTML = apps.map(app => {
+            const job = dbState.jobs.find(j => j.id === app.job_id);
+            const title = job ? job.title : app.jobTitle || 'Unknown Job';
+            const company = job ? job.company : app.companyName || 'Unknown Company';
+            return `
+              <div style="background:var(--bg-tertiary); padding:0.75rem 1rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                <div>
+                  <strong style="color:var(--text-primary); font-size:0.85rem;">${title}</strong>
+                  <span style="display:block; font-size:0.72rem; color:var(--text-muted);">${company} &bull; Applied: ${app.appliedDate || 'N/A'}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <select onchange="updateApplicationStatusAdmin(${app.id}, this.value)" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:4px;">
+                    <option value="applied" ${app.status === 'applied' ? 'selected' : ''}>Applied</option>
+                    <option value="shortlisted" ${app.status === 'shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                    <option value="interviewing" ${app.status === 'interviewing' ? 'selected' : ''}>Interviewing</option>
+                    <option value="hired" ${app.status === 'hired' ? 'selected' : ''}>Hired</option>
+                    <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                  </select>
+                  <button type="button" onclick="deleteApplicationAdmin(${app.id})" class="btn" style="background:#ef4444; color:white; padding:0.25rem 0.5rem; font-size:0.75rem; border-radius:4px;">🗑️ Delete</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      window.updateApplicationStatusAdmin = function(appId, newStatus) {
+        const dbState = dbGet();
+        const app = dbState.applications.find(a => a.id === appId);
+        if (app) {
+          app.status = newStatus;
+          dbSave(dbState);
+          showAlert('alert-container', `Application status updated to "${newStatus}"!`, 'success');
+          renderAdminApplications();
+          
+          // Dispatch change to parent window
+          window.postMessage('db_updated', '*');
+        }
+      };
+
+      window.deleteApplicationAdmin = function(appId) {
+        if (confirm("Are you sure you want to withdraw/delete this job application?")) {
+          const dbState = dbGet();
+          dbState.applications = dbState.applications.filter(a => a.id !== appId);
+          dbSave(dbState);
+          showAlert('alert-container', 'Application deleted successfully.', 'success');
+          renderAdminApplications();
+
+          // Refresh jobs grid to show enabled Apply button
+          db.applications = dbState.applications;
+          window.filterJobs();
+
+          // Dispatch change to parent window
+          window.postMessage('db_updated', '*');
+        }
+      };
+
+    }
+    })();
+  </script>
+</body>
+</html>
