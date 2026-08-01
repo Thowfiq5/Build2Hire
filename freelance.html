@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Hub | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="opacity: 0; transition: opacity 0.15s ease-in-out;">
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <!-- LOADING STATE -->
+      <div id="freelance-loader" style="display: flex; justify-content: center; align-items: center; min-height: 50vh; flex-direction: column; gap: 1rem;">
+        <div class="spinner" style="width: 40px; height: 40px; border: 4px solid var(--border-color); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p style="color: var(--text-secondary); font-family: var(--font-display);">Authenticating Freelance Profile...</p>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+      </div>
+
+      <!-- LOCKED PROFILE STATE -->
+      <div id="locked-portal-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Freelance Hub Locked</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          To access freelance gigs, you must first complete your candidate profile onboarding. Our AI engine uses your preferred job role to match you with relevant micro-projects.
+        </p>
+        <a href="portfolio.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; width: 100%;">
+          👤 Complete My Profile & Onboard
+        </a>
+      </div>
+
+      
+      <!-- UNREGISTERED STATE: Prompt to Register as Company -->
+      <div id="unregistered-state" style="display: none; max-width: 900px; margin: 2rem auto; text-align: center; padding: 4rem 2rem;" class="card">
+        <span style="font-size: 5rem; display: block; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite;">🏢</span>
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+          Unlock Freelance Gigs: Register as a Company
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; max-width: 650px; margin: 0 auto 2.5rem auto; font-size: 1.05rem;">
+          Build2Hire requires all freelancers to register as a business entity (Sole Proprietorship, LLP, OPC, etc.) to establish client trust, handle billing invoices, and prove credential compliance. It takes 5 minutes!
+        </p>
+        <button onclick="openRegModal()" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: var(--radius-sm); font-family: var(--font-display);">
+          🚀 Start Company Registration
+        </button>
+        <style>
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+          }
+        </style>
+      </div>
+
+      <!-- PENDING STATE: Application Under Review -->
+      <div id="pending-state" style="display: none; max-width: 900px; margin: 2rem auto; text-align: center; padding: 4rem 2rem;" class="card">
+        <div style="width: 100px; height: 100px; margin: 0 auto 1.5rem auto; position: relative;">
+          <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="var(--primary)" stroke-width="6" style="opacity: 0.2;"/>
+            <line x1="50" y1="50" x2="50" y2="25" stroke="var(--primary)" stroke-width="5" stroke-linecap="round" style="transform-origin: 50px 50px; animation: spinClock 4s linear infinite;" />
+            <line x1="50" y1="50" x2="70" y2="50" stroke="var(--secondary)" stroke-width="5" stroke-linecap="round" style="transform-origin: 50px 50px; animation: spinClock 12s linear infinite;" />
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#spinGradient)" stroke-width="4" stroke-dasharray="140 140" style="transform-origin: 50px 50px; animation: spinClock 2s linear infinite;"/>
+            <defs>
+              <linearGradient id="spinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--primary)" />
+                <stop offset="100%" stop-color="var(--secondary)" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 1rem; color: var(--text-primary);">
+          Application Under Review
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; max-width: 650px; margin: 0 auto 1rem auto; font-size: 1.05rem;">
+          Your company registration is under review. You'll be notified once approved. Please wait 24–48 hours for the admin to process your application.
+        </p>
+        <div id="pending-countdown" style="font-size: 1.5rem; font-weight: 600; color: var(--primary); font-family: var(--font-display); margin-top: 1.5rem;">
+          Calculating remaining time...
+        </div>
+        <style>
+          @keyframes spinClock { 100% { transform: rotate(360deg); } }
+        </style>
+      </div>
+
+      <!-- REJECTED STATE: Application Rejected -->
+      <div id="rejected-state" style="display: none; max-width: 900px; margin: 2rem auto; text-align: center; padding: 4rem 2rem; border: 1px solid #ef4444;" class="card">
+        <span style="font-size: 5rem; display: block; margin-bottom: 1.5rem;">❌</span>
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 1rem; color: #ef4444;">
+          Registration Rejected
+        </h2>
+        <p id="rejection-reason-text" style="color: var(--text-secondary); line-height: 1.6; max-width: 650px; margin: 0 auto 2.5rem auto; font-size: 1.05rem;">
+          Your company registration was rejected. Reason: <strong>Not provided.</strong>
+        </p>
+        <button onclick="openRegModal()" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: var(--radius-sm); font-family: var(--font-display);">
+          🔄 Edit and Re-apply
+        </button>
+      </div>
+
+      <!-- Top banner -->
+      <div id="portal-top-banner" style="display: none; margin-bottom: 1.5rem; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Freelance Gigs</h2>
+          <p style="color: var(--text-secondary);">Take on micro-projects to build your portfolio score and reputation.</p>
+        </div>
+        
+        <!-- Search -->
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="job-search" class="form-control" placeholder="Search gigs, skills..." oninput="window.filterJobs()" style="width: 250px; font-size: 0.85rem;">
+        </div>
+      </div>
+
+      <!-- AI RECOMMENDATION BANNER (Persistent) -->
+      <div id="ai-recom-banner" style="display: none; background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%); border: 1px solid var(--primary); padding: 1.25rem 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; align-items: center; gap: 1rem; box-shadow: 0 0 20px rgba(99,102,241,0.18); flex-wrap: wrap; position: relative; overflow: hidden;">
+        <!-- Animated pulse ring -->
+        <div style="position: absolute; top: 50%; left: 1.25rem; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; background: rgba(99,102,241,0.15); animation: aiPulse 2.5s ease-in-out infinite;"></div>
+        <span style="font-size: 1.8rem; z-index: 1; position: relative;">🤖</span>
+        <div style="flex: 1; min-width: 200px; z-index: 1;">
+          <strong style="color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 0.2rem;">AI Recommendation Engine Active</strong>
+          <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; display: block;">Showing only <strong id="user-matched-role" style="color: var(--secondary);">[Preferred Role]</strong> positions — <strong id="ai-job-count" style="color: var(--primary);">0</strong> jobs matched to your profile.</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; z-index: 1;">
+          <a href="recommendations.html" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 700;">🗺️ View Roadmap</a>
+        </div>
+      </div>
+      <style>
+        @keyframes aiPulse {
+          0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+          50% { transform: translateY(-50%) scale(1.8); opacity: 0; }
+        }
+      </style>
+
+      <div id="alert-container"></div>
+
+      <!-- Jobs Grid -->
+      <div id="jobs-grid" class="grid-2col" style="display: none; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <!-- Dynamic job cards -->
+      </div>
+
+      <!-- AI Recommendations Grid (Outside Core Role) -->
+      <div id="ai-bonus-recom-section" style="display: none; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+        <h3 style="font-family: var(--font-display); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.4rem;">
+          🤖 AI is also recommending you these jobs
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">Expand your skills and unlock new opportunities in the <a href="recommendations.html" style="color: var(--primary); font-weight: 600;">Learners</a> section to apply for these!</p>
+        <div id="ai-bonus-jobs-grid" class="grid-2col" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; opacity: 0.85;">
+          <!-- Dynamic bonus job cards -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+  <!-- APPLICATION FORM MODAL -->
+  <div id="apply-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 500px;">
+      <button class="modal-close" onclick="closeApplyModal()">✕</button>
+      <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 0.5rem;">Apply for Position</h3>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Role: <strong id="modal-job-title" style="color: var(--primary);"></strong> at <span id="modal-job-company" style="font-weight: 700;"></span>
+      </p>
+
+      <form id="apply-form">
+        <div class="form-group">
+          <label class="form-label" for="coverLetter">Why are you a good fit? (Brief Cover Letter)</label>
+          <textarea required id="coverLetter" class="form-control" rows="3" placeholder="Tell the recruiter about your technical background and experience..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="githubUrl">GitHub Repository Link</label>
+          <input type="url" id="githubUrl" class="form-control" placeholder="https://github.com/username/repo">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label" for="demoUrl">Live Demo URL (Optional)</label>
+          <input type="url" id="demoUrl" class="form-control" placeholder="https://demo-app.vercel.app">
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <button type="button" onclick="closeApplyModal()" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<script src="shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    (function() {
+      try {
+        const auth = withAuth(['candidate']);
+        if (auth) {
+        const loader = document.getElementById('freelance-loader');
+        if (loader) loader.style.display = 'none';
+
+        const { user, db, candidate } = auth;
+
+      // Refresh XP Progress layout inside the sidebar
+      function refreshSidebarStats() {
+        if(document.getElementById('level-name')) document.getElementById('level-name').textContent = candidate.current_level || "Beginner Builder";
+        if(document.getElementById('level-num')) document.getElementById('level-num').textContent = candidate.level || 1;
+        if(document.getElementById('xp-current')) document.getElementById('xp-current').textContent = candidate.xp_points || 0;
+
+        let maxLvlXp = 1000;
+        let minLvlXp = 0;
+        if (candidate.level === 2) { minLvlXp = 1000; maxLvlXp = 2500; }
+        else if (candidate.level === 3) { minLvlXp = 2500; maxLvlXp = 4000; }
+        else if (candidate.level === 4) { minLvlXp = 4000; maxLvlXp = 6000; }
+
+        const pct = Math.min(100, Math.max(5, ((candidate.xp_points - minLvlXp) / (maxLvlXp - minLvlXp)) * 100));
+        setTimeout(() => {
+          const fillEl = document.getElementById('xp-bar-fill');
+          if (fillEl) fillEl.style.width = `${pct}%`;
+        }, 100);
+      }
+      
+      refreshSidebarStats();
+
+      const candidateRole = candidate.preferredRole || "";
+      
+      // Floating AI matching notification toast launcher
+      function triggerAINotification(role, jobCount) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 2rem;
+          right: 2rem;
+          background: var(--bg-secondary);
+          border: 1px solid var(--primary);
+          box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+          border-radius: var(--radius-md);
+          padding: 1.25rem;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          z-index: 1000;
+          animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          max-width: 380px;
+        `;
+        toast.innerHTML = `
+          <div style="font-size: 1.8rem;">🤖</div>
+          <div>
+            <strong style="color: var(--primary); font-size: 0.9rem; display: block;">AI Engine Match!</strong>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.3; display: block; margin-top: 0.15rem;">
+              We found <strong>${jobCount}</strong> opportunities matching your role as <strong>${role}</strong>.
+            </span>
+          </div>
+          <button onclick="this.parentElement.remove()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:bold; margin-left: auto; padding: 0.25rem;">✕</button>
+        `;
+        document.body.appendChild(toast);
+        
+        if (!document.getElementById('toast-animation-style')) {
+          const style = document.createElement('style');
+          style.id = 'toast-animation-style';
+          style.textContent = `
+            @keyframes slideInRight {
+              from { transform: translateX(120%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        setTimeout(() => {
+          if (toast.parentElement) {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => toast.remove(), 500);
+          }
+        }, 6000);
+      }
+
+      // Check profile onboarding and company registration status
+      const lockedState = document.getElementById('locked-portal-state');
+      const unregState = document.getElementById('unregistered-state');
+      const pendingState = document.getElementById('pending-state');
+      const rejectedState = document.getElementById('rejected-state');
+      const topBanner = document.getElementById('portal-top-banner');
+      const aiBanner = document.getElementById('ai-recom-banner');
+      const jobsGrid = document.getElementById('jobs-grid');
+      const aiBonus = document.getElementById('ai-bonus-recom-section');
+
+      if (!candidate.profileCompleted || !candidateRole) {
+        lockedState.style.display = "block";
+        if(unregState) unregState.style.display = "none";
+        if(pendingState) pendingState.style.display = "none";
+        if(rejectedState) rejectedState.style.display = "none";
+        topBanner.style.display = "none";
+        aiBanner.style.display = "none";
+        jobsGrid.style.display = "none";
+        if(aiBonus) aiBonus.style.display = "none";
+      } else if (!candidate.companyRegistered) {
+        lockedState.style.display = "none";
+        if(unregState) unregState.style.display = "block";
+        if(pendingState) pendingState.style.display = "none";
+        if(rejectedState) rejectedState.style.display = "none";
+        topBanner.style.display = "none";
+        aiBanner.style.display = "none";
+        jobsGrid.style.display = "none";
+        if(aiBonus) aiBonus.style.display = "none";
+      } else if (candidate.companyRegistrationStatus === 'pending') {
+        lockedState.style.display = "none";
+        if(unregState) unregState.style.display = "none";
+        if(pendingState) {
+          pendingState.style.display = "block";
+          
+          const reg = (db.company_registrations || []).find(c => String(c.candidate_id) === String(candidate.id));
+          if (reg && reg.submitted_at) {
+            const submitTime = new Date(reg.submitted_at).getTime();
+            const targetTime = submitTime + (48 * 60 * 60 * 1000);
+            const countdownEl = document.getElementById('pending-countdown');
+            
+            if (countdownEl) {
+              if (window.pendingCountdownInterval) clearInterval(window.pendingCountdownInterval);
+              
+              const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetTime - now;
+                
+                if (distance < 0) {
+                  countdownEl.innerHTML = "Your review is taking longer than expected. Our team will get back to you shortly.";
+                  countdownEl.style.color = "var(--text-secondary)";
+                  countdownEl.style.fontSize = "1.1rem";
+                  countdownEl.style.fontWeight = "normal";
+                  clearInterval(window.pendingCountdownInterval);
+                  return;
+                }
+                
+                const h = Math.floor(distance / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                countdownEl.innerHTML = `${h}h ${m}m ${s}s remaining`;
+              };
+              
+              updateCountdown();
+              window.pendingCountdownInterval = setInterval(updateCountdown, 1000);
+            }
+          }
+        }
+        if(rejectedState) rejectedState.style.display = "none";
+        topBanner.style.display = "none";
+        aiBanner.style.display = "none";
+        jobsGrid.style.display = "none";
+        if(aiBonus) aiBonus.style.display = "none";
+      } else if (candidate.companyRegistrationStatus === 'rejected') {
+        lockedState.style.display = "none";
+        if(unregState) unregState.style.display = "none";
+        if(pendingState) pendingState.style.display = "none";
+        if(rejectedState) {
+          rejectedState.style.display = "block";
+          const reasonText = document.getElementById('rejection-reason-text');
+          if (reasonText) {
+            reasonText.innerHTML = `Your company registration was rejected. Reason: <strong>${candidate.companyRejectionReason || 'Not provided.'}</strong>`;
+          }
+        }
+        topBanner.style.display = "none";
+        aiBanner.style.display = "none";
+        jobsGrid.style.display = "none";
+        if(aiBonus) aiBonus.style.display = "none";
+      } else {
+        lockedState.style.display = "none";
+        if(unregState) unregState.style.display = "none";
+        if(pendingState) pendingState.style.display = "none";
+        if(rejectedState) rejectedState.style.display = "none";
+        topBanner.style.display = "flex";
+        aiBanner.style.display = "flex";
+        jobsGrid.style.display = "grid";
+        if(aiBonus) aiBonus.style.display = "block";
+        if(document.getElementById('user-matched-role')) document.getElementById('user-matched-role').textContent = candidateRole;
+        // Populate live job count
+        const totalMatched = (db.jobs || []).filter(j => j.category.toLowerCase() === candidateRole.toLowerCase()).length;
+        const aiCount = document.getElementById('ai-job-count');
+        if (aiCount) aiCount.textContent = totalMatched;
+      }
+      
+      // Modal logic for Registration
+      window.openRegModal = function() {
+        if (!candidate.profileCompleted) {
+          window.location.href = 'portfolio.html';
+          return;
+        }
+        const modal = document.getElementById('company-reg-modal');
+        if(modal) {
+          modal.style.display = 'flex';
+          if (typeof goToStep === 'function') goToStep(1);
+        }
+      };
+      
+      window.closeRegModal = function() {
+        const modal = document.getElementById('company-reg-modal');
+        if(modal) modal.style.display = 'none';
+      };
+
+      window.submitCompanyRegistration = async function() {
+        const form = document.getElementById('multi-step-reg-form');
+        const submitBtn = document.getElementById('btn-next-3');
+        
+        // 1. Validation
+        const requiredInputs = form.querySelectorAll('[required]');
+        let invalidInput = null;
+        for (const input of requiredInputs) {
+          if (!input.checkValidity()) {
+            invalidInput = input;
+            break;
+          }
+        }
+        
+        const checkedActivities = document.querySelectorAll('.biz-activity-cb:checked');
+        if (invalidInput || checkedActivities.length === 0) {
+          let stepToNav = 1;
+          if (invalidInput) {
+            const stepEl = invalidInput.closest('.reg-step');
+            if (stepEl) stepToNav = parseInt(stepEl.id.replace('reg-step-', ''));
+          } else {
+            stepToNav = 3;
+          }
+          
+          if (typeof goToStep === 'function') goToStep(stepToNav);
+          
+          setTimeout(() => {
+            if (invalidInput) invalidInput.reportValidity();
+            else alert("Please select at least one Business Activity.");
+          }, 100);
+          return;
+        }
+
+        // 2. Set loading state
+        if (submitBtn) {
+          submitBtn.dataset.originalText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '⏳ Processing...';
+          submitBtn.disabled = true;
+        }
+
+        try {
+          // Simulate network processing
+          await new Promise(r => setTimeout(r, 1200));
+          
+          const dbState = typeof dbGet === 'function' ? dbGet() : JSON.parse(localStorage.getItem('build2hire_db') || '{}');
+          
+          let lUser = null;
+          if (typeof getUser === 'function') {
+            lUser = getUser();
+          } else {
+            const userStr = sessionStorage.getItem('user');
+            if (userStr) lUser = JSON.parse(userStr);
+          }
+          
+          if (!lUser) {
+            throw new Error("You must be logged in to register.");
+          }
+            // Extract detailed form data
+            const safeVal = (id) => {
+              const el = document.getElementById(id);
+              return el ? el.value.trim() : '';
+            };
+            const safeFile = (id) => {
+              const el = document.getElementById(id);
+              return (el && el.files && el.files[0]) ? el.files[0].name : '';
+            };
+            
+            const detailedData = {
+              bizName: safeVal('biz-name'),
+              bizType: safeVal('biz-type'),
+              bizNature: safeVal('biz-nature'),
+              bizDesc: safeVal('biz-desc'),
+              bizDate: safeVal('biz-date'),
+              ownName: safeVal('own-name'),
+              ownFather: safeVal('own-father'),
+              ownDob: safeVal('own-dob'),
+              ownGender: safeVal('own-gender'),
+              ownNat: safeVal('own-nat'),
+              ownOcc: safeVal('own-occ'),
+              ownPan: safeVal('own-pan'),
+              ownAadhaar: safeVal('own-aadhaar'),
+              ownPhone: safeVal('own-phone'),
+              ownEmail: safeVal('own-email'),
+              bizResAddr: safeVal('biz-res-addr'),
+              bizBusAddr: safeVal('biz-bus-addr'),
+              bizState: safeVal('biz-state'),
+              bizDistrict: safeVal('biz-district'),
+              bizCity: safeVal('biz-city'),
+              bizPin: safeVal('biz-pin'),
+              docAadhaar: safeFile('doc-aadhaar'),
+              docPan: safeFile('doc-pan'),
+              docPassport: safeFile('doc-passport'),
+              docVoter: safeFile('doc-voter'),
+              proofElectric: safeFile('proof-electric'),
+              proofNoc: safeFile('proof-noc'),
+              proofRent: safeFile('proof-rent'),
+              proofTax: safeFile('proof-tax'),
+              bankName: safeVal('bank-name'),
+              bankAcc: safeVal('bank-acc'),
+              bankIfsc: safeVal('bank-ifsc'),
+              bankCheque: safeFile('bank-cheque'),
+              taxGst: safeVal('tax-gst'),
+              taxPan: safeVal('tax-pan'),
+              nomName: safeVal('nom-name'),
+              nomRel: safeVal('nom-rel'),
+              activities: Array.from(document.querySelectorAll('.biz-activity-cb:checked')).map(cb => cb.value),
+              declName: safeVal('decl-name'),
+              declPlace: safeVal('decl-place'),
+              declDate: safeVal('decl-date'),
+              declSign: safeFile('decl-sign')
+            };
+
+            const bizName = detailedData.bizName || 'Business';
+            const industry = detailedData.bizType || 'Tech';
+            const location = [detailedData.bizCity, detailedData.bizState].filter(Boolean).join(', ') || 'HQ';
+            const ownerName = detailedData.ownName || lUser.fullName;
+  
+            if (!dbState.company_registrations) {
+              dbState.company_registrations = [];
+            }
+            
+            dbState.company_registrations.unshift({
+              id: Date.now(),
+              candidate_id: lUser.id,
+              owner_name: ownerName,
+              business_name: bizName,
+              industry: industry,
+              location: location,
+              status: "pending",
+              submitted_at: new Date().toISOString(),
+              isVerified: false,
+              archived: false,
+              logo: "🏢",
+              details: detailedData
+            });
+
+          // Save to session user
+          lUser.companyRegistered = true;
+          lUser.companyRegistrationStatus = "pending";
+          sessionStorage.setItem('user', JSON.stringify(lUser));
+          
+          // Save to DB
+          if(dbState.users) {
+            const candidateIndex = dbState.users.findIndex(u => String(u.id) === String(lUser.id));
+            if(candidateIndex !== -1) {
+              dbState.users[candidateIndex].companyRegistered = true;
+              dbState.users[candidateIndex].companyRegistrationStatus = "pending";
+            }
+          }
+          
+          if(typeof dbSave === 'function') {
+            dbSave(dbState);
+          } else {
+            localStorage.setItem('build2hire_db', JSON.stringify(dbState));
+          }
+          
+          if (typeof closeRegModal === 'function') closeRegModal();
+          
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+          
+          const alertContainer = document.getElementById('alert-container');
+          if(alertContainer) {
+            alertContainer.innerHTML = '<div style="background: var(--success); color: white; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">✅ You have successfully submitted your application. Please wait 24–48 hours for approval.</div>';
+          }
+          
+          if (typeof window.addCandidateNotification === 'function') {
+            window.addCandidateNotification("Application Submitted", "You have successfully submitted your application. Please wait 24–48 hours for approval.", "system");
+          }
+          
+          setTimeout(() => {
+            if (window.navigateSeamlessly) {
+              window.navigateSeamlessly('freelance.html');
+            } else {
+              window.location.reload();
+            }
+          }, 2000);
+
+        } catch (error) {
+          console.error("Registration failed:", error);
+          alert("Registration failed: " + error.message);
+        } finally {
+          if (submitBtn && submitBtn.dataset.originalText) {
+            submitBtn.innerHTML = submitBtn.dataset.originalText;
+            submitBtn.disabled = false;
+          }
+        }
+      };
+
+      // Load all jobs instead of strictly filtering
+      let allJobs = db.jobs || [];
+      let currentJobType = "Freelance";
+
+      // RENDER JOBS
+      function createJobCard(job, canApply) {
+        const hasApplied = db.applications.some(app => app.candidate_id === candidate.id && app.job_id === job.id);
+        const div = document.createElement('div');
+        div.className = "card";
+        div.style.cssText = "display: flex; flex-direction: column; justify-content: space-between; padding: 1.5rem; gap: 1.25rem;";
+        
+        const skillsBadges = job.skills.map(s => `<span class="badge badge-secondary" style="font-size: 0.75rem;">${s}</span>`).join(" ");
+
+        div.innerHTML = `
+          <div>
+            <div class="flex-between" style="align-items: flex-start;">
+              <div>
+                <span style="font-size: 2.2rem; display: block; margin-bottom: 0.5rem;">${job.logo}</span>
+                <h3 style="font-size: 1.2rem; font-family: var(--font-sans); font-weight: 700; margin-bottom: 0.25rem;">${job.title}</h3>
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">by <strong>${job.company}</strong></span>
+              </div>
+              <div style="text-align: right; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end;">
+                <span class="badge badge-primary">${job.location}</span>
+                <span style="font-size: 0.85rem; font-weight: 600; color: var(--success);">${job.salary}</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">
+              ${job.description}
+            </p>
+          </div>
+
+          <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              ${skillsBadges}
+            </div>
+            ${canApply ? `
+              <button onclick="window.openApplyModal(${job.id})" class="btn ${hasApplied ? 'btn-secondary' : 'btn-primary'}" style="width: 100%; justify-content: center; font-size: 0.85rem;" ${hasApplied ? 'disabled' : ''}>
+                ${hasApplied ? 'Applied ✅' : 'Apply Now 🚀'}
+              </button>
+            ` : `<a href="recommendations.html" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem;">Upgrade Skills to Apply</a>`}
+          </div>
+        `;
+        return div;
+      }
+
+      function renderJobs(list) {
+        const grid = document.getElementById('jobs-grid');
+        grid.innerHTML = "";
+
+        if (list.length === 0) {
+          grid.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);"><p>No jobs found for this category right now.</p></div>`;
+        } else {
+          list.forEach(job => {
+            const card = createJobCard(job, true);
+            grid.appendChild(card);
+          });
+        }
+
+        // Hide the AI bonus section since we are now showing all jobs in the main grid
+        if (document.getElementById('ai-bonus-recom-section')) {
+          document.getElementById('ai-bonus-recom-section').style.display = "none";
+        }
+      }
+
+
+
+      // FILTER JOBS
+      window.filterJobs = function() {
+        const search = document.getElementById('job-search').value.toLowerCase().trim();
+        
+        // Filter strictly by the current active category (matching candidate role) and the selected type (Job vs Freelance)
+        let filtered = allJobs.filter(job => job.type === currentJobType);
+
+        if (search) {
+          filtered = filtered.filter(job => 
+            job.title.toLowerCase().includes(search) || 
+            job.company.toLowerCase().includes(search) || 
+            job.skills.some(s => s.toLowerCase().includes(search))
+          );
+        }
+        renderJobs(filtered);
+      }
+
+      // APPLICATION MODAL ACTIONS
+      let selectedJobId = null;
+
+      window.openApplyModal = function(jobId) {
+        const job = allJobs.find(j => j.id === jobId);
+        if (!job) return;
+
+        selectedJobId = jobId;
+        document.getElementById('modal-job-title').textContent = job.title;
+        document.getElementById('modal-job-company').textContent = job.company;
+        document.getElementById('apply-modal').style.display = "flex";
+      }
+
+      window.closeApplyModal = function() {
+        document.getElementById('apply-modal').style.display = "none";
+        document.getElementById('apply-form').reset();
+        selectedJobId = null;
+      }
+
+      document.getElementById('apply-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!selectedJobId) return;
+
+        const job = allJobs.find(j => j.id === selectedJobId);
+        if (!job) return;
+
+        const coverLetter = document.getElementById('coverLetter').value;
+        const githubUrl = document.getElementById('githubUrl').value;
+        const demoUrl = document.getElementById('demoUrl').value;
+
+        // Add application to Mock DB applications array
+        const dbState = dbGet();
+        const newApp = {
+          id: Date.now(),
+          candidate_id: candidate.id,
+          candidate_name: candidate.fullName,
+          job_id: selectedJobId,
+          challenge_title: `${job.title} (${job.company})`, // recruiter dashboard compatibility
+          talent_score: candidate.talent_score || 50,
+          status: "applied",
+          cover_letter: coverLetter,
+          github_url: githubUrl,
+          demo_url: demoUrl
+        };
+
+        dbState.applications.unshift(newApp);
+
+        // Create a submission record so recruiters can review this custom application
+        const newSub = {
+          id: Date.now(),
+          candidate_id: candidate.id,
+          candidate_name: candidate.fullName,
+          challenge_id: selectedJobId,
+          challenge_title: `${job.title} (${job.company})`,
+          talent_score: candidate.talent_score || 50,
+          current_level: candidate.current_level || 'Beginner Builder',
+          status: "pending",
+          description: coverLetter,
+          github_url: githubUrl,
+          submission_url: demoUrl
+        };
+        
+        dbState.submissions.unshift(newSub);
+        dbSave(dbState);
+
+        closeApplyModal();
+
+        // Refresh list to show disabled "Applied ✅" state
+        const refreshedDb = dbGet();
+        db.applications = refreshedDb.applications; // Sync active applications collection
+        allJobs = (refreshedDb.jobs || []).filter(job => job.category.toLowerCase() === candidateRole.toLowerCase());
+        window.filterJobs();
+
+        // Trigger alerts and celebration
+        showAlert('alert-container', `Your application for ${job.title} at ${job.company} was submitted! Recruiter alerted.`, 'success');
+        
+        // Trigger Confetti
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      });
+      // Load initial jobs
+      window.filterJobs();
+      if (candidate.profileCompleted && candidate.companyRegistered && candidateRole && candidate.companyRegistrationStatus !== 'pending' && candidate.companyRegistrationStatus !== 'rejected') {
+        const initialMatchCount = (db.jobs || []).filter(j => j.category.toLowerCase() === candidateRole.toLowerCase() && j.type === 'Freelance').length;
+        triggerAINotification(candidateRole, initialMatchCount);
+      }
+      
+        // Reveal page once DOM and state are correctly set
+        requestAnimationFrame(() => {
+          document.body.style.opacity = '1';
+        });
+      }
+      } catch (error) {
+        console.error("Error loading freelance profile:", error);
+        const loader = document.getElementById('freelance-loader');
+        if (loader) {
+          loader.innerHTML = `<p style="color:var(--danger); font-family:var(--font-display);">Failed to authenticate profile. Please refresh the page.</p>`;
+        }
+        document.body.style.opacity = '1';
+      }
+    })();
+  </script>
+
+      <!-- COMPANY REGISTRATION MODAL -->
+  <div id="company-reg-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 2rem;">
+    <div class="modal-content" style="background: var(--bg-secondary); padding: 0; border-radius: var(--radius-lg); max-width: 850px; width: 100%; border: 1px solid var(--border-color); max-height: 90vh; overflow-y: auto; position: relative;">
+      
+      <!-- Modal Header -->
+      <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; background: var(--bg-secondary); z-index: 10; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <h3 style="margin: 0; font-family: var(--font-display); font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          🏢 Register as Freelance Company
+        </h3>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button class="btn btn-secondary" onclick="autofillFromProfile()" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.35rem;">
+            👤 Autofill from Profile
+          </button>
+          <button class="modal-close" onclick="closeRegModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.5rem; line-height: 1;">✕</button>
+        </div>
+      </div>
+
+      <div style="padding: 1.5rem 2rem;">
+        <!-- Progress Indicator -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; position: relative; max-width: 700px; margin-left: auto; margin-right: auto;">
+          <!-- Connecting Line -->
+          <div style="position: absolute; top: 20px; left: 10%; right: 10%; height: 2px; background: var(--border-color); z-index: 1;"></div>
+          
+          <!-- Step 1 -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 2; width: 33%;">
+            <div id="step-ind-circle-1" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--primary); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 0 0 4px var(--bg-secondary);">1</div>
+            <div id="step-ind-text-1" style="font-size: 0.75rem; font-weight: bold; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px;">Business & Owner</div>
+          </div>
+          
+          <!-- Step 2 -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 2; width: 33%;">
+            <div id="step-ind-circle-2" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--border-color); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 0 0 4px var(--bg-secondary);">2</div>
+            <div id="step-ind-text-2" style="font-size: 0.75rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Address & Proofs</div>
+          </div>
+          
+          <!-- Step 3 -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 2; width: 33%;">
+            <div id="step-ind-circle-3" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--border-color); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 0 0 4px var(--bg-secondary);">3</div>
+            <div id="step-ind-text-3" style="font-size: 0.75rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Activities & Decl.</div>
+          </div>
+        </div>
+
+        <form id="multi-step-reg-form" onsubmit="event.preventDefault();">
+          
+          <!-- STEP 1: Business & Owner -->
+          <div id="reg-step-1" class="reg-step">
+            <!-- 1. Business Details -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              1. Business Details
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+              <div class="form-group">
+                <label>Proposed Business Name *</label>
+                <input type="text" class="form-control" id="biz-name" placeholder="e.g. Chen Backend Solutions" required oninput="validateStep(1)">
+              </div>
+              <div class="form-group">
+                <label>Business Type *</label>
+                <select class="form-control" id="biz-type" onchange="toggleNomineeDetails(); validateStep(1);" required>
+                  <option value="" disabled selected>Select type</option>
+                  <option value="Sole Proprietorship">Sole Proprietorship</option>
+                  <option value="OPC">OPC</option>
+                  <option value="Private Limited">Private Limited</option>
+                  <option value="LLP">LLP</option>
+                  <option value="Partnership">Partnership</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Nature of Business *</label>
+                <select class="form-control" id="biz-nature" required onchange="validateStep(1)">
+                  <option value="" disabled selected>Select nature</option>
+                  <option value="Graphic Design">Graphic Design</option>
+                  <option value="IT Services">IT Services</option>
+                  <option value="Digital Marketing">Digital Marketing</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Video Production">Video Production</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Date of Commencement (if applicable)</label>
+                <input type="date" class="form-control" id="biz-date">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 2rem;">
+              <label>Business Description *</label>
+              <textarea class="form-control" rows="3" id="biz-desc" placeholder="Write a short pitch detailing your company's core values..." required oninput="validateStep(1)"></textarea>
+            </div>
+
+            <!-- 2. Owner Details -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              2. Owner Details
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="form-group"><label>Full Name *</label><input type="text" class="form-control" id="own-name" placeholder="As per PAN/Aadhaar" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Father's Name *</label><input type="text" class="form-control" id="own-father" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Date of Birth *</label><input type="date" class="form-control" id="own-dob" required oninput="validateStep(1)"></div>
+              <div class="form-group">
+                <label>Gender *</label>
+                <select class="form-control" id="own-gender" required onchange="validateStep(1)">
+                  <option value="" disabled selected>Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Nationality *</label><input type="text" class="form-control" id="own-nat" value="Indian" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Occupation *</label><input type="text" class="form-control" id="own-occ" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>PAN Number *</label><input type="text" class="form-control" id="own-pan" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Aadhaar Number *</label><input type="text" class="form-control" id="own-aadhaar" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Mobile Number *</label><input type="tel" class="form-control" id="own-phone" required oninput="validateStep(1)"></div>
+              <div class="form-group"><label>Email Address *</label><input type="email" class="form-control" id="own-email" required oninput="validateStep(1)"></div>
+            </div>
+
+            <!-- Footer -->
+            <div style="border-top: 1px solid var(--border-color); margin-top: 2rem; padding-top: 1.5rem; display: flex; justify-content: flex-end;">
+              <button type="button" class="btn btn-primary" id="btn-next-1" onclick="goToStep(2)" disabled style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; font-weight: 600;">Next Step →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Address & Proofs -->
+          <div id="reg-step-2" class="reg-step" style="display: none;">
+            <!-- 3. Address Details -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              3. Address Details
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.25rem;">
+              <div class="form-group"><label>Residential Address *</label><input type="text" class="form-control" id="biz-res-addr" required oninput="validateStep(2)"></div>
+              <div class="form-group"><label>Business Address *</label><input type="text" class="form-control" id="biz-bus-addr" required oninput="validateStep(2)"></div>
+            </div>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+              <div class="form-group"><label>State *</label><input type="text" class="form-control" id="biz-state" required oninput="validateStep(2)"></div>
+              <div class="form-group"><label>District *</label><input type="text" class="form-control" id="biz-district" required oninput="validateStep(2)"></div>
+              <div class="form-group"><label>City *</label><input type="text" class="form-control" id="biz-city" required oninput="validateStep(2)"></div>
+              <div class="form-group"><label>PIN Code *</label><input type="text" class="form-control" id="biz-pin" required oninput="validateStep(2)"></div>
+            </div>
+
+            <!-- 4. Identity Documents -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              4. Identity Documents
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+              <div class="form-group"><label>PAN Card *</label><input type="file" class="form-control" id="doc-pan" accept=".pdf,.jpg,.png" required onchange="validateStep(2)"></div>
+              <div class="form-group"><label>Aadhaar Card *</label><input type="file" class="form-control" id="doc-aadhaar" accept=".pdf,.jpg,.png" required onchange="validateStep(2)"></div>
+              <div class="form-group"><label>Passport (if available)</label><input type="file" class="form-control" id="doc-passport" accept=".pdf,.jpg,.png"></div>
+              <div class="form-group"><label>Voter ID / Driving Licence (if required)</label><input type="file" class="form-control" id="doc-voter" accept=".pdf,.jpg,.png"></div>
+            </div>
+
+            <!-- 5. Business Address Proof -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              5. Business Address Proof
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+              <div class="form-group"><label>Electricity Bill *</label><input type="file" class="form-control" id="proof-electric" accept=".pdf,.jpg,.png" required onchange="validateStep(2)"></div>
+              <div class="form-group"><label>Property Tax Receipt *</label><input type="file" class="form-control" id="proof-tax" accept=".pdf,.jpg,.png" required onchange="validateStep(2)"></div>
+              <div class="form-group"><label>Rental Agreement (if rented)</label><input type="file" class="form-control" id="proof-rent" accept=".pdf,.jpg,.png"></div>
+              <div class="form-group"><label>NOC from property owner (if required)</label><input type="file" class="form-control" id="proof-noc" accept=".pdf,.jpg,.png"></div>
+            </div>
+
+            <!-- 6. Bank Details -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              6. Bank Details <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(may be required later)</span>
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="form-group"><label>Bank Name</label><input type="text" class="form-control" id="bank-name"></div>
+              <div class="form-group"><label>Account Number</label><input type="text" class="form-control" id="bank-acc"></div>
+              <div class="form-group"><label>IFSC Code</label><input type="text" class="form-control" id="bank-ifsc"></div>
+              <div class="form-group"><label>Cancelled Cheque</label><input type="file" class="form-control" id="bank-cheque" accept=".pdf,.jpg,.png"></div>
+            </div>
+
+            <!-- Footer -->
+            <div style="border-top: 1px solid var(--border-color); margin-top: 2rem; padding-top: 1.5rem; display: flex; justify-content: space-between;">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+              <button type="button" class="btn btn-primary" id="btn-next-2" onclick="goToStep(3)" disabled style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; font-weight: 600;">Next Step →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Activities & Declaration -->
+          <div id="reg-step-3" class="reg-step" style="display: none;">
+            
+            <!-- 7. Business Activities -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              7. Business Activities
+            </h4>
+            <div class="form-group" style="margin-bottom: 2rem;">
+              <label style="margin-bottom: 0.75rem;">Select all that apply *</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="activities-container">
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Graphic Design" onchange="validateStep(3)"> Graphic Design
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Branding" onchange="validateStep(3)"> Branding
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Logo Design" onchange="validateStep(3)"> Logo Design
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Website Design & Development" onchange="validateStep(3)"> Website Design & Development
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Mobile Application Development" onchange="validateStep(3)"> Mobile Application Development
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Digital Marketing" onchange="validateStep(3)"> Digital Marketing
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Social Media Management" onchange="validateStep(3)"> Social Media Management
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Photography & Videography" onchange="validateStep(3)"> Photography & Videography
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Video Editing & Animation" onchange="validateStep(3)"> Video Editing & Animation
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Printing & Advertising Services" onchange="validateStep(3)"> Printing & Advertising Services
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="IT Consultancy" onchange="validateStep(3)"> IT Consultancy
+                </label>
+                <label style="padding: 0.4rem 0.8rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+                  <input type="checkbox" class="biz-activity-cb" value="Software Development" onchange="validateStep(3)"> Software Development
+                </label>
+              </div>
+            </div>
+
+            <!-- 8. Tax Information -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              8. Tax Information
+            </h4>
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+              <div class="form-group"><label>GST Registration (if applicable)</label><input type="text" class="form-control" id="tax-gst"></div>
+              <div class="form-group"><label>PAN of the Business *</label><input type="text" class="form-control" id="tax-pan" required oninput="validateStep(3)"></div>
+            </div>
+
+            <!-- 9. Nominee/Partner Details -->
+            <div id="nominee-section" style="display: none; margin-bottom: 2rem;">
+              <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+                9. Nominee/Partner Details
+              </h4>
+              <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                <div class="form-group"><label>Name *</label><input type="text" class="form-control" id="nom-name" oninput="validateStep(3)"></div>
+                <div class="form-group"><label>Relationship / Designation *</label><input type="text" class="form-control" id="nom-rel" oninput="validateStep(3)"></div>
+              </div>
+            </div>
+
+            <!-- 10. Declaration -->
+            <h4 style="margin-bottom: 1.25rem; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 4px; height: 1.2rem; background: var(--primary); border-radius: 2px;"></div>
+              10. Declaration
+            </h4>
+            
+            <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--success); margin-bottom: 1.25rem;">
+              <label style="display: flex; gap: 1rem; align-items: flex-start; cursor: pointer;">
+                <input type="checkbox" id="decl-check" style="margin-top: 0.25rem; transform: scale(1.2);" required onchange="validateStep(3)">
+                <span style="font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">
+                  I hereby declare that all the information provided above is true and correct to the best of my knowledge. I understand that Build2Hire acts solely as a platform to connect freelancers with clients and that I am independently responsible for my business compliance, tax filings, and legal liabilities. I authorize Build2Hire to verify these documents for platform credentialing.
+                </span>
+              </label>
+            </div>
+
+            <div class="grid-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="form-group"><label>Applicant's Name *</label><input type="text" class="form-control" id="decl-name" required oninput="validateStep(3)"></div>
+              <div class="form-group"><label>Signature (Upload) *</label><input type="file" class="form-control" id="decl-sign" accept=".pdf,.jpg,.png" required onchange="validateStep(3)"></div>
+              <div class="form-group"><label>Place *</label><input type="text" class="form-control" id="decl-place" required oninput="validateStep(3)"></div>
+              <div class="form-group"><label>Date *</label><input type="date" class="form-control" id="decl-date" required oninput="validateStep(3)"></div>
+            </div>
+
+            <!-- Footer -->
+            <div style="border-top: 1px solid var(--border-color); margin-top: 2rem; padding-top: 1.5rem; display: flex; justify-content: space-between;">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+              <button type="button" class="btn btn-primary" id="btn-next-3" onclick="submitCompanyRegistration()" disabled style="background: var(--success); border: none; color: white; font-weight: 600;">✅ Submit Application</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleNomineeDetails() {
+      const type = document.getElementById('biz-type').value;
+      const nomSection = document.getElementById('nominee-section');
+      const nomName = document.getElementById('nom-name');
+      const nomRel = document.getElementById('nom-rel');
+      
+      if (type === 'OPC' || type === 'Partnership' || type === 'LLP' || type === 'Private Limited') {
+        nomSection.style.display = 'block';
+        nomName.required = true;
+        nomRel.required = true;
+      } else {
+        nomSection.style.display = 'none';
+        nomName.required = false;
+        nomRel.required = false;
+        nomName.value = '';
+        nomRel.value = '';
+      }
+    }
+    
+    function validateStep(stepNum) {
+      const stepEl = document.getElementById('reg-step-' + stepNum);
+      const nextBtn = document.getElementById('btn-next-' + stepNum);
+      if (!stepEl || !nextBtn) return;
+
+      const requiredInputs = stepEl.querySelectorAll('input[required], select[required], textarea[required]');
+      let isValid = true;
+
+      requiredInputs.forEach(input => {
+        if (!input.value || (input.type === 'checkbox' && !input.checked)) {
+          isValid = false;
+        }
+      });
+
+      // Custom validation for step 3 activities checkbox group
+      if (stepNum === 3) {
+        const checkedActivities = stepEl.querySelectorAll('.biz-activity-cb:checked');
+        if (checkedActivities.length === 0) isValid = false;
+      }
+
+      nextBtn.disabled = !isValid;
+    }
+    
+    function autofillFromProfile() {
+      const auth = window.withAuth ? window.withAuth(['candidate']) : null;
+      let user, candidate;
+
+      if(auth && auth.user) {
+        user = auth.user;
+        candidate = auth.candidate || {};
+      } else {
+        const userStr = localStorage.getItem('build2hire_user');
+        if(userStr) user = JSON.parse(userStr);
+        const dbStr = localStorage.getItem('build2hire_db');
+        if(dbStr && user) {
+          const db = JSON.parse(dbStr);
+          candidate = (db.candidates || []).find(c => c.email === user.email) || {};
+        }
+      }
+
+      if(user) {
+        // Owner Details
+        if(document.getElementById('own-name')) {
+          document.getElementById('own-name').value = user.fullName || candidate.fullName || '';
+          if(document.getElementById('decl-name')) document.getElementById('decl-name').value = user.fullName || candidate.fullName || '';
+        }
+        if(document.getElementById('own-email')) document.getElementById('own-email').value = user.email || candidate.email || '';
+        
+        if(candidate.phone && document.getElementById('own-phone')) document.getElementById('own-phone').value = candidate.phone;
+        if(candidate.dob && document.getElementById('own-dob')) document.getElementById('own-dob').value = candidate.dob;
+        if(candidate.gender && document.getElementById('own-gender')) document.getElementById('own-gender').value = candidate.gender;
+        if(candidate.nationality && document.getElementById('own-nat')) document.getElementById('own-nat').value = candidate.nationality;
+        if(candidate.occupation && document.getElementById('own-occ')) document.getElementById('own-occ').value = candidate.occupation;
+        if(candidate.pan && document.getElementById('own-pan')) document.getElementById('own-pan').value = candidate.pan;
+        if(candidate.aadhaar && document.getElementById('own-aadhaar')) document.getElementById('own-aadhaar').value = candidate.aadhaar;
+        if(candidate.fatherName && document.getElementById('own-father')) document.getElementById('own-father').value = candidate.fatherName;
+        
+        // Business Details
+        if(document.getElementById('biz-name') && !document.getElementById('biz-name').value) {
+          document.getElementById('biz-name').value = (user.fullName || candidate.fullName) ? (user.fullName || candidate.fullName) + ' Services' : '';
+        }
+
+        // Address Details
+        if(candidate.address) {
+          if(document.getElementById('biz-res-addr')) document.getElementById('biz-res-addr').value = candidate.address;
+          if(document.getElementById('biz-bus-addr')) document.getElementById('biz-bus-addr').value = candidate.address;
+        }
+        if(candidate.state && document.getElementById('biz-state')) document.getElementById('biz-state').value = candidate.state;
+        if(candidate.district && document.getElementById('biz-district')) document.getElementById('biz-district').value = candidate.district;
+        if(candidate.city && document.getElementById('biz-city')) document.getElementById('biz-city').value = candidate.city;
+        if(candidate.pin && document.getElementById('biz-pin')) document.getElementById('biz-pin').value = candidate.pin;
+        
+        // Re-validate all steps to enable buttons if sufficient fields are filled
+        validateStep(1);
+        validateStep(2);
+        validateStep(3);
+      }
+    }
+    
+    function goToStep(stepNum) {
+      document.getElementById('reg-step-1').style.display = 'none';
+      document.getElementById('reg-step-2').style.display = 'none';
+      document.getElementById('reg-step-3').style.display = 'none';
+      
+      // Update UI for circles
+      for (let i = 1; i <= 3; i++) {
+        const circle = document.getElementById('step-ind-circle-' + i);
+        const text = document.getElementById('step-ind-text-' + i);
+        if (i === stepNum) {
+          circle.style.borderColor = 'var(--primary)';
+          circle.style.color = 'var(--primary)';
+          text.style.color = 'var(--text-primary)';
+        } else if (i < stepNum) {
+          // Completed
+          circle.style.borderColor = 'var(--success)';
+          circle.style.color = 'var(--success)';
+          circle.style.background = 'rgba(16, 185, 129, 0.1)';
+          circle.innerHTML = '✓';
+          text.style.color = 'var(--text-secondary)';
+        } else {
+          // Future
+          circle.style.borderColor = 'var(--border-color)';
+          circle.style.color = 'var(--text-muted)';
+          circle.style.background = 'var(--bg-secondary)';
+          circle.innerHTML = i;
+          text.style.color = 'var(--text-muted)';
+        }
+      }
+
+      const currentStepEl = document.getElementById('reg-step-' + stepNum);
+      if (currentStepEl) {
+        currentStepEl.style.display = 'block';
+        validateStep(stepNum);
+      }
+    }
+    function openRegModal() {
+      document.getElementById('company-reg-modal').style.display = 'flex';
+      validateStep(1);
+    }
+    function closeRegModal() {
+      document.getElementById('company-reg-modal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
+
+
