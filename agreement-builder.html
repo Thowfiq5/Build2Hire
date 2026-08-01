@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Agreement Builder | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .builder-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .agreement-sheet {
+      background-color: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      border: 1px solid var(--border-color);
+      min-height: 720px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .logo-placeholder-left {
+      width: 140px;
+      height: 60px;
+      border: 2px dashed #94a3b8;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: #64748b;
+      text-align: center;
+      background-color: #f8fafc;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .logo-placeholder-left:hover {
+      border-color: #6366f1;
+      background-color: #f1f5f9;
+    }
+    .logo-placeholder-left img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .logo-fixed-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+    .sheet-content {
+      flex-grow: 1;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+    .sheet-content h4 {
+      margin-top: 1.35rem;
+      margin-bottom: 0.4rem;
+      color: #0f172a;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .sheet-content p {
+      margin-bottom: 0.85rem;
+    }
+    .sheet-footer {
+      border-top: 2px solid #e2e8f0;
+      padding-top: 1.25rem;
+      margin-top: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    .split-summary-box {
+      background-color: var(--primary-light);
+      border: 1px dashed var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    @media print {
+      header, aside, .navbar, .sidebar, #main-nav, #main-sidebar, .builder-layout > div:first-child, button {
+        display: none !important;
+      }
+      body, .dashboard-layout, main, .main-content, .builder-layout {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        width: 100% !important;
+      }
+      .agreement-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+    <script>
+        (() => { const saved = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', saved); })();
+    </script>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Agreement & Payment Builder</h2>
+          <p style="color: var(--text-secondary);">Create legally binding service contracts, upload company logo, configure autopay card links, and split installments.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- SPLIT VIEW LAYOUT -->
+      <div class="builder-layout">
+        
+        <!-- LEFT COLUMN: AGREEMENT FORM & PARAMETERS -->
+        <div class="card" style="padding: 2rem;">
+          <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin-bottom: 1.5rem; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            📝 Agreement Parameters
+          </h3>
+
+          <form id="agreement-form" onsubmit="handleAgreementLaunch(event)">
+            
+            <div class="form-group">
+              <label class="form-label" for="select-candidate">Select Freelancer / Candidate</label>
+              <select id="select-candidate" class="form-control" style="background-color: var(--bg-tertiary);" onchange="updateAgreementText()">
+                <!-- Populated dynamically -->
+              </select>
+              <input type="text" id="input-custom-candidate" class="form-control" style="display: none; background-color: var(--bg-tertiary);" placeholder="Type Contractor Full Name" oninput="updateAgreementText()">
+              <span id="toggle-custom-candidate" onclick="toggleCustomCandidateField()" style="font-size: 0.75rem; color: var(--primary); cursor: pointer; display: block; margin-top: 0.25rem; font-weight: 600; text-decoration: underline;">✍️ Or type custom candidate name</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="project-title">Project Title</label>
+              <input type="text" id="project-title" required class="form-control" placeholder="e.g. Interactive React Dashboard" oninput="updateAgreementText()">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="total-budget">Total Project Budget ($)</label>
+                <input type="number" id="total-budget" required class="form-control" value="20000" min="100" oninput="updateAgreementText()">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="duration-months">Duration (Months)</label>
+                <input type="number" id="duration-months" required class="form-control" value="5" min="1" max="12" oninput="updateAgreementText()">
+              </div>
+            </div>
+
+            <!-- PAYMENT SPLIT SELECTION -->
+            <div class="form-group">
+              <label class="form-label" for="payment-split">Payment Split Model</label>
+              <select id="payment-split" class="form-control" style="background-color: var(--bg-tertiary);" onchange="updateAgreementText()">
+                <option value="monthly">Monthly Autopay Installments (Split equally per month)</option>
+                <option value="2-splits">2 Equal Installments (50% upfront, 50% on completion)</option>
+                <option value="flat">Single Flat Release (100% payout upon full contract end)</option>
+              </select>
+              <div id="split-summary" class="split-summary-box">
+                <!-- Summary of payment breaks -->
+              </div>
+            </div>
+
+            <!-- bank account card link -->
+            <div class="card" style="background-color: rgba(0,0,0,0.2); padding: 1.25rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <input type="checkbox" id="enable-autopay" checked onchange="toggleAutopayFields()" style="width: 1.1rem; height: 1.1rem; accent-color: var(--primary);">
+                <label for="enable-autopay" style="font-weight: 700; font-size: 0.85rem; cursor: pointer;">Enable Bank Autopay (Auto-debits on 1st-5th of each month)</label>
+              </div>
+
+              <div id="autopay-card-details" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 0.75rem;">
+                  <input type="text" id="bank-card-no" class="form-control" style="font-size: 0.8rem;" placeholder="Card/Account Number (e.g. **** 9843)" value="4532 9821 0034 9843">
+                  <input type="text" id="bank-name" class="form-control" style="font-size: 0.8rem;" placeholder="Bank Name (e.g. Chase)" value="Chase Savings">
+                </div>
+                <span style="font-size: 0.72rem; color: var(--text-secondary); display: block;">🔒 Card credentials are stored securely via Build2Hire masked escrow router. Autopay triggers on due dates.</span>
+              </div>
+            </div>
+
+            <!-- custom content editor -->
+            <div class="form-group">
+              <label class="form-label" for="custom-clauses">Additional Custom Terms (Optional)</label>
+              <textarea id="custom-clauses" class="form-control" rows="3" placeholder="Add specific delivery criteria, penalties, or custom clauses..." oninput="updateAgreementText()"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+              ✍️ Sign & Launch Contract
+            </button>
+
+          </form>
+        </div>
+
+        <!-- RIGHT COLUMN: AGREEMENT PREVIEW SHEET -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Live Printable Agreement Sheet Preview</span>
+            <button onclick="window.print()" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+              🖨️ Print / Download PDF
+            </button>
+          </div>
+          
+          <div class="agreement-sheet" id="agreement-sheet-preview">
+            
+            <!-- HEADER -->
+            <div class="sheet-header">
+              <!-- CLIENT LOGO ATTACHMENT (LEFT) -->
+              <div class="logo-placeholder-left" onclick="triggerLogoUpload()">
+                <input type="file" id="logo-uploader-input" style="display: none;" accept="image/*" onchange="loadLogoImage(event)">
+                <div id="logo-placeholder-text">📁 Attach Custom Logo<br><span style="font-size: 0.6rem;">(Drag & Drop)</span></div>
+                <img id="logo-preview-img" style="display: none;" src="" alt="Client Logo">
+              </div>
+
+              <!-- BUILD2HIRE LOGO (RIGHT) -->
+              <div class="logo-fixed-right">
+                <span style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: #6366f1;">Build<span style="color: #0f172a;">2</span>Hire</span>
+                <span style="font-size: 0.6rem; color: #10b981; font-weight: 800; letter-spacing: 0.05em; border: 1px solid #10b981; padding: 0.15rem 0.35rem; border-radius: 4px; margin-top: 0.25rem;">🔒 ESCROW SECURED</span>
+              </div>
+            </div>
+
+            <!-- SHEET CONTENT -->
+            <div class="sheet-content">
+              <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1.25rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; color: #0f172a;">Independent Contractor Agreement</h3>
+                <span style="font-size: 0.78rem; color: #64748b;">Contract Ref: <strong id="sheet-contract-ref" style="color: #4338ca;">B2H-942817-SECURE</strong></span>
+              </div>
+
+              <p style="color: #475569; font-size: 0.88rem;">This service agreement is entered into dynamically via the Build2Hire Escrow platform between the following registered parties:</p>
+              
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                <div>
+                  <strong style="color: #475569; font-size: 0.72rem; text-transform: uppercase; display: block; margin-bottom: 0.25rem; letter-spacing: 0.05em;">CLIENT (Employer)</strong>
+                  <div id="sheet-client-name" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">InnovateTech (Client)</div>
+                </div>
+                <div>
+                  <strong style="color: #475569; font-size: 0.72rem; text-transform: uppercase; display: block; margin-bottom: 0.25rem; letter-spacing: 0.05em;">CONTRACTOR (Freelancer)</strong>
+                  <div id="sheet-candidate-name" style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">Test 1 (Contractor)</div>
+                </div>
+              </div>
+
+              <h4>1. Project Title & Scope</h4>
+              <p>The contractor agrees to build and deploy the technical project: <strong id="sheet-project-title" style="color: #4338ca;">Full Stack Platform Development & Escrow Deployment</strong>. Deliverables must match the platform compliance standards.</p>
+
+              <h4>2. Budget & Installment Split</h4>
+              <p>The total budget is set to <strong id="sheet-budget-val" style="color: #059669; font-size: 1rem;">$20,000</strong>. The payment model is split under the following schedule:</p>
+              <div id="sheet-split-details" style="font-weight: 600; padding: 0.75rem 1rem; margin-bottom: 1rem; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: #334155;">
+                <!-- Schedule breakdown -->
+              </div>
+
+              <h4>3. Platform Escrow & Autopay Terms</h4>
+              <p>Build2Hire Escrow compliance requires both parties to adhere to the terms. Payment is released automatically from the linked account if updates are logged correctly. If client does not clear manual releases, AutoPay will run the auto-debit process between the 1st and 5th of each milestone month.</p>
+
+              <h4>4. Progress Updates</h4>
+              <p>The contractor must submit work progress reports weekly. Failure to submit updates may pause escrow releases and trigger dispute mediation.</p>
+
+              <div id="sheet-custom-clauses-wrapper" style="display: none;">
+                <h4>5. Additional Custom Clauses</h4>
+                <p id="sheet-custom-clauses-content" style="white-space: pre-wrap; font-style: italic; font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0;"></p>
+              </div>
+
+              <!-- SIGNATURES BLOCK -->
+              <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed #cbd5e1; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.8rem; color: #334155;">
+                <div>
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;">AUTHORIZED CLIENT SIGNATURE</div>
+                  <div style="border-bottom: 2px solid #94a3b8; height: 36px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: #4338ca; display: flex; align-items: flex-end; padding-bottom: 0.25rem;" id="sheet-client-sig">
+                    Sarah Connor (Hiring Manager)
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 0.35rem;" id="sheet-client-company-sub">InnovateTech Escrow Account</div>
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;">INDEPENDENT CONTRACTOR SIGNATURE</div>
+                  <div style="border-bottom: 2px solid #94a3b8; height: 36px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: #059669; display: flex; align-items: flex-end; padding-bottom: 0.25rem;" id="sheet-candidate-sig">
+                    Test 1
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 0.35rem;">Verified Platform Contractor</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="sheet-footer" style="margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b;">
+              <span>Build2Hire Escrow Network &bull; SECURE CLOUD TRANSACTION</span>
+              <span>Generated on <strong id="sheet-date" style="color: #334155;">Jul 25, 2026</strong></span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      alert("JavaScript Error: " + message + " at line " + lineno);
+      return false;
+    };
+
+    var auth = withAuth(['recruiter', 'admin']);
+    var dbState = null;
+    var selectedBase64Logo = "";
+    var isCustomCandidate = false;
+    var currentContractRef = "";
+
+    if (auth) {
+      dbState = dbGet();
+      initializeBuilder();
+    }
+
+    function initializeBuilder() {
+      dbState = dbGet();
+      const user = getUser();
+      
+      // Generate dynamic contract ref and date if not already generated
+      if (!currentContractRef) {
+        currentContractRef = "B2H-" + Math.floor(100000 + Math.random() * 900000) + "-SECURE";
+      }
+      if (document.getElementById('sheet-contract-ref')) {
+        document.getElementById('sheet-contract-ref').textContent = currentContractRef;
+      }
+      if (document.getElementById('sheet-date')) {
+        document.getElementById('sheet-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      // Client details
+      const rawFullName = user ? (user.fullName || "Sarah Connor") : "Sarah Connor";
+      const cleanFullName = rawFullName.replace(/\s*\(.*?\)\s*/g, '').trim() || "Sarah Connor";
+      const companyNameStr = user ? (user.companyName || "InnovateTech") : "InnovateTech";
+      
+      if (document.getElementById('sheet-client-name')) {
+        document.getElementById('sheet-client-name').textContent = `${companyNameStr} (${cleanFullName})`;
+      }
+      if (document.getElementById('sheet-client-sig')) {
+        document.getElementById('sheet-client-sig').textContent = cleanFullName;
+      }
+      if (document.getElementById('sheet-client-company-sub')) {
+        document.getElementById('sheet-client-company-sub').textContent = `${companyNameStr} Escrow Account`;
+      }
+
+      // Default project title if empty
+      const titleInput = document.getElementById('project-title');
+      if (titleInput && !titleInput.value) {
+        titleInput.value = "Full Stack Platform Development & Escrow Deployment";
+      }
+
+      // Populate candidates
+      const select = document.getElementById('select-candidate');
+      const candidates = dbState.users ? dbState.users.filter(u => u.role === 'candidate') : [];
+
+      if (candidates.length === 0) {
+        select.innerHTML = `<option value="">No registered candidates available</option>`;
+      } else {
+        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName || c.email} (Talent Score: ${c.talent_score || 80})</option>`).join('');
+      }
+
+      updateAgreementText();
+    }
+
+    function triggerLogoUpload() {
+      document.getElementById('logo-uploader-input').click();
+    }
+
+    function loadLogoImage(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          selectedBase64Logo = evt.target.result;
+          document.getElementById('logo-preview-img').src = selectedBase64Logo;
+          document.getElementById('logo-preview-img').style.display = 'block';
+          document.getElementById('logo-placeholder-text').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function toggleAutopayFields() {
+      const checked = document.getElementById('enable-autopay').checked;
+      document.getElementById('autopay-card-details').style.opacity = checked ? '1' : '0.3';
+      document.getElementById('autopay-card-details').style.pointerEvents = checked ? 'auto' : 'none';
+    }
+
+    function toggleCustomCandidateField() {
+      isCustomCandidate = !isCustomCandidate;
+      const select = document.getElementById('select-candidate');
+      const input = document.getElementById('input-custom-candidate');
+      const toggleLink = document.getElementById('toggle-custom-candidate');
+
+      if (isCustomCandidate) {
+        select.style.display = 'none';
+        input.style.display = 'block';
+        input.value = "";
+        input.required = true;
+        select.required = false;
+        toggleLink.textContent = "📋 Or select from registered list";
+      } else {
+        select.style.display = 'block';
+        input.style.display = 'none';
+        input.required = false;
+        select.required = true;
+        toggleLink.textContent = "✍️ Or type custom candidate name";
+      }
+      updateAgreementText();
+    }
+    window.toggleCustomCandidateField = toggleCustomCandidateField;
+
+    function updateAgreementText() {
+      let candidateName = "Test 1";
+      if (isCustomCandidate) {
+        candidateName = document.getElementById('input-custom-candidate').value.trim() || "Test 1";
+      } else {
+        const select = document.getElementById('select-candidate');
+        if (select && select.value) {
+          const cand = (dbState.users || []).find(u => String(u.id) === String(select.value));
+          candidateName = cand ? (cand.fullName || cand.email) : "Test 1";
+        }
+      }
+      
+      if (document.getElementById('sheet-candidate-name')) {
+        document.getElementById('sheet-candidate-name').textContent = `${candidateName} (Contractor)`;
+      }
+      if (document.getElementById('sheet-candidate-sig')) {
+        document.getElementById('sheet-candidate-sig').textContent = candidateName;
+      }
+
+      const titleInput = document.getElementById('project-title');
+      const title = (titleInput ? titleInput.value.trim() : "") || "Full Stack Platform Development";
+      if (document.getElementById('sheet-project-title')) {
+        document.getElementById('sheet-project-title').textContent = title;
+      }
+
+      const budgetInput = document.getElementById('total-budget');
+      const budget = (budgetInput ? parseFloat(budgetInput.value) : 20000) || 20000;
+      if (document.getElementById('sheet-budget-val')) {
+        document.getElementById('sheet-budget-val').textContent = `$${budget.toLocaleString()}`;
+      }
+
+      const monthsInput = document.getElementById('duration-months');
+      const months = (monthsInput ? parseInt(monthsInput.value) : 5) || 5;
+      const splitSelect = document.getElementById('payment-split');
+      const splitModel = splitSelect ? splitSelect.value : 'monthly';
+
+      let summaryText = "";
+      let sheetScheduleHTML = "";
+
+      if (splitModel === 'monthly') {
+        const amountPerMonth = Math.round(budget / months);
+        summaryText = `Divided into ${months} monthly autopay installments of $${amountPerMonth.toLocaleString()} per month.`;
+        sheetScheduleHTML = `Monthly payment model: $${amountPerMonth.toLocaleString()} paid automatically between the 1st and 5th of each month for ${months} months.`;
+      } else if (splitModel === '2-splits') {
+        const splitAmt = Math.round(budget / 2);
+        summaryText = `Divided into 2 equal splits of $${splitAmt.toLocaleString()} (50% upfront, 50% on final clearance).`;
+        sheetScheduleHTML = `Milestone splits: 50% ($${splitAmt.toLocaleString()}) upfront deposit. 50% ($${splitAmt.toLocaleString()}) upon final project handover and review.`;
+      } else {
+        summaryText = `Single flat payment of $${budget.toLocaleString()} released upon full completion at month ${months}.`;
+        sheetScheduleHTML = `Flat release model: 100% payment release of $${budget.toLocaleString()} upon completion of the contract.`;
+      }
+
+      if (document.getElementById('split-summary')) {
+        document.getElementById('split-summary').textContent = summaryText;
+      }
+      if (document.getElementById('sheet-split-details')) {
+        document.getElementById('sheet-split-details').innerHTML = sheetScheduleHTML;
+      }
+
+      const customInput = document.getElementById('custom-clauses');
+      const custom = customInput ? customInput.value.trim() : "";
+      const customWrapper = document.getElementById('sheet-custom-clauses-wrapper');
+      const customContent = document.getElementById('sheet-custom-clauses-content');
+
+      if (customWrapper && customContent) {
+        if (custom) {
+          customWrapper.style.display = 'block';
+          customContent.textContent = custom;
+        } else {
+          customWrapper.style.display = 'none';
+        }
+      }
+    }
+
+    function handleAgreementLaunch(e) {
+      e.preventDefault();
+      const title = document.getElementById('project-title').value.trim();
+      const budget = parseFloat(document.getElementById('total-budget').value) || 1000;
+      const months = parseInt(document.getElementById('duration-months').value) || 1;
+      const splitModel = document.getElementById('payment-split').value;
+      const customClauses = document.getElementById('custom-clauses').value.trim();
+      const enableAutopay = document.getElementById('enable-autopay').checked;
+
+      let finalCandidateId = 1001; // default fallback candidate
+      let candidateName = "Candidate User";
+
+      if (isCustomCandidate) {
+        candidateName = document.getElementById('input-custom-candidate').value.trim();
+        if (!candidateName) {
+          alert("Please type contractor name.");
+          return;
+        }
+        // Try to find candidate user by name in users list
+        const matched = dbState.users.find(u => u.role === 'candidate' && u.fullName.toLowerCase() === candidateName.toLowerCase());
+        if (matched) {
+          finalCandidateId = matched.id;
+        } else {
+          // Update candidate 1001's name dynamically so they can log in and view it
+          const defaultCand = dbState.users.find(u => u.id === 1001);
+          if (defaultCand) {
+            defaultCand.fullName = candidateName;
+          }
+        }
+      } else {
+        const candidateId = document.getElementById('select-candidate').value;
+        if (!candidateId) {
+          alert("Please select a candidate.");
+          return;
+        }
+        finalCandidateId = parseInt(candidateId);
+        const cand = dbState.users.find(u => String(u.id) === String(finalCandidateId));
+        candidateName = cand ? cand.fullName : "Candidate User";
+      }
+
+      const contractId = "cnt_" + Date.now();
+      
+      // Calculate milestones based on split type
+      let milestones = [];
+      if (splitModel === 'monthly') {
+        const monthlyAmt = Math.round(budget / months);
+        for (let i = 1; i <= months; i++) {
+          milestones.push({
+            id: i,
+            title: `Part ${i}: Month ${i} Deliverables`,
+            description: `Review and completion logs for project phase ${i}`,
+            weight: Math.round(100 / months),
+            status: i === 1 ? "in-progress" : "pending",
+            deliverable: ""
+          });
+        }
+      } else if (splitModel === '2-splits') {
+        milestones = [
+          { id: 1, title: "Part 1: Initial Setup Deliverables (50%)", description: "Project codebase setup and mockups approval", weight: 50, status: "in-progress", deliverable: "" },
+          { id: 2, title: "Part 2: Final Verification & Handover (50%)", description: "Complete integration and code testing specs", weight: 50, status: "pending", deliverable: "" }
+        ];
+      } else {
+        milestones = [
+          { id: 1, title: "Full Scope Payout (100%)", description: "Deliver entire project deliverables", weight: 100, status: "in-progress", deliverable: "" }
+        ];
+      }
+
+       const newContract = {
+        id: contractId,
+        candidateId: parseInt(finalCandidateId),
+        jobId: Date.now(), // Mock ID
+        title: title,
+        company: auth.user.companyName || "InnovateTech",
+        salary: splitModel === 'monthly' ? `$${Math.round(budget/months).toLocaleString()}/Mo` : `$${budget.toLocaleString()} Flat`,
+        amount: budget,
+        durationMonths: months,
+        paymentSplitType: splitModel,
+        status: "active",
+        dateStarted: new Date().toISOString().split('T')[0],
+        dateCompleted: null,
+        milestones: milestones,
+        autoPayLinked: enableAutopay,
+        customContent: customClauses,
+        clientLogo: selectedBase64Logo,
+        weeklyProgress: [],
+        invoices: []
+      };
+
+      if (enableAutopay) {
+        const cardNo = document.getElementById('bank-card-no').value;
+        const bankName = document.getElementById('bank-name').value;
+        newContract.bankDetails = {
+          bankName: bankName,
+          cardNumber: "🔒 Card ending in *" + cardNo.substring(cardNo.length - 4),
+          linkedAt: Date.now()
+        };
+      }
+
+      if (!dbState.contracts) dbState.contracts = [];
+      dbState.contracts.push(newContract);
+      dbSave(dbState);
+
+      // Open a conversation with this candidate
+      const conv = startConversation(
+        auth.user.id, 
+        auth.user.fullName, 
+        auth.user.companyName || "InnovateTech", 
+        auth.user.phone || "+1 (555) 012-9843",
+        parseInt(finalCandidateId), 
+        candidateName
+      );
+
+      if (conv) {
+        sendMessage(conv.id, 1000, `✍️ **New Agreement Signed & Launched!**\nProject: **${title}**\nBudget: $${budget.toLocaleString()}\nDuration: ${months} Months\nSplit Model: ${splitModel === 'monthly' ? 'Monthly Autopay' : splitModel === '2-splits' ? '2 equal splits' : 'Flat release'}`);
+      }
+
+      showAlert('alert-container', 'Service contract initiated successfully! Relocating to dashboard...', 'success');
+      
+      // Auto Deduct first installment if Autopay is linked
+      if (enableAutopay) {
+        setTimeout(() => {
+          triggerMonthlyAutoDeduction(contractId, 1);
+        }, 1000);
+      }
+
+      setTimeout(() => {
+        window.location.href = 'recruiter-dashboard.html';
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
