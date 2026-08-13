@@ -2064,8 +2064,8 @@
 
   <script src="shared.js"></script>
   <script>
-    const auth = withAuth(['admin']);
-    if (auth) {
+    window.auth = window.auth || withAuth(['admin']);
+    if (window.auth) {
       let dbState = dbGet();
 
       // CANDIDATE CMS STATE
