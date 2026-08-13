@@ -160,12 +160,12 @@
           <form id="agreement-form" onsubmit="handleAgreementLaunch(event)">
             
             <div class="form-group">
-              <label class="form-label" for="select-candidate">Select Freelancer / Candidate</label>
+              <label class="form-label" for="select-candidate">Select Recruiter / Client</label>
               <select id="select-candidate" class="form-control" style="background-color: var(--bg-tertiary);" onchange="updateAgreementText()">
                 <!-- Populated dynamically -->
               </select>
               <input type="text" id="input-custom-candidate" class="form-control" style="display: none; background-color: var(--bg-tertiary);" placeholder="Type Contractor Full Name" oninput="updateAgreementText()">
-              <span id="toggle-custom-candidate" onclick="toggleCustomCandidateField()" style="font-size: 0.75rem; color: var(--primary); cursor: pointer; display: block; margin-top: 0.25rem; font-weight: 600; text-decoration: underline;">✍️ Or type custom candidate name</span>
+              <span id="toggle-custom-candidate" onclick="toggleCustomCandidateField()" style="font-size: 0.75rem; color: var(--primary); cursor: pointer; display: block; margin-top: 0.25rem; font-weight: 600; text-decoration: underline;">✍️ Or type custom client name</span>
             </div>
 
             <div class="form-group">
@@ -332,7 +332,7 @@
       return false;
     };
 
-    var auth = withAuth(['recruiter', 'admin']);
+    var auth = withAuth(['candidate', 'admin']);
     var dbState = null;
     var selectedBase64Logo = "";
     var isCustomCandidate = false;
@@ -358,19 +358,15 @@
         document.getElementById('sheet-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       }
 
-      // Client details
+      // Contractor details
       const rawFullName = user ? (user.fullName || "Sarah Connor") : "Sarah Connor";
       const cleanFullName = rawFullName.replace(/\s*\(.*?\)\s*/g, '').trim() || "Sarah Connor";
-      const companyNameStr = user ? (user.companyName || "InnovateTech") : "InnovateTech";
       
-      if (document.getElementById('sheet-client-name')) {
-        document.getElementById('sheet-client-name').textContent = `${companyNameStr} (${cleanFullName})`;
+      if (document.getElementById('sheet-candidate-name')) {
+        document.getElementById('sheet-candidate-name').textContent = `${cleanFullName} (Contractor)`;
       }
-      if (document.getElementById('sheet-client-sig')) {
-        document.getElementById('sheet-client-sig').textContent = cleanFullName;
-      }
-      if (document.getElementById('sheet-client-company-sub')) {
-        document.getElementById('sheet-client-company-sub').textContent = `${companyNameStr} Escrow Account`;
+      if (document.getElementById('sheet-candidate-sig')) {
+        document.getElementById('sheet-candidate-sig').textContent = cleanFullName;
       }
 
       // Default project title if empty
@@ -381,12 +377,12 @@
 
       // Populate candidates
       const select = document.getElementById('select-candidate');
-      const candidates = dbState.users ? dbState.users.filter(u => u.role === 'candidate') : [];
+      const candidates = dbState.users ? dbState.users.filter(u => u.role === 'recruiter') : [];
 
       if (candidates.length === 0) {
         select.innerHTML = `<option value="">No registered candidates available</option>`;
       } else {
-        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName || c.email} (Talent Score: ${c.talent_score || 80})</option>`).join('');
+        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName || c.email} (${c.companyName || 'Company'})</option>`).join('');
       }
 
       updateAgreementText();
@@ -434,29 +430,37 @@
         input.style.display = 'none';
         input.required = false;
         select.required = true;
-        toggleLink.textContent = "✍️ Or type custom candidate name";
+        toggleLink.textContent = "✍️ Or type custom client name";
       }
       updateAgreementText();
     }
     window.toggleCustomCandidateField = toggleCustomCandidateField;
 
     function updateAgreementText() {
-      let candidateName = "Test 1";
+      const user = getUser();
+      
+      let clientName = "Test 1";
       if (isCustomCandidate) {
-        candidateName = document.getElementById('input-custom-candidate').value.trim() || "Test 1";
+        clientName = document.getElementById('input-custom-candidate').value.trim() || "Test 1";
       } else {
         const select = document.getElementById('select-candidate');
         if (select && select.value) {
           const cand = (dbState.users || []).find(u => String(u.id) === String(select.value));
-          candidateName = cand ? (cand.fullName || cand.email) : "Test 1";
+          clientName = cand ? (cand.fullName || cand.email) : "Test 1";
         }
       }
       
-      if (document.getElementById('sheet-candidate-name')) {
-        document.getElementById('sheet-candidate-name').textContent = `${candidateName} (Contractor)`;
+      if (document.getElementById('sheet-client-name')) {
+        document.getElementById('sheet-client-name').textContent = `${clientName} (Client)`;
       }
-      if (document.getElementById('sheet-candidate-sig')) {
-        document.getElementById('sheet-candidate-sig').textContent = candidateName;
+      if (document.getElementById('sheet-client-sig')) {
+        document.getElementById('sheet-client-sig').textContent = clientName;
+      }
+      if (document.getElementById('sheet-candidate-name') && user) {
+        document.getElementById('sheet-candidate-name').textContent = `${user.fullName} (Contractor)`;
+      }
+      if (document.getElementById('sheet-candidate-sig') && user) {
+        document.getElementById('sheet-candidate-sig').textContent = user.fullName;
       }
 
       const titleInput = document.getElementById('project-title');
@@ -533,7 +537,7 @@
           return;
         }
         // Try to find candidate user by name in users list
-        const matched = dbState.users.find(u => u.role === 'candidate' && u.fullName.toLowerCase() === candidateName.toLowerCase());
+        const matched = dbState.users.find(u => u.role === 'recruiter' && u.fullName.toLowerCase() === candidateName.toLowerCase());
         if (matched) {
           finalCandidateId = matched.id;
         } else {
@@ -581,12 +585,16 @@
         ];
       }
 
+       const selectedRecruiter = dbState.users.find(u => String(u.id) === String(finalCandidateId));
+       const clientCompany = selectedRecruiter ? (selectedRecruiter.companyName || "InnovateTech") : "InnovateTech";
+       const clientPhone = selectedRecruiter ? (selectedRecruiter.phone || "+1 (555) 012-9843") : "+1 (555) 012-9843";
+
        const newContract = {
         id: contractId,
-        candidateId: parseInt(finalCandidateId),
+        candidateId: getUser().id,
         jobId: Date.now(), // Mock ID
         title: title,
-        company: auth.user.companyName || "InnovateTech",
+        company: clientCompany,
         salary: splitModel === 'monthly' ? `$${Math.round(budget/months).toLocaleString()}/Mo` : `$${budget.toLocaleString()} Flat`,
         amount: budget,
         durationMonths: months,
@@ -618,12 +626,12 @@
 
       // Open a conversation with this candidate
       const conv = startConversation(
-        auth.user.id, 
-        auth.user.fullName, 
-        auth.user.companyName || "InnovateTech", 
-        auth.user.phone || "+1 (555) 012-9843",
         parseInt(finalCandidateId), 
-        candidateName
+        candidateName,
+        clientCompany, 
+        clientPhone,
+        getUser().id, 
+        getUser().fullName
       );
 
       if (conv) {
