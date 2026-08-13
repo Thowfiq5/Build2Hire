@@ -108,9 +108,9 @@
 
   <script src="shared.js"></script>
   <script>
-    var auth = withAuth(['candidate', 'recruiter', 'admin']);
-    if (auth) {
-      const { user, db, candidate } = auth;
+    window.auth = window.auth || withAuth(['candidate', 'recruiter', 'admin']);
+    if (window.auth) {
+      const { user, db, candidate } = window.auth;
 
       window.loadLeaderboard = async function() {
         try {
@@ -404,7 +404,7 @@
     };
 
     window.initializeLeaderboardUI = function() {
-      if (!auth) return;
+      if (!window.auth) return;
       if (typeof window.loadLeaderboard === 'function') window.loadLeaderboard();
     };
 
