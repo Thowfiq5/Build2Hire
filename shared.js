@@ -2210,11 +2210,6 @@ function renderSidebar(activePage) {
         </a>
       </li>
       <li>
-        <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
-          🤝 <span>Agreement Builder</span>
-        </a>
-      </li>
-      <li>
         <a href="chat.html" class="sidebar-link ${activePage === 'chat.html' ? 'active' : ''}">
           💬 <span>Inbox & Meetings</span>
         </a>
@@ -2282,6 +2277,11 @@ function renderSidebar(activePage) {
           <li>
             <a href="freelance.html" class="sidebar-link ${activePage === 'freelance.html' ? 'active' : ''}">
               🚀 <span>Freelance Gigs</span>
+            </a>
+          </li>
+          <li>
+            <a href="agreement-builder.html" class="sidebar-link ${activePage === 'agreement-builder.html' ? 'active' : ''}">
+              🤝 <span>Agreement Builder</span>
             </a>
           </li>
         </ul>
