@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div id="alert-container"></div>
+
+      <!-- PENDING STATE -->
+      <div id="pending-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Registration Under Review</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          Your registration is under review, please wait 24 hours. Our administrative team is reviewing your details to ensure the highest quality network.
+        </p>
+      </div>
+
+      <!-- REJECTED STATE -->
+      <div id="rejected-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">❌</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Registration Rejected</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          Unfortunately, your registration to join the Build2Hire network has been rejected. If you believe this is an error, please contact support.
+        </p>
+      </div>
+
+      <!-- APPROVED DASHBOARD SHELL -->
+      <div id="approved-state" style="display: none;">
+        <div class="card" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.6rem; font-family: var(--font-display); margin-bottom: 0.5rem;">
+              Welcome, <span id="client-name">Client</span>!
+            </h2>
+            <p style="color: var(--text-secondary);">
+              Manage your network projects, job postings, and hired builders here.
+            </p>
+          </div>
+          <button class="btn btn-primary" onclick="openPostJobModal()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            ➕ Post New Job
+          </button>
+        </div>
+        
+        <!-- MY POSTED JOBS -->
+        <div class="card" style="margin-bottom: 2rem;">
+          <h3 style="font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 1.25rem;">
+            💼 My Posted Jobs
+          </h3>
+          <div id="my-jobs-list" style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Dynamically rendered jobs -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- POST JOB MODAL -->
+  <div id="post-job-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="modal-box" style="max-width: 550px; width: 90%; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--card-shadow);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.4rem; font-family: var(--font-display); margin: 0;">➕ Post a New Job</h3>
+        <button onclick="closePostJobModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">✕</button>
+      </div>
+      <form id="post-job-form">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Job Title</label>
+          <input type="text" id="job-title" class="form-control" required placeholder="e.g. Senior Full Stack Developer" style="width: 100%;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Description</label>
+          <textarea id="job-description" class="form-control" rows="3" required placeholder="Describe the job responsibilities and requirements..." style="width: 100%; font-family: inherit;"></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Budget ($)</label>
+            <input type="number" id="job-budget" class="form-control" required placeholder="e.g. 5000" style="width: 100%;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Duration</label>
+            <input type="text" id="job-duration" class="form-control" required placeholder="e.g. 3 Months" style="width: 100%;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Skills (comma separated)</label>
+            <input type="text" id="job-skills" class="form-control" required placeholder="React, Node.js, TypeScript" style="width: 100%;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Experience Level</label>
+            <select id="job-experience" class="form-control" required style="width: 100%;">
+              <option value="Entry">Entry Level</option>
+              <option value="Intermediate" selected>Intermediate</option>
+              <option value="Expert">Expert</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="closePostJobModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Job 🚀</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CANDIDATE PROFILE MODAL -->
+  <div id="candidate-profile-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="modal-box" style="max-width: 650px; width: 90%; max-height: 85vh; overflow-y: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--card-shadow);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div id="cand-modal-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: bold; flex-shrink: 0;">
+            👤
+          </div>
+          <div>
+            <h3 id="cand-modal-name" style="font-size: 1.35rem; font-family: var(--font-display); margin: 0; color: var(--text-primary);">Candidate Name</h3>
+            <p id="cand-modal-role" style="color: var(--primary); font-weight: 600; font-size: 0.88rem; margin: 0.15rem 0 0 0;">Frontend Developer</p>
+          </div>
+        </div>
+        <button onclick="closeCandidateProfileModal()" style="background: none; border: none; font-size: 1.4rem; color: var(--text-muted); cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Quick Info Bar -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.25rem; font-size: 0.85rem;">
+        <div>📧 <strong>Email:</strong> <span id="cand-modal-email" style="color: var(--text-secondary);">N/A</span></div>
+        <div>📞 <strong>Phone:</strong> <span id="cand-modal-phone" style="color: var(--text-secondary);">Not provided</span></div>
+        <div>🏆 <strong>Talent Score:</strong> <span id="cand-modal-score" style="color: var(--warning); font-weight: bold;">0 pts</span></div>
+        <div>⭐ <strong>Level & XP:</strong> <span id="cand-modal-level-xp" style="color: var(--primary); font-weight: bold;">Lvl 1 (0 XP)</span></div>
+      </div>
+
+      <!-- Bio Section -->
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.92rem; font-family: var(--font-display); margin-bottom: 0.4rem; color: var(--text-primary);">📝 Professional Summary / Bio</h4>
+        <p id="cand-modal-bio" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; background: var(--bg-primary); padding: 0.75rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin: 0;">No bio provided.</p>
+      </div>
+
+      <!-- Skills Section -->
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.92rem; font-family: var(--font-display); margin-bottom: 0.4rem; color: var(--text-primary);">🎯 Verified Skills</h4>
+        <div id="cand-modal-skills" style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+          <!-- Badges dynamically rendered -->
+        </div>
+      </div>
+
+      <!-- Portfolio / Showcase Projects -->
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.92rem; font-family: var(--font-display); margin-bottom: 0.4rem; color: var(--text-primary);">💻 Showcase Projects</h4>
+        <div id="cand-modal-projects" style="display: flex; flex-direction: column; gap: 0.65rem;">
+          <!-- Projects dynamically rendered -->
+        </div>
+      </div>
+
+      <!-- External Links & Portfolio Button -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.1rem; flex-wrap: wrap; gap: 0.85rem;">
+        <div id="cand-modal-links" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <!-- External link badges -->
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <a id="cand-modal-portfolio-link" href="#" target="_blank" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.4rem 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+            🔗 Full Portfolio
+          </a>
+          <button id="cand-modal-message-btn" class="btn btn-primary" style="font-size: 0.78rem; padding: 0.4rem 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+            💬 Message Candidate
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const auth = window.withAuth(['client']);
+    if (auth) {
+      const user = auth.user;
+
+      if (user.status === 'pending') {
+        document.getElementById('pending-state').style.display = 'block';
+      } else if (user.status === 'rejected') {
+        document.getElementById('rejected-state').style.display = 'block';
+      } else {
+        document.getElementById('approved-state').style.display = 'block';
+        document.getElementById('client-name').textContent = user.businessName || user.fullName || "Client";
+        renderMyJobs(user);
+      }
+    }
+
+    function openPostJobModal() {
+      document.getElementById('post-job-modal').style.display = 'flex';
+    }
+    function closePostJobModal() {
+      document.getElementById('post-job-modal').style.display = 'none';
+      document.getElementById('post-job-form').reset();
+    }
+
+    function renderMyJobs(user) {
+      const db = dbGet();
+      const rawJobs = (db.jobs || []).filter(j => 
+        String(j.postedBy) === String(user.id) || 
+        String(j.posted_by) === String(user.id) || 
+        (typeof j.id === 'string' && j.id.startsWith('job_seed_'))
+      );
+
+      const seenIds = new Set();
+      const jobs = [];
+
+      for (const j of rawJobs) {
+        const idStr = String(j.id);
+        if (!seenIds.has(idStr)) {
+          seenIds.add(idStr);
+          jobs.push(j);
+        }
+      }
+
+      const applications = db.applications || [];
+      const container = document.getElementById('my-jobs-list');
+      if (!container) return;
+
+      if (jobs.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem; background: var(--bg-tertiary); border: 1px dashed var(--border-color); border-radius: var(--radius-sm);">
+            You haven't posted any jobs yet. Click <strong>"Post New Job"</strong> above to create your first listing!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = jobs.map(job => {
+        const jobApps = applications.filter(a => String(a.jobId) === String(job.id) || String(a.job_id) === String(job.id));
+        const skillsList = Array.isArray(job.skills) ? job.skills : (job.skills ? String(job.skills).split(',') : []);
+        const skillsBadges = skillsList.map(s => `<span class="badge badge-secondary" style="font-size: 0.75rem;">${s.trim()}</span>`).join(' ');
+
+        const applicantsHTML = jobApps.length === 0 ? 
+          `<div style="padding: 0.75rem 1rem; color: var(--text-muted); font-size: 0.85rem;">No candidates have applied yet.</div>` :
+          jobApps.map(app => {
+            const candId = app.candidateId || app.candidate_id;
+            const candUser = (db.users || []).find(u => String(u.id) === String(candId));
+            const candName = candUser ? (candUser.fullName || app.candidateName || app.candidate_name || "Candidate #" + candId) : (app.candidateName || app.candidate_name || "Candidate #" + candId);
+            const appliedDate = app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : "Recently";
+            return `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-top: 1px solid var(--border-color); font-size: 0.85rem;">
+                <div>
+                  <strong style="color: var(--text-primary);">${candName}</strong>
+                  <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.5rem;">Applied: ${appliedDate}</span>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button class="btn btn-secondary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="viewCandidateProfile('${candId}')">
+                    👁️ View Profile
+                  </button>
+                  <button class="btn btn-primary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="messageApplicant('${candId}', '${candName.replace(/'/g, "\\'")}')">
+                    💬 Message
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+        return `
+          <div class="card" style="padding: 1.25rem; background: var(--bg-tertiary); border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+              <div>
+                <h4 style="font-size: 1.1rem; font-family: var(--font-display); margin-bottom: 0.25rem;">${job.title}</h4>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                  <span>💰 Budget: $${job.budget || 'N/A'}</span>
+                  <span>⏳ Duration: ${job.duration || 'N/A'}</span>
+                  <span>🎯 Exp: ${job.experienceLevel || job.experience || 'Intermediate'}</span>
+                </div>
+                <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                  ${skillsBadges}
+                </div>
+              </div>
+              <span class="badge badge-primary" style="font-size: 0.75rem;">${job.status || 'open'}</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.4;">${job.description || ''}</p>
+            
+            <details style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-secondary);">
+              <summary style="padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--primary);">
+                👥 Applicants (${jobApps.length})
+              </summary>
+              <div>
+                ${applicantsHTML}
+              </div>
+            </details>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.viewCandidateProfile = function(candidateId) {
+      const db = dbGet();
+      const cand = (db.users || []).find(u => String(u.id) === String(candidateId));
+
+      const modal = document.getElementById('candidate-profile-modal');
+      if (!modal) return;
+
+      const name = cand ? (cand.fullName || "Candidate #" + candidateId) : "Candidate #" + candidateId;
+      const role = cand ? (cand.preferredRole || "Candidate Developer") : "Candidate";
+      const email = cand ? (cand.email || "N/A") : "N/A";
+      const phone = cand ? (cand.phone || "Not provided") : "Not provided";
+      const bio = cand ? (cand.bio || "No professional summary provided.") : "No professional summary provided.";
+      const score = cand ? (cand.talent_score || cand.portfolio_score || 0) : 0;
+      const xp = cand ? (cand.xp_points || 0) : 0;
+      const level = cand ? (cand.level || 1) : 1;
+
+      document.getElementById('cand-modal-avatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('cand-modal-name').textContent = name;
+      document.getElementById('cand-modal-role').textContent = role;
+      document.getElementById('cand-modal-email').textContent = email;
+      document.getElementById('cand-modal-phone').textContent = phone;
+      document.getElementById('cand-modal-score').textContent = score + " pts";
+      document.getElementById('cand-modal-level-xp').textContent = `Lvl ${level} (${xp} XP)`;
+      document.getElementById('cand-modal-bio').textContent = bio;
+
+      // Skills
+      const skillsContainer = document.getElementById('cand-modal-skills');
+      const skills = (cand && cand.skills && cand.skills.length > 0) ? cand.skills : [];
+      if (skills.length > 0) {
+        skillsContainer.innerHTML = skills.map(s => {
+          const lvl = cand.skillLevels && cand.skillLevels[s] ? ` (${cand.skillLevels[s]})` : '';
+          return `<span class="badge badge-primary" style="font-size: 0.8rem;">${s}${lvl}</span>`;
+        }).join(' ');
+      } else {
+        skillsContainer.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">No skills listed.</span>`;
+      }
+
+      // Projects
+      const projectsContainer = document.getElementById('cand-modal-projects');
+      const projects = (cand && cand.projects && cand.projects.length > 0) ? cand.projects : [];
+      if (projects.length > 0) {
+        projectsContainer.innerHTML = projects.map(p => `
+          <div style="background: var(--bg-tertiary); padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <strong style="color: var(--text-primary); font-size: 0.9rem;">${p.thumbnail_url || p.thumbnail || '📁'} ${p.title || 'Project'}</strong>
+              <div style="display: flex; gap: 0.5rem;">
+                ${p.github_url || p.githubUrl ? `<a href="${p.github_url || p.githubUrl}" target="_blank" style="font-size: 0.75rem; color: var(--primary);">GitHub ↗</a>` : ''}
+                ${p.project_url || p.projectUrl ? `<a href="${p.project_url || p.projectUrl}" target="_blank" style="font-size: 0.75rem; color: var(--secondary);">Live Demo ↗</a>` : ''}
+              </div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1.4;">${p.description || ''}</p>
+          </div>
+        `).join('');
+      } else {
+        projectsContainer.innerHTML = `<div style="font-size: 0.85rem; color: var(--text-muted); background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">No portfolio projects published yet.</div>`;
+      }
+
+      // External Links
+      const linksContainer = document.getElementById('cand-modal-links');
+      linksContainer.innerHTML = '';
+      if (cand) {
+        if (cand.githubUrl) linksContainer.innerHTML += `<a href="${cand.githubUrl}" target="_blank" class="badge badge-secondary" style="text-decoration: none; font-size: 0.8rem;">💻 GitHub</a>`;
+        if (cand.linkedinUrl) linksContainer.innerHTML += `<a href="${cand.linkedinUrl}" target="_blank" class="badge badge-primary" style="text-decoration: none; font-size: 0.8rem;">💼 LinkedIn</a>`;
+        if (cand.portfolioWebsite) linksContainer.innerHTML += `<a href="${cand.portfolioWebsite}" target="_blank" class="badge badge-secondary" style="text-decoration: none; font-size: 0.8rem;">🌐 Website</a>`;
+      }
+
+      // Portfolio showcase link
+      const portLinkBtn = document.getElementById('cand-modal-portfolio-link');
+      portLinkBtn.href = `portfolio.html?candidateId=${candidateId}`;
+
+      // Message button inside modal
+      const msgBtn = document.getElementById('cand-modal-message-btn');
+      msgBtn.onclick = function() {
+        window.closeCandidateProfileModal();
+        messageApplicant(candidateId, name);
+      };
+
+      modal.style.display = 'flex';
+    };
+
+    window.closeCandidateProfileModal = function() {
+      const modal = document.getElementById('candidate-profile-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    function viewCandidateProfile(candidateId) {
+      return window.viewCandidateProfile(candidateId);
+    }
+    function closeCandidateProfileModal() {
+      return window.closeCandidateProfileModal();
+    }
+
+    function messageApplicant(candidateId, candidateName) {
+      const auth = window.withAuth(['client']);
+      if (!auth) return;
+      const user = auth.user;
+
+      const conv = startConversation(
+        user.id,
+        user.fullName || user.businessName || "Client",
+        user.businessName || "Client Company",
+        user.phone || "+1 (555) 019-2834",
+        candidateId,
+        candidateName
+      );
+
+      if (conv && conv.id) {
+        window.location.href = `chat.html?convId=${conv.id}`;
+      }
+    }
+
+    document.getElementById('post-job-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const auth = window.withAuth(['client']);
+      if (!auth) return;
+      const user = auth.user;
+
+      const title = document.getElementById('job-title').value.trim();
+      const description = document.getElementById('job-description').value.trim();
+      const budget = document.getElementById('job-budget').value;
+      const duration = document.getElementById('job-duration').value.trim();
+      const skillsStr = document.getElementById('job-skills').value.trim();
+      const experienceLevel = document.getElementById('job-experience').value;
+
+      const skills = skillsStr ? skillsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      const db = dbGet();
+      if (!db.jobs) db.jobs = [];
+
+      const newJob = {
+        id: "job_" + Date.now(),
+        title: title,
+        description: description,
+        skills: skills,
+        budget: Number(budget),
+        duration: duration,
+        experienceLevel: experienceLevel,
+        postedBy: user.id,
+        posted_by: user.id,
+        postedByName: user.fullName || user.businessName || "Client",
+        companyName: user.companyName || user.businessName || user.fullName || "Client",
+        company: user.companyName || user.businessName || user.fullName || "Client",
+        status: "open",
+        type: "Freelance",
+        createdAt: Date.now()
+      };
+
+      db.jobs.unshift(newJob);
+      dbSave(db);
+
+      closePostJobModal();
+      renderMyJobs(user);
+    });
+  </script>
+</body>
+</html>
