@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Agreement Builder | Build2Hire</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .builder-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .agreement-sheet {
+      background-color: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      border: 1px solid var(--border-color);
+      min-height: 720px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-sizing: border-box;
+      max-width: 100%;
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .logo-placeholder-left {
+      width: 140px;
+      height: 60px;
+      border: 2px dashed #94a3b8;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: #64748b;
+      text-align: center;
+      background-color: #f8fafc;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .logo-placeholder-left:hover {
+      border-color: #6366f1;
+      background-color: #f1f5f9;
+    }
+    .logo-placeholder-left img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .logo-fixed-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+    .sheet-content {
+      flex-grow: 1;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #334155;
+      box-sizing: border-box;
+      max-width: 100%;
+      width: 100%;
+    }
+    .sheet-content h4 {
+      margin-top: 1.35rem;
+      margin-bottom: 0.4rem;
+      color: #0f172a;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .sheet-content p {
+      margin-bottom: 0.85rem;
+    }
+    .sheet-footer {
+      border-top: 2px solid #e2e8f0;
+      padding-top: 1.25rem;
+      margin-top: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    .split-summary-box {
+      background-color: var(--primary-light);
+      border: 1px dashed var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    @media print {
+      header, aside, .navbar, .sidebar, #main-nav, #main-sidebar, .builder-layout > div:first-child, button {
+        display: none !important;
+      }
+      body, .dashboard-layout, main, .main-content, .builder-layout {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        width: 100% !important;
+      }
+      .agreement-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+    <script>
+        (() => { const saved = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', saved); })();
+    </script>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav"></header>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="main-sidebar"></aside>
+
+    <main class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-display);">Agreement & Payment Builder</h2>
+          <p style="color: var(--text-secondary);">Create legally binding service contracts, upload company logo, configure autopay card links, and split installments.</p>
+        </div>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- LOCKED PROFILE STATE -->
+      <div id="locked-portal-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Agreement Builder Locked</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          To access the agreement builder, you must first complete your candidate profile onboarding.
+        </p>
+        <a href="portfolio.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; width: 100%;">
+          👤 Complete My Profile & Onboard
+        </a>
+      </div>
+
+      <!-- LOCKED CLIENT REVIEW STATE -->
+      <div id="locked-client-review-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">🔒</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Registration Under Review</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          Your registration is under review, please wait 24 hours. Our administrative team is reviewing your details to ensure the highest quality network.
+        </p>
+      </div>
+
+      <!-- LOCKED CLIENT REJECTED STATE -->
+      <div id="locked-client-rejected-state" style="display: none; text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 4rem auto;" class="card">
+        <span style="font-size: 4rem; display: block; margin-bottom: 1.5rem;">❌</span>
+        <h2 style="font-size: 1.8rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-primary);">Registration Rejected</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+          Unfortunately, your registration to join the Build2Hire network has been rejected. If you believe this is an error, please contact support.
+        </p>
+      </div>
+
+      <!-- SPLIT VIEW LAYOUT -->
+      <div class="builder-layout" style="display: none;">
+        
+        <!-- LEFT COLUMN: AGREEMENT FORM & PARAMETERS -->
+        <div class="card" style="padding: 2rem;">
+          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);">
+            <strong style="font-size: 0.95rem; color: var(--text-primary);">Document Mode:</strong>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem;">
+              <input type="radio" name="agreement_mode" value="default" checked onchange="toggleAgreementMode()" style="accent-color: var(--primary);"> 📄 Default Template
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem;">
+              <input type="radio" name="agreement_mode" value="custom" onchange="toggleAgreementMode()" style="accent-color: var(--primary);"> ✍️ Custom (Blank)
+            </label>
+          </div>
+
+          <div id="default-form-container">
+            <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin-bottom: 1.5rem; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              📝 Agreement Parameters
+            </h3>
+
+            <form id="agreement-form" onsubmit="handleAgreementLaunch(event)">
+            
+            <div class="form-group">
+              <label class="form-label" for="select-candidate">Select Recruiter / Client</label>
+              <select id="select-candidate" class="form-control" style="background-color: var(--bg-tertiary);" onchange="updateAgreementText()">
+                <!-- Populated dynamically -->
+              </select>
+              <input type="text" id="input-custom-candidate" class="form-control" style="display: none; background-color: var(--bg-tertiary);" placeholder="Type Contractor Full Name" oninput="updateAgreementText()">
+              <span id="toggle-custom-candidate" onclick="toggleCustomCandidateField()" style="font-size: 0.75rem; color: var(--primary); cursor: pointer; display: block; margin-top: 0.25rem; font-weight: 600; text-decoration: underline;">✍️ Or type custom client name</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="project-title">Project Title</label>
+              <input type="text" id="project-title" required class="form-control" placeholder="e.g. Interactive React Dashboard" oninput="updateAgreementText()">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="total-budget">Total Project Budget ($)</label>
+                <input type="number" id="total-budget" required class="form-control" value="20000" min="100" oninput="updateAgreementText()">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="duration-months">Duration (Months)</label>
+                <input type="number" id="duration-months" required class="form-control" value="5" min="1" max="12" oninput="updateAgreementText()">
+              </div>
+            </div>
+
+            <!-- PAYMENT SPLIT SELECTION -->
+            <div class="form-group">
+              <label class="form-label" for="payment-split">Payment Split Model</label>
+              <select id="payment-split" class="form-control" style="background-color: var(--bg-tertiary);" onchange="updateAgreementText()">
+                <option value="monthly">Monthly Autopay Installments (Split equally per month)</option>
+                <option value="2-splits">2 Equal Installments (50% upfront, 50% on completion)</option>
+                <option value="flat">Single Flat Release (100% payout upon full contract end)</option>
+              </select>
+              <div id="split-summary" class="split-summary-box">
+                <!-- Summary of payment breaks -->
+              </div>
+            </div>
+
+            <!-- bank account card link -->
+            <div class="card" style="background-color: rgba(0,0,0,0.2); padding: 1.25rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <input type="checkbox" id="enable-autopay" checked onchange="toggleAutopayFields()" style="width: 1.1rem; height: 1.1rem; accent-color: var(--primary);">
+                <label for="enable-autopay" style="font-weight: 700; font-size: 0.85rem; cursor: pointer;">Enable Bank Autopay (Auto-debits on 1st-5th of each month)</label>
+              </div>
+
+              <div id="autopay-card-details" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 0.75rem;">
+                  <input type="text" id="bank-card-no" class="form-control" style="font-size: 0.8rem;" placeholder="Card/Account Number (e.g. **** 9843)" value="4532 9821 0034 9843">
+                  <input type="text" id="bank-name" class="form-control" style="font-size: 0.8rem;" placeholder="Bank Name (e.g. Chase)" value="Chase Savings">
+                </div>
+                <span style="font-size: 0.72rem; color: var(--text-secondary); display: block;">🔒 Card credentials are stored securely via Build2Hire masked escrow router. Autopay triggers on due dates.</span>
+              </div>
+            </div>
+
+            <!-- custom content editor -->
+            <div class="form-group">
+              <label class="form-label" for="custom-clauses">Additional Custom Terms (Optional)</label>
+              <textarea id="custom-clauses" class="form-control" rows="3" placeholder="Add specific delivery criteria, penalties, or custom clauses..." oninput="updateAgreementText()"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+              ✍️ Sign & Launch Contract
+            </button>
+
+          </form>
+          </div> <!-- end default-form-container -->
+
+          <!-- CUSTOM MODE EDITOR -->
+          <div id="custom-editor-container" style="display: none;">
+            <h3 style="font-size: 1.25rem; font-family: var(--font-display); margin-bottom: 1.25rem; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              📄 Custom Agreement Editor
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+              Use the formatting tools below, and <strong>type directly into the blank pages on the right</strong>.
+            </p>
+            <div style="margin-bottom: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; background: var(--bg-tertiary); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('bold', false, null)"><b>B</b></button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('underline', false, null)"><u>U</u></button>
+              <span style="border-left: 1px solid var(--border-color); margin: 0 0.25rem;"></span>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('formatBlock', false, 'H3')">H3</button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('formatBlock', false, 'H4')">H4</button>
+              <span style="border-left: 1px solid var(--border-color); margin: 0 0.25rem;"></span>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('insertUnorderedList', false, null)">• List</button>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="document.execCommand('insertOrderedList', false, null)">1. List</button>
+              <span style="border-left: 1px solid var(--border-color); margin: 0 0.25rem;"></span>
+              <button type="button" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;" onmousedown="event.preventDefault()" onclick="insertPageBreak()">📄 Page Break</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;">
+              💡 <strong>Tip:</strong> Your custom logo and Build2Hire escrow badge will automatically be attached to the printable sheet on the right.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: AGREEMENT PREVIEW SHEET -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Live Printable Agreement Sheet Preview</span>
+            <button onclick="window.print()" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.85rem; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+              🖨️ Print / Download PDF
+            </button>
+          </div>
+          
+          <div class="agreement-sheet" id="agreement-sheet-preview">
+            
+            <!-- HEADER -->
+            <div class="sheet-header">
+              <!-- BUILD2HIRE LOGO (LEFT NOW) -->
+              <div class="logo-fixed-left" style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                <span style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: #6366f1;">Build<span style="color: #0f172a;">2</span>Hire</span>
+                <span style="font-size: 0.6rem; color: #10b981; font-weight: 800; letter-spacing: 0.05em; border: 1px solid #10b981; padding: 0.15rem 0.35rem; border-radius: 4px; margin-top: 0.25rem;">🔒 ESCROW SECURED</span>
+              </div>
+
+              <!-- CANDIDATE LOGO ATTACHMENT (RIGHT NOW) -->
+              <div class="logo-placeholder-right" onclick="triggerLogoUpload()" style="width: 140px; height: 60px; border: 2px dashed #94a3b8; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.72rem; color: #64748b; text-align: center; background-color: #f8fafc; overflow: hidden; transition: all 0.2s ease;">
+                <input type="file" id="logo-uploader-input" style="display: none;" accept="image/*" onchange="loadLogoImage(event)">
+                <div id="logo-placeholder-text">📁 Attach Custom Logo<br><span style="font-size: 0.6rem;">(Drag & Drop)</span></div>
+                <img id="logo-preview-img" style="display: none; max-width: 100%; max-height: 100%; object-fit: contain;" src="" alt="Candidate Logo">
+              </div>
+            </div>
+
+            <!-- SHEET CONTENT -->
+            <div class="sheet-content">
+              <div id="default-sheet-content">
+                <style>
+                  .doc-input {
+                    border: 1px solid #f6ad55;
+                    border-radius: 6px;
+                    padding: 0.25rem 0.5rem;
+                    font-size: 0.85rem;
+                    color: #ed8936;
+                    background: rgba(237, 137, 54, 0.05);
+                    outline: none;
+                    font-family: inherit;
+                    box-sizing: border-box;
+                    max-width: 100%;
+                    min-width: 0;
+                  }
+                  .doc-input.client {
+                    border-color: #805ad5;
+                    color: #805ad5;
+                    background: rgba(128, 90, 213, 0.05);
+                  }
+                  .doc-input::placeholder {
+                    color: inherit;
+                    opacity: 0.6;
+                  }
+                  .grid-2 {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1.5rem;
+                    margin-bottom: 1.5rem;
+                    box-sizing: border-box;
+                    max-width: 100%;
+                    min-width: 0;
+                  }
+                  .address-grid {
+                    display: grid;
+                    gap: 0.5rem;
+                    box-sizing: border-box;
+                    min-width: 0;
+                    max-width: 100%;
+                  }
+                  .address-grid > div {
+                    min-width: 0;
+                  }
+                  .address-grid .row-2 { 
+                    grid-template-columns: 1fr 1fr; 
+                    display: grid; 
+                    gap: 0.5rem; 
+                    min-width: 0;
+                    box-sizing: border-box;
+                  }
+                  .address-grid .row-4 { 
+                    grid-template-columns: repeat(4, 1fr); 
+                    display: grid; 
+                    gap: 0.5rem; 
+                    min-width: 0;
+                    box-sizing: border-box;
+                  }
+                  .payment-table {
+                    width: 100%;
+                    max-width: 100%;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                    box-sizing: border-box;
+                    table-layout: fixed;
+                  }
+                  .payment-table th, .payment-table td {
+                    border: 1px solid #cbd5e1;
+                    padding: 0.5rem;
+                    text-align: left;
+                    font-size: 0.85rem;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  }
+                  .payment-table th { background: #f8fafc; font-weight: 700; color: #475569; text-align: center; }
+                </style>
+                
+                <h3 style="font-size: 1.25rem; text-align: center; margin-bottom: 1.5rem; font-weight: 800; color: #0f172a;">Independent Contractor Agreement</h3>
+                
+                <p style="margin-bottom: 1.5rem; line-height: 1.8;">
+                  This <strong>Independent Contractor Agreement</strong> ("<em>Agreement</em>" hereinafter) executed on this 
+                  <input type="text" class="doc-input" placeholder="Day" style="width: 50px; text-align: center;"> day of 
+                  <input type="text" class="doc-input" placeholder="Month" style="width: 70px; text-align: center;">, 
+                  <input type="text" class="doc-input" placeholder="Year" style="width: 60px; text-align: center;">, 
+                  by and between the following parties;
+                </p>
+
+                <div class="grid-2">
+                  <div class="address-grid">
+                    <strong style="color: #0f172a; margin-bottom: 0.25rem; display: block; font-size: 0.95rem;">Contractor</strong>
+                    <input type="text" class="doc-input" placeholder="Contractor" style="width: 100%;">
+                    <div class="row-2">
+                      <input type="text" class="doc-input" placeholder="Street Address">
+                      <input type="text" class="doc-input" placeholder="Street Address 2">
+                    </div>
+                    <div class="row-4">
+                      <input type="text" class="doc-input" placeholder="City">
+                      <input type="text" class="doc-input" placeholder="State ...">
+                      <input type="text" class="doc-input" placeholder="Post...">
+                      <input type="text" class="doc-input" placeholder="C...">
+                    </div>
+                    <div class="row-2">
+                      <input type="email" class="doc-input" placeholder="example@exam...">
+                      <input type="text" class="doc-input" placeholder="Phone Num...">
+                    </div>
+                  </div>
+                  <div class="address-grid">
+                    <strong style="color: #0f172a; margin-bottom: 0.25rem; display: block; font-size: 0.95rem;">Client</strong>
+                    <input type="text" class="doc-input client" placeholder="Client" style="width: 100%;">
+                    <div class="row-2">
+                      <input type="text" class="doc-input client" placeholder="Street Address">
+                      <input type="text" class="doc-input client" placeholder="Street Address 2">
+                    </div>
+                    <div class="row-4">
+                      <input type="text" class="doc-input client" placeholder="City">
+                      <input type="text" class="doc-input client" placeholder="State ...">
+                      <input type="text" class="doc-input client" placeholder="Post...">
+                      <input type="text" class="doc-input client" placeholder="C...">
+                    </div>
+                    <div class="row-2">
+                      <input type="email" class="doc-input client" placeholder="example@exam...">
+                      <input type="text" class="doc-input client" placeholder="Phone Num...">
+                    </div>
+                  </div>
+                </div>
+
+                <p style="margin-bottom: 1.25rem; margin-top: 1.5rem;"><strong>WHEREAS</strong>, Client needs an independent contractor to <input type="text" class="doc-input" placeholder="Subject" style="width: 100%; margin-top: 0.5rem;"></p>
+                
+                <p style="margin-bottom: 1.25rem;"><strong>WHEREAS</strong>, Client understands that Contractor has the necessary skills, experience and qualifications to provide services to the Client for the above-mentioned task,</p>
+                
+                <p style="margin-bottom: 1.25rem;"><strong>WHEREAS</strong>, Contractor accepts the responsibility in providing services for the above-mentioned task,</p>
+                
+                <p style="margin-bottom: 1.5rem;"><strong>NOW, THEREFORE</strong>, for and in consideration of the foregoing premises and of the mutual benefits and obligations set forth herein this Agreement, Client and Contractor (hereinafter known individually as "<em>Party</em>" and collectively as "<em>Parties</em>") agree as follows:</p>
+
+                <h4>I. Scope of Work</h4>
+                <p>Detailed description of the work to be performed by the Contractor is as follows;</p>
+                <textarea class="doc-input" placeholder="Scope of Work" style="width: 100%; min-height: 100px; resize: vertical; margin-top: 0.5rem; font-family: inherit;"></textarea>
+
+                <h4>II. Term of the Agreement</h4>
+                <p style="line-height: 1.8;">The term of this Agreement is <input type="text" class="doc-input" placeholder="Term">, commence on <input type="date" class="doc-input"> and expires on <input type="date" class="doc-input">, unless terminated earlier by the parties.</p>
+
+                <h4>III. Contract Amount</h4>
+                <p>Total contract price for the services to be provided under this Agreement is <input type="text" class="doc-input" placeholder="Total Contrac...">.</p>
+                <p style="margin-top: 1rem;">The Client agrees to pay the Contractor according to the following schedule;</p>
+                
+                <table class="payment-table">
+                  <thead>
+                    <tr>
+                      <th>Payment</th>
+                      <th>Due Date</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600; color: #475569;">Initial Payment</td>
+                      <td style="text-align: center;"><input type="date" class="doc-input"></td>
+                      <td><input type="text" class="doc-input" placeholder="Amount" style="width: 100%; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; color: #475569;">First Payment</td>
+                      <td style="text-align: center;"><input type="date" class="doc-input"></td>
+                      <td><input type="text" class="doc-input" placeholder="Amount" style="width: 100%; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; color: #475569;">Second Payment</td>
+                      <td style="text-align: center;"><input type="date" class="doc-input"></td>
+                      <td><input type="text" class="doc-input" placeholder="Amount" style="width: 100%; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; color: #475569;">Final Payment</td>
+                      <td style="text-align: center;"><input type="date" class="doc-input"></td>
+                      <td><input type="text" class="doc-input" placeholder="Amount" style="width: 100%; text-align: center;"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <p style="margin-bottom: 1.25rem;">The Contractor shall be responsible for all expenses incurred during the performance of the services unless otherwise agreed upon in writing by both parties. Any reimbursable expenses must be pre-approved by the Client.</p>
+                <p>In the event of a late payment, the Client shall pay interest on the overdue amount at a rate of <input type="text" class="doc-input" placeholder="Int..." style="width: 60px; text-align: center;"> % per annum.</p>
+
+                <h4>IV. Termination</h4>
+                <p style="margin-bottom: 1.25rem; line-height: 1.8;">Either party may terminate this Agreement at any time, with or without cause, by providing <input type="text" class="doc-input" placeholder="Noti..." style="width: 60px; text-align: center;"> days written notice to the other party. In the event of termination, the Client shall pay the Contractor for all services performed up to the date of termination.</p>
+                <p>In any case that any Party commits breach to any of the material provisions of this Agreement, the aggrieved or the non-defaulting party may at any time terminate this Agreement immediately, with a written notice.</p>
+
+                <h4>V. Intellectual Property</h4>
+                <p style="margin-bottom: 1.25rem;">Intellectual property shall refer to any intangible material or creation of the mind such as artistic or literary works, designs, images, names, including trade names, trademark, logos, symbols, patents, copyrights, designs, architecture, concepts, among others which are used in commerce.</p>
+                <p>As contemplated in this Agreement, the use of the Intellectual Property by the Client will not be restricted in any manner. Any intellectual property acquired by Contractor during the term of this Agreement shall not be used other than for the purpose of this Agreement. In case where intellectual creation has been created by Contractor during the term of this Agreement and for which for the purpose of this Agreement, the Parties to this Agreement agree that the intellectual property rights belong to the Client.</p>
+
+                <h4>VI. No Employer-Employee Relationship</h4>
+                <p style="margin-bottom: 1.25rem;">The Parties agree that this Agreement does not constitute an employer-employee relationship between the parties. Parties are independent contractors and agree that this Agreement does not constitute a partnership or joint venture but is exclusively a contract for service.</p>
+                <p>Client is not required to pay or make contributions to Contractor's social security, taxes, unemployment or workers' compensation, insurance premiums, or any other benefits received by Client's employees.</p>
+
+                <h4>VII. Return of Client's Property</h4>
+                <p>In the event that this Agreement ceases to be effective, or upon request of Client, Contractor agrees to return to Client any and all properties owned by Client. Any digital or softcopy data may be deleted at the request of Client or hardcopy or physical records may be destroyed at the request of Client in case of impossibility to return the said document or data containing confidential information.</p>
+
+                <h4>VIII. Indemnification</h4>
+                <p>Except as otherwise to any breach constituted by any party herein, Parties agree to indemnify, release, and hold harmless the other, its agents, affiliates, officers, and employees from any claims, losses, damages, penalties, obligations, and other expenses of any kind resulting to or arising from any of their act or omission. This indemnification will survive the termination of this Agreement.</p>
+
+                <h4>IX. Amendments</h4>
+                <p>Any amendment or modification to this Agreement in order to be binding must be made in writing and signed by the Parties.</p>
+
+                <h4>X. Time Is of the Essence</h4>
+                <p>The duties and responsibilities of the parties hereto are a time of the essence. Any schedules must be complied with in a strict manner and unreasonable extensions are not allowed.</p>
+
+                <h4>XI. Assignment</h4>
+                <p>Contractor may not assign, subcontract, or otherwise transfer to another contractor the duties and responsibilities set forth in this agreement without due prior and written notice to Client.</p>
+
+                <h4>XII. Severability</h4>
+                <p>In case a competent court or authority holds invalid any of the provisions hereto, such invalidity shall affect only the said provision and the remaining provisions shall remain valid and enforceable.</p>
+
+                <h4>XIII. Non-Waiver</h4>
+                <p>The act or omission by any party in insisting on the strict compliance of the other regarding the terms, conditions, covenants, among others, does not constitute a waiver of the party over such breach. Only by express written consent and duly signed by the waiving party shall be considered as having been made.</p>
+
+                <h4>XIV. Entire Agreement</h4>
+                <p>This Agreement contains the entire agreement between the Parties and supersedes the other agreements made prior in relation to the subject matter. No other conditions, representation, warranty, collateral, or any other condition shall affect this Agreement except as expressly provided hereto.</p>
+
+                <h4>XV. Governing Law</h4>
+                <p>This Agreement is governed by and construed in accordance with the applicable federal laws and the laws of the State of <input type="text" class="doc-input" placeholder="State">.</p>
+
+                <p style="margin-top: 2rem; margin-bottom: 1.5rem;"><strong>IN WITNESS WHEREOF</strong>, the Parties hereto have set their hands on the date of the last signature below.</p>
+
+                <div class="grid-2">
+                  <div class="address-grid">
+                    <strong style="color: #0f172a; margin-bottom: 0.25rem; display: block; font-size: 0.95rem;">Contractor</strong>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; width: 40px;">Name</span>
+                      <input type="text" class="doc-input" placeholder="Contractor" style="flex-grow: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; width: 40px;">Date</span>
+                      <input type="date" class="doc-input" style="width: 140px;">
+                    </div>
+                    <div style="margin-top: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 0.5rem;">Signature</span>
+                      <input type="text" class="doc-input" placeholder="Signature" style="width: 100%; height: 60px; text-align: center; font-size: 1.25rem;">
+                    </div>
+                  </div>
+                  <div class="address-grid">
+                    <strong style="color: #0f172a; margin-bottom: 0.25rem; display: block; font-size: 0.95rem;">Client</strong>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; width: 40px;">Name</span>
+                      <input type="text" class="doc-input client" placeholder="Client" style="flex-grow: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; width: 40px;">Date</span>
+                      <input type="date" class="doc-input client" style="width: 140px;">
+                    </div>
+                    <div style="margin-top: 0.5rem;">
+                      <span style="font-weight: 700; font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 0.5rem;">Signature</span>
+                      <input type="text" class="doc-input client" placeholder="Signature" style="width: 100%; height: 60px; text-align: center; font-size: 1.25rem;">
+                    </div>
+                  </div>
+                </div>
+
+              </div> <!-- end default-sheet-content -->
+              
+            <div id="custom-sheet-content" contenteditable="true" style="display: none; min-height: 2500px; outline: none; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px dashed var(--border-color);">
+              <h3 style="margin-bottom: 1rem;">Custom Service Agreement</h3>
+              <p>Type your terms and conditions here...</p>
+            </div>
+          </div> <!-- end sheet-content -->
+
+          <!-- FOOTER -->
+            <div class="sheet-footer" style="margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b;">
+              <span>Build2Hire Escrow Network &bull; SECURE CLOUD TRANSACTION</span>
+              <span>Generated on <strong id="sheet-date" style="color: #334155;">Jul 25, 2026</strong></span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      alert("JavaScript Error: " + message + " at line " + lineno);
+      return false;
+    };
+
+    window.onload = function() {
+      // Stub to avoid console errors if components load early
+      window.initSeamlessNavigation = window.initSeamlessNavigation || function() {
+        return false;
+      };
+
+      window.auth = withAuth(['candidate', 'admin', 'client', 'recruiter']);
+      
+      if (window.auth) {
+        dbState = dbGet();
+        window.initializeBuilder();
+      }
+    };
+
+    var dbState = null;
+    var selectedBase64Logo = "";
+    var isCustomCandidate = false;
+    var currentContractRef = "";
+
+    window.initializeBuilder = function() {
+      dbState = dbGet();
+      const sessionUser = getUser();
+      const layout = document.querySelector('.builder-layout');
+
+      if (document.getElementById('locked-portal-state')) document.getElementById('locked-portal-state').style.display = "none";
+      if (document.getElementById('locked-client-review-state')) document.getElementById('locked-client-review-state').style.display = "none";
+      if (document.getElementById('locked-client-rejected-state')) document.getElementById('locked-client-rejected-state').style.display = "none";
+      
+      if (sessionUser && sessionUser.role === 'candidate') {
+        const freshCandidate = (dbState.users || []).find(u => String(u.id) === String(sessionUser.id)) || sessionUser;
+        if (!freshCandidate.profileCompleted || !freshCandidate.preferredRole) {
+          if (document.getElementById('locked-portal-state')) document.getElementById('locked-portal-state').style.display = "block";
+          if (layout) layout.style.display = "none";
+          return;
+        } else {
+          if (layout) layout.style.display = "grid";
+        }
+      } else if (sessionUser && sessionUser.role === 'client') {
+        const freshClient = (dbState.users || []).find(u => String(u.id) === String(sessionUser.id) || (u.email && sessionUser.email && u.email.toLowerCase() === sessionUser.email.toLowerCase())) || sessionUser;
+        if (!freshClient || freshClient.status === 'pending' || !freshClient.status) {
+          if (document.getElementById('locked-client-review-state')) document.getElementById('locked-client-review-state').style.display = "block";
+          if (layout) layout.style.display = "none";
+          return;
+        } else if (freshClient.status === 'rejected') {
+          if (document.getElementById('locked-client-rejected-state')) document.getElementById('locked-client-rejected-state').style.display = "block";
+          if (layout) layout.style.display = "none";
+          return;
+        } else {
+          if (layout) layout.style.display = "grid";
+        }
+      } else {
+        if (layout) layout.style.display = "grid";
+      }
+
+      const user = sessionUser;
+
+      // Generate dynamic contract ref and date if not already generated
+      if (!currentContractRef) {
+        currentContractRef = "B2H-" + Math.floor(100000 + Math.random() * 900000) + "-SECURE";
+      }
+      if (document.getElementById('sheet-contract-ref')) {
+        document.getElementById('sheet-contract-ref').textContent = currentContractRef;
+      }
+      if (document.getElementById('sheet-date')) {
+        document.getElementById('sheet-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      // Contractor details
+      const rawFullName = user ? (user.fullName || "Sarah Connor") : "Sarah Connor";
+      const cleanFullName = rawFullName.replace(/\s*\(.*?\)\s*/g, '').trim() || "Sarah Connor";
+      
+      if (document.getElementById('sheet-candidate-name')) {
+        document.getElementById('sheet-candidate-name').textContent = `${cleanFullName} (Contractor)`;
+      }
+      if (document.getElementById('sheet-candidate-sig')) {
+        document.getElementById('sheet-candidate-sig').textContent = cleanFullName;
+      }
+
+      // Default project title if empty
+      const titleInput = document.getElementById('project-title');
+      if (titleInput && !titleInput.value) {
+        titleInput.value = "Full Stack Platform Development & Escrow Deployment";
+      }
+
+      // Populate candidates
+      const select = document.getElementById('select-candidate');
+      const candidates = dbState.users ? dbState.users.filter(u => u.role === 'recruiter' || u.role === 'client') : [];
+
+      if (candidates.length === 0) {
+        select.innerHTML = `<option value="">No registered candidates available</option>`;
+      } else {
+        select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.fullName || c.email} (${c.companyName || 'Company'})</option>`).join('');
+      }
+
+      updateAgreementText();
+    }
+
+    function triggerLogoUpload() {
+      document.getElementById('logo-uploader-input').click();
+    }
+
+    function loadLogoImage(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          selectedBase64Logo = evt.target.result;
+          document.getElementById('logo-preview-img').src = selectedBase64Logo;
+          document.getElementById('logo-preview-img').style.display = 'block';
+          document.getElementById('logo-placeholder-text').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function toggleAutopayFields() {
+      const checked = document.getElementById('enable-autopay').checked;
+      document.getElementById('autopay-card-details').style.opacity = checked ? '1' : '0.3';
+      document.getElementById('autopay-card-details').style.pointerEvents = checked ? 'auto' : 'none';
+    }
+
+    function toggleCustomCandidateField() {
+      isCustomCandidate = !isCustomCandidate;
+      const select = document.getElementById('select-candidate');
+      const input = document.getElementById('input-custom-candidate');
+      const toggleLink = document.getElementById('toggle-custom-candidate');
+
+      if (isCustomCandidate) {
+        select.style.display = 'none';
+        input.style.display = 'block';
+        input.value = "";
+        input.required = true;
+        select.required = false;
+        toggleLink.textContent = "📋 Or select from registered list";
+      } else {
+        select.style.display = 'block';
+        input.style.display = 'none';
+        input.required = false;
+        select.required = true;
+        toggleLink.textContent = "✍️ Or type custom client name";
+      }
+      updateAgreementText();
+    }
+    window.toggleCustomCandidateField = toggleCustomCandidateField;
+
+    function updateAgreementText() {
+      const user = getUser();
+      
+      let clientName = "Test 1";
+      if (isCustomCandidate) {
+        clientName = document.getElementById('input-custom-candidate').value.trim() || "Test 1";
+      } else {
+        const select = document.getElementById('select-candidate');
+        if (select && select.value) {
+          const cand = (dbState.users || []).find(u => String(u.id) === String(select.value));
+          clientName = cand ? (cand.fullName || cand.email) : "Test 1";
+        }
+      }
+      
+      if (document.getElementById('sheet-client-name')) {
+        document.getElementById('sheet-client-name').textContent = `${clientName} (Client)`;
+      }
+      if (document.getElementById('sheet-client-sig')) {
+        document.getElementById('sheet-client-sig').textContent = clientName;
+      }
+      if (document.getElementById('sheet-candidate-name') && user) {
+        document.getElementById('sheet-candidate-name').textContent = `${user.fullName} (Contractor)`;
+      }
+      if (document.getElementById('sheet-candidate-sig') && user) {
+        document.getElementById('sheet-candidate-sig').textContent = user.fullName;
+      }
+
+      const titleInput = document.getElementById('project-title');
+      const title = (titleInput ? titleInput.value.trim() : "") || "Full Stack Platform Development";
+      if (document.getElementById('sheet-project-title')) {
+        document.getElementById('sheet-project-title').textContent = title;
+      }
+
+      const budgetInput = document.getElementById('total-budget');
+      const budget = (budgetInput ? parseFloat(budgetInput.value) : 20000) || 20000;
+      if (document.getElementById('sheet-budget-val')) {
+        document.getElementById('sheet-budget-val').textContent = `$${budget.toLocaleString()}`;
+      }
+
+      const monthsInput = document.getElementById('duration-months');
+      const months = (monthsInput ? parseInt(monthsInput.value) : 5) || 5;
+      const splitSelect = document.getElementById('payment-split');
+      const splitModel = splitSelect ? splitSelect.value : 'monthly';
+
+      let summaryText = "";
+      let sheetScheduleHTML = "";
+
+      if (splitModel === 'monthly') {
+        const amountPerMonth = Math.round(budget / months);
+        summaryText = `Divided into ${months} monthly autopay installments of $${amountPerMonth.toLocaleString()} per month.`;
+        sheetScheduleHTML = `Monthly payment model: $${amountPerMonth.toLocaleString()} paid automatically between the 1st and 5th of each month for ${months} months.`;
+      } else if (splitModel === '2-splits') {
+        const splitAmt = Math.round(budget / 2);
+        summaryText = `Divided into 2 equal splits of $${splitAmt.toLocaleString()} (50% upfront, 50% on final clearance).`;
+        sheetScheduleHTML = `Milestone splits: 50% ($${splitAmt.toLocaleString()}) upfront deposit. 50% ($${splitAmt.toLocaleString()}) upon final project handover and review.`;
+      } else {
+        summaryText = `Single flat payment of $${budget.toLocaleString()} released upon full completion at month ${months}.`;
+        sheetScheduleHTML = `Flat release model: 100% payment release of $${budget.toLocaleString()} upon completion of the contract.`;
+      }
+
+      if (document.getElementById('split-summary')) {
+        document.getElementById('split-summary').textContent = summaryText;
+      }
+      if (document.getElementById('sheet-split-details')) {
+        document.getElementById('sheet-split-details').innerHTML = sheetScheduleHTML;
+      }
+
+      const customInput = document.getElementById('custom-clauses');
+      const custom = customInput ? customInput.value.trim() : "";
+      const customWrapper = document.getElementById('sheet-custom-clauses-wrapper');
+      const customContent = document.getElementById('sheet-custom-clauses-content');
+
+      if (customWrapper && customContent) {
+        if (custom) {
+          customWrapper.style.display = 'block';
+          customContent.textContent = custom;
+        } else {
+          customWrapper.style.display = 'none';
+        }
+      }
+    }
+
+    function handleAgreementLaunch(e) {
+      e.preventDefault();
+      const title = document.getElementById('project-title').value.trim();
+      const budget = parseFloat(document.getElementById('total-budget').value) || 1000;
+      const months = parseInt(document.getElementById('duration-months').value) || 1;
+      const splitModel = document.getElementById('payment-split').value;
+      const customClauses = document.getElementById('custom-clauses').value.trim();
+      const enableAutopay = document.getElementById('enable-autopay').checked;
+
+      let finalCandidateId = 1001; // default fallback candidate
+      let candidateName = "Candidate User";
+
+      if (isCustomCandidate) {
+        candidateName = document.getElementById('input-custom-candidate').value.trim();
+        if (!candidateName) {
+          alert("Please type contractor name.");
+          return;
+        }
+        // Try to find candidate user by name in users list
+        const matched = dbState.users.find(u => u.role === 'recruiter' && u.fullName.toLowerCase() === candidateName.toLowerCase());
+        if (matched) {
+          finalCandidateId = matched.id;
+        } else {
+          // Update candidate 1001's name dynamically so they can log in and view it
+          const defaultCand = dbState.users.find(u => u.id === 1001);
+          if (defaultCand) {
+            defaultCand.fullName = candidateName;
+          }
+        }
+      } else {
+        const candidateId = document.getElementById('select-candidate').value;
+        if (!candidateId) {
+          alert("Please select a candidate.");
+          return;
+        }
+        finalCandidateId = parseInt(candidateId);
+        const cand = dbState.users.find(u => String(u.id) === String(finalCandidateId));
+        candidateName = cand ? cand.fullName : "Candidate User";
+      }
+
+      const contractId = "cnt_" + Date.now();
+      
+      // Calculate milestones based on split type
+      let milestones = [];
+      if (splitModel === 'monthly') {
+        const monthlyAmt = Math.round(budget / months);
+        for (let i = 1; i <= months; i++) {
+          milestones.push({
+            id: i,
+            title: `Part ${i}: Month ${i} Deliverables`,
+            description: `Review and completion logs for project phase ${i}`,
+            weight: Math.round(100 / months),
+            status: i === 1 ? "in-progress" : "pending",
+            deliverable: ""
+          });
+        }
+      } else if (splitModel === '2-splits') {
+        milestones = [
+          { id: 1, title: "Part 1: Initial Setup Deliverables (50%)", description: "Project codebase setup and mockups approval", weight: 50, status: "in-progress", deliverable: "" },
+          { id: 2, title: "Part 2: Final Verification & Handover (50%)", description: "Complete integration and code testing specs", weight: 50, status: "pending", deliverable: "" }
+        ];
+      } else {
+        milestones = [
+          { id: 1, title: "Full Scope Payout (100%)", description: "Deliver entire project deliverables", weight: 100, status: "in-progress", deliverable: "" }
+        ];
+      }
+
+       const selectedRecruiter = dbState.users.find(u => String(u.id) === String(finalCandidateId));
+       const clientCompany = selectedRecruiter ? (selectedRecruiter.companyName || "InnovateTech") : "InnovateTech";
+       const clientPhone = selectedRecruiter ? (selectedRecruiter.phone || "+1 (555) 012-9843") : "+1 (555) 012-9843";
+
+       const newContract = {
+        id: contractId,
+        candidateId: getUser().id,
+        jobId: Date.now(), // Mock ID
+        title: title,
+        company: clientCompany,
+        salary: splitModel === 'monthly' ? `$${Math.round(budget/months).toLocaleString()}/Mo` : `$${budget.toLocaleString()} Flat`,
+        amount: budget,
+        durationMonths: months,
+        paymentSplitType: splitModel,
+        status: "active",
+        dateStarted: new Date().toISOString().split('T')[0],
+        dateCompleted: null,
+        milestones: milestones,
+        autoPayLinked: enableAutopay,
+        customContent: customClauses,
+        clientLogo: selectedBase64Logo,
+        weeklyProgress: [],
+        invoices: []
+      };
+
+      if (enableAutopay) {
+        const cardNo = document.getElementById('bank-card-no').value;
+        const bankName = document.getElementById('bank-name').value;
+        newContract.bankDetails = {
+          bankName: bankName,
+          cardNumber: "🔒 Card ending in *" + cardNo.substring(cardNo.length - 4),
+          linkedAt: Date.now()
+        };
+      }
+
+      if (!dbState.contracts) dbState.contracts = [];
+      dbState.contracts.push(newContract);
+      dbSave(dbState);
+
+      // Open a conversation with this candidate
+      const conv = startConversation(
+        parseInt(finalCandidateId), 
+        candidateName,
+        clientCompany, 
+        clientPhone,
+        getUser().id, 
+        getUser().fullName
+      );
+
+      if (conv) {
+        sendMessage(conv.id, 1000, `✍️ **New Agreement Signed & Launched!**\nProject: **${title}**\nBudget: $${budget.toLocaleString()}\nDuration: ${months} Months\nSplit Model: ${splitModel === 'monthly' ? 'Monthly Autopay' : splitModel === '2-splits' ? '2 equal splits' : 'Flat release'}`);
+      }
+
+      showAlert('alert-container', 'Service contract initiated successfully! Relocating to dashboard...', 'success');
+      
+      // Auto Deduct first installment if Autopay is linked
+      if (enableAutopay) {
+        setTimeout(() => {
+          triggerMonthlyAutoDeduction(contractId, 1);
+        }, 1000);
+      }
+
+      setTimeout(() => {
+        window.location.href = 'recruiter-dashboard.html';
+      }, 2500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const db = typeof dbGet === 'function' ? dbGet() : null;
+      if (db && db.settings && db.settings.defaultAgreementTemplate) {
+        document.getElementById('default-sheet-content').innerHTML = db.settings.defaultAgreementTemplate;
+      }
+    });
+
+    function toggleAgreementMode() {
+      const mode = document.querySelector('input[name="agreement_mode"]:checked').value;
+      const defaultForm = document.getElementById('default-form-container');
+      const customForm = document.getElementById('custom-editor-container');
+      const defaultSheet = document.getElementById('default-sheet-content');
+      const customSheet = document.getElementById('custom-sheet-content');
+
+      if (mode === 'custom') {
+        defaultForm.style.display = 'none';
+        customForm.style.display = 'block';
+        defaultSheet.style.display = 'none';
+        customSheet.style.display = 'block';
+      } else {
+        defaultForm.style.display = 'block';
+        customForm.style.display = 'none';
+        defaultSheet.style.display = 'block';
+        customSheet.style.display = 'none';
+      }
+    }
+
+    function insertPageBreak() {
+      const pageBreakHTML = '<div style="page-break-after: always; text-align: center; color: #94a3b8; font-size: 0.7rem; border-top: 1px dashed #cbd5e1; margin: 2rem 0; padding-top: 0.5rem;">--- Page Break ---</div><p><br></p>';
+      document.execCommand('insertHTML', false, pageBreakHTML);
+    }
+  </script>
+</body>
+</html>
