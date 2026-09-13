@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Build2Hire | Register</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (() => { const saved = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', saved); })();
+  </script>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar" id="main-nav" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 2rem; border-bottom: 1px solid var(--border-color); background-color: var(--bg-secondary);">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="index.html" title="Build2Hire" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; letter-spacing: -0.02em;">
+        Build2<span style="color: var(--primary);">Hire</span>
+      </a>
+      <div class="theme-switch" style="display:inline-flex; align-items:center; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px; cursor: pointer; user-select: none;">
+        <span id="theme-btn-light" onclick="setTheme('light')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">☀️</span>
+        <span id="theme-btn-dark" onclick="setTheme('dark')" style="padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.95rem; line-height: 1; transition: all 0.2s;">🌙</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="index.html" class="nav-link" style="font-size:0.9rem; font-weight: 600;">🏠 Home</a>
+      <a href="login.html" class="btn btn-secondary" style="padding:0.45rem 1.1rem;font-size:0.85rem;">Sign In</a>
+    </div>
+  </header>
+
+  <main class="flex-center section-padding" style="min-height: calc(100vh - 70px); margin-top: 70px;">
+    <div class="card" style="width: 100%; max-width: 500px; padding: 2.5rem;">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <h1 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 0.5rem;">Join Build2Hire</h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Showcase your work, get hired on merit.</p>
+      </div>
+
+      <!-- Role Toggle Button Switch -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; padding: 4px; background-color: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+        <button
+          type="button"
+          id="btn-candidate"
+          class="btn"
+          onclick="window.setRole('candidate')"
+          style="background-color: var(--bg-secondary); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 0.5rem;"
+        >
+          Candidate
+        </button>
+        <button
+          type="button"
+          id="btn-recruiter"
+          class="btn"
+          onclick="window.setRole('recruiter')"
+          style="background-color: transparent; color: var(--text-secondary); box-shadow: none; padding: 0.5rem;"
+        >
+          Recruiter
+        </button>
+        <button
+          type="button"
+          id="btn-client"
+          class="btn"
+          onclick="window.setRole('client')"
+          style="background-color: transparent; color: var(--text-secondary); box-shadow: none; padding: 0.5rem;"
+        >
+          Client
+        </button>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="fullName">Full Name</label>
+          <input
+            id="fullName"
+            type="text"
+            required
+            class="form-control"
+            placeholder="John Doe"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            required
+            class="form-control"
+            placeholder="john@example.com"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            required
+            class="form-control"
+            placeholder="Min 6 characters"
+          >
+        </div>
+
+        <!-- Candidate-specific fields -->
+        <div id="candidate-fields">
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone Number (Optional)</label>
+            <input
+              id="phone"
+              type="tel"
+              class="form-control"
+              placeholder="+1 (555) 000-0000"
+            >
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bio">Professional Bio</label>
+            <textarea
+              id="bio"
+              class="form-control"
+              rows="3"
+              placeholder="Briefly describe your skill set and builders mission..."
+              style="resize: vertical;"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Recruiter-specific fields (hidden by default) -->
+        <div id="recruiter-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="companyName">Company Name</label>
+            <input
+              id="companyName"
+              type="text"
+              class="form-control"
+              placeholder="e.g. InnovateTech"
+            >
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="jobTitle">Job Title</label>
+            <input
+              id="jobTitle"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Senior Talent Acquisition"
+            >
+          </div>
+        </div>
+
+        <!-- Client-specific fields (hidden by default) -->
+        <div id="client-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="clientBusinessName">Full Name / Business Name</label>
+            <input
+              id="clientBusinessName"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Acme Corp or Jane Doe"
+            >
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="clientPhone">Phone</label>
+            <input
+              id="clientPhone"
+              type="tel"
+              class="form-control"
+              placeholder="+1 (555) 000-0000"
+            >
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          Register
+        </button>
+      </form>
+
+      <!-- OTP SECTION FOR RECRUITERS -->
+      <div id="otp-section" style="display: none;">
+        <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; text-align: center;">Verify your business email</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">Enter the 6-digit OTP sent to your email.</p>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <input type="text" id="otp-input" class="form-control" placeholder="6-digit OTP" maxlength="6" style="text-align: center; font-size: 1.25rem; letter-spacing: 0.25em; font-weight: bold;">
+        </div>
+        <button type="button" id="verify-otp-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Verify OTP</button>
+        <button type="button" id="resend-otp-btn" class="btn" style="width: 100%; background: transparent; color: var(--text-muted);">Resend OTP</button>
+      </div>
+
+      <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+        Already have an account? 
+        <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign In</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    // Fix: Prevent unintended auto-login session from persisting on register page
+    sessionStorage.removeItem('user');
+  </script>
+  <script>
+    let currentRole = "candidate";
+
+    // ══════════════════════════════════════════════
+    // EMAIL SIGN-UP
+    // ══════════════════════════════════════════════
+
+    window.setRole = function(role) {
+      currentRole = role;
+      const btnCandidate = document.getElementById('btn-candidate');
+      const btnRecruiter = document.getElementById('btn-recruiter');
+      const btnClient = document.getElementById('btn-client');
+      const candidateFields = document.getElementById('candidate-fields');
+      const recruiterFields = document.getElementById('recruiter-fields');
+      const clientFields = document.getElementById('client-fields');
+      const companyInput = document.getElementById('companyName');
+      const jobInput = document.getElementById('jobTitle');
+      const clientBusinessNameInput = document.getElementById('clientBusinessName');
+
+      // Reset all buttons
+      btnCandidate.style.backgroundColor = "transparent";
+      btnCandidate.style.color = "var(--text-secondary)";
+      btnCandidate.style.boxShadow = "none";
+      
+      btnRecruiter.style.backgroundColor = "transparent";
+      btnRecruiter.style.color = "var(--text-secondary)";
+      btnRecruiter.style.boxShadow = "none";
+      
+      btnClient.style.backgroundColor = "transparent";
+      btnClient.style.color = "var(--text-secondary)";
+      btnClient.style.boxShadow = "none";
+
+      // Reset all fields
+      candidateFields.style.display = "none";
+      recruiterFields.style.display = "none";
+      clientFields.style.display = "none";
+      companyInput.required = false;
+      jobInput.required = false;
+      clientBusinessNameInput.required = false;
+
+      if (role === 'candidate') {
+        btnCandidate.style.backgroundColor = "var(--bg-secondary)";
+        btnCandidate.style.color = "var(--primary)";
+        btnCandidate.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
+        candidateFields.style.display = "block";
+      } else if (role === 'recruiter') {
+        btnRecruiter.style.backgroundColor = "var(--bg-secondary)";
+        btnRecruiter.style.color = "var(--primary)";
+        btnRecruiter.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
+        recruiterFields.style.display = "block";
+        companyInput.required = true;
+        jobInput.required = true;
+      } else if (role === 'client') {
+        btnClient.style.backgroundColor = "var(--bg-secondary)";
+        btnClient.style.color = "var(--primary)";
+        btnClient.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
+        clientFields.style.display = "block";
+        clientBusinessNameInput.required = true;
+      }
+    }
+
+    let generatedOTP = null;
+    let otpExpiry = null;
+    let pendingPayload = null;
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      const payload = {
+        fullName,
+        email,
+        password,
+        role: currentRole,
+        phone: currentRole === "candidate" ? document.getElementById('phone').value : undefined,
+        bio: currentRole === "candidate" ? document.getElementById('bio').value : undefined,
+        companyName: currentRole === "recruiter" ? document.getElementById('companyName').value : undefined,
+        jobTitle: currentRole === "recruiter" ? document.getElementById('jobTitle').value : undefined,
+      };
+
+      if (currentRole === 'client') {
+        payload.businessName = document.getElementById('clientBusinessName').value;
+        payload.phone = document.getElementById('clientPhone').value;
+        payload.status = 'pending';
+      }
+
+      if (currentRole === 'recruiter') {
+        const domainMatch = email.match(/@(.+)$/);
+        const domain = domainMatch ? domainMatch[1].toLowerCase() : '';
+        const freeDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com'];
+        if (freeDomains.includes(domain)) {
+          showAlert('alert-container', 'Please use a business email domain. Free providers are not allowed.', 'error');
+          return;
+        }
+
+        generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+        otpExpiry = Date.now() + 10 * 60 * 1000;
+        pendingPayload = payload;
+
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('otp-section').style.display = 'block';
+
+        showAlert('alert-container', `OTP sent to ${email}: ${generatedOTP} (Simulated for testing)`, 'success');
+        console.log(`[System] OTP generated for ${email}: ${generatedOTP}`);
+        return;
+      }
+
+      processRegistration(payload, submitBtn);
+    });
+
+    document.getElementById('verify-otp-btn').addEventListener('click', () => {
+      const enteredOTP = document.getElementById('otp-input').value.trim();
+      if (!generatedOTP) return;
+
+      if (Date.now() > otpExpiry) {
+        showAlert('alert-container', 'OTP has expired. Please resend.', 'error');
+        return;
+      }
+
+      if (enteredOTP !== generatedOTP) {
+        showAlert('alert-container', 'Invalid OTP.', 'error');
+        return;
+      }
+
+      pendingPayload.status = "approved";
+      pendingPayload.isVerified = true;
+
+      const btn = document.getElementById('verify-otp-btn');
+      processRegistration(pendingPayload, btn);
+    });
+
+    document.getElementById('resend-otp-btn').addEventListener('click', () => {
+      if (!pendingPayload) return;
+      generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+      otpExpiry = Date.now() + 10 * 60 * 1000;
+      showAlert('alert-container', `New OTP sent to ${pendingPayload.email}: ${generatedOTP} (Simulated for testing)`, 'success');
+      console.log(`[System] New OTP generated for ${pendingPayload.email}: ${generatedOTP}`);
+    });
+
+    async function processRegistration(payload, submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating account...";
+
+      try {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to register");
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(data.data));
+        if (currentRole === "client") {
+          window.location.href = "client-dashboard.html";
+        } else {
+          window.location.href = currentRole === "recruiter" ? "recruiter-dashboard.html" : "portfolio.html";
+        }
+      } catch (err) {
+        console.warn("Backend offline, using mock registration fallback:", err.message);
+
+        const dbState = dbGet();
+        let existingUser = dbState.users.find(u => u.email.toLowerCase() === payload.email.toLowerCase());
+
+        if (!existingUser) {
+          existingUser = {
+            id: Date.now(),
+            email: payload.email,
+            role: payload.role,
+            fullName: payload.fullName
+          };
+          if (payload.status) existingUser.status = payload.status;
+          if (payload.isVerified) existingUser.isVerified = payload.isVerified;
+
+          if (payload.role === 'candidate') {
+            existingUser.phone = payload.phone || "";
+            existingUser.bio = payload.bio || "";
+            existingUser.githubUrl = "";
+            existingUser.linkedinUrl = "";
+            existingUser.portfolioWebsite = "";
+            existingUser.skills = ["React", "JavaScript", "HTML", "CSS Variables"];
+            existingUser.skillLevels = { "React": "Basic", "JavaScript": "Basic", "HTML": "Basic", "CSS Variables": "Basic" };
+            existingUser.profileCompleted = false;
+            existingUser.preferredRole = "";
+            existingUser.xp_points = 0;
+            existingUser.level = 1;
+            existingUser.talent_score = 0;
+            existingUser.portfolio_score = 40;
+            existingUser.challenge_score = 0;
+            existingUser.assessment_score = 0;
+            existingUser.projects = [];
+          } else if (payload.role === 'recruiter') {
+            existingUser.companyName = payload.companyName || "InnovateTech";
+            existingUser.jobTitle = payload.jobTitle || "Hiring Manager";
+          } else if (payload.role === 'client') {
+            existingUser.businessName = payload.businessName || "";
+            existingUser.phone = payload.phone || "";
+          }
+          dbState.users.push(existingUser);
+          dbSave(dbState);
+        } else {
+          if (payload.status) existingUser.status = payload.status;
+          if (payload.isVerified) existingUser.isVerified = payload.isVerified;
+          dbSave(dbState);
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(existingUser));
+
+        if (payload.role === 'client') {
+          showAlert('alert-container', 'Registration submitted! Please wait 24 hours for admin approval.', 'success');
+          setTimeout(() => {
+            window.location.href = "client-dashboard.html";
+          }, 1000);
+        } else {
+          showAlert('alert-container', 'Backend offline. Registered successfully with Demo account!', 'success');
+          setTimeout(() => {
+            window.location.href = payload.role === "recruiter" ? "recruiter-dashboard.html" : "portfolio.html";
+          }, 1000);
+        }
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Register";
+      }
+    }
+  </script>
+</body>
+</html>
