@@ -1,3 +1,4 @@
+<?php
 // If accessed via web browser, serve index.html homepage UI
 $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
 if (strpos($accept, 'text/html') !== false && !isset($_GET['format'])) {
